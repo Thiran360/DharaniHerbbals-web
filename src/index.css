@@ -1,0 +1,492 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Vibrant Leaf Green Palette (Matched to Logo) */
+  --color-primary: #5cb85c;
+  --color-primary-light: #7cd07c;
+  --color-primary-dark: #449d44;
+  --color-secondary: #8bc34a;
+  
+  /* Neutral Palette */
+  --color-bg-light: linear-gradient(135deg, #f2fbf4 0%, #ffffff 50%, #f4fdfa 100%); /* Subtle premium green/white gradient */
+  --color-bg-dark: linear-gradient(135deg, #f2fbf4 0%, #ffffff 50%, #f4fdfa 100%); /* Force light theme */
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #ffffff;
+  
+  --color-text-light: #212529;
+  --color-text-dark: #f8f9fa;
+  --color-text-muted-light: #6c757d;
+  --color-text-muted-dark: #adb5bd;
+  
+  /* Glassmorphism */
+  --glass-bg-light: rgba(255, 255, 255, 0.7);
+  --glass-bg-dark: rgba(36, 41, 36, 0.7);
+  --glass-border-light: rgba(255, 255, 255, 0.5);
+  --glass-border-dark: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  
+  /* Typography */
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Active Theme Variables (Default Light) */
+  --bg: var(--color-bg-light);
+  --surface: var(--color-surface-light);
+  --text: var(--color-text-light);
+  --text-muted: var(--color-text-muted-light);
+  --glass-bg: var(--glass-bg-light);
+  --glass-border: var(--glass-border-light);
+  --border: rgba(46, 125, 50, 0.1);
+}
+
+/* Removed dark mode to force white and green theme */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100%;
+}
+
+html {
+  max-width: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+  color: var(--text);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+/* Glass Card Utility */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 24px;
+  transform: translateZ(0); /* Hardware acceleration */
+  will-change: transform;
+}
+
+/* Form Elements Utility */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.input-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--text);
+  transition: all var(--transition-fast);
+}
+
+@media (prefers-color-scheme: dark) {
+  .input-field {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+  background: var(--surface);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--color-primary); /* Solid flat green */
+  color: white;
+  box-shadow: none;
+  border-radius: 8px; /* Slightly rounded, not a full pill */
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn-outline:hover {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Global Scroll Reveal Animations - Ultra UI */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: none;
+}
+
+/* Staggered Grid Reveals */
+.reveal-stagger {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.reveal-stagger > * {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-stagger.active > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger.active > *:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger.active > *:nth-child(2) { transition-delay: 0.1s; }
+.reveal-stagger.active > *:nth-child(3) { transition-delay: 0.15s; }
+.reveal-stagger.active > *:nth-child(4) { transition-delay: 0.2s; }
+.reveal-stagger.active > *:nth-child(5) { transition-delay: 0.25s; }
+.reveal-stagger.active > *:nth-child(6) { transition-delay: 0.3s; }
+.reveal-stagger.active > *:nth-child(7) { transition-delay: 0.35s; }
+.reveal-stagger.active > *:nth-child(8) { transition-delay: 0.4s; }
+.reveal-stagger.active > *:nth-child(n+9) { transition-delay: 0.4s; }
+
+/* --- Bento Header Utility Classes for Responsive Sections --- */
+.bento-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 60px;
+  padding: 30px;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.bento-header.with-margin-top {
+  margin-top: 80px;
+}
+
+.bento-header-blob {
+  position: absolute;
+  top: -100px;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(40px);
+}
+.bento-header-blob.left { 
+  left: -100px; 
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.12) 0%, transparent 70%);
+}
+.bento-header-blob.right { 
+  right: -100px; 
+}
+
+.bento-title-col {
+  flex: 1 1 350px;
+  z-index: 1;
+}
+
+.bento-title-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: white;
+  border-radius: 20px;
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.bento-title-text {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+  font-weight: 400;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bento-title-text > div {
+  min-width: 0;
+}
+
+.brand-logo-video-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.brand-logo-video-wrap--title {
+  width: clamp(65px, 10vw, 90px);
+  height: clamp(50px, 8vw, 70px);
+  margin-right: 12px;
+  transform: translateY(2px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.brand-logo-video-wrap--nav {
+  width: 65px;
+  height: 65px;
+}
+
+.brand-logo-video-wrap--mobile-nav {
+  width: 55px;
+  height: 55px;
+}
+
+.brand-logo-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  background: transparent;
+}
+
+.brand-logo-video-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 1;
+}
+
+.brand-logo-video-wrap.is-canvas-keyed .brand-logo-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.brand-logo-video-wrap--title.is-canvas-keyed .brand-logo-video {
+  opacity: 1;
+}
+
+.brand-logo-video-wrap--title .brand-logo-video-canvas {
+  mix-blend-mode: normal;
+}
+
+.title-with-brand-video {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.title-with-brand-video .brand-logo-video-wrap {
+  -webkit-text-fill-color: initial;
+  text-shadow: none;
+}
+
+.title-with-brand-video > span,
+.title-with-brand-video > div {
+  min-width: 0;
+}
+
+.bento-title-text span.highlight {
+  color: #000000;
+}
+
+.bento-desc-col {
+  flex: 1 1 400px;
+  z-index: 1;
+  border-left: 2px solid #e2e8f0;
+  padding-left: 30px;
+}
+
+.bento-desc-text {
+  color: #475569;
+  font-size: 1.15rem;
+  margin: 0;
+  line-height: 1.8;
+  font-weight: 500;
+}
+
+/* Mobile Responsive Overrides */
+@media (max-width: 768px) {
+  .bento-header {
+    padding: 16px;
+    gap: 12px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .bento-header.with-margin-top {
+    margin-top: 40px;
+  }
+  .bento-title-col {
+    flex-basis: auto;
+  }
+  .bento-title-badge {
+    margin-bottom: 12px;
+    font-size: 0.7rem;
+    padding: 4px 10px;
+  }
+  .bento-title-text {
+    font-size: 1.4rem;
+    gap: 8px;
+  }
+  .title-with-brand-video {
+    justify-content: flex-start;
+  }
+  .brand-logo-video-wrap--title {
+    width: 60px;
+    height: 50px;
+    margin-right: 8px;
+    transform: translateY(2px);
+    flex-shrink: 0;
+  }
+  .bento-desc-col {
+    flex-basis: auto;
+    border-left: none;
+    border-top: 2px solid #e2e8f0;
+    padding-left: 0;
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+  .bento-desc-text {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .bento-header-blob {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* ============================================
+   ULTIMATE LOW-RAM MOBILE PERFORMANCE FIX
+   ============================================ */
+@media (max-width: 768px) {
+  /* 1. Disable all Glassmorphism (Backdrop Blurs) - Saves massive GPU overhead */
+  * {
+  }
+  
+  /* 2. Hide all massive Background Glowing Orbs (Filter Blurs) - Prevents 2GB RAM phones from hanging */
+  .ultra-glow-orb,
+  .gr-bg-glow,
+  .gr-orb,
+  .hero-orb,
+  .shop-hero-orb,
+  .about-orb,
+  .contact-orb,
+  .login-orb,
+  .shop-root::before,
+  .shop-root::after,
+  .about-root::before,
+  .about-root::after,
+  .contact-root::before,
+  .contact-root::after,
+  .login-root::before,
+  .login-root::after,
+  .bg-shape-1,
+  .bg-shape-2 {
+    display: none !important;
+  }
+}

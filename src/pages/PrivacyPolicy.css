@@ -1,0 +1,177 @@
+.privacy-policy-page {
+  padding-top: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9fbf9;
+  font-family: var(--font-sans);
+}
+
+.privacy-policy-header {
+  background-color: #0b3b24; /* Brand dark green */
+  color: #fff;
+  padding: 160px 20px 60px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.privacy-policy-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+.effective-date {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.privacy-policy-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px;
+  flex-grow: 1;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  margin-bottom: 60px;
+}
+
+.policy-section {
+  margin-bottom: 40px;
+}
+
+.policy-section:last-child {
+  margin-bottom: 0;
+}
+
+.policy-section h2 {
+  color: #0b3b24;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+  border-bottom: 2px solid #e5ede8;
+  padding-bottom: 10px;
+}
+
+.policy-section h3 {
+  color: #2c5942;
+  font-size: 1.2rem;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.policy-section p {
+  color: #4a5550;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.policy-section ul {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+
+.policy-section li {
+  color: #4a5550;
+  line-height: 1.6;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  position: relative;
+  list-style-type: disc;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.important-note {
+  background-color: #fff8e1;
+  border-left: 4px solid #f5b041;
+  padding: 16px 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+  color: #5d4037;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.contact-section .contact-details {
+  background-color: #f1f8f4;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.contact-section a {
+  color: #1a7f45;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.contact-section a:hover {
+  color: #0b3b24;
+  text-decoration: underline;
+}
+
+.contact-phone-row {
+  display: flex;
+  margin-bottom: 16px;
+  align-items: flex-start;
+}
+
+.contact-phone-label {
+  margin-right: 8px;
+}
+
+.contact-phone-numbers {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.contact-phone-separator {
+  margin: 0 5px;
+}
+
+@media (max-width: 768px) {
+  .privacy-policy-page {
+    padding-top: 140px;
+  }
+
+  .privacy-policy-header {
+    padding: 40px 15px;
+  }
+  
+  .privacy-policy-header h1 {
+    font-size: 2rem;
+  }
+  
+  .privacy-policy-content {
+    margin: 0 15px 40px 15px;
+    padding: 24px 20px;
+  }
+  
+  .policy-section h2 {
+    font-size: 1.3rem;
+  }
+  
+  .contact-phone-numbers {
+    flex-direction: column;
+  }
+  
+  .contact-phone-separator {
+    display: none;
+  }
+}

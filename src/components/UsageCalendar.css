@@ -1,0 +1,150 @@
+.usage-calendar-container {
+  width: 100%;
+}
+
+.calendar-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f3f4f6;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.calendar-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.calendar-title h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.latest-order-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f0fdf4;
+  color: #166534;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid #bbf7d0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+
+.calendar-day-header {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  padding-bottom: 12px;
+}
+
+.calendar-cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.calendar-cell.has-date {
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
+}
+
+.calendar-cell.has-date:hover {
+  background-color: #f3f4f6;
+}
+
+.calendar-cell.highlight-order {
+  background-color: #22c55e;
+  color: white;
+  border-color: #22c55e;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  font-weight: 700;
+  transform: scale(1.05);
+  z-index: 2;
+}
+
+.highlight-tooltip {
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1f2937;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.highlight-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background-color: #1f2937;
+}
+
+.calendar-cell.highlight-order:hover .highlight-tooltip {
+  opacity: 1;
+}
+
+.empty-orders-calendar {
+  text-align: center;
+  padding: 32px 0;
+  color: #6b7280;
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .calendar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .calendar-cell {
+    font-size: 0.875rem;
+    border-radius: 8px;
+  }
+  
+  .calendar-grid {
+    gap: 8px;
+  }
+}
