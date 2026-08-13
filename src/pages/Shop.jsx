@@ -47,6 +47,18 @@ export const ProductCard = memo(({ product, index = 0 }) => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  let displayImage = '/logo.png';
+  if (product.image) {
+    if (typeof product.image === 'string' && product.image.includes(',')) {
+      displayImage = product.image.split(',')[0].trim();
+    } else {
+      displayImage = product.image;
+    }
+  }
+
+>>>>>>> master
   return (
     <div
       className="uc-card"
@@ -76,7 +88,11 @@ export const ProductCard = memo(({ product, index = 0 }) => {
         <div className="uc-bottom-row">
           <div className="uc-price-block">
             <span className="uc-price">{product.price}</span>
+<<<<<<< HEAD
             {product.mrp && <span className="uc-original-price">₹{product.mrp}</span>}
+=======
+            {product.mrp && parseFloat(product.mrp) > parseFloat(String(product.price).replace(/[^0-9.]/g, '')) && <span className="uc-original-price">₹{product.mrp}</span>}
+>>>>>>> master
           </div>
         </div>
 
@@ -112,7 +128,11 @@ export const ProductCard = memo(({ product, index = 0 }) => {
           />
         </button>
         <img
+<<<<<<< HEAD
           src={product.image || '/logo.png'}
+=======
+          src={displayImage}
+>>>>>>> master
           alt={translatedName}
           className="uc-img"
           loading="lazy"
@@ -178,7 +198,11 @@ export default function Shop() {
   const [selectedFilters, setSelectedFilters] = useState({});
 
   useEffect(() => {
+<<<<<<< HEAD
     fetch('https://api.codingboss.in/herbal/categories/', {
+=======
+    fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/categories/', {
+>>>>>>> master
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }

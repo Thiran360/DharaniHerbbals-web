@@ -106,8 +106,13 @@ export default function Navbar() {
           <Link to="/" className="nav-brand">
             <BrandLogoVideo variant="nav" />
             <div className="brand-text-logo">
+<<<<<<< HEAD
               <div className="brand-text-line1">Dharani<span className="brand-reg">®</span></div>
               <div className="brand-text-line2">Herbbals</div>
+=======
+              <div className="brand-text-line1">Vedan Mart<span className="brand-reg">®</span></div>
+              
+>>>>>>> master
             </div>
           </Link>
         </div>
@@ -251,8 +256,13 @@ export default function Navbar() {
           <div className="mobile-drawer-brand">
             <BrandLogoVideo variant="mobile-nav" />
             <div className="brand-text-logo">
+<<<<<<< HEAD
               <div className="brand-text-line1">Dharani<span className="brand-reg">®</span></div>
               <div className="brand-text-line2">Herbbals</div>
+=======
+              <div className="brand-text-line1">Vedan Mart<span className="brand-reg">®</span></div>
+              
+>>>>>>> master
             </div>
           </div>
           <button className="close-drawer-btn" onClick={toggleMobileMenu}>
@@ -322,9 +332,17 @@ export default function Navbar() {
               <button className="btn-mobile-login" style={{ border: 'none', background: 'none', color: '#15803d', fontWeight: 'bold' }} onClick={() => { toggleMobileMenu(); openLoginModal(); }}>{t('login')}</button>
             )}
           </div>
+<<<<<<< HEAD
           <p className="mobile-copyright">© {new Date().getFullYear()} {t('copyright')}</p>
+=======
+          <p className="mobile-copyright">Â© {new Date().getFullYear()} {t('copyright')}</p>
+>>>>>>> master
         </div>
       </div>
     </nav>
   );
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master

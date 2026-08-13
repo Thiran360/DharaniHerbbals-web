@@ -26,10 +26,17 @@ export default function ProductDetails() {
       if (!id) return;
       try {
         const [revRes, sumRes] = await Promise.all([
+<<<<<<< HEAD
           fetch(`https://api.codingboss.in/herbal/products/${id}/reviews/`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
           }),
           fetch(`https://api.codingboss.in/herbal/products/${id}/review-summary/`, {
+=======
+          fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/${id}/reviews/`, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+          }),
+          fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/${id}/review-summary/`, {
+>>>>>>> master
             headers: { 'ngrok-skip-browser-warning': 'true' }
           })
         ]);
@@ -158,7 +165,11 @@ export default function ProductDetails() {
 
     if (id) {
       // Fetch CRM product images for Product Gallery section
+<<<<<<< HEAD
       fetch(`https://api.codingboss.in/herbal/product-images/${id}/`, {
+=======
+      fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/product-images/${id}/`, {
+>>>>>>> master
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {
@@ -189,7 +200,11 @@ export default function ProductDetails() {
         });
 
       // Fetch CRM product key benefits
+<<<<<<< HEAD
       fetch(`https://api.codingboss.in/herbal/products/${id}/key-points/`, {
+=======
+      fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/${id}/key-points/`, {
+>>>>>>> master
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {
@@ -223,7 +238,11 @@ export default function ProductDetails() {
         });
 
       // Fetch CRM product variations
+<<<<<<< HEAD
       fetch(`https://api.codingboss.in/herbal/products/${id}/variations/`, {
+=======
+      fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/${id}/variations/`, {
+>>>>>>> master
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {
@@ -477,6 +496,7 @@ export default function ProductDetails() {
               className="pd-pro-image-track"
               ref={trackRef}
               onScroll={handleScroll}
+<<<<<<< HEAD
               style={{
                 display: 'flex',
                 width: '100%',
@@ -492,6 +512,11 @@ export default function ProductDetails() {
               `}</style>
               {mediaItems.map((media, idx) => (
                 <div key={idx} className="pd-pro-main-image-wrapper" style={{ minWidth: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', scrollSnapAlign: 'start', scrollSnapStop: 'always' }}>
+=======
+            >
+              {mediaItems.map((media, idx) => (
+                <div key={idx} className="pd-pro-main-image-wrapper">
+>>>>>>> master
                   {media.type === '3d' ? (
                     <model-viewer
                       src={media.src}
@@ -643,11 +668,19 @@ export default function ProductDetails() {
           <div className="pd-bento-grid">
             {/* Bento Box 1: Description */}
             <div className="pd-bento-cell bento-desc">
+<<<<<<< HEAD
               <div className="bento-header">
                 <FileText size={18} className="bento-icon text-indigo" />
                 <h3>{t('descriptionLabel')}</h3>
               </div>
               <p className="bento-text">
+=======
+              <div className="pd-bento-header">
+                <FileText size={18} className="pd-bento-icon text-indigo" />
+                <h3>{t('descriptionLabel')}</h3>
+              </div>
+              <p className="pd-bento-text">
+>>>>>>> master
                 {translatedDesc}
               </p>
             </div>
@@ -670,8 +703,13 @@ export default function ProductDetails() {
 
             {/* Bento Box 3: Quick Benefits */}
             <div className="pd-bento-cell bento-benefits">
+<<<<<<< HEAD
               <div className="bento-header">
                 <Star size={18} className="bento-icon text-pink" />
+=======
+              <div className="pd-bento-header">
+                <Star size={18} className="pd-bento-icon text-pink" />
+>>>>>>> master
                 <h3>Key Benefits</h3>
               </div>
               <div className="bento-tags-wrapper">
@@ -777,8 +815,13 @@ export default function ProductDetails() {
 
             {/* Bento Box 4: Delivery */}
             <div className="pd-bento-cell bento-delivery">
+<<<<<<< HEAD
               <div className="bento-header">
                 <Truck size={18} className="bento-icon text-indigo" />
+=======
+              <div className="pd-bento-header">
+                <Truck size={18} className="pd-bento-icon text-indigo" />
+>>>>>>> master
                 <h3>Delivery Check</h3>
               </div>
               <div className="bento-pincode-wrapper">
@@ -915,7 +958,11 @@ export default function ProductDetails() {
           {[
             ...products.filter(p => p.id !== product.id && p.category_name === product.category_name),
             ...products.filter(p => p.id !== product.id && p.category_name !== product.category_name)
+<<<<<<< HEAD
           ].slice(0, 4).map(p => (
+=======
+          ].slice(0, 6).map(p => (
+>>>>>>> master
             <ProductCard key={p.id} product={p} />
           ))}
         </div>

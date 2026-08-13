@@ -38,7 +38,11 @@ export default function OtpVerification() {
     setSuccessMsg(null);
 
     try {
+<<<<<<< HEAD
       const response = await fetch('https://api.codingboss.in/herbal/verify-otp/', {
+=======
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/verify-otp/', {
+>>>>>>> master
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +87,11 @@ export default function OtpVerification() {
     setLoading(true);
 
     try {
+<<<<<<< HEAD
       const response = await fetch('https://api.codingboss.in/herbal/resend-otp/', {
+=======
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/resend-otp/', {
+>>>>>>> master
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

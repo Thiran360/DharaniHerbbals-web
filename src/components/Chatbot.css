@@ -6,6 +6,7 @@
 }
 
 .float-chatbot {
+<<<<<<< HEAD
   background-color: #10b981; /* Match brand color */
   z-index: 10000;
   border-radius: 16px !important; /* Override 50% from .float-btn */
@@ -35,6 +36,18 @@
   100% { transform: scale(1.5); opacity: 0; }
 }
 
+=======
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  z-index: 10000;
+  /* Will inherit 50% border-radius from .float-btn */
+}
+
+.float-chatbot.active {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  transform: scale(0.9);
+}
+
+>>>>>>> master
 /* Chat Window */
 .chatbot-window {
   position: absolute;
@@ -411,4 +424,8 @@
 .chat-products-carousel .chat-product-card {
   flex-shrink: 0;
   margin-top: 0;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

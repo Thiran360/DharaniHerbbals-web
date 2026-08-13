@@ -158,7 +158,10 @@
 
 .promo-offer-box {
   background: rgba(255, 255, 255, 0.15); /* Glassmorphism */
+<<<<<<< HEAD
   backdrop-filter: blur(12px);
+=======
+>>>>>>> master
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   display: inline-block;
@@ -292,7 +295,10 @@
 
 .slider-btn {
   background: rgba(255, 255, 255, 0.15);
+<<<<<<< HEAD
   backdrop-filter: blur(8px);
+=======
+>>>>>>> master
   border: 1px solid rgba(255, 255, 255, 0.3);
   width: 60px;
   height: 60px;
@@ -323,8 +329,11 @@
   background: rgba(0, 0, 0, 0.2);
   padding: 10px 20px;
   border-radius: 100px;
+<<<<<<< HEAD
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+=======
+>>>>>>> master
 }
 
 /* Slider Navigation Arrows */
@@ -334,8 +343,11 @@
   transform: translateY(-50%);
   z-index: 15;
   background: rgba(255, 255, 255, 0.15);
+<<<<<<< HEAD
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+=======
+>>>>>>> master
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   width: 56px;

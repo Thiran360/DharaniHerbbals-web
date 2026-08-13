@@ -31,8 +31,11 @@
   margin: 0 auto;
   height: var(--nav-height);
   background: var(--bg-glass);
+<<<<<<< HEAD
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+=======
+>>>>>>> master
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 24px;
   display: flex;
@@ -92,18 +95,27 @@
 }
 
 .brand-text-line1 {
+<<<<<<< HEAD
   font-size: 32px;
+=======
+    font-size: 21px;
+>>>>>>> master
   font-weight: 700;
   letter-spacing: -0.2px;
 }
 
 .brand-text-line2 {
+<<<<<<< HEAD
   font-size: 32px;
+=======
+  font-size: 24px;
+>>>>>>> master
   font-weight: 700;
   letter-spacing: -0.2px;
 }
 
 .brand-reg {
+<<<<<<< HEAD
   font-size: 11px;
   font-weight: 400;
   vertical-align: super;
@@ -118,16 +130,41 @@
 .navbar-ultra.scrolled .brand-logo-video-wrap--nav {
   width: 54px;
   height: 54px;
+=======
+    font-size: 12px;
+    font-weight: 400;
+    vertical-align: top;
+  margin-left: 2px;
+}
+
+/* Shrink brand on scroll */
+.navbar-ultra.scrolled .brand-text-line1,
+.navbar-ultra.scrolled .brand-text-line2 {
+  font-size: 20px;
+}
+
+.navbar-ultra.scrolled .brand-logo-video-wrap--nav {
+  width: 52px;
+  height: 44px;
+>>>>>>> master
 }
 
 .nav-brand .brand-logo-video-wrap--nav {
   display: flex !important;
   align-items: center;
   justify-content: center;
+<<<<<<< HEAD
   width: 60px;
   height: 60px;
   margin-right: -10px;
   transform: translateY(4px);
+=======
+  width: 42px;
+    height: 35px;
+    /* transform removed for alignment */
+  overflow: hidden;
+  border-radius: 6px;
+>>>>>>> master
 }
 
 /* Center Section: Links */
@@ -291,7 +328,10 @@
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.6);
+<<<<<<< HEAD
   backdrop-filter: blur(8px);
+=======
+>>>>>>> master
   border: 1px solid rgba(0, 0, 0, 0.04);
   border-radius: 100px;
   padding: 4px;
@@ -429,8 +469,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+<<<<<<< HEAD
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(4px);
+=======
+  background: rgba(0, 0, 0, 0.4);
+>>>>>>> master
   opacity: 0;
   visibility: hidden;
   transition: var(--transition-smooth);
@@ -447,6 +491,7 @@
 .mobile-menu-drawer {
   position: fixed;
   top: 0;
+<<<<<<< HEAD
   left: -100%;
   width: 68%;
   max-width: 260px;
@@ -458,15 +503,37 @@
   z-index: 999;
   pointer-events: auto; /* IMPORTANT: Restores clickability! */
   transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+=======
+  left: 0;
+  transform: translateX(-100%);
+  width: 68%;
+  max-width: 260px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 999;
+  pointer-events: auto;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Hardware accelerated */
+>>>>>>> master
   display: flex;
   flex-direction: column;
   box-shadow: 20px 0 44px rgba(0,0,0,0.12);
   border-top-right-radius: 24px;
   border-bottom-right-radius: 24px;
+<<<<<<< HEAD
 }
 
 .mobile-menu-drawer.open {
   left: 0;
+=======
+  overflow-x: hidden;
+}
+
+.mobile-menu-drawer.open {
+  transform: translateX(0);
+>>>>>>> master
 }
 
 .mobile-drawer-header {
@@ -492,12 +559,22 @@
 }
 
 .mobile-drawer-header .brand-logo-video-wrap--mobile-nav {
+<<<<<<< HEAD
   width: 56px;
   height: 56px;
+=======
+  width: 58px;
+  height: 48px;
+>>>>>>> master
   margin: 0;
   display: flex !important;
   align-items: center;
   justify-content: center;
+<<<<<<< HEAD
+=======
+  overflow: hidden;
+  border-radius: 6px;
+>>>>>>> master
 }
 
 .close-drawer-btn {
@@ -649,6 +726,7 @@
     position: static;
     transform: none;
     grid-column: 2;
+<<<<<<< HEAD
     justify-content: flex-start;
     max-width: 100%;
     width: 100%;
@@ -657,6 +735,18 @@
 
   .nav-brand {
     justify-content: flex-start;
+=======
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    width: 100%;
+    flex: none;
+    display: flex;
+  }
+
+  .nav-brand {
+    justify-content: center;
+>>>>>>> master
     align-items: center;
     gap: 5px;
     height: 74px;
@@ -664,21 +754,38 @@
   }
 
   .brand-text-line1, .brand-text-line2 {
+<<<<<<< HEAD
     font-size: 21px;
+=======
+    font-size: 18px;
+>>>>>>> master
   }
 
   .navbar-ultra.scrolled .brand-text-line1,
   .navbar-ultra.scrolled .brand-text-line2 {
+<<<<<<< HEAD
     font-size: 21px;
+=======
+    font-size: 18px;
+>>>>>>> master
   }
 
   .brand-logo-video-wrap--nav,
   .navbar-ultra.scrolled .brand-logo-video-wrap--nav {
+<<<<<<< HEAD
     width: 50px;
     height: 50px;
     display: flex !important;
     align-items: center;
     justify-content: center;
+=======
+    width: 38px;
+      height: 32px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+>>>>>>> master
   }
 
   .nav-icons-right {

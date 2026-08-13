@@ -23,7 +23,11 @@ export default function Contact() {
     const selectedSubject = subjectSelect.options[subjectSelect.selectedIndex]?.text || formData.get('subject');
 
     const message = [
+<<<<<<< HEAD
       'New enquiry from Dharani Herbbals website',
+=======
+      'New enquiry from Vedan Mart website',
+>>>>>>> master
       '',
       `Name: ${formData.get('fullName')}`,
       `Phone: ${formData.get('phone')}`,

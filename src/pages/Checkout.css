@@ -1,7 +1,11 @@
 .checkout-page-wrapper {
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
   min-height: calc(100vh - 80px);
+<<<<<<< HEAD
   padding: 100px 20px 60px 20px;
+=======
+  padding: 120px 20px 60px 20px;
+>>>>>>> master
   display: flex;
   justify-content: center;
 }
@@ -49,8 +53,11 @@
   flex-direction: row-reverse;
   align-items: stretch;
   background: rgba(255, 255, 255, 0.45);
+<<<<<<< HEAD
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
+=======
+>>>>>>> master
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.05);
   border: 1px solid rgba(255, 255, 255, 0.6);
@@ -830,6 +837,7 @@
 }
 
 @media (max-width: 900px) {
+<<<<<<< HEAD
   .checkout-grid {
     flex-direction: column;
     gap: 32px;
@@ -838,13 +846,69 @@
   .checkout-form-section {
     padding: 24px 24px 24px 8px;
     width: 100%;
+=======
+  .checkout-page-wrapper {
+    background: #ffffff !important;
+  }
+
+  .checkout-grid {
+    flex-direction: column;
+    gap: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .checkout-form-section {
+    width: 100%;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+  
+  .step-card {
+    background: #ffffff !important;
+    backdrop-filter: none;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 24px 16px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .step-card:last-child {
+    border-bottom: none !important;
+  }
+
+  .step-card::before {
+    display: none !important;
+  }
+  
+  .step-card-body {
+    padding-left: 0 !important;
+    margin-top: 20px !important;
+>>>>>>> master
   }
 
   .checkout-summary-section {
     width: 100%;
+<<<<<<< HEAD
     border-right: none;
     border-bottom: 1px solid rgba(0,0,0,0.05);
     padding: 32px 24px;
+=======
+    background: #f8fafc;
+    backdrop-filter: none;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    padding: 32px 16px;
+    margin-top: 16px;
+>>>>>>> master
   }
 
   .form-row {
@@ -1232,6 +1296,321 @@
   border-radius: 12px;
   font-size: 1.15rem;
   font-weight: 700;
+<<<<<<< HEAD
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+=======
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 1px #10b981;
+}
+
+.modern-floating-label {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  color: #94a3b8;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: 0.2s ease all;
+  transform-origin: left top;
+}
+
+.modern-floating-input:focus~.modern-floating-label,
+.modern-floating-input:not(:placeholder-shown)~.modern-floating-label {
+  top: 8px;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.modern-floating-input:focus~.modern-floating-label {
+  color: #10b981;
+}
+
+.modern-btn-save {
+  padding: 18px 24px;
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.modern-btn-save:hover {
+  background: #059669;
+}
+
+.modern-btn-save:active {
+  background: #047857;
+}
+
+@media (min-width: 640px) {
+  .modern-floating-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .modern-input-group:nth-child(1) {
+    grid-column: 1 / 2;
+  }
+
+  .modern-input-group:nth-child(2) {
+    grid-column: 2 / 3;
+  }
+
+  .modern-btn-save {
+    grid-column: 1 / -1;
+    width: auto;
+    justify-self: end;
+    padding: 16px 32px;
+  }
+}
+
+@media (min-width: 640px) {
+  .guest-profile-inputs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .guest-profile-input {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .btn-guest-save {
+    width: auto;
+    margin-top: 0;
+  }
+}
+
+
+
+/* --- New Accordion Step Card Styles --- */
+.step-card {
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  padding: 0 0 32px 0;
+  margin-bottom: 0;
+  transition: all 0.3s ease;
+  box-shadow: none;
+  position: relative;
+}
+
+.step-card:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 13px;
+  bottom: -10px;
+  width: 2px;
+  background-color: #cbd5e1;
+  z-index: 1;
+}
+
+.step-card.active {
+  border: none;
+  box-shadow: none;
+  padding: 0 0 32px 0;
+}
+
+.step-card-header {
+  user-select: none;
+  position: relative;
+  z-index: 2;
+}
+
+.step-card-body {
+  padding-left: 40px;
+}
+
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1e293b;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.step-badge.completed {
+  background: #10b981;
+}
+
+.step-badge.pending {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.btn-edit-step {
+  background: transparent;
+  border: none;
+  color: #10b981;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+}
+
+.btn-edit-step:hover {
+  color: #059669;
+  text-decoration: underline;
+}
+
+.step-card-summary {
+  margin-top: 16px;
+  padding-left: 40px;
+  font-size: 0.95rem;
+}
+
+
+/* Master Action Container */
+.master-action-container {
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 24px;
+}
+
+.master-btn {
+  width: 100%;
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+@media (max-width: 900px) {
+  .checkout-page-wrapper {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
+  }
+
+  .checkout-grid {
+    flex-direction: column;
+    gap: 24px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  /* The Single Massive Floating Glass Island */
+  .checkout-form-section {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 40px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08), inset 0 2px 4px rgba(255,255,255,0.9);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 32px 24px;
+    margin-bottom: 24px;
+  }
+  
+  .step-card {
+    background: transparent !important;
+    backdrop-filter: none;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+    padding: 24px 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .step-card:last-child {
+    border-bottom: none !important;
+  }
+
+  .step-card::before {
+    display: none !important;
+  }
+  
+  .step-card-body {
+    padding-left: 0 !important;
+    margin-top: 20px !important;
+  }
+
+  .checkout-summary-section {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 40px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08), inset 0 2px 4px rgba(255,255,255,0.9);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 32px 24px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .checkout-title {
+    font-size: 1.6rem;
+  }
+  .checkout-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+  .btn-place-order {
+    padding: 14px;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+  .form-group input,
+  .form-group textarea,
+  .custom-select-trigger {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+  .stepper-item .step-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+  .stepper-item .step-label {
+    font-size: 0.85rem;
+  }
+  .summary-title {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+  .summary-item-img-box {
+    width: 50px;
+    height: 50px;
+  }
+  .summary-item-info h4 {
+    font-size: 0.85rem;
+  }
+  .summary-item-info p {
+    font-size: 0.8rem;
+  }
+  .total-row {
+    font-size: 0.95rem;
+  }
+  .total-row.final-total {
+    font-size: 1.1rem;
+  }
+}
+
+>>>>>>> master

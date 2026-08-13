@@ -1,5 +1,9 @@
 .privacy-policy-page {
+<<<<<<< HEAD
   padding-top: 80px; /* Offset for fixed navbar */
+=======
+  padding-top: 0;
+>>>>>>> master
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -10,7 +14,11 @@
 .privacy-policy-header {
   background-color: #0b3b24; /* Brand dark green */
   color: #fff;
+<<<<<<< HEAD
   padding: 60px 20px;
+=======
+  padding: 160px 20px 60px;
+>>>>>>> master
   text-align: center;
   margin-bottom: 40px;
 }

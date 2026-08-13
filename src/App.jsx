@@ -116,6 +116,7 @@ function Home() {
     };
   }, [isMobile]);
 
+<<<<<<< HEAD
   const [mostLovedIds, setMostLovedIds] = useState([]);
 
   useEffect(() => {
@@ -140,6 +141,21 @@ function Home() {
     });
   }
 
+=======
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+
+  useEffect(() => {
+    fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/most-loved/', {
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      }
+    })
+      .then(res => res.json())
+      .then(data => setFeaturedProducts(data))
+      .catch(err => console.error("Error fetching most loved products:", err));
+  }, []);
+
+>>>>>>> master
   const navigate = useNavigate();
 
   const [promoAds] = useState([

@@ -225,7 +225,10 @@
 .pf-whatsapp-input {
   flex: 1;
   background: rgba(255, 255, 255, 0.15);
+<<<<<<< HEAD
   backdrop-filter: blur(10px);
+=======
+>>>>>>> master
   border: 2px solid rgba(255, 255, 255, 0.3);
   padding: 16px 24px;
   border-radius: 50px;

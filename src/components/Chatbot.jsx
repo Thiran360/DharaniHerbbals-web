@@ -9,7 +9,11 @@ import './Chatbot.css';
 const PREDEFINED_RESPONSES = [
   {
     keywords: ['hello', 'hi', 'hey', 'greetings', 'vanakkam'],
+<<<<<<< HEAD
     response: "Hello! Welcome to Dharani Herbbals. How can I help you today?"
+=======
+    response: "Hello! Welcome to Vedan Mart. How can I help you today?"
+>>>>>>> master
   },
   {
     keywords: ['return', 'refund', 'exchange', 'cancel', 'return policy'],
@@ -17,7 +21,11 @@ const PREDEFINED_RESPONSES = [
   },
   {
     keywords: ['about dharani', 'about us', 'who are you', 'what is dharani', 'about company'],
+<<<<<<< HEAD
     response: "Dharani Herbbals provides pure, chemical-free herbal remedies for health and beauty. We bring ancient Siddha and Ayurvedic wisdom into modern daily care."
+=======
+    response: "Vedan Mart provides pure, chemical-free herbal remedies for health and beauty. We bring ancient Siddha and Ayurvedic wisdom into modern daily care."
+>>>>>>> master
   },
   {
     keywords: ['mission', 'goal', 'vision'],
@@ -80,7 +88,11 @@ const PREDEFINED_RESPONSES = [
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
+<<<<<<< HEAD
     { id: 1, text: "Hi there! 👋 I'm the Dharani Herbbals Assistant. You can type or use the microphone to tell me what you're looking for!", isUser: false }
+=======
+    { id: 1, text: "Hi there! 👋 I'm the Vedan Mart Assistant. You can type or use the microphone to tell me what you're looking for!", isUser: false }
+>>>>>>> master
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -180,7 +192,11 @@ export default function Chatbot() {
       }
     } else if (isMostLovedRequest) {
       try {
+<<<<<<< HEAD
         const res = await fetch('https://api.codingboss.in/herbal/most-loved/', {
+=======
+        const res = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/most-loved/', {
+>>>>>>> master
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
         const data = await res.json();
@@ -320,7 +336,11 @@ export default function Chatbot() {
               <Sparkles size={20} />
             </div>
             <div>
+<<<<<<< HEAD
               <h4>Dharani Assistant</h4>
+=======
+              <h4>Vedan Assistant</h4>
+>>>>>>> master
               <span className="chatbot-status">Online</span>
             </div>
           </div>

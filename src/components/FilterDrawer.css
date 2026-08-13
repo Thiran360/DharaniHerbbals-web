@@ -19,7 +19,12 @@
 .filter-drawer {
   position: fixed;
   top: 0;
+<<<<<<< HEAD
   left: -400px; /* Slide from left */
+=======
+  left: 0;
+  transform: translateX(-100%); /* Slide from left */
+>>>>>>> master
   width: 100%;
   max-width: 350px;
   height: 100vh;
@@ -27,12 +32,20 @@
   z-index: 100000;
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   transition: left 0.3s ease;
+=======
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+>>>>>>> master
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .filter-drawer.open {
+<<<<<<< HEAD
   left: 0;
+=======
+  transform: translateX(0);
+>>>>>>> master
 }
 
 .filter-header {
@@ -219,6 +232,7 @@
 
 @media (max-width: 480px) {
   .filter-drawer {
+<<<<<<< HEAD
     left: 0;
     top: 100vh; /* Slide from bottom on mobile */
     height: 90vh;
@@ -229,5 +243,17 @@
 
   .filter-drawer.open {
     top: 10vh;
+=======
+    top: 10vh; /* Fixed position */
+    transform: translateY(100%); /* Slide from bottom on mobile */
+    height: 90vh;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .filter-drawer.open {
+    transform: translateY(0);
+>>>>>>> master
   }
 }

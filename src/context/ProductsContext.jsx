@@ -62,7 +62,11 @@ export function ProductsProvider({ children }) {
     if (products.length === 0) {
       setLoading(true);
     }
+<<<<<<< HEAD
     let apiUrl = 'https://api.codingboss.in/herbal/products/';
+=======
+    let apiUrl = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/';
+>>>>>>> master
     let isStoreMember = false;
 
     // Check if the logged-in user is a store member
@@ -82,7 +86,11 @@ export function ProductsProvider({ children }) {
           ['staff', 'store', 'store_member'].includes(type2);
 
         if (isStoreMember) {
+<<<<<<< HEAD
           apiUrl = 'https://api.codingboss.in/herbal/store/products/';
+=======
+          apiUrl = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/store/products/';
+>>>>>>> master
         }
       }
     } catch (e) {

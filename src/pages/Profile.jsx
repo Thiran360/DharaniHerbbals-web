@@ -79,7 +79,11 @@ export default function Profile() {
             ['staff', 'store', 'store_member'].includes(type2);
           const roleParam = isStaff ? 'staff' : 'customer';
 
+<<<<<<< HEAD
           fetch(`https://api.codingboss.in/herbal/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+=======
+          fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+>>>>>>> master
             headers: { 'ngrok-skip-browser-warning': 'true' }
           })
             .then(res => res.json())
@@ -94,7 +98,11 @@ export default function Profile() {
               }
 
               // Fetch addresses for this user
+<<<<<<< HEAD
               fetch(`https://api.codingboss.in/herbal/address/${actualUser.id}/`, {
+=======
+              fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${actualUser.id}/`, {
+>>>>>>> master
                 headers: { 'ngrok-skip-browser-warning': 'true' }
               })
                 .then(res => res.json())
@@ -119,7 +127,11 @@ export default function Profile() {
 
                       // Fetch the tracking info using the new ngrok track endpoint
                       const trackingIdToUse = order.id || order.order_id;
+<<<<<<< HEAD
                       const trackRes = await fetch(`https://api.codingboss.in/herbal/tracking/${trackingIdToUse}/`, {
+=======
+                      const trackRes = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/tracking/${trackingIdToUse}/`, {
+>>>>>>> master
                         headers: { 'ngrok-skip-browser-warning': 'true' }
                       });
                       if (trackRes.ok) {
@@ -176,7 +188,11 @@ export default function Profile() {
     setProfileUpdating(true);
 
     try {
+<<<<<<< HEAD
       const response = await fetch(`https://api.codingboss.in/herbal/customers/${actualUser.id}/`, {
+=======
+      const response = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/customers/${actualUser.id}/`, {
+>>>>>>> master
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -217,7 +233,11 @@ export default function Profile() {
     }
 
     try {
+<<<<<<< HEAD
       let url = 'https://api.codingboss.in/herbal/address/';
+=======
+      let url = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/';
+>>>>>>> master
       let method = addressFormData.id ? 'PUT' : 'POST';
 
       if (addressFormData.id) {
@@ -235,7 +255,11 @@ export default function Profile() {
 
       if (res.ok) {
         // Refresh addresses
+<<<<<<< HEAD
         const addrRes = await fetch(`https://api.codingboss.in/herbal/address/${actualUser.id}/`, { headers: { 'ngrok-skip-browser-warning': 'true' } });
+=======
+        const addrRes = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${actualUser.id}/`, { headers: { 'ngrok-skip-browser-warning': 'true' } });
+>>>>>>> master
         const addrData = await addrRes.json();
 
         if (addrData && Array.isArray(addrData.addresses)) {
@@ -260,7 +284,11 @@ export default function Profile() {
     const id = addressToDelete;
     const actualUser = userData.user || userData;
     try {
+<<<<<<< HEAD
       const res = await fetch(`https://api.codingboss.in/herbal/address/${id}/`, {
+=======
+      const res = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${id}/`, {
+>>>>>>> master
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -282,7 +310,11 @@ export default function Profile() {
     if (!window.confirm("Are you sure you want to cancel this order? If you have paid, a refund will be initiated.")) return;
 
     try {
+<<<<<<< HEAD
       const res = await fetch('https://api.codingboss.in/herbal/paytm/refund/', {
+=======
+      const res = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/paytm/refund/', {
+>>>>>>> master
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -316,7 +348,11 @@ export default function Profile() {
 
   // Fallback data if API doesn't return everything
   const user = userData.user || userData;
+<<<<<<< HEAD
   const name = user.name || 'Dharani Customer';
+=======
+  const name = user.name || 'Vedan Customer';
+>>>>>>> master
   const mobile = user.mobile || user.phone_number || '+91 00000 00000';
   const email = user.email || 'No email provided';
 
@@ -324,6 +360,7 @@ export default function Profile() {
     <div className="profile-page-wrapper">
       <div className="profile-container">
 
+<<<<<<< HEAD
         {/* Left Column: Profile Card & Nav */}
         <div className="profile-sidebar">
           <div className="profile-card">
@@ -360,18 +397,63 @@ export default function Profile() {
             </button>
             <button
               className={`profile-nav-item ${activeTab === 'wishlist' ? 'active' : ''}`}
+=======
+        {/* Left Column: SaaS Sidebar */}
+        <div className="saas-sidebar">
+          <div className="saas-profile-header">
+            <div className="saas-avatar">
+              {name.charAt(0).toUpperCase()}
+            </div>
+            <div className="saas-profile-info">
+              <h2 className="saas-name">{name}</h2>
+              <p className="saas-email">{email}</p>
+            </div>
+          </div>
+
+          <nav className="saas-nav">
+            <button
+              className={`saas-nav-item ${activeTab === 'account' ? 'active' : ''}`}
+              onClick={() => setActiveTab('account')}
+            >
+              <User size={18} />
+              <span>Profile Settings</span>
+            </button>
+            <button
+              className={`saas-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
+              onClick={() => setActiveTab('orders')}
+            >
+              <Package size={18} />
+              <span>Order History</span>
+            </button>
+            <button
+              className={`saas-nav-item ${activeTab === 'addresses' ? 'active' : ''}`}
+              onClick={() => setActiveTab('addresses')}
+            >
+              <MapPin size={18} />
+              <span>Saved Addresses</span>
+            </button>
+            <button
+              className={`saas-nav-item ${activeTab === 'wishlist' ? 'active' : ''}`}
+>>>>>>> master
               onClick={() => setActiveTab('wishlist')}
             >
               <Heart size={18} />
               <span>Wishlist</span>
+<<<<<<< HEAD
               <ChevronRight size={16} className="chevron" />
             </button>
             <button
               className={`profile-nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
+=======
+            </button>
+            <button
+              className={`saas-nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
+>>>>>>> master
               onClick={() => setActiveTab('calendar')}
             >
               <Calendar size={18} />
               <span>Usage Calendar</span>
+<<<<<<< HEAD
               <ChevronRight size={16} className="chevron" />
             </button>
             <button className="profile-nav-item logout-btn" onClick={handleLogout}>
@@ -379,6 +461,15 @@ export default function Profile() {
               <span>Logout</span>
             </button>
           </div>
+=======
+            </button>
+            <div className="saas-nav-divider"></div>
+            <button className="saas-nav-item logout" onClick={handleLogout}>
+              <LogOut size={18} />
+              <span>Sign Out</span>
+            </button>
+          </nav>
+>>>>>>> master
         </div>
 
         {/* Right Column: Main Content */}
@@ -458,7 +549,11 @@ export default function Profile() {
                     style={{ marginTop: '20px', width: 'auto' }}
                     onClick={() => {
                       setProfileFormData({
+<<<<<<< HEAD
                         name: name !== 'Dharani Customer' ? name : '',
+=======
+                        name: name !== 'Vedan Customer' ? name : '',
+>>>>>>> master
                         email: email !== 'No email provided' ? email : ''
                       });
                       setIsEditingProfile(true);
@@ -473,11 +568,16 @@ export default function Profile() {
 
           {activeTab === 'addresses' && (
             <div className="profile-addresses">
+<<<<<<< HEAD
               <div className="profile-content-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+=======
+              <div className="profile-content-header has-action">
+>>>>>>> master
                 <div>
                   <h1>My Addresses</h1>
                   <p>Manage your shipping addresses for quick checkout.</p>
                 </div>
+<<<<<<< HEAD
                 {!showAddressForm && (
                   <button className="btn-add-address" onClick={() => {
                     setAddressFormData({ id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false });
@@ -486,6 +586,8 @@ export default function Profile() {
                     <Plus size={18} /> Add New Address
                   </button>
                 )}
+=======
+>>>>>>> master
               </div>
 
               {showAddressForm ? (
@@ -555,6 +657,7 @@ export default function Profile() {
               ) : (
                 <div className="address-list">
                   {addresses.length > 0 ? (
+<<<<<<< HEAD
                     addresses.map(addr => (
                       <div key={addr.id} className="address-card">
                         <div className="address-card-header">
@@ -573,6 +676,36 @@ export default function Profile() {
                         </div>
                       </div>
                     ))
+=======
+                    <>
+                      {addresses.map(addr => (
+                        <div key={addr.id} className="address-card">
+                          <div className="address-card-header">
+                            <h4>{addr.full_name}</h4>
+                            <span className="address-phone">{addr.phone}</span>
+                          </div>
+                          <p className="address-text">{addr.address}</p>
+                          <p className="address-city">{addr.city}, {addr.state} - {addr.pincode}</p>
+                          <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+                            <button className="btn-edit-address" onClick={() => handleEditAddress(addr)}>
+                              Edit
+                            </button>
+                            <button className="btn-delete-address" onClick={() => setAddressToDelete(addr.id)}>
+                              <Trash2 size={16} /> Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
+                        <button className="btn-add-address" onClick={() => {
+                          setAddressFormData({ id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false });
+                          setShowAddressForm(true);
+                        }}>
+                          <Plus size={18} /> Add Another Address
+                        </button>
+                      </div>
+                    </>
+>>>>>>> master
                   ) : (
                     <div className="empty-orders">
                       <MapPin size={40} className="empty-icon" />
@@ -671,14 +804,22 @@ export default function Profile() {
                               <button
                                 className="btn-cancel-order"
                                 onClick={() => handleCancelOrder(order.order_id)}
+<<<<<<< HEAD
                                 style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.9rem' }}
+=======
+>>>>>>> master
                               >
                                 Cancel Order
                               </button>
                             )}
                             <button
+<<<<<<< HEAD
                               className="btn-track-order"
                               onClick={() => navigate(`/track/${order.id || order.order_id}`)}
+=======
+                                className="btn-track-order"
+                                onClick={() => navigate(`/track/${order.id || order.order_id}`)}
+>>>>>>> master
                             >
                               Track Order
                             </button>
