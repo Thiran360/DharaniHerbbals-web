@@ -95,7 +95,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      let response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/user-login/', {
+      let response = await fetch('https://api.codingboss.in/herbal/user-login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ mobile: mobileNumber, phone_number: mobileNumber })
@@ -129,7 +129,7 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/resend-otp/', {
+      const response = await fetch('https://api.codingboss.in/herbal/resend-otp/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ phone_number: mobileRef.current, mobile: mobileRef.current })
@@ -161,8 +161,8 @@ export default function Login() {
 
     try {
       const verifyUrl = (otpTypeRef.current === 'forgot-password' || otpTypeRef.current === 'store')
-        ? 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/verify-user-login-otp/'
-        : 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/verify-otp/';
+        ? 'https://api.codingboss.in/herbal/verify-user-login-otp/'
+        : 'https://api.codingboss.in/herbal/verify-otp/';
 
       let response = await fetch(verifyUrl, {
         method: 'POST',
@@ -180,7 +180,7 @@ export default function Login() {
       if (response.ok && data.success !== false) {
         if (!data.user && data.user_id && !isStoreMemberRef.current) {
           try {
-            const userResp = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/customers/${data.user_id}/`, {
+            const userResp = await fetch(`https://api.codingboss.in/herbal/customers/${data.user_id}/`, {
               headers: { 'ngrok-skip-browser-warning': 'true' }
             });
             if (userResp.ok) data.user = await userResp.json();

@@ -37,7 +37,7 @@ export function CartProvider({ children }) {
   const refreshCart = async (params = {}) => {
     const user = getUser();
     if (user) {
-      let url = `https://concise-egomaniac-starved.ngrok-free.dev/herbal/carts/?user_id=${user.id}`;
+      let url = `https://api.codingboss.in/herbal/carts/?user_id=${user.id}`;
       if (params.address_id) {
         url += `&address_id=${params.address_id}`;
       }
@@ -157,7 +157,7 @@ export function CartProvider({ children }) {
         // Different variation -> Backend doesn't support multiple variations of the same product.
         // We must delete the old one before adding the new one.
         try {
-          await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/carts/${existingItem.cartItemId}/`, {
+          await fetch(`https://api.codingboss.in/herbal/carts/${existingItem.cartItemId}/`, {
             method: 'DELETE',
             headers: { 'ngrok-skip-browser-warning': 'true' }
           });
@@ -166,7 +166,7 @@ export function CartProvider({ children }) {
     }
 
     try {
-      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/carts/', {
+      const response = await fetch('https://api.codingboss.in/herbal/carts/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -211,7 +211,7 @@ export function CartProvider({ children }) {
 
     if (user && itemToRemove && itemToRemove.cartItemId) {
       try {
-        await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/cart/${itemToRemove.cartItemId}/`, {
+        await fetch(`https://api.codingboss.in/herbal/cart/${itemToRemove.cartItemId}/`, {
           method: 'DELETE',
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
@@ -237,7 +237,7 @@ export function CartProvider({ children }) {
 
     if (user && item.cartItemId) {
       try {
-        await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/cart/${item.cartItemId}/`, {
+        await fetch(`https://api.codingboss.in/herbal/cart/${item.cartItemId}/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

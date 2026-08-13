@@ -30,7 +30,7 @@ export default function Checkout() {
     if (statusParam === 'success') {
       if (orderIdParam) {
         setLoading(true);
-        fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/paytm/status/', {
+        fetch('https://api.codingboss.in/herbal/paytm/status/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export default function Checkout() {
         const currentUserId = userData.id || userData.user_id;
 
         // Fetch addresses from backend
-        fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${currentUserId}/`, {
+        fetch(`https://api.codingboss.in/herbal/address/${currentUserId}/`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         })
           .then(async res => {
@@ -288,7 +288,7 @@ export default function Checkout() {
       const currentUserId = user.id || user.user_id;
       if (!currentUserId) return;
 
-      await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/customers/${currentUserId}/`, {
+      await fetch(`https://api.codingboss.in/herbal/customers/${currentUserId}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -306,7 +306,7 @@ export default function Checkout() {
     const id = addressToDelete;
 
     try {
-      const res = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/`, {
+      const res = await fetch(`https://api.codingboss.in/herbal/address/`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ address_id: id })
@@ -418,7 +418,7 @@ export default function Checkout() {
     try {
       const currentUserId = user.id || user.user_id;
       const payload = { ...formData, user_id: currentUserId };
-      let url = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/';
+      let url = 'https://api.codingboss.in/herbal/address/';
       let method = 'POST';
 
       if (formData.id) {
@@ -439,7 +439,7 @@ export default function Checkout() {
         const savedAddr = await addrRes.json();
         let newId = savedAddr.id || savedAddr.address_id || formData.id;
 
-        const res = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${currentUserId}/`, {
+        const res = await fetch(`https://api.codingboss.in/herbal/address/${currentUserId}/`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
         if (res.ok) {
@@ -486,7 +486,7 @@ export default function Checkout() {
     if (checkoutView === 'form') {
       try {
         const payload = { ...formData, user_id: currentUserId };
-        let url = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/';
+        let url = 'https://api.codingboss.in/herbal/address/';
         let method = 'POST';
 
         if (formData.id) {
@@ -522,7 +522,7 @@ export default function Checkout() {
 
       if (!internalOrderId) {
         // STEP 1: Create the Order in Database
-        const checkoutRes = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/checkout/', {
+        const checkoutRes = await fetch('https://api.codingboss.in/herbal/checkout/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -572,7 +572,7 @@ export default function Checkout() {
         
         if (!finalPaytmData) {
           // Call Paytm Initiate API
-          const paytmRes = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/create-paytm-order/', {
+          const paytmRes = await fetch('https://api.codingboss.in/herbal/create-paytm-order/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -656,7 +656,7 @@ export default function Checkout() {
               }
 
               try {
-                const statusRes = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/paytm/status/', {
+                const statusRes = await fetch('https://api.codingboss.in/herbal/paytm/status/', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',

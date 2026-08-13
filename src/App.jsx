@@ -119,7 +119,7 @@ function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
   useEffect(() => {
-    fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/most-loved/', {
+    fetch('https://api.codingboss.in/herbal/most-loved/', {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }

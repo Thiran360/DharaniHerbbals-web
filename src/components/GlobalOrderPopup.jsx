@@ -31,7 +31,7 @@ export default function GlobalOrderPopup() {
           ['staff', 'store', 'store_member'].includes(type2);
         const roleParam = isStaff ? 'staff' : 'customer';
 
-        const response = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+        const response = await fetch(`https://api.codingboss.in/herbal/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
 

@@ -180,7 +180,7 @@ export default function Chatbot() {
       }
     } else if (isMostLovedRequest) {
       try {
-        const res = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/most-loved/', {
+        const res = await fetch('https://api.codingboss.in/herbal/most-loved/', {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
         const data = await res.json();

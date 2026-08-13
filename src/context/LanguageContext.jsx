@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef } f
 
 const LanguageContext = createContext();
 
-const BASE_TRANSLATE_URL = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/herbal';
+const BASE_TRANSLATE_URL = 'https://api.codingboss.in/herbal/herbal';
 
 const UI_TRANSLATIONS = {
   en: {

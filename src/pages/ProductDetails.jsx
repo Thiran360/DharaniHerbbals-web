@@ -26,10 +26,10 @@ export default function ProductDetails() {
       if (!id) return;
       try {
         const [revRes, sumRes] = await Promise.all([
-          fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/${id}/reviews/`, {
+          fetch(`https://api.codingboss.in/herbal/products/${id}/reviews/`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
           }),
-          fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/${id}/review-summary/`, {
+          fetch(`https://api.codingboss.in/herbal/products/${id}/review-summary/`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
           })
         ]);
@@ -158,7 +158,7 @@ export default function ProductDetails() {
 
     if (id) {
       // Fetch CRM product images for Product Gallery section
-      fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/product-images/${id}/`, {
+      fetch(`https://api.codingboss.in/herbal/product-images/${id}/`, {
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {
@@ -189,7 +189,7 @@ export default function ProductDetails() {
         });
 
       // Fetch CRM product key benefits
-      fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/${id}/key-points/`, {
+      fetch(`https://api.codingboss.in/herbal/products/${id}/key-points/`, {
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {
@@ -223,7 +223,7 @@ export default function ProductDetails() {
         });
 
       // Fetch CRM product variations
-      fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/${id}/variations/`, {
+      fetch(`https://api.codingboss.in/herbal/products/${id}/variations/`, {
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {
