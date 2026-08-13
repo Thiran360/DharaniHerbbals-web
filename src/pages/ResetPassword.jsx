@@ -25,7 +25,7 @@ export default function ResetPassword() {
     setError(null);
 
     try {
-      const response = await fetch('https://api.codingboss.in/reset-password/', {
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/reset-password/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

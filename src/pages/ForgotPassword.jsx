@@ -18,7 +18,7 @@ export default function ForgotPassword() {
     setError(null);
 
     try {
-      const response = await fetch('https://api.codingboss.in/user-login/', {
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/user-login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export default function ForgotPassword() {
         throw new Error('Please enter a valid OTP.');
       }
 
-      const response = await fetch('https://api.codingboss.in/verify-user-login-otp/', {
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/verify-user-login-otp/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

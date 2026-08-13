@@ -62,7 +62,7 @@ export function ProductsProvider({ children }) {
     if (products.length === 0) {
       setLoading(true);
     }
-    let apiUrl = 'https://api.codingboss.in/products/';
+    let apiUrl = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/products/';
     let isStoreMember = false;
 
     // Check if the logged-in user is a store member
@@ -82,7 +82,7 @@ export function ProductsProvider({ children }) {
           ['staff', 'store', 'store_member'].includes(type2);
 
         if (isStoreMember) {
-          apiUrl = 'https://api.codingboss.in/store/products/';
+          apiUrl = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/store/products/';
         }
       }
     } catch (e) {

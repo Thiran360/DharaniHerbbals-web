@@ -16,6 +16,17 @@ export default function Login() {
   const [otpUserId, setOtpUserId] = useState(null);
   const [isStoreMember, setIsStoreMember] = useState(false);
   const [otpType, setOtpType] = useState('register');
+  const [resendTimer, setResendTimer] = useState(0);
+
+  useEffect(() => {
+    let interval = null;
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer(prev => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendTimer]);
 
   // The ONE real input that captures everything (keyboard + SMS autofill)
   const realOtpInputRef = useRef(null);
@@ -84,7 +95,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      let response = await fetch('https://api.codingboss.in/store/login/', {
+      let response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/user-login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ mobile: mobileNumber, phone_number: mobileNumber })
@@ -93,42 +104,12 @@ export default function Login() {
 
       if (response.ok && data.success !== false) {
         if (data.user_id) setOtpUserId(data.user_id);
-        setIsStoreMember(true);
-        setOtpType('store');
+        setIsStoreMember(false);
+        setOtpType('login');
+        setResendTimer(30);
         setShowOtp(true);
       } else {
-        response = await fetch('https://api.codingboss.in/register/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-          body: JSON.stringify({
-            mobile: mobileNumber, phone_number: mobileNumber,
-            email: `${mobileNumber}@guest.com`, password: 'GuestPassword123!', name: 'Guest User'
-          })
-        });
-        data = await response.json();
-
-        if (response.ok && data.success !== false && (!data.message || !data.message.includes('already exists'))) {
-          if (data.user_id) setOtpUserId(data.user_id);
-          setIsStoreMember(false);
-          setOtpType('register');
-          setShowOtp(true);
-        } else {
-          response = await fetch('https://api.codingboss.in/user-login/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-            body: JSON.stringify({ phone_number: mobileNumber, mobile: mobileNumber })
-          });
-          data = await response.json();
-
-          if (response.ok && data.success !== false) {
-            if (data.user_id) setOtpUserId(data.user_id);
-            setIsStoreMember(false);
-            setOtpType('forgot-password');
-            setShowOtp(true);
-          } else {
-            setError(data.message || data.error || 'Login failed. Please try again.');
-          }
-        }
+        setError(data.message || data.error || 'Login failed. Please try again or ensure you are registered.');
       }
     } catch (err) {
       setError('Network error. Please try again later.');
@@ -141,7 +122,28 @@ export default function Login() {
     const val = e.target.value.replace(/\D/g, '');
     if (val.length <= 10) {
       setMobile(val);
-      if (val.length === 10) handleSendOtp(val);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/resend-otp/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+        body: JSON.stringify({ phone_number: mobileRef.current, mobile: mobileRef.current })
+      });
+      const data = await response.json();
+      if (!response.ok || data.success === false) {
+        setError(data.message || 'Failed to resend OTP.');
+      } else {
+        setResendTimer(30);
+      }
+    } catch (err) {
+      setError('Network error. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,8 +161,8 @@ export default function Login() {
 
     try {
       const verifyUrl = (otpTypeRef.current === 'forgot-password' || otpTypeRef.current === 'store')
-        ? 'https://api.codingboss.in/verify-user-login-otp/'
-        : 'https://api.codingboss.in/verify-otp/';
+        ? 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/verify-user-login-otp/'
+        : 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/verify-otp/';
 
       let response = await fetch(verifyUrl, {
         method: 'POST',
@@ -178,20 +180,22 @@ export default function Login() {
       if (response.ok && data.success !== false) {
         if (!data.user && data.user_id && !isStoreMemberRef.current) {
           try {
-            const userResp = await fetch(`https://api.codingboss.in/customers/${data.user_id}/`, {
+            const userResp = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/customers/${data.user_id}/`, {
               headers: { 'ngrok-skip-browser-warning': 'true' }
             });
             if (userResp.ok) data.user = await userResp.json();
           } catch (e) {}
         }
 
-        const user = data.user || {
-          id: data.user_id || 'user-' + mobileRef.current,
-          phone_number: mobileRef.current,
-          mobile: mobileRef.current,
-          name: data.name || (isStoreMemberRef.current ? 'Store Member' : 'Dharani Herbbals Customer'),
-          is_store_member: data.is_store_member || isStoreMemberRef.current,
-          role: data.role || (isStoreMemberRef.current ? 'store' : 'customer')
+        const userObj = data.user || {};
+        const user = {
+          ...userObj,
+          id: userObj.id || data.user_id || data.id || otpUserIdRef.current,
+          phone_number: userObj.phone_number || userObj.mobile || mobileRef.current,
+          mobile: userObj.mobile || userObj.phone_number || mobileRef.current,
+          name: userObj.name || data.name || (isStoreMemberRef.current ? 'Store Member' : 'Vedan Mart Customer'),
+          is_store_member: userObj.is_store_member ?? data.is_store_member ?? isStoreMemberRef.current,
+          role: userObj.role || data.role || (isStoreMemberRef.current ? 'store' : 'customer')
         };
 
         try {
@@ -203,7 +207,14 @@ export default function Login() {
         window.dispatchEvent(new Event('user-login-status-changed'));
         if (typeof refreshProducts === 'function') refreshProducts();
         if (typeof refreshCart === 'function') refreshCart();
-        setTimeout(() => { window.location.href = window.location.pathname; }, 300);
+        
+        setTimeout(() => {
+          if (user.is_store_member || user.role === 'store' || user.role === 'admin') {
+            window.location.href = '/admin';
+          } else {
+            window.location.href = window.location.pathname;
+          }
+        }, 300);
 
       } else {
         setError(data.message || data.error || 'Invalid OTP. Please try again.');
@@ -237,9 +248,9 @@ export default function Login() {
 
         {/* Left Side (Image) - Hidden on Mobile */}
         <div className="login-modal-left">
-          <img src={heartImg} alt="Dharani Herbbals" className="desktop-hero-img" />
+          <img src={heartImg} alt="Vedan Mart" className="desktop-hero-img" />
           <div className="desktop-hero-overlay">
-            <div className="login-modal-brand"><h2>Dharani Herbbals</h2></div>
+            <div className="login-modal-brand"><h2>Vedan Mart</h2></div>
             <h1 className="login-modal-title">Experience The Goodness Of Nature</h1>
             <p className="login-modal-subtitle">
               Authentic Siddha formulations with carefully sourced herbs for your daily wellness.
@@ -249,13 +260,13 @@ export default function Login() {
 
         {/* Hero Image - Hidden on Desktop */}
         <div className="login-modal-hero">
-          <img src={heartImg} alt="Dharani Herbbals" className="login-hero-img" />
+          <img src={heartImg} alt="Vedan Mart" className="login-hero-img" />
         </div>
 
         {/* Right Side (White) */}
         <div className="login-modal-right">
           <div className="login-form-container">
-            <h2 className="welcome-text">Welcome To Dharani Herbbals!</h2>
+            <h2 className="welcome-text">Welcome To Vedan Mart!</h2>
 
             <form onSubmit={showOtp ? handleVerifyOtp : handleSendOtp}>
               {!showOtp ? (
@@ -345,9 +356,14 @@ export default function Login() {
 
                   {error && <div className="error-message">{error}</div>}
 
-                  <button type="submit" className="submit-btn" disabled={loading}>
-                    {loading ? 'Verifying...' : 'Verify & Proceed'}
-                  </button>
+                  <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+                    <button type="submit" className="submit-btn" disabled={loading} style={{ flex: 2 }}>
+                      {loading ? 'Verifying...' : 'Verify & Proceed'}
+                    </button>
+                    <button type="button" className="submit-btn" disabled={loading || resendTimer > 0} onClick={handleResendOtp} style={{ flex: 1, background: '#f1f5f9', color: (loading || resendTimer > 0) ? '#94a3b8' : '#0f172a' }}>
+                      {resendTimer > 0 ? `Wait ${resendTimer}s` : 'Resend'}
+                    </button>
+                  </div>
                 </>
               )}
             </form>

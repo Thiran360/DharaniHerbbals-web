@@ -119,7 +119,11 @@ function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
   useEffect(() => {
-    fetch('https://api.codingboss.in/most-loved/')
+    fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/most-loved/', {
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      }
+    })
       .then(res => res.json())
       .then(data => setFeaturedProducts(data))
       .catch(err => console.error("Error fetching most loved products:", err));

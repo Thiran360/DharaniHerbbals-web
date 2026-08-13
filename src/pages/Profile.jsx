@@ -79,7 +79,7 @@ export default function Profile() {
             ['staff', 'store', 'store_member'].includes(type2);
           const roleParam = isStaff ? 'staff' : 'customer';
 
-          fetch(`https://api.codingboss.in/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+          fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
           })
             .then(res => res.json())
@@ -94,7 +94,7 @@ export default function Profile() {
               }
 
               // Fetch addresses for this user
-              fetch(`https://api.codingboss.in/address/${actualUser.id}/`, {
+              fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${actualUser.id}/`, {
                 headers: { 'ngrok-skip-browser-warning': 'true' }
               })
                 .then(res => res.json())
@@ -119,7 +119,7 @@ export default function Profile() {
 
                       // Fetch the tracking info using the new ngrok track endpoint
                       const trackingIdToUse = order.id || order.order_id;
-                      const trackRes = await fetch(`https://api.codingboss.in/tracking/${trackingIdToUse}/`, {
+                      const trackRes = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/tracking/${trackingIdToUse}/`, {
                         headers: { 'ngrok-skip-browser-warning': 'true' }
                       });
                       if (trackRes.ok) {
@@ -176,7 +176,7 @@ export default function Profile() {
     setProfileUpdating(true);
 
     try {
-      const response = await fetch(`https://api.codingboss.in/customers/${actualUser.id}/`, {
+      const response = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/customers/${actualUser.id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -217,7 +217,7 @@ export default function Profile() {
     }
 
     try {
-      let url = 'https://api.codingboss.in/address/';
+      let url = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/';
       let method = addressFormData.id ? 'PUT' : 'POST';
 
       if (addressFormData.id) {
@@ -235,7 +235,7 @@ export default function Profile() {
 
       if (res.ok) {
         // Refresh addresses
-        const addrRes = await fetch(`https://api.codingboss.in/address/${actualUser.id}/`, { headers: { 'ngrok-skip-browser-warning': 'true' } });
+        const addrRes = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${actualUser.id}/`, { headers: { 'ngrok-skip-browser-warning': 'true' } });
         const addrData = await addrRes.json();
 
         if (addrData && Array.isArray(addrData.addresses)) {
@@ -260,7 +260,7 @@ export default function Profile() {
     const id = addressToDelete;
     const actualUser = userData.user || userData;
     try {
-      const res = await fetch(`https://api.codingboss.in/address/${id}/`, {
+      const res = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${id}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -282,7 +282,7 @@ export default function Profile() {
     if (!window.confirm("Are you sure you want to cancel this order? If you have paid, a refund will be initiated.")) return;
 
     try {
-      const res = await fetch('https://api.codingboss.in/paytm/refund/', {
+      const res = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/paytm/refund/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -316,7 +316,7 @@ export default function Profile() {
 
   // Fallback data if API doesn't return everything
   const user = userData.user || userData;
-  const name = user.name || 'Dharani Customer';
+  const name = user.name || 'Vedan Customer';
   const mobile = user.mobile || user.phone_number || '+91 00000 00000';
   const email = user.email || 'No email provided';
 
@@ -457,7 +457,7 @@ export default function Profile() {
                     style={{ marginTop: '20px', width: 'auto' }}
                     onClick={() => {
                       setProfileFormData({
-                        name: name !== 'Dharani Customer' ? name : '',
+                        name: name !== 'Vedan Customer' ? name : '',
                         email: email !== 'No email provided' ? email : ''
                       });
                       setIsEditingProfile(true);
@@ -472,19 +472,11 @@ export default function Profile() {
 
           {activeTab === 'addresses' && (
             <div className="profile-addresses">
-              <div className="profile-content-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="profile-content-header has-action">
                 <div>
                   <h1>My Addresses</h1>
                   <p>Manage your shipping addresses for quick checkout.</p>
                 </div>
-                {!showAddressForm && (
-                  <button className="btn-add-address" onClick={() => {
-                    setAddressFormData({ id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false });
-                    setShowAddressForm(true);
-                  }}>
-                    <Plus size={18} /> Add New Address
-                  </button>
-                )}
               </div>
 
               {showAddressForm ? (
@@ -554,24 +546,34 @@ export default function Profile() {
               ) : (
                 <div className="address-list">
                   {addresses.length > 0 ? (
-                    addresses.map(addr => (
-                      <div key={addr.id} className="address-card">
-                        <div className="address-card-header">
-                          <h4>{addr.full_name}</h4>
-                          <span className="address-phone">{addr.phone}</span>
+                    <>
+                      {addresses.map(addr => (
+                        <div key={addr.id} className="address-card">
+                          <div className="address-card-header">
+                            <h4>{addr.full_name}</h4>
+                            <span className="address-phone">{addr.phone}</span>
+                          </div>
+                          <p className="address-text">{addr.address}</p>
+                          <p className="address-city">{addr.city}, {addr.state} - {addr.pincode}</p>
+                          <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+                            <button className="btn-edit-address" onClick={() => handleEditAddress(addr)}>
+                              Edit
+                            </button>
+                            <button className="btn-delete-address" onClick={() => setAddressToDelete(addr.id)}>
+                              <Trash2 size={16} /> Delete
+                            </button>
+                          </div>
                         </div>
-                        <p className="address-text">{addr.address}</p>
-                        <p className="address-city">{addr.city}, {addr.state} - {addr.pincode}</p>
-                        <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
-                          <button className="btn-edit-address" onClick={() => handleEditAddress(addr)}>
-                            Edit
-                          </button>
-                          <button className="btn-delete-address" onClick={() => setAddressToDelete(addr.id)}>
-                            <Trash2 size={16} /> Delete
-                          </button>
-                        </div>
+                      ))}
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
+                        <button className="btn-add-address" onClick={() => {
+                          setAddressFormData({ id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false });
+                          setShowAddressForm(true);
+                        }}>
+                          <Plus size={18} /> Add Another Address
+                        </button>
                       </div>
-                    ))
+                    </>
                   ) : (
                     <div className="empty-orders">
                       <MapPin size={40} className="empty-icon" />

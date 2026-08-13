@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef } f
 
 const LanguageContext = createContext();
 
-const BASE_TRANSLATE_URL = 'https://viral-motto-customs.ngrok-free.dev/herbal';
+const BASE_TRANSLATE_URL = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/herbal';
 
 const UI_TRANSLATIONS = {
   en: {
@@ -36,7 +36,7 @@ const UI_TRANSLATIONS = {
     myAccount: "My Account",
     logout: "Log Out",
     login: "Log In",
-    copyright: "Dharani Herbbals",
+    copyright: "Vedan Mart",
     quantity: "Quantity",
     subtotal: "Subtotal",
     checkout: "Checkout",
@@ -85,12 +85,12 @@ const UI_TRANSLATIONS = {
     featureTitle3: "Rooted in Tradition",
     featureDesc3: "Inspired by generations of Siddha wisdom and refined through modern expertise, our formulations unite timeless herbal traditions with contemporary quality to support natural wellness every day.",
     aboutBadge: "100% Natural Wellness",
-    aboutTitle: "About Dharani Herbbals",
+    aboutTitle: "About Vedan Mart",
     aboutSubtitle: "Your trusted partner in natural wellness and herbal healthcare solutions",
     ourMission: "Our Mission",
     missionDesc: "To make traditional herbal wisdom accessible to everyone by creating carefully crafted products that promote a natural and balanced lifestyle.",
     ourHistory: "Our History",
-    historyDesc: "Our journey began in 2004 with dedicated research into Siddha and Ayurvedic traditions, leading to the formal establishment of Dharani Herbbals in 2007.",
+    historyDesc: "Our journey began in 2004 with dedicated research into Siddha and Ayurvedic traditions, leading to the formal establishment of Vedan Mart in 2007.",
     coreValues: "Our Core Values",
     coreValuesDesc: "These values guide everything we do and shape our commitment to natural wellness",
     val1Title: "Quality First",
@@ -123,7 +123,7 @@ const UI_TRANSLATIONS = {
     commit6Title: "Transparent Communication",
     commit6Desc: "We believe in honest, transparent communication about our products and processes.",
     ctaTitle: "Join Our Wellness Journey",
-    ctaDesc: "Experience the power of natural wellness with Dharani Herbbals. Let us be your partner in achieving optimal health through the wisdom of nature and the science of modern herbal medicine.",
+    ctaDesc: "Experience the power of natural wellness with Vedan Mart. Let us be your partner in achieving optimal health through the wisdom of nature and the science of modern herbal medicine.",
     ctaBtn1: "Explore Our Products",
     ctaBtn2: "Get In Touch",
     contactHeroTitle: "Get In Touch",
@@ -151,7 +151,7 @@ const UI_TRANSLATIONS = {
     contactMessageLabel: "Message *",
     contactMessagePlaceholder: "Tell us how we can help you...",
     contactSendBtn: "Send via WhatsApp",
-    contactWhyChooseUs: "Why Choose Dharani Herbbals?",
+    contactWhyChooseUs: "Why Choose Vedan Mart?",
     contactSupportTitle: "24/7 Support",
     contactSupportDesc: "Round-the-clock customer support for all your queries",
     contactQuickResponseTitle: "Quick Response",

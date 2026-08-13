@@ -45,7 +45,7 @@ export default function Admin() {
       {/* Sidebar */}
       <aside className="admin-sidebar">
         <div className="admin-brand" style={{ justifyContent: 'center', padding: '32px 24px' }}>
-          <img src="/logo.png" alt="Dharani Herbbals Logo" style={{ width: '140px', height: 'auto', objectFit: 'contain' }} />
+          <img src="/logo.png" alt="Vedan Mart Logo" style={{ width: '140px', height: 'auto', objectFit: 'contain' }} />
         </div>
 
         <nav className="admin-nav">

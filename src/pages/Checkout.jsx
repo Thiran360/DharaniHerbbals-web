@@ -30,7 +30,7 @@ export default function Checkout() {
     if (statusParam === 'success') {
       if (orderIdParam) {
         setLoading(true);
-        fetch('https://api.codingboss.in/paytm/status/', {
+        fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/paytm/status/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ export default function Checkout() {
         setUser(userData);
 
         // Initialize guest info if available
-        if (userData.name === 'Guest User' || userData.name === 'Dharani Customer' || userData.email?.includes('@guest.com')) {
+        if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.email?.includes('@guest.com')) {
           setGuestInfo({ name: '', email: '' });
         } else {
           setGuestInfo({ name: userData.name || '', email: userData.email || '' });
@@ -154,7 +154,7 @@ export default function Checkout() {
         const currentUserId = userData.id || userData.user_id;
 
         // Fetch addresses from backend
-        fetch(`https://api.codingboss.in/address/${currentUserId}/`, {
+        fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${currentUserId}/`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         })
           .then(async res => {
@@ -188,7 +188,7 @@ export default function Checkout() {
               setSelectedAddressId(loadedAddresses[0].id);
               setFormData(loadedAddresses[0]);
               setCheckoutView('selected');
-              if (userData.name === 'Guest User' || userData.name === 'Dharani Customer' || userData.email?.includes('@guest.com')) {
+              if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.email?.includes('@guest.com')) {
                 setActiveStep(1);
               } else {
                 setActiveStep(2);
@@ -197,7 +197,7 @@ export default function Checkout() {
               setCheckoutView('form');
               setShowFullAddressForm(false);
               setIsManualEntry(false);
-              if (userData.name === 'Guest User' || userData.name === 'Dharani Customer' || userData.email?.includes('@guest.com')) {
+              if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.email?.includes('@guest.com')) {
                 setActiveStep(1);
               } else {
                 setActiveStep(2);
@@ -276,7 +276,7 @@ export default function Checkout() {
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
 
-    if (formData.full_name === 'Guest User' || formData.full_name === 'Dharani Customer' || !formData.full_name) {
+    if (formData.full_name === 'Guest User' || formData.full_name === 'Vedan Customer' || !formData.full_name) {
       setFormData(prev => ({ ...prev, full_name: guestInfo.name }));
     }
 
@@ -288,7 +288,7 @@ export default function Checkout() {
       const currentUserId = user.id || user.user_id;
       if (!currentUserId) return;
 
-      await fetch(`https://api.codingboss.in/customers/${currentUserId}/`, {
+      await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/customers/${currentUserId}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -306,7 +306,7 @@ export default function Checkout() {
     const id = addressToDelete;
 
     try {
-      const res = await fetch(`https://api.codingboss.in/address/`, {
+      const res = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ address_id: id })
@@ -418,7 +418,7 @@ export default function Checkout() {
     try {
       const currentUserId = user.id || user.user_id;
       const payload = { ...formData, user_id: currentUserId };
-      let url = 'https://api.codingboss.in/address/';
+      let url = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/';
       let method = 'POST';
 
       if (formData.id) {
@@ -439,7 +439,7 @@ export default function Checkout() {
         const savedAddr = await addrRes.json();
         let newId = savedAddr.id || savedAddr.address_id || formData.id;
 
-        const res = await fetch(`https://api.codingboss.in/address/${currentUserId}/`, {
+        const res = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/${currentUserId}/`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
         if (res.ok) {
@@ -486,7 +486,7 @@ export default function Checkout() {
     if (checkoutView === 'form') {
       try {
         const payload = { ...formData, user_id: currentUserId };
-        let url = 'https://api.codingboss.in/address/';
+        let url = 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/address/';
         let method = 'POST';
 
         if (formData.id) {
@@ -522,7 +522,7 @@ export default function Checkout() {
 
       if (!internalOrderId) {
         // STEP 1: Create the Order in Database
-        const checkoutRes = await fetch('https://api.codingboss.in/checkout/', {
+        const checkoutRes = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/checkout/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -541,7 +541,7 @@ export default function Checkout() {
             role: user.role || "customer",
             total_amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
             amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
-            email: user?.email || guestInfo?.email || "customer@dharaniherbbals.com",
+            email: user?.email || guestInfo?.email || "customer@vedanmart.com",
             name: formData.full_name || "Customer"
           })
         });
@@ -572,7 +572,7 @@ export default function Checkout() {
         
         if (!finalPaytmData) {
           // Call Paytm Initiate API
-          const paytmRes = await fetch('https://api.codingboss.in/create-paytm-order/', {
+          const paytmRes = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/create-paytm-order/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -583,7 +583,7 @@ export default function Checkout() {
               amount: calculatedAmount,
               user_id: currentUserId,
               mobile: formData.phone || user?.mobile || "9999999999",
-              email: user?.email || guestInfo?.email || "customer@dharaniherbbals.com"
+              email: user?.email || guestInfo?.email || "customer@vedanmart.com"
             })
           });
 
@@ -656,7 +656,7 @@ export default function Checkout() {
               }
 
               try {
-                const statusRes = await fetch('https://api.codingboss.in/paytm/status/', {
+                const statusRes = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/paytm/status/', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -791,7 +791,7 @@ export default function Checkout() {
           <div className="checkout-form-section">
 
             {/* STEP 1: CONTACT */}
-            {user && (user.name === 'Guest User' || user.name === 'Dharani Customer' || !user.email || user.email.includes('@guest.com')) && (
+            {user && (user.name === 'Guest User' || user.name === 'Vedan Customer' || !user.email || user.email.includes('@guest.com')) && (
               <div className={`step-card ${activeStep === 1 ? 'active' : ''}`}>
                 <div className="step-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: activeStep > 1 ? 'pointer' : 'default' }} onClick={() => activeStep > 1 && setActiveStep(1)}>
                   <h3 className="modern-contact-title" style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: 0, fontSize: '1.2rem', color: activeStep >= 1 ? '#111827' : '#9CA3AF' }}>

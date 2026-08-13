@@ -38,7 +38,7 @@ export default function OtpVerification() {
     setSuccessMsg(null);
 
     try {
-      const response = await fetch('https://api.codingboss.in/verify-otp/', {
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/verify-otp/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export default function OtpVerification() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://api.codingboss.in/resend-otp/', {
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/resend-otp/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

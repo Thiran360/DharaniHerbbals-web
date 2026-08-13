@@ -69,8 +69,8 @@ export default function Footer() {
         <div className="footer-logo-box footer-animate">
           <Link to="/" className="footer-brand" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none' }}>
             <div className="brand-text-logo footer-brand-text">
-              <div className="brand-text-line1" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: '1.0' }}>Dharani</div>
-              <div className="brand-text-line2" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: '1.0' }}>Herbbals</div>
+              <div className="brand-text-line1" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: '1.0' }}>Vedan Mart<span className="brand-reg">®</span></div>
+              
             </div>
           </Link>
         </div>
@@ -95,17 +95,17 @@ export default function Footer() {
 
         {/* Contact Info (Inline) */}
         <div className="footer-inline-contact footer-animate">
-          <a href="mailto:info@dharaniherbbals.in">info@dharaniherbbals.in</a>
+          <a href="mailto:info@dharanimart.in">info@dharanimart.in</a>
           <span className="separator">|</span>
           <a href="tel:+919788122001">+91 97881 22001 / +91 99655 32001</a>
         </div>
 
         {/* Social Icons */}
         <div className="footer-social-row footer-animate">
-          <a href="https://www.instagram.com/dharani_herbbals?igsh=NG9sbTFidTdodzN2" target="_blank" rel="noopener noreferrer" className="social-icon-link" title="Instagram"><InstaIcon /></a>
+          <a href="https://www.instagram.com/dharani_mart?igsh=NG9sbTFidTdodzN2" target="_blank" rel="noopener noreferrer" className="social-icon-link" title="Instagram"><InstaIcon /></a>
           <a href="https://www.facebook.com/profile.php?id=61574767123085" target="_blank" rel="noopener noreferrer" className="social-icon-link" title="Facebook"><FbIcon /></a>
           <a href="#" className="social-icon-link" title="Twitter"><TwitterIcon /></a>
-          <a href="https://youtube.com/@dharaniherbbalsppy?si=MUDYw9IQF3rEdxt9" target="_blank" rel="noopener noreferrer" className="social-icon-link" title="Youtube"><YoutubeIcon /></a>
+          <a href="https://youtube.com/@dharanimartppy?si=MUDYw9IQF3rEdxt9" target="_blank" rel="noopener noreferrer" className="social-icon-link" title="Youtube"><YoutubeIcon /></a>
         </div>
 
       </div>

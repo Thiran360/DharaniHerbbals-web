@@ -39,7 +39,7 @@ export default function BrandsSlider() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://api.codingboss.in/brands/', {
+    fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/brands/', {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }

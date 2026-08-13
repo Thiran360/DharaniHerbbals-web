@@ -154,6 +154,13 @@
   padding-bottom: 24px;
 }
 
+.profile-content-header.has-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
 .profile-content-header h1 {
   font-size: 2.5rem;
   font-weight: 900;
@@ -841,12 +848,17 @@
   .saas-nav {
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
   }
 
   .saas-nav-item {
     width: auto;
     padding: 12px 16px;
+  }
+
+  .saas-nav-divider {
+    display: none;
   }
 
   .profile-main-content {
@@ -881,7 +893,25 @@
 
 @media (max-width: 768px) {
   .profile-page-wrapper {
-    padding: 100px 16px 24px 16px;
+    /* Symmetric padding for perfect alignment */
+    padding: 100px 16px 40px 16px;
+  }
+  
+  .profile-main-content {
+    padding: 24px 16px;
+  }
+
+  .saas-sidebar {
+    padding: 24px 16px;
+  }
+  
+  .profile-content-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .profile-content-header.has-action {
+    flex-direction: column;
+    align-items: stretch;
   }
   
   .saas-nav-item span {
@@ -890,9 +920,99 @@
   .saas-nav-item {
     justify-content: center;
   }
-  .saas-nav-divider {
-    width: 1px;
-    height: auto;
-    margin: 0 4px;
+
+  /* Compact native-app style for profile info cards */
+  .profile-info-grid {
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .profile-info-card {
+    padding: 16px;
+    gap: 16px;
+    border-radius: 16px;
+  }
+
+  .info-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  
+  .info-details label {
+    font-size: 0.8rem;
+  }
+  
+  .info-details p {
+    font-size: 1rem;
+    word-break: break-word;
+  }
+
+  /* Full width button on mobile */
+  .btn-save, .btn-cancel {
+    width: 100%;
+    margin-top: 8px;
+    justify-content: center;
+  }
+  
+  .address-form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+
+/* --- MOBILE ALIGNMENT FIXES --- */
+@media (max-width: 768px) {
+  /* Restore padding to clear the mobile navbar and search bar */
+  .profile-page-wrapper {
+    padding-top: 140px !important;
+    align-items: center !important;
+  }
+  
+  .saas-avatar {
+    width: 64px !important;
+    height: 64px !important;
+    font-size: 1.75rem !important;
+    margin: 0 auto !important;
+  }
+  
+  .saas-profile-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+  
+  /* Force horizontal scrolling, no wrapping */
+  .saas-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    padding-bottom: 8px !important;
+    width: 100% !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  .saas-nav::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .saas-nav {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .saas-nav-item {
+    flex: 0 0 auto !important;
+    padding: 10px 14px !important;
+    min-width: 50px !important;
+    display: flex !important;
+    justify-content: center !important;
   }
 }

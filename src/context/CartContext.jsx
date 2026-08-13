@@ -23,14 +23,21 @@ export function CartProvider({ children }) {
       const stored = localStorage.getItem('user');
       if (!stored) return null;
       const parsed = JSON.parse(stored);
-      return parsed.user || parsed;
+      const user = parsed.user || parsed;
+      // Sanitize string IDs caused by legacy bug
+      if (typeof user.id === 'string' && user.id.startsWith('user-')) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        return null;
+      }
+      return user;
     } catch { return null; }
   };
 
   const refreshCart = async (params = {}) => {
     const user = getUser();
     if (user) {
-      let url = `https://api.codingboss.in/carts/?user_id=${user.id}`;
+      let url = `https://concise-egomaniac-starved.ngrok-free.dev/herbal/carts/?user_id=${user.id}`;
       if (params.address_id) {
         url += `&address_id=${params.address_id}`;
       }
@@ -150,7 +157,7 @@ export function CartProvider({ children }) {
         // Different variation -> Backend doesn't support multiple variations of the same product.
         // We must delete the old one before adding the new one.
         try {
-          await fetch(`https://api.codingboss.in/carts/${existingItem.cartItemId}/`, {
+          await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/carts/${existingItem.cartItemId}/`, {
             method: 'DELETE',
             headers: { 'ngrok-skip-browser-warning': 'true' }
           });
@@ -159,7 +166,7 @@ export function CartProvider({ children }) {
     }
 
     try {
-      const response = await fetch('https://api.codingboss.in/carts/', {
+      const response = await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/carts/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -204,7 +211,7 @@ export function CartProvider({ children }) {
 
     if (user && itemToRemove && itemToRemove.cartItemId) {
       try {
-        await fetch(`https://api.codingboss.in/cart/${itemToRemove.cartItemId}/`, {
+        await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/cart/${itemToRemove.cartItemId}/`, {
           method: 'DELETE',
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
@@ -230,7 +237,7 @@ export function CartProvider({ children }) {
 
     if (user && item.cartItemId) {
       try {
-        await fetch(`https://api.codingboss.in/cart/${item.cartItemId}/`, {
+        await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/cart/${item.cartItemId}/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

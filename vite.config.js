@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://viral-motto-customs.ngrok-free.dev/herbal',
+        target: 'https://concise-egomaniac-starved.ngrok-free.dev/herbal/herbal',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')

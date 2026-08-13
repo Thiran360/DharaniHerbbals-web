@@ -20,7 +20,13 @@ export function WishlistProvider({ children }) {
       const stored = localStorage.getItem('user');
       if (!stored) return null;
       const parsed = JSON.parse(stored);
-      return parsed.user || parsed;
+      const user = parsed.user || parsed;
+      if (typeof user.id === 'string' && user.id.startsWith('user-')) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        return null;
+      }
+      return user;
     } catch {
       return null;
     }
@@ -31,7 +37,7 @@ export function WishlistProvider({ children }) {
     if (!user) return;
 
     try {
-      const res = await fetch(`https://api.codingboss.in/wishlist/${user.id}/`, {
+      const res = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/wishlist/${user.id}/`, {
         method: 'GET',
         headers: {
           'ngrok-skip-browser-warning': 'true'
@@ -84,7 +90,7 @@ export function WishlistProvider({ children }) {
 
     if (user) {
       try {
-        await fetch('https://api.codingboss.in/wishlist/add/', {
+        await fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/wishlist/add/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -116,7 +122,7 @@ export function WishlistProvider({ children }) {
 
     if (user) {
       try {
-        await fetch(`https://api.codingboss.in/wishlist/delete/${deleteId}/`, {
+        await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/wishlist/delete/${deleteId}/`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

@@ -23,7 +23,7 @@ export default function OrderTracking() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`https://api.codingboss.in/tracking/${orderId}/`, {
+        const response = await fetch(`https://concise-egomaniac-starved.ngrok-free.dev/herbal/tracking/${orderId}/`, {
           method: 'GET',
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
@@ -98,7 +98,7 @@ export default function OrderTracking() {
             review_text: reviewText
           };
 
-          return fetch('https://api.codingboss.in/reviews/submit/', {
+          return fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/reviews/submit/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

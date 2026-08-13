@@ -50,7 +50,7 @@ export default function CategoryStrip() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    fetch('https://api.codingboss.in/categories/', {
+    fetch('https://concise-egomaniac-starved.ngrok-free.dev/herbal/categories/', {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }

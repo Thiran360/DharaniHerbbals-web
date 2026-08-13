@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 
-const LOGO_SRC = '/videos/logo.mp4';
+const LOGO_SRC = '/videos/logo1.mp4';
 const LOGO_STATIC = '/favicon.png';
 
 // --- Shared singleton video element ---
@@ -49,7 +49,7 @@ function onVideoReady(cb) {
   }
 }
 
-export default function BrandLogoVideo({ className = '', variant = 'title', ariaLabel = 'Dharani Herbbals logo' }) {
+export default function BrandLogoVideo({ className = '', variant = 'title', ariaLabel = 'Vedan Mart logo' }) {
   const canvasRef = useRef(null);
   const [videoStarted, setVideoStarted] = useState(false);
 
