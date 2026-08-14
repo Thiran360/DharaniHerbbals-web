@@ -7,6 +7,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
 import UsageCalendar from '../components/UsageCalendar';
+import { API_BASE_URL } from '../services/api';
 import './Profile.css';
 
 const INDIAN_STATES = [
@@ -79,7 +80,7 @@ export default function Profile() {
             ['staff', 'store', 'store_member'].includes(type2);
           const roleParam = isStaff ? 'staff' : 'customer';
 
-          fetch(`https://api.codingboss.in/herbal/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+          fetch(`${API_BASE_URL}/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
           })
             .then(res => res.json())
@@ -94,7 +95,7 @@ export default function Profile() {
               }
 
               // Fetch addresses for this user
-              fetch(`https://api.codingboss.in/herbal/address/${actualUser.id}/`, {
+              fetch(`${API_BASE_URL}/address/${actualUser.id}/`, {
                 headers: { 'ngrok-skip-browser-warning': 'true' }
               })
                 .then(res => res.json())
@@ -119,7 +120,7 @@ export default function Profile() {
 
                       // Fetch the tracking info using the new ngrok track endpoint
                       const trackingIdToUse = order.id || order.order_id;
-                      const trackRes = await fetch(`https://api.codingboss.in/herbal/tracking/${trackingIdToUse}/`, {
+                      const trackRes = await fetch(`${API_BASE_URL}/tracking/${trackingIdToUse}/`, {
                         headers: { 'ngrok-skip-browser-warning': 'true' }
                       });
                       if (trackRes.ok) {
@@ -176,7 +177,7 @@ export default function Profile() {
     setProfileUpdating(true);
 
     try {
-      const response = await fetch(`https://api.codingboss.in/herbal/customers/${actualUser.id}/`, {
+      const response = await fetch(`${API_BASE_URL}/customers/${actualUser.id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -217,7 +218,7 @@ export default function Profile() {
     }
 
     try {
-      let url = 'https://api.codingboss.in/herbal/address/';
+      let url = `${API_BASE_URL}/address/`;
       let method = addressFormData.id ? 'PUT' : 'POST';
 
       if (addressFormData.id) {
@@ -235,7 +236,7 @@ export default function Profile() {
 
       if (res.ok) {
         // Refresh addresses
-        const addrRes = await fetch(`https://api.codingboss.in/herbal/address/${actualUser.id}/`, { headers: { 'ngrok-skip-browser-warning': 'true' } });
+        const addrRes = await fetch(`${API_BASE_URL}/address/${actualUser.id}/`, { headers: { 'ngrok-skip-browser-warning': 'true' } });
         const addrData = await addrRes.json();
 
         if (addrData && Array.isArray(addrData.addresses)) {
@@ -260,7 +261,7 @@ export default function Profile() {
     const id = addressToDelete;
     const actualUser = userData.user || userData;
     try {
-      const res = await fetch(`https://api.codingboss.in/herbal/address/${id}/`, {
+      const res = await fetch(`${API_BASE_URL}/address/${id}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -282,7 +283,7 @@ export default function Profile() {
     if (!window.confirm("Are you sure you want to cancel this order? If you have paid, a refund will be initiated.")) return;
 
     try {
-      const res = await fetch('https://api.codingboss.in/herbal/paytm/refund/', {
+      const res = await fetch(`${API_BASE_URL}/paytm/refund/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

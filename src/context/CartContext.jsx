@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect, useMemo } from 'react';
 import confetti from 'canvas-confetti';
 import { useProducts } from './ProductsContext';
 import { useAuthModal } from './AuthModalContext';
+import { API_BASE_URL } from '../services/api';
 
 const CartContext = createContext();
 
@@ -37,7 +38,7 @@ export function CartProvider({ children }) {
   const refreshCart = async (params = {}) => {
     const user = getUser();
     if (user) {
-      let url = `https://api.codingboss.in/herbal/carts/?user_id=${user.id}`;
+      let url = `${API_BASE_URL}/carts/?user_id=${user.id}`;
       if (params.address_id) {
         url += `&address_id=${params.address_id}`;
       }
@@ -157,7 +158,7 @@ export function CartProvider({ children }) {
         // Different variation -> Backend doesn't support multiple variations of the same product.
         // We must delete the old one before adding the new one.
         try {
-          await fetch(`https://api.codingboss.in/herbal/carts/${existingItem.cartItemId}/`, {
+          await fetch(`${API_BASE_URL}/carts/${existingItem.cartItemId}/`, {
             method: 'DELETE',
             headers: { 'ngrok-skip-browser-warning': 'true' }
           });
@@ -166,7 +167,7 @@ export function CartProvider({ children }) {
     }
 
     try {
-      const response = await fetch('https://api.codingboss.in/herbal/carts/', {
+      const response = await fetch(`${API_BASE_URL}/carts/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -211,7 +212,7 @@ export function CartProvider({ children }) {
 
     if (user && itemToRemove && itemToRemove.cartItemId) {
       try {
-        await fetch(`https://api.codingboss.in/herbal/cart/${itemToRemove.cartItemId}/`, {
+        await fetch(`${API_BASE_URL}/cart/${itemToRemove.cartItemId}/`, {
           method: 'DELETE',
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
@@ -237,7 +238,7 @@ export function CartProvider({ children }) {
 
     if (user && item.cartItemId) {
       try {
-        await fetch(`https://api.codingboss.in/herbal/cart/${item.cartItemId}/`, {
+        await fetch(`${API_BASE_URL}/cart/${item.cartItemId}/`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

@@ -4,6 +4,7 @@ import { MapPin, Phone, CheckCircle, ArrowLeft, Loader2, Plus, Navigation, Trash
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
+import { API_BASE_URL } from '../services/api';
 import './Checkout.css';
 
 const INDIAN_STATES = [
@@ -30,7 +31,7 @@ export default function Checkout() {
     if (statusParam === 'success') {
       if (orderIdParam) {
         setLoading(true);
-        fetch('https://api.codingboss.in/herbal/paytm/status/', {
+        fetch(`${API_BASE_URL}/paytm/status/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -154,7 +155,7 @@ export default function Checkout() {
         const currentUserId = userData.id || userData.user_id;
 
         // Fetch addresses from backend
-        fetch(`https://api.codingboss.in/herbal/address/${currentUserId}/`, {
+        fetch(`${API_BASE_URL}/address/${currentUserId}/`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         })
           .then(async res => {
@@ -288,7 +289,7 @@ export default function Checkout() {
       const currentUserId = user.id || user.user_id;
       if (!currentUserId) return;
 
-      await fetch(`https://api.codingboss.in/herbal/customers/${currentUserId}/`, {
+      await fetch(`${API_BASE_URL}/customers/${currentUserId}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -306,7 +307,7 @@ export default function Checkout() {
     const id = addressToDelete;
 
     try {
-      const res = await fetch(`https://api.codingboss.in/herbal/address/`, {
+      const res = await fetch(`${API_BASE_URL}/address/`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ address_id: id })
@@ -418,7 +419,7 @@ export default function Checkout() {
     try {
       const currentUserId = user.id || user.user_id;
       const payload = { ...formData, user_id: currentUserId };
-      let url = 'https://api.codingboss.in/herbal/address/';
+      let url = `${API_BASE_URL}/address/`;
       let method = 'POST';
 
       if (formData.id) {
@@ -439,7 +440,7 @@ export default function Checkout() {
         const savedAddr = await addrRes.json();
         let newId = savedAddr.id || savedAddr.address_id || formData.id;
 
-        const res = await fetch(`https://api.codingboss.in/herbal/address/${currentUserId}/`, {
+        const res = await fetch(`${API_BASE_URL}/address/${currentUserId}/`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
         if (res.ok) {
@@ -486,7 +487,7 @@ export default function Checkout() {
     if (checkoutView === 'form') {
       try {
         const payload = { ...formData, user_id: currentUserId };
-        let url = 'https://api.codingboss.in/herbal/address/';
+        let url = `${API_BASE_URL}/address/`;
         let method = 'POST';
 
         if (formData.id) {
@@ -522,7 +523,7 @@ export default function Checkout() {
 
       if (!internalOrderId) {
         // STEP 1: Create the Order in Database
-        const checkoutRes = await fetch('https://api.codingboss.in/herbal/checkout/', {
+        const checkoutRes = await fetch(`${API_BASE_URL}/checkout/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -572,7 +573,7 @@ export default function Checkout() {
         
         if (!finalPaytmData) {
           // Call Paytm Initiate API
-          const paytmRes = await fetch('https://api.codingboss.in/herbal/create-paytm-order/', {
+          const paytmRes = await fetch(`${API_BASE_URL}/create-paytm-order/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -656,7 +657,7 @@ export default function Checkout() {
               }
 
               try {
-                const statusRes = await fetch('https://api.codingboss.in/herbal/paytm/status/', {
+                const statusRes = await fetch(`${API_BASE_URL}/paytm/status/`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',

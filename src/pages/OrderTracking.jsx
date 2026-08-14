@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Package, Truck, CheckCircle, ArrowLeft, Loader2, MapPin, Image as ImageIcon, Star } from 'lucide-react';
 import { useProducts } from '../context/ProductsContext';
+import { API_BASE_URL } from '../services/api';
 import './OrderTracking.css';
 
 export default function OrderTracking() {
@@ -23,7 +24,7 @@ export default function OrderTracking() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`https://api.codingboss.in/herbal/tracking/${orderId}/`, {
+        const response = await fetch(`${API_BASE_URL}/tracking/${orderId}/`, {
           method: 'GET',
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
@@ -98,7 +99,7 @@ export default function OrderTracking() {
             review_text: reviewText
           };
 
-          return fetch('https://api.codingboss.in/herbal/reviews/submit/', {
+          return fetch(`${API_BASE_URL}/reviews/submit/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

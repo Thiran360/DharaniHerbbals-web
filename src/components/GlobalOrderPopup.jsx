@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Package, Truck, CheckCircle, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { API_BASE_URL } from '../services/api';
 import './GlobalOrderPopup.css';
 
 export default function GlobalOrderPopup() {
@@ -31,7 +32,7 @@ export default function GlobalOrderPopup() {
           ['staff', 'store', 'store_member'].includes(type2);
         const roleParam = isStaff ? 'staff' : 'customer';
 
-        const response = await fetch(`https://api.codingboss.in/herbal/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+        const response = await fetch(`${API_BASE_URL}/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
 

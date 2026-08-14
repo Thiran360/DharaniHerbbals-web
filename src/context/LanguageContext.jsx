@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { API_BASE_URL } from '../services/api';
 
 const LanguageContext = createContext();
 
-const BASE_TRANSLATE_URL = 'https://api.codingboss.in/herbal/herbal';
+const BASE_TRANSLATE_URL = `${API_BASE_URL}/herbal`;
 
 const UI_TRANSLATIONS = {
   en: {

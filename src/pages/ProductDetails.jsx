@@ -8,6 +8,7 @@ import imgTexture from '../assets/herbal_texture.png';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
+import { API_BASE_URL } from '../services/api';
 import './ProductDetails.css';
 
 export default function ProductDetails() {
@@ -26,10 +27,10 @@ export default function ProductDetails() {
       if (!id) return;
       try {
         const [revRes, sumRes] = await Promise.all([
-          fetch(`https://api.codingboss.in/herbal/products/${id}/reviews/`, {
+          fetch(`${API_BASE_URL}/products/${id}/reviews/`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
           }),
-          fetch(`https://api.codingboss.in/herbal/products/${id}/review-summary/`, {
+          fetch(`${API_BASE_URL}/products/${id}/review-summary/`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
           })
         ]);
@@ -158,7 +159,7 @@ export default function ProductDetails() {
 
     if (id) {
       // Fetch CRM product images for Product Gallery section
-      fetch(`https://api.codingboss.in/herbal/product-images/${id}/`, {
+      fetch(`${API_BASE_URL}/product-images/${id}/`, {
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {
@@ -189,7 +190,7 @@ export default function ProductDetails() {
         });
 
       // Fetch CRM product key benefits
-      fetch(`https://api.codingboss.in/herbal/products/${id}/key-points/`, {
+      fetch(`${API_BASE_URL}/products/${id}/key-points/`, {
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {
@@ -223,7 +224,7 @@ export default function ProductDetails() {
         });
 
       // Fetch CRM product variations
-      fetch(`https://api.codingboss.in/herbal/products/${id}/variations/`, {
+      fetch(`${API_BASE_URL}/products/${id}/variations/`, {
         headers: { 'ngrok-skip-browser-warning': 'true' }
       })
         .then(res => {

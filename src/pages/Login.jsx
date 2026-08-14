@@ -4,6 +4,7 @@ import { Phone, Lock, Star, X, Leaf, ShieldCheck, Heart } from 'lucide-react';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { useAuthModal } from '../context/AuthModalContext';
+import { API_BASE_URL } from '../services/api';
 import heartImg from '../assets/heart.png';
 import './Login.css';
 
@@ -17,6 +18,8 @@ export default function Login() {
   const [isStoreMember, setIsStoreMember] = useState(false);
   const [otpType, setOtpType] = useState('register');
   const [resendTimer, setResendTimer] = useState(0);
+
+  const [apiOtp, setApiOtp] = useState('');          // Stores OTP returned in API response
 
   useEffect(() => {
     let interval = null;
@@ -37,11 +40,25 @@ export default function Login() {
   const otpTypeRef = useRef('register');
   const isStoreMemberRef = useRef(false);
   const verifyFnRef = useRef(null);
+  const lastSubmittedOtpRef = useRef(null);
 
   useEffect(() => { mobileRef.current = mobile; }, [mobile]);
   useEffect(() => { otpUserIdRef.current = otpUserId; }, [otpUserId]);
   useEffect(() => { otpTypeRef.current = otpType; }, [otpType]);
   useEffect(() => { isStoreMemberRef.current = isStoreMember; }, [isStoreMember]);
+
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered
+  useEffect(() => {
+    if (showOtp && otpValue && otpValue.length === 6 && lastSubmittedOtpRef.current !== otpValue && !loading) {
+      lastSubmittedOtpRef.current = otpValue;
+      const timer = setTimeout(() => {
+        if (verifyFnRef.current) {
+          verifyFnRef.current(otpValue);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [showOtp, otpValue, loading]);
 
   const { refreshProducts } = useProducts();
   const { refreshCart } = useCart();
@@ -95,7 +112,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      let response = await fetch('https://api.codingboss.in/herbal/user-login/', {
+      let response = await fetch(`${API_BASE_URL}/user-login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ mobile: mobileNumber, phone_number: mobileNumber })
@@ -107,6 +124,17 @@ export default function Login() {
         setIsStoreMember(false);
         setOtpType('login');
         setResendTimer(30);
+
+        // Extract OTP from API response, store in state & prefill input field
+        const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
+        if (receivedOtp) {
+          const otpStr = String(receivedOtp).replace(/\D/g, '').slice(0, 6);
+          setApiOtp(otpStr);
+          setOtpValue(otpStr);
+        } else {
+          setApiOtp('');
+        }
+
         setShowOtp(true);
       } else {
         setError(data.message || data.error || 'Login failed. Please try again or ensure you are registered.');
@@ -129,7 +157,7 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      const response = await fetch('https://api.codingboss.in/herbal/resend-otp/', {
+      const response = await fetch(`${API_BASE_URL}/resend-otp/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ phone_number: mobileRef.current, mobile: mobileRef.current })
@@ -138,6 +166,12 @@ export default function Login() {
       if (!response.ok || data.success === false) {
         setError(data.message || 'Failed to resend OTP.');
       } else {
+        const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
+        if (receivedOtp) {
+          const otpStr = String(receivedOtp).replace(/\D/g, '').slice(0, 6);
+          setApiOtp(otpStr);
+          setOtpValue(otpStr);
+        }
         setResendTimer(30);
       }
     } catch (err) {
@@ -161,8 +195,8 @@ export default function Login() {
 
     try {
       const verifyUrl = (otpTypeRef.current === 'forgot-password' || otpTypeRef.current === 'store')
-        ? 'https://api.codingboss.in/herbal/verify-user-login-otp/'
-        : 'https://api.codingboss.in/herbal/verify-otp/';
+        ? `${API_BASE_URL}/verify-user-login-otp/`
+        : `${API_BASE_URL}/verify-otp/`;
 
       let response = await fetch(verifyUrl, {
         method: 'POST',
@@ -180,7 +214,7 @@ export default function Login() {
       if (response.ok && data.success !== false) {
         if (!data.user && data.user_id && !isStoreMemberRef.current) {
           try {
-            const userResp = await fetch(`https://api.codingboss.in/herbal/customers/${data.user_id}/`, {
+            const userResp = await fetch(`${API_BASE_URL}/customers/${data.user_id}/`, {
               headers: { 'ngrok-skip-browser-warning': 'true' }
             });
             if (userResp.ok) data.user = await userResp.json();
@@ -298,7 +332,7 @@ export default function Login() {
                     <p className="otp-sent-text" style={{ marginBottom: '15px' }}>
                       Verification code sent to <br />
                       <strong>+91 {mobile}</strong>
-                      <button type="button" className="edit-mobile-btn" onClick={() => { setShowOtp(false); setOtpValue(''); }}>Edit</button>
+                      <button type="button" className="edit-mobile-btn" onClick={() => { setShowOtp(false); setOtpValue(''); setApiOtp(''); lastSubmittedOtpRef.current = null; }}>Edit</button>
                     </p>
 
                     {/*

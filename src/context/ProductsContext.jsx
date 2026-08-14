@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { API_BASE_URL, NGROK_DOMAIN } from '../services/api';
 
 const ProductsContext = createContext();
 
@@ -62,7 +63,7 @@ export function ProductsProvider({ children }) {
     if (products.length === 0) {
       setLoading(true);
     }
-    let apiUrl = 'https://api.codingboss.in/herbal/products/';
+    let apiUrl = `${API_BASE_URL}/products/`;
     let isStoreMember = false;
 
     // Check if the logged-in user is a store member
@@ -82,7 +83,7 @@ export function ProductsProvider({ children }) {
           ['staff', 'store', 'store_member'].includes(type2);
 
         if (isStoreMember) {
-          apiUrl = 'https://api.codingboss.in/herbal/store/products/';
+          apiUrl = `${API_BASE_URL}/store/products/`;
         }
       }
     } catch (e) {
@@ -102,7 +103,7 @@ export function ProductsProvider({ children }) {
           const urlObj = new URL(apiUrl);
           baseUrl = urlObj.origin;
         } catch (e) {
-          baseUrl = 'https://api.codingboss.in';
+          baseUrl = NGROK_DOMAIN;
         }
 
         // Map API data to our frontend format

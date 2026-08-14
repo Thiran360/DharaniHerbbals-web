@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { API_BASE_URL } from '../services/api';
 import './Chatbot.css';
 
 const PREDEFINED_RESPONSES = [
@@ -180,7 +181,7 @@ export default function Chatbot() {
       }
     } else if (isMostLovedRequest) {
       try {
-        const res = await fetch('https://api.codingboss.in/herbal/most-loved/', {
+        const res = await fetch(`${API_BASE_URL}/most-loved/`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
         const data = await res.json();

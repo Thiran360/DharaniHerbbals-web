@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { ChevronRight, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { API_BASE_URL } from '../services/api';
 import './CategoryStrip.css';
 
 // Import custom generated category images matching premium organic blob style
@@ -50,7 +51,7 @@ export default function CategoryStrip() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    fetch('https://api.codingboss.in/herbal/categories/', {
+    fetch(`${API_BASE_URL}/categories/`, {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }

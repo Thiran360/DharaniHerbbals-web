@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Lock, ShieldCheck, RefreshCw, Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '../services/api';
 import './Login.css';
 
 export default function OtpVerification() {
@@ -12,6 +13,15 @@ export default function OtpVerification() {
   const [timerActive, setTimerActive] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const lastSubmittedOtpRef = useRef(null);
+
+  useEffect(() => {
+    if (location.state?.otp) {
+      const prefilled = String(location.state.otp).replace(/\D/g, '').slice(0, 6);
+      setOtp(prefilled);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (timeLeft > 0 && timerActive) {
@@ -26,8 +36,21 @@ export default function OtpVerification() {
     }
   }, [timeLeft, timerActive]);
 
-  const handleVerify = async (e) => {
-    e.preventDefault();
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered
+  useEffect(() => {
+    if (otp && otp.length === 6 && timerActive && lastSubmittedOtpRef.current !== otp && !loading) {
+      lastSubmittedOtpRef.current = otp;
+      const timerId = setTimeout(() => {
+        handleVerify(otp);
+      }, 300);
+      return () => clearTimeout(timerId);
+    }
+  }, [otp, timerActive, loading]);
+
+  const handleVerify = async (eOrOtp) => {
+    if (eOrOtp && eOrOtp.preventDefault) eOrOtp.preventDefault();
+    const currentOtp = typeof eOrOtp === 'string' ? eOrOtp : otp;
+
     if (!timerActive) {
       setError('OTP has expired. Please request a new one.');
       return;
@@ -38,7 +61,7 @@ export default function OtpVerification() {
     setSuccessMsg(null);
 
     try {
-      const response = await fetch('https://api.codingboss.in/herbal/verify-otp/', {
+      const response = await fetch(`${API_BASE_URL}/verify-otp/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +69,7 @@ export default function OtpVerification() {
         },
         body: JSON.stringify({
           email: location.state?.email,
-          otp: otp
+          otp: currentOtp
         })
       });
 
@@ -83,7 +106,7 @@ export default function OtpVerification() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://api.codingboss.in/herbal/resend-otp/', {
+      const response = await fetch(`${API_BASE_URL}/resend-otp/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

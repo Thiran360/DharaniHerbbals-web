@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-react';
+import { API_BASE_URL } from '../services/api';
 import './Login.css';
 
 export default function ForgotPassword() {
@@ -12,13 +13,26 @@ export default function ForgotPassword() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const lastSubmittedOtpRef = useRef(null);
+
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered
+  useEffect(() => {
+    if (step === 'otp' && otp && otp.length === 6 && lastSubmittedOtpRef.current !== otp && !loading) {
+      lastSubmittedOtpRef.current = otp;
+      const timer = setTimeout(() => {
+        handleVerifyOtp(otp);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [step, otp, loading]);
+
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('https://api.codingboss.in/herbal/user-login/', {
+      const response = await fetch(`${API_BASE_URL}/user-login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,6 +55,11 @@ export default function ForgotPassword() {
         setUserId(data.id);
       }
 
+      const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
+      if (receivedOtp) {
+        setOtp(String(receivedOtp).replace(/\D/g, '').slice(0, 6));
+      }
+
       setStep('otp');
     } catch (err) {
       setError(err.message);
@@ -49,23 +68,25 @@ export default function ForgotPassword() {
     }
   };
 
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
+  const handleVerifyOtp = async (eOrOtp) => {
+    if (eOrOtp && eOrOtp.preventDefault) eOrOtp.preventDefault();
+    const currentOtp = typeof eOrOtp === 'string' ? eOrOtp : otp;
+
     setLoading(true);
     setError(null);
 
     try {
-      if (otp.length < 4) {
+      if (currentOtp.length < 4) {
         throw new Error('Please enter a valid OTP.');
       }
 
-      const response = await fetch('https://api.codingboss.in/herbal/verify-user-login-otp/', {
+      const response = await fetch(`${API_BASE_URL}/verify-user-login-otp/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'ngrok-skip-browser-warning': 'true'
         },
-        body: JSON.stringify({ user_id: userId, otp })
+        body: JSON.stringify({ user_id: userId, otp: currentOtp })
       });
 
       const text = await response.text();

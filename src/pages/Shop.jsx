@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
+import { API_BASE_URL } from '../services/api';
 import FilterDrawer from '../components/FilterDrawer';
 import grpImg from '../assets/grp.png';
 import './Shop.css';
@@ -187,7 +188,7 @@ export default function Shop() {
   const [selectedFilters, setSelectedFilters] = useState({});
 
   useEffect(() => {
-    fetch('https://api.codingboss.in/herbal/categories/', {
+    fetch(`${API_BASE_URL}/categories/`, {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }

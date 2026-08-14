@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_BASE_URL } from '../services/api';
 
 const WishlistContext = createContext();
 
@@ -37,7 +38,7 @@ export function WishlistProvider({ children }) {
     if (!user) return;
 
     try {
-      const res = await fetch(`https://api.codingboss.in/herbal/wishlist/${user.id}/`, {
+      const res = await fetch(`${API_BASE_URL}/wishlist/${user.id}/`, {
         method: 'GET',
         headers: {
           'ngrok-skip-browser-warning': 'true'
@@ -90,7 +91,7 @@ export function WishlistProvider({ children }) {
 
     if (user) {
       try {
-        await fetch('https://api.codingboss.in/herbal/wishlist/add/', {
+        await fetch(`${API_BASE_URL}/wishlist/add/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -122,7 +123,7 @@ export function WishlistProvider({ children }) {
 
     if (user) {
       try {
-        await fetch(`https://api.codingboss.in/herbal/wishlist/delete/${deleteId}/`, {
+        await fetch(`${API_BASE_URL}/wishlist/delete/${deleteId}/`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

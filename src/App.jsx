@@ -8,6 +8,7 @@ import { useLanguage } from './context/LanguageContext';
 import { useWishlist } from './context/WishlistContext';
 import ImageSlider from './components/ImageSlider';
 import { Heart } from 'lucide-react';
+import { API_BASE_URL } from './services/api';
 
 // Critical components loaded synchronously
 import Shop, { ProductCard } from './pages/Shop';
@@ -119,7 +120,7 @@ function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
   useEffect(() => {
-    fetch('https://api.codingboss.in/herbal/most-loved/', {
+    fetch(`${API_BASE_URL}/most-loved/`, {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }

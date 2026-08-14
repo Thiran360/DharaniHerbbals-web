@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { API_BASE_URL } from '../services/api';
 import './Login.css';
 
 export default function ResetPassword() {
@@ -25,7 +26,7 @@ export default function ResetPassword() {
     setError(null);
 
     try {
-      const response = await fetch('https://api.codingboss.in/herbal/reset-password/', {
+      const response = await fetch(`${API_BASE_URL}/reset-password/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

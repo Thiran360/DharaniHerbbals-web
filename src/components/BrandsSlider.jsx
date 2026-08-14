@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BrandsSlider.css';
 import { useLanguage } from '../context/LanguageContext';
+import { API_BASE_URL } from '../services/api';
 
 import makilImg from '../assets/brands_api/MAKIL.png';
 import amuthuImg from '../assets/brands_api/Amuthu.png';
@@ -39,7 +40,7 @@ export default function BrandsSlider() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://api.codingboss.in/herbal/brands/', {
+    fetch(`${API_BASE_URL}/brands/`, {
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }
