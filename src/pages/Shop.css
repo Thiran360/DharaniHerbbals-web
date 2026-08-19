@@ -578,6 +578,7 @@
   overflow: hidden;
   padding: 130px 24px 20px 24px;
 }
+
 @media (min-width: 992px) {
   .shop-hero {
     align-items: center;
@@ -611,12 +612,21 @@
 .shop-hero-container {
   position: relative;
   z-index: 10;
-  max-width: 1200px;
+  max-width: 1300px;
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+@media (min-width: 992px) {
+  .shop-hero-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
 }
 
 .shop-hero-content {
@@ -626,6 +636,60 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
+}
+
+@media (max-width: 991px) {
+  .shop-hero-hair {
+    background-image: 
+      linear-gradient(to bottom, rgba(10, 51, 24, 0.85) 0%, rgba(10, 51, 24, 0.6) 60%, rgba(10, 51, 24, 0.95) 100%),
+      url('../assets/hair_banner.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .shop-hero-hair .shop-hero-right-visual {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .shop-hero-hair {
+    background-image: none !important;
+  }
+}
+
+.shop-hero-right-visual {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+}
+
+@media (min-width: 992px) {
+  .shop-hero-right-visual {
+    flex: 2;
+    max-width: 980px;
+    margin-top: 0;
+    justify-content: flex-end;
+    position: relative;
+    right: -100px;
+  }
+}
+
+.shop-hero-right-img {
+  width: 100%;
+  max-width: 950px;
+  height: auto;
+  max-height: 720px;
+  object-fit: contain;
+  display: block;
+  opacity: 0.85;
+  filter: brightness(0.85) contrast(0.95) drop-shadow(0 30px 50px rgba(0, 0, 0, 0.4));
+  transform: scale(1.55);
+  transform-origin: center right;
+  transition: all 0.3s ease;
 }
 
 .shop-hero-tag {

@@ -8,7 +8,127 @@ import { useLanguage } from '../context/LanguageContext';
 import { API_BASE_URL } from '../services/api';
 import FilterDrawer from '../components/FilterDrawer';
 import grpImg from '../assets/grp.png';
+import hairBannerImg from '../assets/hair_banner_transparent.png';
+import imgBody from '../assets/body_soap_transparent.png';
+import imgFood from '../assets/pirandai_pickle_transparent_v2.png';
+import imgSkin from '../assets/aloe_vera_face_pack_transparent.png';
+import imgHealth from '../assets/sathu_maavu_transparent.png';
+import imgBaby from '../assets/nalangu_powder_transparent_v2.png';
+import imgPoojas from '../assets/pooja_oil_transparent_v2.png';
+import imgBeverages from '../assets/beverage_transparent.png';
+import imgAll from '../assets/shopall.png';
 import './Shop.css';
+
+const CATEGORY_HERO_CONFIG = {
+  hair: {
+    titleKey: 'hairCareTitle',
+    defaultTitle: 'Hair Care Collection',
+    tagKey: 'hairCareTag',
+    defaultTag: '100% Natural Hair Care',
+    subKey: 'hairCareDesc',
+    defaultSub: 'Nourish your locks with authentic herbal oils, natural shampoos, and traditional hair care remedies for strong, shiny, and healthy hair.',
+    bgImage: hairBannerImg
+  },
+  'hair care': {
+    titleKey: 'hairCareTitle',
+    defaultTitle: 'Hair Care Collection',
+    tagKey: 'hairCareTag',
+    defaultTag: '100% Natural Hair Care',
+    subKey: 'hairCareDesc',
+    defaultSub: 'Nourish your locks with authentic herbal oils, natural shampoos, and traditional hair care remedies for strong, shiny, and healthy hair.',
+    bgImage: hairBannerImg
+  },
+  skin: {
+    titleKey: 'skinCareTitle',
+    defaultTitle: 'Skin Care Collection',
+    tagKey: 'skinCareTag',
+    defaultTag: 'Pure & Radiant Skin Care',
+    subKey: 'skinCareDesc',
+    defaultSub: 'Rejuvenate your skin with authentic herbal face packs, natural aloe gels, and traditional skin remedies.',
+    bgImage: imgSkin
+  },
+  'skin care': {
+    titleKey: 'skinCareTitle',
+    defaultTitle: 'Skin Care Collection',
+    tagKey: 'skinCareTag',
+    defaultTag: 'Pure & Radiant Skin Care',
+    subKey: 'skinCareDesc',
+    defaultSub: 'Rejuvenate your skin with authentic herbal face packs, natural aloe gels, and traditional skin remedies.',
+    bgImage: imgSkin
+  },
+  body: {
+    titleKey: 'bodyCareTitle',
+    defaultTitle: 'Bath & Body Essentials',
+    tagKey: 'bodyCareTag',
+    defaultTag: '100% Herbal Body Care',
+    subKey: 'bodyCareDesc',
+    defaultSub: 'Pamper your skin with handcrafted organic herbal soaps and refreshing natural bath powders.',
+    bgImage: imgBody
+  },
+  food: {
+    titleKey: 'foodTitle',
+    defaultTitle: 'Traditional Food & Pickles',
+    tagKey: 'foodTag',
+    defaultTag: 'Authentic Traditional Taste',
+    subKey: 'foodDesc',
+    defaultSub: 'Savor authentic homemade herbal pickles, traditional spices, and wholesome natural foods.',
+    bgImage: imgFood
+  },
+  'health & wellness': {
+    titleKey: 'healthTitle',
+    defaultTitle: 'Health & Wellness Care',
+    tagKey: 'healthTag',
+    defaultTag: 'Pure Siddha & Ayurvedic Care',
+    subKey: 'healthDesc',
+    defaultSub: 'Boost your daily vital energy with authentic herbal health powders and traditional wellness supplements.',
+    bgImage: imgHealth
+  },
+  health: {
+    titleKey: 'healthTitle',
+    defaultTitle: 'Health & Wellness Care',
+    tagKey: 'healthTag',
+    defaultTag: 'Pure Siddha & Ayurvedic Care',
+    subKey: 'healthDesc',
+    defaultSub: 'Boost your daily vital energy with authentic herbal health powders and traditional wellness supplements.',
+    bgImage: imgHealth
+  },
+  baby: {
+    titleKey: 'babyTitle',
+    defaultTitle: 'Gentle Baby Care',
+    tagKey: 'babyTag',
+    defaultTag: 'Gentle & Pure Herbal Care',
+    subKey: 'babyDesc',
+    defaultSub: 'Nurture your little ones with 100% natural, mild herbal bath powders and gentle baby care remedies.',
+    bgImage: imgBaby
+  },
+  poojas: {
+    titleKey: 'poojasTitle',
+    defaultTitle: 'Divine Pooja Essentials',
+    tagKey: 'poojasTag',
+    defaultTag: 'Traditional Sacred Aromas',
+    subKey: 'poojasDesc',
+    defaultSub: 'Elevate your spiritual ambiance with pure natural lamp oils, herbal incenses, and sacred pooja essentials.',
+    bgImage: imgPoojas
+  },
+  beverages: {
+    titleKey: 'beveragesTitle',
+    defaultTitle: 'Herbal Teas & Beverages',
+    tagKey: 'beveragesTag',
+    defaultTag: 'Refreshing Natural Drinks',
+    subKey: 'beveragesDesc',
+    defaultSub: 'Revitalize your body with traditional herbal teas, natural concoctions, and refreshing wellness drinks.',
+    bgImage: imgBeverages
+  },
+  all: {
+    titleKey: 'ourCollection',
+    defaultTitle: 'Explore Our Products',
+    tagKey: 'herbalTag',
+    defaultTag: '100% Natural & Herbal',
+    subKey: 'handcraftedWellness',
+    defaultSub: 'Handcrafted wellness products rooted in nature and tradition.',
+    bgImage: imgAll
+  }
+};
 
 // ─── Product Card ────────────────────────────────────────────────────────────
 export const ProductCard = memo(({ product, index = 0 }) => {
@@ -357,6 +477,14 @@ export default function Shop() {
   }, [filteredProducts, navType]);
 
 
+  const currentCategoryKey = (activeCategory || '').trim().toLowerCase();
+  const isHairCategory = currentCategoryKey === 'hair' || currentCategoryKey === 'hair care';
+
+  const heroTagText = isHairCategory ? t('hairCareTag') : t('herbalTag');
+  const heroSubText = isHairCategory ? t('hairCareDesc') : t('handcraftedWellness');
+  const heroTitleText = isHairCategory ? t('hairCareTitle') : (activeCategory === 'All' ? t('Explore Our Products') : translatedHeroCat);
+  const heroBgImg = isHairCategory ? hairBannerImg : null;
+
   return (
     <div className="shop-root">
       <FilterDrawer
@@ -367,17 +495,17 @@ export default function Shop() {
       />
 
       {/* ── Hero Banner ── */}
-      <div className="shop-hero">
+      <div className={`shop-hero ${isHairCategory ? 'shop-hero-hair' : ''}`}>
         <div className="shop-hero-bg" />
 
         <div className="shop-hero-container">
           <div className="shop-hero-content">
-            <span className="shop-hero-tag"><Leaf size={16} /> 100% NATURAL & HERBAL</span>
+            <span className="shop-hero-tag"><Leaf size={16} /> {heroTagText}</span>
             <h1 className="shop-hero-title">
-              <span>{translatedHeroCat}</span>
+              <span>{heroTitleText}</span>
             </h1>
             <p className="shop-hero-sub">
-              {t('handcraftedWellness')}
+              {heroSubText}
             </p>
             <div className="shop-hero-actions">
               <button className="shop-btn-primary" onClick={() => {
@@ -385,6 +513,12 @@ export default function Shop() {
               }}>Shop Now <ArrowRight size={18} /></button>
             </div>
           </div>
+
+          {heroBgImg && (
+            <div className="shop-hero-right-visual">
+              <img src={heroBgImg} alt={heroTitleText} className="shop-hero-right-img" />
+            </div>
+          )}
         </div>
       </div>
 

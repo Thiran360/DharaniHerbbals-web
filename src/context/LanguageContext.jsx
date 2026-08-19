@@ -47,6 +47,37 @@ const UI_TRANSLATIONS = {
     descriptionLabel: "Description",
     relatedProducts: "You May Also Like",
     naturalTag: "Pure & Organic",
+    hairCareTitle: "Hair Care Collection",
+    hairCareTag: "100% Natural Hair Care",
+    hairCareDesc: "Nourish your locks with authentic herbal oils, natural shampoos, and traditional hair care remedies for strong, shiny, and healthy hair.",
+    
+    skinCareTitle: "Skin Care Collection",
+    skinCareTag: "Pure & Radiant Skin Care",
+    skinCareDesc: "Rejuvenate your skin with authentic herbal face packs, natural aloe gels, and traditional skin remedies.",
+    
+    bodyCareTitle: "Bath & Body Essentials",
+    bodyCareTag: "100% Herbal Body Care",
+    bodyCareDesc: "Pamper your skin with handcrafted organic herbal soaps and refreshing natural bath powders.",
+    
+    foodTitle: "Traditional Food & Pickles",
+    foodTag: "Authentic Traditional Taste",
+    foodDesc: "Savor authentic homemade herbal pickles, traditional spices, and wholesome natural foods.",
+    
+    healthTitle: "Health & Wellness Care",
+    healthTag: "Pure Siddha & Ayurvedic Care",
+    healthDesc: "Boost your daily vital energy with authentic herbal health powders and traditional wellness supplements.",
+    
+    babyTitle: "Gentle Baby Care",
+    babyTag: "Gentle & Pure Herbal Care",
+    babyDesc: "Nurture your little ones with 100% natural, mild herbal bath powders and gentle baby care remedies.",
+    
+    poojasTitle: "Divine Pooja Essentials",
+    poojasTag: "Traditional Sacred Aromas",
+    poojasDesc: "Elevate your spiritual ambiance with pure natural lamp oils, herbal incenses, and sacred pooja essentials.",
+    
+    beveragesTitle: "Herbal Teas & Beverages",
+    beveragesTag: "Refreshing Natural Drinks",
+    beveragesDesc: "Revitalize your body with traditional herbal teas, natural concoctions, and refreshing wellness drinks.",
     labTested: "Quality Assured",
     freeDelivery: "Secure Delivery",
     taxInclusive: "Inclusive of all taxes",
@@ -204,6 +235,37 @@ const UI_TRANSLATIONS = {
     descriptionLabel: "விளக்கம்",
     relatedProducts: "நீங்கள் விரும்பக்கூடியவை",
     naturalTag: "தூய்மையான & இயற்கை",
+    hairCareTitle: "கூந்தல் பராமரிப்பு தொகுப்பு",
+    hairCareTag: "100% இயற்கை கூந்தல் பராமரிப்பு",
+    hairCareDesc: "வலுவான, பளபளப்பான மற்றும் ஆரோக்கியமான கூந்தலுக்கு பாரம்பரிய மூலிகை எண்ணெய், இயற்கை ஷாம்பு மற்றும் மூலிகை பராமரிப்பு தயாரிப்புகள்.",
+    
+    skinCareTitle: "சரும பராமரிப்பு தொகுப்பு",
+    skinCareTag: "தூய்மையான சரும பராமரிப்பு",
+    skinCareDesc: "இயற்கை மூலிகை ஃபேஸ் பேக் மற்றும் சோற்றுக் கற்றாழை மூலம் உங்கள் சருமத்தை பொலிவாக வைத்துக் கொள்ளுங்கள்.",
+    
+    bodyCareTitle: "குளியல் & உடல் பராமரிப்பு",
+    bodyCareTag: "100% மூலிகை உடல் பராமரிப்பு",
+    bodyCareDesc: "பாரம்பரிய மூலிகை சோப்புகள் மற்றும் இயற்கை குளியல் பொடிகள் மூலம் உங்கள் உடலை பராமரியுங்கள்.",
+    
+    foodTitle: "பாரம்பரிய உணவு & ஊறுகாய்",
+    foodTag: "உண்மையான பாரம்பரிய சுவை",
+    foodDesc: "சுவையான பிரண்டைகாய் ஊறுகாய், பாரம்பரிய மசாலாக்கள் மற்றும் சத்தான இயற்கை உணவுகள்.",
+    
+    healthTitle: "சுகாதாரம் & ஆரோக்கிய கவனிப்பு",
+    healthTag: "சித்த & ஆயுர்வேத ஆரோக்கியம்",
+    healthDesc: "பாரம்பரிய சத்து மாவு மற்றும் மூலிகை சூரணங்கள் மூலம் உங்கள் உடலின் நோய் எதிர்ப்பு சக்தியை அதிகரிக்கவும்.",
+    
+    babyTitle: "குழந்தை பராமரிப்பு",
+    babyTag: "மென்மையான மூலிகை கவனிப்பு",
+    babyDesc: "100% இயற்கை நலங்கு மாவு மற்றும் மென்மையான மூலிகை தயாரிப்புகள் மூலம் உங்கள் குழந்தைகளை பராமரியுங்கள்.",
+    
+    poojasTitle: "பூஜை பொருட்கள்",
+    poojasTag: "பாரம்பரிய ஆன்மீக நறுமணம்",
+    poojasDesc: "தூய்மையான பஞ்ச தீப எண்ணெய் மற்றும் மூலிகை பூஜை பொருட்கள் மூலம் உங்கள் வீட்டை ஆன்மீக நறுமணத்தால் நிரப்புங்கள்.",
+    
+    beveragesTitle: "மூலிகை பானங்கள் & டீ",
+    beveragesTag: "புத்துணர்ச்சி தரும் இயற்கை பானங்கள்",
+    beveragesDesc: "பாரம்பரிய மூலிகை டீ மற்றும் ஆரோக்கிய பானங்கள் மூலம் உடலுக்கு புத்துணர்ச்சி அளிக்கவும்.",
     labTested: "தர உத்தரவாதம்",
     freeDelivery: "பாதுகாப்பான டெலிவரி",
     taxInclusive: "வரிகள் உட்பட",
