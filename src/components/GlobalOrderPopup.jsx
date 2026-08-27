@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Package, Truck, CheckCircle, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { API_BASE_URL } from '../services/api';
+import { API_BASE_URL, getMyOrdersUrl } from '../services/api';
 import './GlobalOrderPopup.css';
 
 export default function GlobalOrderPopup() {
@@ -32,13 +32,19 @@ export default function GlobalOrderPopup() {
           ['staff', 'store', 'store_member'].includes(type2);
         const roleParam = isStaff ? 'staff' : 'customer';
 
-        const response = await fetch(`${API_BASE_URL}/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+        let response = await fetch(getMyOrdersUrl(actualUser.id), {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
 
+        if (!response.ok) {
+          response = await fetch(`${API_BASE_URL}/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+          });
+        }
+
         if (response.ok) {
           const data = await response.json();
-          let fetchedOrders = Array.isArray(data) ? data : (data.results || data.value || []);
+          let fetchedOrders = Array.isArray(data) ? data : (data.orders || data.results || data.value || []);
 
           if (fetchedOrders.length > 0) {
             // Sort by date descending

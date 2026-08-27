@@ -7,7 +7,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
 import UsageCalendar from '../components/UsageCalendar';
-import { API_BASE_URL } from '../services/api';
+import { API_BASE_URL, getMyOrdersUrl } from '../services/api';
 import './Profile.css';
 
 const INDIAN_STATES = [
@@ -80,14 +80,23 @@ export default function Profile() {
             ['staff', 'store', 'store_member'].includes(type2);
           const roleParam = isStaff ? 'staff' : 'customer';
 
-          fetch(`${API_BASE_URL}/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+          fetch(getMyOrdersUrl(actualUser.id), {
             headers: { 'ngrok-skip-browser-warning': 'true' }
           })
-            .then(res => res.json())
+            .then(res => {
+              if (!res.ok) {
+                return fetch(`${API_BASE_URL}/orders/?user_id=${actualUser.id}&role=${roleParam}`, {
+                  headers: { 'ngrok-skip-browser-warning': 'true' }
+                }).then(r => r.json());
+              }
+              return res.json();
+            })
             .then(async (data) => {
               let fetchedOrders = [];
               if (Array.isArray(data)) {
                 fetchedOrders = data;
+              } else if (data && Array.isArray(data.orders)) {
+                fetchedOrders = data.orders;
               } else if (data && Array.isArray(data.results)) {
                 fetchedOrders = data.results;
               } else if (data && Array.isArray(data.value)) {
