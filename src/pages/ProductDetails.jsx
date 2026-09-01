@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ProductCard } from './Shop';
-import { ShoppingCart, ShieldCheck, Leaf, Truck, ChevronDown, ChevronUp, Share2, MessageCircle, Camera, Copy, Check, Package, Plus, Star, MessageSquare, FileText, CheckCircle } from 'lucide-react';
+import { ShoppingCart, ShieldCheck, Leaf, Truck, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Share2, MessageCircle, Camera, Copy, Check, Package, Plus, Star, MessageSquare, FileText, CheckCircle } from 'lucide-react';
 import imgLifestyle from '../assets/herbal_lifestyle.png';
 import imgIngredients from '../assets/herbal_ingredients.png';
 import imgTexture from '../assets/herbal_texture.png';
@@ -16,11 +16,22 @@ export default function ProductDetails() {
   const { products, loading } = useProducts();
   const sliderRef = useRef(null);
   const trackRef = useRef(null);
+  const thumbRefs = useRef([]);
   const [reviews, setReviews] = useState([]);
   const [reviewSummary, setReviewSummary] = useState(null);
   const [reviewText, setReviewText] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    if (thumbRefs.current[currentImgIndex]) {
+      thumbRefs.current[currentImgIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [currentImgIndex]);
 
   useEffect(() => {
     const fetchReviewsAndSummary = async () => {
@@ -439,22 +450,47 @@ export default function ProductDetails() {
     setShowShareMenu(false);
   };
 
-  const handleScroll = (e) => {
-    if (!e.target) return;
-    const index = Math.round(e.target.scrollLeft / e.target.clientWidth);
-    if (index !== currentImgIndex) {
-      setCurrentImgIndex(index);
-    }
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
   };
 
-  const scrollToSlide = (index) => {
-    setCurrentImgIndex(index);
-    if (trackRef.current) {
-      trackRef.current.scrollTo({
-        left: index * trackRef.current.clientWidth,
-        behavior: 'smooth'
-      });
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 40;
+    if (diff > threshold) {
+      // Swiped left -> Next image
+      const nextIdx = (currentImgIndex + 1) % mediaItems.length;
+      setCurrentImgIndex(nextIdx);
+    } else if (diff < -threshold) {
+      // Swiped right -> Previous image
+      const nextIdx = (currentImgIndex - 1 + mediaItems.length) % mediaItems.length;
+      setCurrentImgIndex(nextIdx);
     }
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
+  const isFirstSlide = currentImgIndex === 0;
+  const isLastSlide = currentImgIndex === mediaItems.length - 1;
+
+  const handlePrevSlide = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (isFirstSlide) return;
+    setCurrentImgIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleNextSlide = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (isLastSlide) return;
+    setCurrentImgIndex((prev) => Math.min(mediaItems.length - 1, prev + 1));
   };
 
   return (
@@ -462,8 +498,6 @@ export default function ProductDetails() {
       {/* Breadcrumbs */}
       <div className="pd-breadcrumbs">
         <Link to="/">{t('home')}</Link>
-        <span className="separator">/</span>
-        <Link to="/shop">{t('shopAll')}</Link>
         <span className="separator">/</span>
         <span className="current">{translatedName}</span>
       </div>
@@ -473,14 +507,44 @@ export default function ProductDetails() {
         <div className="pd-pro-gallery">
 
           {/* Main Media Container */}
-          <div className="pd-pro-main-image-container">
+          <div 
+            className="pd-pro-main-image-container"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {mediaItems.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  className={`pd-gallery-arrow pd-gallery-arrow-prev ${isFirstSlide ? 'disabled' : ''}`}
+                  onClick={handlePrevSlide}
+                  disabled={isFirstSlide}
+                  aria-label="Previous Image"
+                >
+                  <ChevronLeft size={22} />
+                </button>
+                <button
+                  type="button"
+                  className={`pd-gallery-arrow pd-gallery-arrow-next ${isLastSlide ? 'disabled' : ''}`}
+                  onClick={handleNextSlide}
+                  disabled={isLastSlide}
+                  aria-label="Next Image"
+                >
+                  <ChevronRight size={22} />
+                </button>
+              </>
+            )}
+
             <div
               className="pd-pro-image-track"
               ref={trackRef}
-              onScroll={handleScroll}
             >
               {mediaItems.map((media, idx) => (
-                <div key={idx} className="pd-pro-main-image-wrapper">
+                <div 
+                  key={idx} 
+                  className={`pd-pro-main-image-wrapper ${currentImgIndex === idx ? 'active' : ''}`}
+                >
                   {media.type === '3d' ? (
                     <model-viewer
                       src={media.src}
@@ -489,7 +553,7 @@ export default function ProductDetails() {
                       camera-controls
                       shadow-intensity="1"
                       environment-image="neutral"
-                      style={{ width: '100%', height: '100%', minHeight: '300px', backgroundColor: '#f9fafb', borderRadius: '24px' }}
+                      style={{ width: '100%', height: '100%', minHeight: '300px', backgroundColor: '#f9fafb', borderRadius: '4px' }}
                     ></model-viewer>
                   ) : (
                     <img
@@ -512,19 +576,6 @@ export default function ProductDetails() {
                 </div>
               ))}
             </div>
-
-            {/* Dots for mobile */}
-            {mediaItems.length > 1 && (
-              <div className="pd-pro-dots">
-                {mediaItems.map((_, idx) => (
-                  <span
-                    key={idx}
-                    className={`pd-pro-dot ${currentImgIndex === idx ? 'active' : ''}`}
-                    onClick={() => scrollToSlide(idx)}
-                  />
-                ))}
-              </div>
-            )}
 
             {product.badge && currentMedia && currentMedia.type !== '3d' && (
               <div className={`pro-badge badge-${product.badgeColor}`}>
@@ -550,8 +601,9 @@ export default function ProductDetails() {
               {mediaItems.map((media, idx) => (
                 <div
                   key={idx}
+                  ref={(el) => (thumbRefs.current[idx] = el)}
                   className={`pd-pro-thumb ${currentImgIndex === idx ? 'active' : ''}`}
-                  onClick={() => scrollToSlide(idx)}
+                  onClick={() => setCurrentImgIndex(idx)}
                 >
                   <img
                     src={media.thumb}

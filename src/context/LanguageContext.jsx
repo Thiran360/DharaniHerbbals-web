@@ -3,7 +3,7 @@ import { API_BASE_URL } from '../services/api';
 
 const LanguageContext = createContext();
 
-const BASE_TRANSLATE_URL = `${API_BASE_URL}/herbal`;
+const BASE_TRANSLATE_URL = API_BASE_URL;
 
 const UI_TRANSLATIONS = {
   en: {

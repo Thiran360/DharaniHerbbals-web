@@ -2,8 +2,8 @@
 
 /* Navbar.css - Ultra Modern UI */
 :root {
-  --nav-height: 84px;
-  --nav-height-scrolled: 70px;
+  --nav-height: 68px;
+  --nav-height-scrolled: 58px;
   --primary-color: #10b981; /* Modern Emerald Green */
   --text-dark: #0f172a;
   --text-muted: #64748b;
@@ -21,7 +21,7 @@
   width: 100%;
   z-index: 1000;
   transition: var(--transition-smooth);
-  padding: 12px 24px;
+  padding: 8px 20px;
   pointer-events: none;
   font-family: 'Outfit', system-ui, sans-serif;
 }
@@ -32,11 +32,11 @@
   height: var(--nav-height);
   background: var(--bg-glass);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 24px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 20px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: auto;
@@ -46,7 +46,7 @@
 
 /* Scrolled State */
 .navbar-ultra.scrolled {
-  padding: 8px 16px;
+  padding: 6px 16px;
 }
 .navbar-ultra.scrolled .navbar-container {
   height: var(--nav-height-scrolled);
@@ -618,25 +618,26 @@
 /* Responsive */
 @media (max-width: 1050px) {
   .navbar-ultra {
-    padding: 12px 16px;
+    padding: 6px 12px;
   }
 
   .navbar-container {
     border-radius: 12px;
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
     align-items: center;
-    padding: 0 14px;
+    padding: 0 10px;
+    height: 52px;
   }
 
   .navbar-ultra.scrolled {
-    padding: 12px 16px;
+    padding: 6px 12px;
   }
 
   .navbar-ultra.scrolled .navbar-container {
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.6);
-    height: var(--nav-height);
+    height: 52px;
   }
 
   .nav-links-center {
@@ -645,6 +646,8 @@
   
   .mobile-menu-btn {
     display: flex;
+    width: 36px;
+    height: 36px;
   }
 
   .nav-brand-container {
@@ -663,23 +666,23 @@
     justify-content: center;
     align-items: center;
     gap: 5px;
-    height: 74px;
+    height: 48px;
     max-width: 100%;
   }
 
   .brand-text-line1, .brand-text-line2 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .navbar-ultra.scrolled .brand-text-line1,
   .navbar-ultra.scrolled .brand-text-line2 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .brand-logo-video-wrap--nav,
   .navbar-ultra.scrolled .brand-logo-video-wrap--nav {
-    width: 38px;
-      height: 32px;
+    width: 32px;
+    height: 26px;
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -691,7 +694,7 @@
     grid-column: 3;
     justify-content: flex-end;
     flex: none;
-    width: 44px;
+    width: 40px;
   }
   
   .action-capsule {
@@ -712,7 +715,7 @@
 
   .mobile-search-row {
     display: block;
-    padding: 4px 16px 12px 16px;
+    padding: 2px 12px 6px 12px;
     width: 100%;
   }
 
@@ -720,8 +723,8 @@
     display: flex;
     align-items: center;
     background: white;
-    border-radius: 12px;
-    padding: 10px 20px;
+    border-radius: 10px;
+    padding: 6px 14px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(0,0,0,0.04);
     transition: all 0.3s ease;
     position: relative;
@@ -733,7 +736,7 @@
 
   .mobile-search-bar .search-icon {
     color: #16a34a;
-    margin-right: 12px;
+    margin-right: 10px;
   }
 
   .mobile-search-bar .search-input {
@@ -741,7 +744,7 @@
     background: transparent;
     outline: none;
     width: 100%;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     color: var(--text-dark);
   }

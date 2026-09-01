@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, memo } from 'react';
-import { useNavigate, useSearchParams, useNavigationType } from 'react-router-dom';
+import { useNavigate, useSearchParams, useNavigationType, Link } from 'react-router-dom';
 import { ShoppingCart, Star, SlidersHorizontal, Heart, Plus, Clock, ShoppingBag, Leaf, Sparkles, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -18,6 +18,35 @@ import imgPoojas from '../assets/pooja_oil_transparent_v2.png';
 import imgBeverages from '../assets/beverage_transparent.png';
 import imgAll from '../assets/shopall.png';
 import './Shop.css';
+
+const getCategoryBullets = (catKey, language) => {
+  if (language === 'ta') {
+    return '• 100% இயற்கை மூலிகை • பாரம்பரிய தயாரிப்பு • தூய்மையான தரம்';
+  }
+  switch (catKey) {
+    case 'hair':
+    case 'hair care':
+      return '• High Performance • 100% Natural • Root Nourishing';
+    case 'skin':
+    case 'skin care':
+      return '• Pure Herbs • Radiant Glow • Chemical Free';
+    case 'body':
+      return '• Handcrafted Soaps • Organic Herbs • Refreshing Bath';
+    case 'food':
+      return '• Authentic Recipe • Traditional Taste • 100% Pure';
+    case 'health':
+    case 'health & wellness':
+      return '• Pure Siddha • Daily Vitality • Herbal Nutrition';
+    case 'baby':
+      return '• Extra Gentle • 100% Pure Herbs • Hypoallergenic';
+    case 'poojas':
+      return '• Sacred Aromas • Pure Lamp Oils • Divine Ambience';
+    case 'beverages':
+      return '• Natural Herbal Teas • Immunity Boost • Zero Sugar';
+    default:
+      return '• High performance • Natural • Sustainable';
+  }
+};
 
 const CATEGORY_HERO_CONFIG = {
   hair: {
@@ -478,12 +507,13 @@ export default function Shop() {
 
 
   const currentCategoryKey = (activeCategory || '').trim().toLowerCase();
+  const catConfig = CATEGORY_HERO_CONFIG[currentCategoryKey] || CATEGORY_HERO_CONFIG['all'];
   const isHairCategory = currentCategoryKey === 'hair' || currentCategoryKey === 'hair care';
 
-  const heroTagText = isHairCategory ? t('hairCareTag') : t('herbalTag');
-  const heroSubText = isHairCategory ? t('hairCareDesc') : t('handcraftedWellness');
-  const heroTitleText = isHairCategory ? t('hairCareTitle') : (activeCategory === 'All' ? t('Explore Our Products') : translatedHeroCat);
-  const heroBgImg = isHairCategory ? hairBannerImg : null;
+  const heroTagText = isHairCategory ? t('hairCareTag') : (t(catConfig.tagKey) || catConfig.defaultTag);
+  const heroSubText = isHairCategory ? t('hairCareDesc') : (t(catConfig.subKey) || catConfig.defaultSub);
+  const heroTitleText = isHairCategory ? t('hairCareTitle') : (activeCategory === 'All' ? t('Explore Our Products') : (translatedHeroCat || catConfig.defaultTitle));
+  const heroBgImg = isHairCategory ? hairBannerImg : (catConfig.bgImage || imgAll);
 
   return (
     <div className="shop-root">
@@ -494,31 +524,52 @@ export default function Shop() {
         setSelectedFilters={setSelectedFilters}
       />
 
-      {/* ── Hero Banner ── */}
-      <div className={`shop-hero ${isHairCategory ? 'shop-hero-hair' : ''}`}>
-        <div className="shop-hero-bg" />
+      {/* ── Mobile Category Header (Rendered ONLY on mobile when a category is selected) ── */}
+      {activeCategory && activeCategory !== 'All' && (
+        <div className="shop-category-header mobile-only-cat-header">
+          <div className="shop-category-breadcrumbs">
+            <Link to="/">{t('home')}</Link>
+            <span className="crumb-sep">›</span>
+            <span className="crumb-current">{translatedHeroCat || catConfig.defaultTitle}</span>
+          </div>
 
+          <h1 className="shop-category-title">{translatedHeroCat || catConfig.defaultTitle}</h1>
+
+          <div className="shop-category-bullets">
+            {getCategoryBullets(currentCategoryKey, language)}
+          </div>
+
+          <p className="shop-category-count">
+            {filteredProducts.length} {filteredProducts.length === 1 ? (t('itemInCollection') || 'product') : (t('itemsInCollection') || 'products')}
+          </p>
+        </div>
+      )}
+
+      {/* ── Hero Banner: Always shown on desktop with image; on mobile shown only when activeCategory === 'All' ── */}
+      <div className={`shop-hero ${activeCategory && activeCategory !== 'All' ? 'shop-hero-desktop-only' : ''} ${isHairCategory ? 'shop-hero-hair' : ''}`}>
         <div className="shop-hero-container">
           <div className="shop-hero-content">
-            <span className="shop-hero-tag"><Leaf size={16} /> {heroTagText}</span>
+            <span className="shop-hero-tag"><Leaf size={14} /> {heroTagText}</span>
             <h1 className="shop-hero-title">
               <span>{heroTitleText}</span>
             </h1>
             <p className="shop-hero-sub">
               {heroSubText}
             </p>
+
             <div className="shop-hero-actions">
               <button className="shop-btn-primary" onClick={() => {
-                document.querySelector('.shop-body').scrollIntoView({ behavior: 'smooth' });
-              }}>Shop Now <ArrowRight size={18} /></button>
+                const target = document.querySelector('.shop-body');
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+              }}>{language === 'ta' ? 'இப்போதே வாங்குங்கள்' : 'Shop Now'} <ArrowRight size={16} /></button>
             </div>
           </div>
 
-          {heroBgImg && (
-            <div className="shop-hero-right-visual">
+          <div className="shop-hero-right-visual">
+            <div className="shop-hero-visual-card">
               <img src={heroBgImg} alt={heroTitleText} className="shop-hero-right-img" />
             </div>
-          )}
+          </div>
         </div>
       </div>
 
