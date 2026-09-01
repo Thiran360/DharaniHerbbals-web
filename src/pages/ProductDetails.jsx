@@ -23,15 +23,6 @@ export default function ProductDetails() {
   const [reviewRating, setReviewRating] = useState(5);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  useEffect(() => {
-    if (thumbRefs.current[currentImgIndex]) {
-      thumbRefs.current[currentImgIndex].scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
-      });
-    }
-  }, [currentImgIndex]);
 
   useEffect(() => {
     const fetchReviewsAndSummary = async () => {
@@ -136,6 +127,16 @@ export default function ProductDetails() {
   const product = products.find(p => p.id === parseInt(id));
 
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
+
+  useEffect(() => {
+    if (thumbRefs.current && thumbRefs.current[currentImgIndex]) {
+      thumbRefs.current[currentImgIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [currentImgIndex]);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [crmGalleryImages, setCrmGalleryImages] = useState([]);
