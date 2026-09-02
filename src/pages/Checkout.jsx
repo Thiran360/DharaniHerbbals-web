@@ -844,51 +844,76 @@ export default function Checkout() {
               {activeStep === 2 ? (
                 <div className="step-card-body fade-in-up" style={{ marginTop: '20px' }}>
                   {checkoutView === 'selected' && savedAddresses.length > 0 && (
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
-                      <button type="button" className="btn-add-address-sm" onClick={() => setCheckoutView('list')} style={{ background: '#f1f5f9', color: '#111827', border: '1px solid rgba(0,0,0,0.1)' }}>
-                        Change Address
-                      </button>
-                    </div>
-                  )}
-                  {checkoutView === 'list' && (
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
-                      <button type="button" className="btn-add-address-sm" onClick={() => {
-                        setCheckoutView('form');
-                        setShowFullAddressForm(false);
-                        setIsManualEntry(false);
-                        setFormData({ id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false });
-                      }}>
-                        <Plus size={16} /> New Address
-                      </button>
-                    </div>
-                  )}
-
-                  {checkoutView === 'selected' && savedAddresses.length > 0 && (
                     <>
-                      <div className="saved-addresses-grid" style={{ marginBottom: 0 }}>
+                      <div className="shipping-selected-container">
                         {savedAddresses.filter(a => a.id === selectedAddressId).map(addr => (
-                          <div key={addr.id} className="saved-address-card selected" style={{ border: '2px solid #16A34A', background: '#F0FDF4', padding: '20px', borderRadius: '12px' }}>
-                            <div className="address-card-header">
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#111827' }}>{addr.full_name}</h4>
-                                <CheckCircle size={20} color="#16A34A" />
+                          <div key={addr.id} className="shipping-hero-card">
+                            {/* Card Top Header: Status Tag & Change Button */}
+                            <div className="shipping-hero-top">
+                              <div className="shipping-hero-tag">
+                                <span className="shipping-status-dot"></span>
+                                <span>Deliver to</span>
+                              </div>
+                              <button
+                                type="button"
+                                className="shipping-hero-change-btn"
+                                onClick={() => setCheckoutView('list')}
+                              >
+                                <Edit2 size={13} />
+                                <span>Change Address</span>
+                              </button>
+                            </div>
+
+                            {/* Recipient Info */}
+                            <div className="shipping-hero-recipient">
+                              <div className="shipping-recipient-avatar">
+                                {addr.full_name ? addr.full_name.charAt(0).toUpperCase() : 'U'}
+                              </div>
+                              <div className="shipping-recipient-details">
+                                <div className="shipping-name-row">
+                                  <h4 className="shipping-recipient-name">{addr.full_name}</h4>
+                                  <span className="shipping-verified-badge">
+                                    <CheckCircle size={13} /> Selected
+                                  </span>
+                                </div>
+                                <div className="shipping-phone-row">
+                                  <Phone size={13} className="shipping-icon-accent" />
+                                  <span>{addr.phone}</span>
+                                </div>
                               </div>
                             </div>
-                            <p style={{ margin: '12px 0 4px', fontWeight: '500', color: '#111827' }}>{addr.phone}</p>
-                            <p style={{ margin: '0', color: '#6B7280' }}>{addr.address}</p>
-                            <p style={{ margin: '4px 0 0', color: '#6B7280' }}>{addr.city}, {addr.state} - {addr.pincode}</p>
+
+                            {/* Address Details with map pin */}
+                            <div className="shipping-address-block">
+                              <div className="shipping-pin-badge">
+                                <MapPin size={16} />
+                              </div>
+                              <div className="shipping-address-text-wrap">
+                                {addr.address && <p className="shipping-street-text">{addr.address}</p>}
+                                <p className="shipping-region-text">
+                                  {[addr.city, addr.state].filter(Boolean).join(', ')}
+                                  {addr.pincode ? ` - ${addr.pincode}` : ''}
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                        <button type="button" className="btn-place-order" onClick={() => {
-                          if (!selectedAddressId) {
-                            setError("Please select a shipping address.");
-                            return;
-                          }
-                          setActiveStep(3);
-                          setError(null);
-                        }} style={{ marginTop: '20px', width: 'auto', padding: '14px 24px', fontSize: '1.05rem' }}>
+
+                      <div className="shipping-action-row" style={{ marginTop: '20px' }}>
+                        <button
+                          type="button"
+                          className="btn-place-order"
+                          onClick={() => {
+                            if (!selectedAddressId) {
+                              setError("Please select a shipping address.");
+                              return;
+                            }
+                            setActiveStep(3);
+                            setError(null);
+                          }}
+                          style={{ width: 'auto', padding: '14px 28px', fontSize: '1.05rem' }}
+                        >
                           Continue to Payment
                         </button>
                       </div>
@@ -896,27 +921,92 @@ export default function Checkout() {
                   )}
 
                   {checkoutView === 'list' && (
-                    <div className="saved-addresses-grid">
-                      {savedAddresses.map(addr => (
-                        <div key={addr.id} className={`saved-address-card ${selectedAddressId === addr.id ? 'selected' : ''}`} onClick={() => handleSelectAddress(addr)} style={{ border: selectedAddressId === addr.id ? '2px solid #16A34A' : '1px solid rgba(0,0,0,0.1)', background: selectedAddressId === addr.id ? '#F0FDF4' : '#fff', padding: '16px', borderRadius: '12px', cursor: 'pointer' }}>
-                          <div className="address-card-header">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <h4 style={{ margin: 0, fontSize: '1.05rem', color: '#111827' }}>{addr.full_name}</h4>
-                              {selectedAddressId === addr.id && <CheckCircle size={20} color="#16A34A" />}
+                    <div className="shipping-list-container">
+                      <div className="shipping-list-header">
+                        <span className="shipping-list-count">Saved Addresses ({savedAddresses.length})</span>
+                        <button
+                          type="button"
+                          className="btn-add-new-address"
+                          onClick={() => {
+                            setCheckoutView('form');
+                            setShowFullAddressForm(false);
+                            setIsManualEntry(false);
+                            setFormData({ id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false });
+                          }}
+                        >
+                          <Plus size={16} /> New Address
+                        </button>
+                      </div>
+
+                      <div className="saved-addresses-grid">
+                        {savedAddresses.map(addr => {
+                          const isSelected = selectedAddressId === addr.id;
+                          return (
+                            <div
+                              key={addr.id}
+                              className={`modern-address-card ${isSelected ? 'selected' : ''}`}
+                              onClick={() => handleSelectAddress(addr)}
+                            >
+                              <div className="address-card-selection-indicator">
+                                <div className={`custom-radio ${isSelected ? 'checked' : ''}`}>
+                                  {isSelected && <div className="radio-inner-dot" />}
+                                </div>
+                              </div>
+
+                              <div className="address-card-main">
+                                <div className="address-card-header">
+                                  <div className="address-card-name-group">
+                                    <h4 className="address-person-name">{addr.full_name}</h4>
+                                    {isSelected && <span className="pill-selected">Selected</span>}
+                                  </div>
+                                  <div className="address-card-actions" onClick={(e) => e.stopPropagation()}>
+                                    <button
+                                      type="button"
+                                      className="icon-action-btn edit-icon"
+                                      title="Edit Address"
+                                      onClick={(e) => handleEditAddress(e, addr)}
+                                    >
+                                      <Edit2 size={15} />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="icon-action-btn delete-icon"
+                                      title="Delete Address"
+                                      onClick={(e) => { e.stopPropagation(); setAddressToDelete(addr.id); }}
+                                    >
+                                      <Trash2 size={15} />
+                                    </button>
+                                  </div>
+                                </div>
+
+                                <div className="address-phone-row">
+                                  <Phone size={13} />
+                                  <span>{addr.phone}</span>
+                                </div>
+
+                                <div className="address-location-row">
+                                  <MapPin size={14} className="addr-pin" />
+                                  <div>
+                                    {addr.address && <p className="addr-street">{addr.address}</p>}
+                                    <p className="addr-region">
+                                      {[addr.city, addr.state].filter(Boolean).join(', ')}
+                                      {addr.pincode ? ` - ${addr.pincode}` : ''}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div className="address-card-actions">
-                              <button type="button" className="icon-action-btn edit-icon" onClick={(e) => handleEditAddress(e, addr)}><Edit2 size={16} /></button>
-                              <button type="button" className="icon-action-btn delete-icon" onClick={(e) => { e.stopPropagation(); setAddressToDelete(addr.id); }}><Trash2 size={16} /></button>
-                            </div>
-                          </div>
-                          <p style={{ margin: '8px 0 4px', fontWeight: '500', color: '#111827' }}>{addr.phone}</p>
-                          <p style={{ margin: '0', color: '#6B7280' }}>{addr.address}</p>
-                          <p style={{ margin: '4px 0 0', color: '#6B7280' }}>{addr.city}, {addr.state} - {addr.pincode}</p>
-                        </div>
-                      ))}
+                          );
+                        })}
+                      </div>
+
                       {savedAddresses.length > 0 && (
-                        <button type="button" className="btn-back-to-addresses" onClick={() => setCheckoutView('selected')} style={{ marginTop: '16px', background: 'transparent', border: 'none', color: '#6B7280', textDecoration: 'underline' }}>
-                          Cancel
+                        <button
+                          type="button"
+                          className="btn-cancel-address-list"
+                          onClick={() => setCheckoutView('selected')}
+                        >
+                          <ArrowLeft size={16} /> Back to selected address
                         </button>
                       )}
                     </div>
@@ -1019,9 +1109,16 @@ export default function Checkout() {
               ) : (
                 <div className="step-card-summary">
                   {savedAddresses.filter(a => a.id === selectedAddressId).map(addr => (
-                    <div key={addr.id} style={{ color: '#6B7280' }}>
-                      <p style={{ margin: 0 }}>{addr.address}</p>
-                      <p style={{ margin: '4px 0 0' }}>{addr.city}, {addr.state} - {addr.pincode}</p>
+                    <div key={addr.id} className="shipping-summary-chip">
+                      <div className="shipping-summary-icon">
+                        <MapPin size={15} />
+                      </div>
+                      <div className="shipping-summary-content">
+                        <span className="shipping-summary-name">{addr.full_name} • {addr.phone}</span>
+                        <span className="shipping-summary-address">
+                          {addr.address ? `${addr.address}, ` : ''}{[addr.city, addr.state].filter(Boolean).join(', ')}{addr.pincode ? ` - ${addr.pincode}` : ''}
+                        </span>
+                      </div>
                     </div>
                   ))}
                   {(!selectedAddressId || savedAddresses.length === 0) && <p style={{ margin: 0, color: '#9CA3AF' }}>No address selected</p>}

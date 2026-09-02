@@ -651,7 +651,7 @@
   }
 
   .shop-category-header {
-    padding: 95px 16px 18px 16px;
+    padding: 175px 16px 20px 16px;
   }
 
   .shop-category-breadcrumbs {
@@ -701,6 +701,7 @@
 @media (min-width: 992px) {
   .shop-hero {
     align-items: center;
+    background-color: #8db632;
     background-image: 
       linear-gradient(to right, rgba(12, 45, 15, 0.78) 0%, rgba(12, 45, 15, 0.38) 45%, transparent 72%),
       url('../assets/shop_hero_desktop.jpg');
@@ -718,8 +719,6 @@
     padding: 13px 28px;
   }
 }
-
-
 
 .shop-hero-container {
   position: relative;
@@ -750,44 +749,13 @@
   text-align: left;
 }
 
-@media (max-width: 991px) {
-  .shop-hero-hair {
-    background-image: 
-      linear-gradient(to bottom, rgba(10, 51, 24, 0.85) 0%, rgba(10, 51, 24, 0.6) 60%, rgba(10, 51, 24, 0.95) 100%),
-      url('../assets/hair_banner.png') !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-  }
-
-  .shop-hero-hair .shop-hero-right-visual {
-    display: none !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .shop-hero-hair {
-    background-image: none !important;
-  }
+/* Category Hero Banner (When a category is active on desktop) */
+.shop-hero.shop-hero-category {
+  min-height: 540px;
 }
 
 .shop-hero-right-visual {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
-}
-
-@media (min-width: 992px) {
-  .shop-hero-right-visual {
-    flex: 2;
-    max-width: 980px;
-    margin-top: 0;
-    justify-content: flex-end;
-    position: relative;
-    right: -100px;
-  }
+  display: none !important;
 }
 
 .shop-hero-visual-card {
@@ -804,15 +772,13 @@
 
 .shop-hero-right-img {
   width: 100%;
-  max-width: 950px;
+  max-width: 650px;
   height: auto;
-  max-height: 720px;
+  max-height: 480px;
   object-fit: contain;
   display: block;
-  opacity: 0.85;
-  filter: brightness(0.85) contrast(0.95) drop-shadow(0 30px 50px rgba(0, 0, 0, 0.4));
-  transform: scale(1.55);
-  transform-origin: center right;
+  opacity: 1;
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.25));
   transition: all 0.3s ease;
 }
 
@@ -1592,8 +1558,8 @@
 
   .shop-hero {
     position: relative;
-    min-height: 560px;
-    padding: 135px 18px 28px 18px;
+    min-height: 580px;
+    padding: 185px 18px 28px 18px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -1605,7 +1571,7 @@
       linear-gradient(180deg, rgba(10, 38, 14, 0.72) 0%, rgba(10, 38, 14, 0.38) 32%, rgba(0, 0, 0, 0) 52%, rgba(8, 30, 12, 0.15) 100%),
       url('../assets/shop_hero_mobile.jpg');
     background-size: cover;
-    background-position: center center;
+    background-position: center 80%;
     background-repeat: no-repeat;
     box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.35);
     overflow: hidden;
@@ -1691,8 +1657,9 @@
 
 @media (max-width: 480px) {
   .shop-hero {
-    min-height: 550px;
-    padding: 130px 16px 26px 16px;
+    min-height: 570px;
+    padding: 180px 16px 26px 16px;
+    background-position: center 80%;
   }
 
   .shop-hero-title {

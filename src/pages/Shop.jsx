@@ -508,12 +508,11 @@ export default function Shop() {
 
   const currentCategoryKey = (activeCategory || '').trim().toLowerCase();
   const catConfig = CATEGORY_HERO_CONFIG[currentCategoryKey] || CATEGORY_HERO_CONFIG['all'];
-  const isHairCategory = currentCategoryKey === 'hair' || currentCategoryKey === 'hair care';
 
-  const heroTagText = isHairCategory ? t('hairCareTag') : (t(catConfig.tagKey) || catConfig.defaultTag);
-  const heroSubText = isHairCategory ? t('hairCareDesc') : (t(catConfig.subKey) || catConfig.defaultSub);
-  const heroTitleText = isHairCategory ? t('hairCareTitle') : (activeCategory === 'All' ? t('Explore Our Products') : (translatedHeroCat || catConfig.defaultTitle));
-  const heroBgImg = isHairCategory ? hairBannerImg : (catConfig.bgImage || imgAll);
+  const heroTagText = t(catConfig.tagKey) || catConfig.defaultTag;
+  const heroSubText = t(catConfig.subKey) || catConfig.defaultSub;
+  const heroTitleText = activeCategory === 'All' ? t('Explore Our Products') : (translatedHeroCat || catConfig.defaultTitle);
+  const heroBgImg = catConfig.bgImage || imgAll;
 
   return (
     <div className="shop-root">
@@ -546,7 +545,7 @@ export default function Shop() {
       )}
 
       {/* ── Hero Banner: Always shown on desktop with image; on mobile shown only when activeCategory === 'All' ── */}
-      <div className={`shop-hero ${activeCategory && activeCategory !== 'All' ? 'shop-hero-desktop-only' : ''} ${isHairCategory ? 'shop-hero-hair' : ''}`}>
+      <div className={`shop-hero ${activeCategory && activeCategory !== 'All' ? 'shop-hero-desktop-only shop-hero-category' : ''}`}>
         <div className="shop-hero-container">
           <div className="shop-hero-content">
             <span className="shop-hero-tag"><Leaf size={14} /> {heroTagText}</span>
