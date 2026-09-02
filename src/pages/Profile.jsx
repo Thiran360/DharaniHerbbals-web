@@ -326,7 +326,7 @@ export default function Profile() {
 
   // Fallback data if API doesn't return everything
   const user = userData.user || userData;
-  const name = user.name || 'Vedan Customer';
+  const name = user.name || 'Dharani Customer';
   const mobile = user.mobile || user.phone_number || '+91 00000 00000';
   const email = user.email || 'No email provided';
 
@@ -467,7 +467,7 @@ export default function Profile() {
                     style={{ marginTop: '20px', width: 'auto' }}
                     onClick={() => {
                       setProfileFormData({
-                        name: name !== 'Vedan Customer' ? name : '',
+                        name: (name !== 'Vedan Customer' && name !== 'Dharani Customer') ? name : '',
                         email: email !== 'No email provided' ? email : ''
                       });
                       setIsEditingProfile(true);

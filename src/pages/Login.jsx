@@ -227,7 +227,7 @@ export default function Login() {
           id: userObj.id || data.user_id || data.id || otpUserIdRef.current,
           phone_number: userObj.phone_number || userObj.mobile || mobileRef.current,
           mobile: userObj.mobile || userObj.phone_number || mobileRef.current,
-          name: userObj.name || data.name || (isStoreMemberRef.current ? 'Store Member' : 'Vedan Mart Customer'),
+          name: userObj.name || data.name || (isStoreMemberRef.current ? 'Store Member' : 'Dharani Customer'),
           is_store_member: userObj.is_store_member ?? data.is_store_member ?? isStoreMemberRef.current,
           role: userObj.role || data.role || (isStoreMemberRef.current ? 'store' : 'customer')
         };
@@ -282,9 +282,9 @@ export default function Login() {
 
         {/* Left Side (Image) - Hidden on Mobile */}
         <div className="login-modal-left">
-          <img src={heartImg} alt="Vedan Mart" className="desktop-hero-img" />
+          <img src={heartImg} alt="Dharani Herbbals" className="desktop-hero-img" />
           <div className="desktop-hero-overlay">
-            <div className="login-modal-brand"><h2>Vedan Mart</h2></div>
+            <div className="login-modal-brand"><h2>Dharani Herbbals</h2></div>
             <h1 className="login-modal-title">Experience The Goodness Of Nature</h1>
             <p className="login-modal-subtitle">
               Authentic Siddha formulations with carefully sourced herbs for your daily wellness.
@@ -294,13 +294,13 @@ export default function Login() {
 
         {/* Hero Image - Hidden on Desktop */}
         <div className="login-modal-hero">
-          <img src={heartImg} alt="Vedan Mart" className="login-hero-img" />
+          <img src={heartImg} alt="Dharani Herbbals" className="login-hero-img" />
         </div>
 
         {/* Right Side (White) */}
         <div className="login-modal-right">
           <div className="login-form-container">
-            <h2 className="welcome-text">Welcome To Vedan Mart!</h2>
+            <h2 className="welcome-text">Welcome To Dharani Herbbals!</h2>
 
             <form onSubmit={showOtp ? handleVerifyOtp : handleSendOtp}>
               {!showOtp ? (

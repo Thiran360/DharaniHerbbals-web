@@ -16,9 +16,9 @@ export default function PrivacyPolicy() {
       
       <div className="privacy-policy-content">
         <section className="policy-section">
-          <h2>1. About Vedan Mart</h2>
+          <h2>1. About Dharani Herbbals</h2>
           <p>
-            At Vedan Mart, we value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you visit our website or make a purchase.
+            At Dharani Herbbals, we value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you visit our website or make a purchase.
           </p>
         </section>
 
@@ -91,7 +91,7 @@ export default function PrivacyPolicy() {
 
         <section className="policy-section">
           <h2>4. Third-Party Disclosure</h2>
-          <p>Vedan Mart does <strong>not</strong> sell, rent, or trade your personal information.</p>
+          <p>Dharani Herbbals does <strong>not</strong> sell, rent, or trade your personal information.</p>
           <p>Your information may be shared only when necessary with trusted third parties such as:</p>
           <ul>
             <li>Authorized Payment Gateway Providers</li>
@@ -136,7 +136,7 @@ export default function PrivacyPolicy() {
 
         <section className="policy-section">
           <h2>7. Cookies Policy</h2>
-          <p>Vedan Mart uses cookies and similar technologies to improve your browsing experience and website functionality.</p>
+          <p>Dharani Herbbals uses cookies and similar technologies to improve your browsing experience and website functionality.</p>
           <p>Cookies are used to:</p>
           <ul>
             <li>Maintain secure login sessions.</li>
@@ -178,7 +178,7 @@ export default function PrivacyPolicy() {
 
         <section className="policy-section">
           <h2>10. Changes to this Privacy Policy</h2>
-          <p>Vedan Mart reserves the right to modify or update this Privacy Policy at any time.</p>
+          <p>Dharani Herbbals reserves the right to modify or update this Privacy Policy at any time.</p>
           <p>
             Any changes will be posted on this page together with the updated Effective Date. Continued use of the website after such changes constitutes your acceptance of the revised Privacy Policy.
           </p>
@@ -190,14 +190,14 @@ export default function PrivacyPolicy() {
             This Privacy Policy shall be governed by and interpreted in accordance with the laws of <strong>India</strong>, including the <strong>Digital Personal Data Protection Act, 2023</strong>, the <strong>Information Technology Act, 2000</strong>, and other applicable laws.
           </p>
           <p>
-            Any dispute arising out of or relating to this Privacy Policy shall be subject to the exclusive jurisdiction of the competent courts in the <strong>State of Tamil Nadu, India</strong>, where Vedan Mart carries on its principal business.
+            Any dispute arising out of or relating to this Privacy Policy shall be subject to the exclusive jurisdiction of the competent courts in the <strong>State of Tamil Nadu, India</strong>, where Dharani Herbbals carries on its principal business.
           </p>
         </section>
 
         <section className="policy-section">
           <h2>12. Refund Policy</h2>
           <p>
-            At Vedan Mart, customer satisfaction is important to us. Refunds or replacements will be considered only if the product received is damaged, defective, expired, or incorrect.
+            At Dharani Herbbals, customer satisfaction is important to us. Refunds or replacements will be considered only if the product received is damaged, defective, expired, or incorrect.
           </p>
           <p>
             Customers must notify us within 48 hours of receiving the product by providing relevant photographs or proof of purchase. Once the request is verified and approved, the refund will be processed to the original payment method within 7–10 business days, depending on the payment provider or bank.
@@ -210,7 +210,7 @@ export default function PrivacyPolicy() {
         <section className="policy-section">
           <h2>13. Shipping & Delivery Policy</h2>
           <p>
-            At Vedan Mart, we are committed to delivering your orders accurately, in good condition, and always on time.
+            At Dharani Herbbals, we are committed to delivering your orders accurately, in good condition, and always on time.
           </p>
           <ul>
             <li><strong>Order Processing Time:</strong> All orders are processed and dispatched within 1 to 2 business days (excluding Sundays and public holidays) after receiving your order confirmation email.</li>
@@ -239,9 +239,9 @@ export default function PrivacyPolicy() {
             <li><strong>Pricing:</strong> Prices are listed in INR and may be updated without prior notice.</li>
             <li><strong>Shipping & Delivery:</strong> Delivery timelines are estimates and may vary depending on your location and courier services.</li>
             <li><strong>Returns & Refunds:</strong> Returns and refunds are governed by our Return & Refund Policy.</li>
-            <li><strong>Intellectual Property:</strong> All website content, including text, images, logos, and designs, is the property of Vedan Mart and may not be copied or reproduced without permission.</li>
+            <li><strong>Intellectual Property:</strong> All website content, including text, images, logos, and designs, is the property of Dharani Herbbals and may not be copied or reproduced without permission.</li>
             <li><strong>User Responsibilities:</strong> Users agree to provide accurate information and use the website only for lawful purposes.</li>
-            <li><strong>Limitation of Liability:</strong> Vedan Mart is not responsible for delays, interruptions, or losses caused by circumstances beyond our control.</li>
+            <li><strong>Limitation of Liability:</strong> Dharani Herbbals is not responsible for delays, interruptions, or losses caused by circumstances beyond our control.</li>
             <li><strong>Privacy:</strong> Your personal information is collected and processed in accordance with our Privacy Policy.</li>
             <li><strong>Changes to Terms:</strong> We reserve the right to modify these Terms & Conditions at any time. Continued use of the website constitutes acceptance of the updated terms.</li>
           </ul>
@@ -251,7 +251,7 @@ export default function PrivacyPolicy() {
           <h2>16. Contact Us</h2>
           <p>If you have any questions, concerns, or requests regarding our policies or the handling of your personal information, please contact us:</p>
           <div className="contact-details">
-            <p><strong>Vedan Mart</strong></p>
+            <p><strong>Dharani Herbbals</strong></p>
             {/* Registered Office Address for Payment Gateway Approval */}
             <p><strong>Registered Office:</strong> 7/470, West Nehru Nagar, Punjai Puliampatti, Erode, Tamil Nadu, India - 638 459</p>
             <p><strong>Founder:</strong> A. Poonkodi</p>
@@ -264,7 +264,7 @@ export default function PrivacyPolicy() {
                 <span>+91 99655 32001</span>
               </div>
             </div>
-            <p><strong>Website:</strong> <a href="https://www.vedanmart.com" target="_blank" rel="noopener noreferrer">https://www.vedanmart.com</a></p>
+            <p><strong>Website:</strong> <a href="https://www.dharaniherbbals.in" target="_blank" rel="noopener noreferrer">https://www.dharaniherbbals.in</a></p>
           </div>
         </section>
       </div>

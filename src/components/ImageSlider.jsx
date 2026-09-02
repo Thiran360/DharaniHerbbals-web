@@ -1,5 +1,4 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import './ImageSlider.css';
@@ -231,14 +230,6 @@ const ImageSlider = function() {
           </div>
         );
       })}
-
-      {/* Navigation Arrows (Hidden on Mobile) */}
-      <button className="slider-arrow prev" onClick={prevSlide} aria-label="Previous Slide">
-        <ChevronLeft size={32} />
-      </button>
-      <button className="slider-arrow next" onClick={nextSlide} aria-label="Next Slide">
-        <ChevronRight size={32} />
-      </button>
 
       {/* Slider Dots */}
       <div className="slider-dots">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { MapPin, Phone, CheckCircle, ArrowLeft, Loader2, Plus, Navigation, Trash2, Edit2, ChevronDown, UserCircle, Check } from 'lucide-react';
+import { MapPin, Phone, CheckCircle, ArrowLeft, Loader2, Plus, Navigation, Trash2, Edit2, ChevronDown, UserCircle, Check, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
@@ -146,7 +146,7 @@ export default function Checkout() {
         setUser(userData);
 
         // Initialize guest info if available
-        if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.email?.includes('@guest.com')) {
+        if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.name === 'Dharani Customer' || userData.email?.includes('@guest.com')) {
           setGuestInfo({ name: '', email: '' });
         } else {
           setGuestInfo({ name: userData.name || '', email: userData.email || '' });
@@ -189,7 +189,7 @@ export default function Checkout() {
               setSelectedAddressId(loadedAddresses[0].id);
               setFormData(loadedAddresses[0]);
               setCheckoutView('selected');
-              if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.email?.includes('@guest.com')) {
+              if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.name === 'Dharani Customer' || userData.email?.includes('@guest.com')) {
                 setActiveStep(1);
               } else {
                 setActiveStep(2);
@@ -198,7 +198,7 @@ export default function Checkout() {
               setCheckoutView('form');
               setShowFullAddressForm(false);
               setIsManualEntry(false);
-              if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.email?.includes('@guest.com')) {
+              if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.name === 'Dharani Customer' || userData.email?.includes('@guest.com')) {
                 setActiveStep(1);
               } else {
                 setActiveStep(2);
@@ -277,7 +277,7 @@ export default function Checkout() {
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
 
-    if (formData.full_name === 'Guest User' || formData.full_name === 'Vedan Customer' || !formData.full_name) {
+    if (formData.full_name === 'Guest User' || formData.full_name === 'Vedan Customer' || formData.full_name === 'Dharani Customer' || !formData.full_name) {
       setFormData(prev => ({ ...prev, full_name: guestInfo.name }));
     }
 
@@ -542,7 +542,7 @@ export default function Checkout() {
             role: user.role || "customer",
             total_amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
             amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
-            email: user?.email || guestInfo?.email || "customer@vedanmart.com",
+            email: user?.email || guestInfo?.email || "customer@dharaniherbbals.in",
             name: formData.full_name || "Customer"
           })
         });
@@ -584,7 +584,7 @@ export default function Checkout() {
               amount: calculatedAmount,
               user_id: currentUserId,
               mobile: formData.phone || user?.mobile || "9999999999",
-              email: user?.email || guestInfo?.email || "customer@vedanmart.com"
+              email: user?.email || guestInfo?.email || "customer@dharaniherbbals.in"
             })
           });
 
@@ -792,7 +792,7 @@ export default function Checkout() {
           <div className="checkout-form-section">
 
             {/* STEP 1: CONTACT */}
-            {user && (user.name === 'Guest User' || user.name === 'Vedan Customer' || !user.email || user.email.includes('@guest.com')) && (
+            {user && (user.name === 'Guest User' || user.name === 'Vedan Customer' || user.name === 'Dharani Customer' || !user.email || user.email.includes('@guest.com')) && (
               <div className={`step-card ${activeStep === 1 ? 'active' : ''}`}>
                 <div className="step-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: activeStep > 1 ? 'pointer' : 'default' }} onClick={() => activeStep > 1 && setActiveStep(1)}>
                   <h3 className="modern-contact-title" style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: 0, fontSize: '1.2rem', color: activeStep >= 1 ? '#111827' : '#9CA3AF' }}>
@@ -847,53 +847,110 @@ export default function Checkout() {
                     <>
                       <div className="shipping-selected-container">
                         {savedAddresses.filter(a => a.id === selectedAddressId).map(addr => (
-                          <div key={addr.id} className="shipping-hero-card">
+                          <div key={addr.id} className="shipping-hero-card modern-exact-card">
                             {/* Card Top Header: Status Tag & Change Button */}
                             <div className="shipping-hero-top">
-                              <div className="shipping-hero-tag">
-                                <span className="shipping-status-dot"></span>
-                                <span>Deliver to</span>
+                              <div className="shipping-hero-tag-exact">
+                                <Truck size={14} className="tag-truck-icon" />
+                                <span>DELIVER TO</span>
                               </div>
                               <button
                                 type="button"
-                                className="shipping-hero-change-btn"
+                                className="shipping-hero-change-btn-exact"
                                 onClick={() => setCheckoutView('list')}
+                                aria-label="Change Shipping Address"
                               >
                                 <Edit2 size={13} />
                                 <span>Change Address</span>
                               </button>
                             </div>
 
-                            {/* Recipient Info */}
-                            <div className="shipping-hero-recipient">
-                              <div className="shipping-recipient-avatar">
+                            {/* Recipient Profile Info */}
+                            <div className="shipping-hero-recipient-exact">
+                              <div className="shipping-recipient-avatar-exact">
                                 {addr.full_name ? addr.full_name.charAt(0).toUpperCase() : 'U'}
                               </div>
-                              <div className="shipping-recipient-details">
-                                <div className="shipping-name-row">
-                                  <h4 className="shipping-recipient-name">{addr.full_name}</h4>
-                                  <span className="shipping-verified-badge">
+                              <div className="shipping-recipient-meta-exact">
+                                <div className="shipping-name-row-exact">
+                                  <h4 className="shipping-recipient-name-exact">{addr.full_name}</h4>
+                                  <span className="shipping-verified-badge-exact">
                                     <CheckCircle size={13} /> Selected
                                   </span>
                                 </div>
-                                <div className="shipping-phone-row">
-                                  <Phone size={13} className="shipping-icon-accent" />
+                                <div className="shipping-phone-row-exact">
+                                  <span className="phone-icon-wrap">
+                                    <Phone size={13} />
+                                  </span>
                                   <span>{addr.phone}</span>
                                 </div>
                               </div>
                             </div>
 
-                            {/* Address Details with map pin */}
-                            <div className="shipping-address-block">
-                              <div className="shipping-pin-badge">
-                                <MapPin size={16} />
+                            {/* Middle Address Box */}
+                            <div className="shipping-address-box-exact">
+                              {/* Decorative Map Watermark in Background */}
+                              <div className="map-watermark-bg" aria-hidden="true">
+                                <svg viewBox="0 0 120 120" className="map-svg-watermark">
+                                  <circle cx="70" cy="70" r="48" fill="#e8f4ec" opacity="0.9" />
+                                  <path d="M28,55 Q48,65 92,45" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" fill="none" opacity="0.95" />
+                                  <path d="M45,28 Q60,68 76,102" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" fill="none" opacity="0.95" />
+                                  <path d="M58,38 Q84,60 106,82" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.95" />
+                                </svg>
+                                <div className="map-watermark-pin">
+                                  <svg width="22" height="26" viewBox="0 0 24 28" fill="none">
+                                    <path d="M12 0C5.37 0 0 5.37 0 12C0 19.5 10.5 27.2 11 27.6C11.3 27.8 11.6 28 12 28C12.4 28 12.7 27.8 13 27.6C13.5 27.2 24 19.5 24 12C24 5.37 18.63 0 12 0Z" fill="#0d7f46"/>
+                                    <circle cx="12" cy="11" r="4" fill="#ffffff"/>
+                                  </svg>
+                                </div>
                               </div>
-                              <div className="shipping-address-text-wrap">
-                                {addr.address && <p className="shipping-street-text">{addr.address}</p>}
-                                <p className="shipping-region-text">
-                                  {[addr.city, addr.state].filter(Boolean).join(', ')}
-                                  {addr.pincode ? ` - ${addr.pincode}` : ''}
-                                </p>
+
+                              {/* Main Address Content */}
+                              <div className="address-box-body">
+                                <div className="address-box-top">
+                                  <div className="address-pin-circle">
+                                    {/* Exact Solid Green Teardrop Pin with White Dot */}
+                                    <svg width="20" height="24" viewBox="0 0 24 28" fill="none" className="exact-teardrop-pin">
+                                      <path d="M12 0C5.37 0 0 5.37 0 12C0 19.5 10.5 27.2 11 27.6C11.3 27.8 11.6 28 12 28C12.4 28 12.7 27.8 13 27.6C13.5 27.2 24 19.5 24 12C24 5.37 18.63 0 12 0Z" fill="#0d7f46"/>
+                                      <circle cx="12" cy="11" r="4.2" fill="#ffffff"/>
+                                    </svg>
+                                  </div>
+                                  <div className="address-street-wrap">
+                                    {addr.address && <p className="address-street-title">{addr.address}</p>}
+                                  </div>
+                                </div>
+
+                                <div className="address-box-dashed-line"></div>
+
+                                <div className="address-box-bottom">
+                                  <p className="address-region-title">
+                                    {[addr.city, addr.state].filter(Boolean).join(', ')}
+                                  </p>
+                                  {addr.pincode && (
+                                    <div className="address-pincode-badge">
+                                      PIN: {addr.pincode}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Bottom Delivery ETA Box */}
+                            <div className="shipping-delivery-box-exact">
+                              <div className="delivery-icon-circle">
+                                {/* Exact Delivery Truck with Clock Icon */}
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0d7f46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                                  <path d="M15 18H9"/>
+                                  <path d="M19 18h2a1 1 0 0 0 1-1v-5l-3-4h-5v10Z"/>
+                                  <circle cx="7" cy="18" r="2"/>
+                                  <circle cx="17" cy="18" r="2"/>
+                                  <circle cx="8" cy="10" r="3.2" stroke="#0d7f46" strokeWidth="1.5" fill="#e6f4ea"/>
+                                  <polyline points="8,8.5 8,10 9.2,10" stroke="#0d7f46" strokeWidth="1.5"/>
+                                </svg>
+                              </div>
+                              <div className="delivery-text-wrap">
+                                <h5 className="delivery-headline">Express Delivery</h5>
+                                <p className="delivery-subline">2–4 Business Days</p>
                               </div>
                             </div>
                           </div>

@@ -69,7 +69,7 @@ export default function Footer() {
         <div className="footer-logo-box footer-animate">
           <Link to="/" className="footer-brand" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none' }}>
             <div className="brand-text-logo footer-brand-text">
-              <div className="brand-text-line1" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: '1.0' }}>Vedan Mart<span className="brand-reg">®</span></div>
+              <div className="brand-text-line1" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: '1.0' }}>Dharani Herbbals<span className="brand-reg">®</span></div>
               
             </div>
           </Link>

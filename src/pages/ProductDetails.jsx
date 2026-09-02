@@ -392,11 +392,11 @@ export default function ProductDetails() {
   const currentMedia = mediaItems[currentImgIndex];
   const getProductShareUrl = () => {
     if (typeof window === 'undefined') return '';
-    return `https://www.vedanmart.com/product/${product.id}`;
+    return `${window.location.origin}/product/${product.id}`;
   };
 
   const getShareText = () => {
-    return `*${translatedName}* | Vedan Mart\nwww.vedanmart.com\n\nShop now on Vedan Mart!\n${getProductShareUrl()}`;
+    return `*${translatedName}* | Dharani Herbbals\n\nShop now on Dharani Herbbals!\n${getProductShareUrl()}`;
   };
 
   const copyShareLink = async () => {

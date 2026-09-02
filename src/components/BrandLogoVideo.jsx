@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 
-const LOGO_SRC = '/videos/logo1.mp4';
+const LOGO_SRC = '/videos/logo.mp4';
 const LOGO_STATIC = '/favicon.png';
 
 // --- Shared singleton video element ---
@@ -49,7 +49,7 @@ function onVideoReady(cb) {
   }
 }
 
-export default function BrandLogoVideo({ className = '', variant = 'title', ariaLabel = 'Vedan Mart logo' }) {
+export default function BrandLogoVideo({ className = '', variant = 'title', ariaLabel = 'Dharani Herbbals logo' }) {
   const canvasRef = useRef(null);
   const [videoStarted, setVideoStarted] = useState(false);
 
@@ -139,7 +139,7 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
     <span
       className={`brand-logo-video-wrap brand-logo-video-wrap--${variant} ${className}`}
       aria-label={ariaLabel}
-      style={{ display: 'inline-flex', position: 'relative', overflow: 'hidden' }}
+      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}
     >
       {/* Animated canvas shown once video is ready */}
       <canvas

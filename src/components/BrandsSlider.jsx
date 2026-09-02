@@ -14,13 +14,52 @@ import vedanImg from '../assets/brands_api/Vedan.png';
 
 const localBrandImages = {
   'MAKIL': makilImg,
+  'makil': makilImg,
   'Amuthu': amuthuImg,
+  'amuthu': amuthuImg,
   'Ramcare': ramcareImg,
+  'ramcare': ramcareImg,
   'VANA ARASI': vanaArasiImg,
+  'Vana Arasi': vanaArasiImg,
+  'Vana arasi': vanaArasiImg,
+  'vana arasi': vanaArasiImg,
+  'vanaarasi': vanaArasiImg,
   'Divyam': divyamImg,
+  'divyam': divyamImg,
   'Athiyaman': athiyamanImg,
+  'athiyaman': athiyamanImg,
   'Vedan ': vedanImg,
-  'Vedan': vedanImg
+  'Vedan': vedanImg,
+  'vedan': vedanImg
+};
+
+const getBrandImage = (brand) => {
+  if (!brand) return '';
+  const rawName = String(brand.name || '').trim().toLowerCase();
+  
+  if (rawName.includes('vana') || rawName.includes('arasi') || rawName.includes('வன')) {
+    return vanaArasiImg;
+  }
+  if (rawName.includes('makil') || rawName.includes('மகிழ')) {
+    return makilImg;
+  }
+  if (rawName.includes('amuthu') || rawName.includes('அமுது')) {
+    return amuthuImg;
+  }
+  if (rawName.includes('ramcare') || rawName.includes('ram care')) {
+    return ramcareImg;
+  }
+  if (rawName.includes('divyam') || rawName.includes('திவ்யம்')) {
+    return divyamImg;
+  }
+  if (rawName.includes('athiyaman') || rawName.includes('அதியமான்')) {
+    return athiyamanImg;
+  }
+  if (rawName.includes('vedan') || rawName.includes('வேடன்')) {
+    return vedanImg;
+  }
+  
+  return localBrandImages[brand.name] || localBrandImages[brand.name?.trim()] || brand.logo;
 };
 
 const fallbackBrands = [
@@ -96,7 +135,7 @@ export default function BrandsSlider() {
             >
               <div className="brand-logo-wrapper">
                 <img
-                  src={localBrandImages[brand.name] || brand.logo}
+                  src={getBrandImage(brand)}
                   alt={brand.name}
                   className="brand-logo-image"
                   loading="lazy"
@@ -118,7 +157,7 @@ export default function BrandsSlider() {
             >
               <div className="brand-logo-wrapper">
                 <img
-                  src={localBrandImages[brand.name] || brand.logo}
+                  src={getBrandImage(brand)}
                   alt={brand.name}
                   className="brand-logo-image"
                   loading="lazy"
