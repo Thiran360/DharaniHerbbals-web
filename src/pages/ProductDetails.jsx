@@ -560,7 +560,11 @@ export default function ProductDetails() {
                     <img
                       src={media.src || '/logo.png'}
                       alt={`${translatedName} - Image ${idx + 1}`}
-                      className="pd-pro-main-image"
+                      className={`pd-pro-main-image ${
+                        media.src && (media.src.includes('/4.jpeg') || media.src.endsWith('4.jpeg') || product?.id === 1301 || (product?.name && product.name.toLowerCase().includes('keelanelli')))
+                          ? 'pd-img-zoom-fit'
+                          : ''
+                      }`}
                       fetchPriority={idx === 0 ? "high" : "auto"}
                       loading={idx === 0 ? "eager" : "lazy"}
                       decoding="async"

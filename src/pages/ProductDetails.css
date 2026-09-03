@@ -271,6 +271,11 @@
   transition: none;
 }
 
+.pd-pro-main-image.pd-img-zoom-fit {
+  transform: scale(1.65);
+  object-fit: contain;
+}
+
 .pd-pro-main-image-container:hover .pd-pro-main-image {
   /* removed hover zoom */
 }

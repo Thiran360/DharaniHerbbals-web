@@ -16,7 +16,7 @@ import imgHealth from '../assets/sathu_maavu_transparent.png';
 import imgBaby from '../assets/nalangu_powder_transparent_v2.png';
 import imgPoojas from '../assets/pooja_oil_transparent_v2.png';
 import imgBeverages from '../assets/beverage_transparent.png';
-import imgAll from '../assets/shopall.png';
+import imgAll from '../assets/show-all.png';
 import './Shop.css';
 
 const getCategoryBullets = (catKey, language) => {
@@ -206,6 +206,15 @@ export const ProductCard = memo(({ product, index = 0 }) => {
     }
   }
 
+  const isSpecialZoomImage = Boolean(
+    displayImage && (
+      displayImage.includes('/4.jpeg') ||
+      displayImage.endsWith('4.jpeg') ||
+      product.id === 1301 ||
+      (product.name && product.name.toLowerCase().includes('keelanelli'))
+    )
+  );
+
   return (
     <div
       className="uc-card"
@@ -273,7 +282,7 @@ export const ProductCard = memo(({ product, index = 0 }) => {
         <img
           src={displayImage}
           alt={translatedName}
-          className="uc-img"
+          className={`uc-img ${isSpecialZoomImage ? 'uc-img-zoom-fit' : ''}`}
           loading="lazy"
           decoding="async"
           onError={handleImageError}
