@@ -461,30 +461,49 @@
 
   .promo-layout {
     flex-direction: column;
+    align-items: center;
     justify-content: flex-start;
+    text-align: center;
     padding: 20px;
     gap: 30px;
     margin-top: 20px;
   }
 
   .promo-text-col {
-    text-align: left;
-    padding-left: 0;
+    text-align: center;
+    padding: 0 16px;
     margin: 0 auto;
+    width: 100%;
+    max-width: 550px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+  }
+
+  .promo-small-title {
+    text-align: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .promo-main-title {
     font-size: 1.8rem;
     white-space: normal;
+    text-align: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .promo-product-col {
     display: flex;
     height: 350px;
     margin: 20px 0;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
   }
 
   .promo-product-img {
@@ -528,6 +547,24 @@
     padding-top: 140px; /* Add space below search bar on mobile */
   }
 
+  .promo-layout {
+    padding: 10px 16px;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    width: 100%;
+  }
+
+  .promo-text-col {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 10px;
+    margin: 0 auto;
+  }
+
   .slide-bg-video {
     transform: translateZ(0);
     object-position: center center; /* Center the video */
@@ -537,22 +574,29 @@
   .promo-slide.has-video::after {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0) 100%);
   }
+
+  .promo-small-title {
+    text-align: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
   
   .promo-main-title {
     font-size: 1.6rem;
-    line-height: 1.15;
+    line-height: 1.25;
     margin-bottom: 16px;
+    text-align: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .promo-offer-box {
     font-size: 1.4rem;
     padding: 8px 20px;
     margin-bottom: 24px;
-  }
-
-  .promo-product-col {
-    height: 280px;
-    margin: 30px 0;
+    text-align: center;
   }
 
   .promo-text-col > .promo-shop-btn {
@@ -560,9 +604,12 @@
   }
 
   .promo-product-col {
+    display: flex;
     justify-content: center;
+    align-items: center;
     height: 220px;
     margin: 70px 0 20px;
+    width: 100%;
   }
 
   .promo-product-animator {
@@ -578,6 +625,7 @@
     min-width: 180px;
     padding: 14px 30px;
     font-size: 1rem;
+    margin: 0 auto;
   }
 
   .promo-slide.active .promo-shop-btn-mobile {
