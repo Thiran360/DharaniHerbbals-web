@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    watch: {
+      ignored: ['**/dist/**', '**/.git/**', '**/node_modules/**']
+    },
     proxy: {
       '/api': {
         target: 'https://api.codingboss.in/herbal',
