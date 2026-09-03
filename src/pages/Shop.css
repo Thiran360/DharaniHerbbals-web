@@ -1597,18 +1597,29 @@
   .shop-root .uc-img-section {
     order: -1;
     width: 100%;
-    height: 160px;
+    height: 200px;
     border-radius: 18px 18px 0 0;
     border-top-left-radius: 18px;
     border-bottom-left-radius: 0;
     border-left: none;
     border-bottom: 1px solid rgba(46, 125, 50, 0.08);
     background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .shop-root .uc-img {
     object-fit: contain;
-    padding: 8px;
+    object-position: center;
+    padding: 6px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .shop-root .uc-img.uc-img-zoom-fit {
+    transform: scale(1.25) translateY(1%);
+    object-fit: contain;
   }
 
   .shop-root .uc-info-section {
@@ -1686,13 +1697,13 @@
 
   .shop-root .pc-skeleton {
     flex-direction: column;
-    height: 290px;
+    height: 330px;
     border-radius: 18px;
   }
 
   .shop-root .pc-skeleton-img {
     width: 100%;
-    height: 160px;
+    height: 200px;
     border-top-left-radius: 18px;
     border-bottom-left-radius: 0;
   }
@@ -1951,14 +1962,26 @@
   }
 
   .shop-root .uc-img-section {
-    height: 135px;
+    height: 175px;
     border-radius: 14px 14px 0 0;
     border-top-left-radius: 14px;
     border-bottom-left-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .shop-root .uc-img {
-    padding: 6px;
+    padding: 4px;
+    object-fit: contain;
+    object-position: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .shop-root .uc-img.uc-img-zoom-fit {
+    transform: scale(1.2) translateY(1%);
+    object-fit: contain;
   }
 
   .shop-root .uc-info-section {
@@ -2039,12 +2062,12 @@
   }
 
   .shop-root .pc-skeleton {
-    height: 250px;
+    height: 290px;
     border-radius: 14px;
   }
 
   .shop-root .pc-skeleton-img {
-    height: 135px;
+    height: 175px;
     border-top-left-radius: 14px;
     border-bottom-left-radius: 0;
   }
@@ -2064,7 +2087,11 @@
   }
 
   .shop-root .uc-img-section {
-    height: 120px;
+    height: 150px;
+  }
+
+  .shop-root .pc-skeleton-img {
+    height: 150px;
   }
 
   .shop-root .uc-title {
