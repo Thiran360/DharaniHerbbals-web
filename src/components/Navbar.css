@@ -80,26 +80,31 @@
 
 .brand-text-logo {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
   font-family: 'Georgia', 'Times New Roman', serif;
   color: #646b73; /* Grey color matching the original PNG image */
-  line-height: 1;
+  line-height: 1.05;
   transition: var(--transition-smooth);
 }
 
 .brand-text-line1 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.2px;
-  display: flex;
-  align-items: center;
+  line-height: 1.05;
+  white-space: nowrap;
 }
 
 .brand-text-line2 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.2px;
+  line-height: 1.05;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 
 .brand-reg {
@@ -112,7 +117,7 @@
 /* Shrink brand on scroll */
 .navbar-ultra.scrolled .brand-text-line1,
 .navbar-ultra.scrolled .brand-text-line2 {
-  font-size: 21px;
+  font-size: 20px;
 }
 
 .navbar-ultra.scrolled .brand-logo-video-wrap--nav {
@@ -628,7 +633,7 @@
     display: grid;
     grid-template-columns: 44px minmax(0, 1fr) 44px;
     align-items: center;
-    padding: 0 14px;
+    padding: 0 12px;
     height: var(--nav-height);
   }
 
@@ -650,6 +655,8 @@
     display: flex;
     width: 44px;
     height: 44px;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav-brand-container {
@@ -672,14 +679,24 @@
     max-width: 100%;
   }
 
+  .brand-text-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    line-height: 1.05;
+  }
+
   .brand-text-line1, .brand-text-line2 {
     font-size: 20px;
     font-weight: 700;
+    line-height: 1.05;
+    white-space: nowrap;
   }
 
   .navbar-ultra.scrolled .brand-text-line1,
   .navbar-ultra.scrolled .brand-text-line2 {
-    font-size: 19px;
+    font-size: 18.5px;
   }
 
   .brand-logo-video-wrap--nav,
@@ -696,7 +713,8 @@
   .nav-icons-right {
     display: flex;
     grid-column: 3;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
     flex: none;
     width: 44px;
   }
@@ -706,7 +724,10 @@
     box-shadow: none;
     border: none;
     padding: 0;
-    gap: 8px;
+    gap: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .user-btn, .cart-text {
@@ -762,8 +783,11 @@
     background: transparent;
     color: var(--text-dark);
     padding: 0;
-    width: auto;
-    height: auto;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .capsule-btn.cart-btn:hover {
     background: transparent;
@@ -773,6 +797,110 @@
 
   .nav-icons-right .lang-switcher-capsule {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-ultra {
+    padding: 8px 12px;
+  }
+
+  .navbar-container {
+    padding: 0 8px;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+  }
+
+  .mobile-menu-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-icons-right {
+    width: 40px;
+  }
+
+  .capsule-btn.cart-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-brand {
+    gap: 8px;
+  }
+
+  .brand-text-line1, .brand-text-line2 {
+    font-size: 18.5px;
+    line-height: 1.05;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+
+  .navbar-ultra.scrolled .brand-text-line1,
+  .navbar-ultra.scrolled .brand-text-line2 {
+    font-size: 17px;
+  }
+
+  .brand-logo-video-wrap--nav,
+  .navbar-ultra.scrolled .brand-logo-video-wrap--nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-reg {
+    font-size: 10px;
+    margin-left: 2px;
+  }
+}
+
+@media (max-width: 375px) {
+  .navbar-ultra {
+    padding: 8px 10px;
+  }
+
+  .navbar-container {
+    padding: 0 6px;
+    grid-template-columns: 36px minmax(0, 1fr) 36px;
+  }
+
+  .mobile-menu-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav-icons-right {
+    width: 36px;
+  }
+
+  .capsule-btn.cart-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav-brand {
+    gap: 7px;
+  }
+
+  .brand-text-line1, .brand-text-line2 {
+    font-size: 17px;
+    line-height: 1.05;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+
+  .navbar-ultra.scrolled .brand-text-line1,
+  .navbar-ultra.scrolled .brand-text-line2 {
+    font-size: 15.5px;
+  }
+
+  .brand-logo-video-wrap--nav,
+  .navbar-ultra.scrolled .brand-logo-video-wrap--nav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .brand-reg {
+    font-size: 9px;
+    margin-left: 1.5px;
   }
 }
 
