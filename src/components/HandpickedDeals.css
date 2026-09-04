@@ -253,8 +253,8 @@
     font-size: 2rem;
   }
   .deals-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
   .deal-name {
     font-size: 0.95rem;

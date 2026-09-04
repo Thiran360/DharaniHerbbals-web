@@ -237,7 +237,6 @@ export const ProductCard = memo(({ product, index = 0 }) => {
           <div className="uc-rating-row">
             <Star size={12} fill="#f59e0b" color="#f59e0b" />
             <span className="uc-rating-text">{displayRating}</span>
-            <span className="uc-review-count">(97)</span>
           </div>
         </div>
 

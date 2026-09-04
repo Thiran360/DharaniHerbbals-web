@@ -868,28 +868,28 @@ export default function ProductDetails() {
         </div>
       </div>
 
-      <div className="pd-pro-divider" style={{ marginTop: '20px', marginBottom: '20px' }}></div>
+      <div className="pd-pro-divider pd-reviews-divider"></div>
 
       {/* Modern Customer Reviews Section */}
       <div className="pd-reviews-section">
-        <h2 className="pd-reviews-main-title" style={{ marginBottom: '25px', textAlign: 'center' }}>Customer Reviews</h2>
+        <h2 className="pd-reviews-main-title">Customer Reviews</h2>
 
-        <div className="pd-reviews-layout" style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="pd-reviews-layout">
           {/* Left Side: Rating Summary Card */}
-          <div className="pd-summary-card-left" style={{ flex: '1 1 300px', maxWidth: '350px', width: '100%', background: '#ffffff', padding: '35px 25px', borderRadius: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '1px solid #f1f5f9', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.03)' }}>
-            <span className="pd-big-rating" style={{ fontSize: '4.5rem', fontWeight: '800', color: '#0f172a', lineHeight: '1' }}>{reviewSummary ? Number(reviewSummary.average_rating).toFixed(1) : "0.0"}</span>
-            <div className="pd-overall-stars" style={{ display: 'flex', gap: '6px', margin: '15px 0 10px' }}>
+          <div className="pd-summary-card-left">
+            <span className="pd-big-rating">{reviewSummary ? Number(reviewSummary.average_rating).toFixed(1) : "0.0"}</span>
+            <div className="pd-overall-stars">
               {[1, 2, 3, 4, 5].map((star) => {
                 const avg = reviewSummary ? Number(reviewSummary.average_rating) : 0;
                 const fill = star <= avg ? "#16a34a" : "transparent";
-                return <Star key={star} size={28} fill={fill} color="#16a34a" />;
+                return <Star key={star} className="pd-summary-star" fill={fill} color="#16a34a" />;
               })}
             </div>
-            <div style={{ fontSize: '1.3rem', fontWeight: '700', color: '#1e293b', margin: '10px 0 25px' }}>
+            <div className="pd-summary-sentiment">
               {(reviewSummary && reviewSummary.average_rating >= 4) ? 'Excellent' : (reviewSummary && reviewSummary.average_rating >= 3) ? 'Good' : 'Average'}
             </div>
-            <div style={{ width: '100%', height: '1px', background: '#e2e8f0', margin: '0 0 20px' }}></div>
-            <p className="pd-summary-count" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '1rem', fontWeight: '500' }}>
+            <div className="pd-summary-inner-divider"></div>
+            <p className="pd-summary-count">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
               Based on <strong style={{ color: '#16a34a' }}>{reviewSummary ? reviewSummary.total_reviews : 0}</strong> reviews
             </p>
