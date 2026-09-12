@@ -109,14 +109,7 @@
   transform: translate(-50%, -50%) scale(1.5);
 }
 
-.deal-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
+.deal-img {  mix-blend-mode: multiply;
 }
 
 /* Badges */

@@ -163,7 +163,28 @@ export default function Chatbot() {
     const searchTerms = inputLower.split(' ').filter(w => w.length > 2 && !ignoreWords.includes(w));
 
     const isMostLovedRequest = inputLower.includes('most love') || inputLower.includes('best seller') || inputLower.includes('top pick') || inputLower.includes('love pic');
-    const isCategoryRequest = inputLower.includes('section') || inputLower.includes('category') || inputLower.includes('all') || inputLower.includes('products') || inputLower.includes('list');
+    
+    let isCategoryRequest = inputLower.includes('section') || inputLower.includes('category') || inputLower.includes('all') || inputLower.includes('products') || inputLower.includes('list') || inputLower.includes('variety') || inputLower.includes('varieties') || inputLower.includes('types');
+    
+    const allCategoryWords = new Set(['skin', 'hair', 'face', 'health', 'body', 'combo', 'powder', 'shampoo', 'soap', 'oil', 'jar', 'rice', 'food']);
+    if (products && products.length > 0) {
+      products.forEach(p => {
+        if (p.category_name) {
+          p.category_name.toLowerCase().split(' ').forEach(w => {
+            const clean = w.replace(/[^a-z]/g, '');
+            if (clean.length > 2) allCategoryWords.add(clean);
+          });
+        }
+      });
+    }
+    
+    if (!isCategoryRequest && searchTerms.length === 1) {
+      const term = searchTerms[0].replace(/s$/, '');
+      if (allCategoryWords.has(term) || allCategoryWords.has(searchTerms[0])) {
+        isCategoryRequest = true;
+      }
+    }
+
     const isWishlistRequest = inputLower.includes('wishlist') || inputLower.includes('liked product') || inputLower.includes('favorite') || inputLower.includes('my likes') || inputLower.includes('saved');
 
     let matchedCategory = null;
@@ -194,8 +215,10 @@ export default function Chatbot() {
         console.error("Error fetching most loved:", e);
       }
     } else if (isCategoryRequest) {
-      const categories = ['skin', 'hair', 'face', 'health', 'body', 'combo', 'powder', 'shampoo'];
-      matchedCategory = categories.find(cat => inputLower.includes(cat));
+      const arrCats = Array.from(allCategoryWords);
+      // Sort by length descending to match longer specific words first
+      arrCats.sort((a, b) => b.length - a.length);
+      matchedCategory = arrCats.find(cat => inputLower.includes(cat));
 
       if (matchedCategory) {
         matchedProductsList = products.filter(p => {

@@ -169,10 +169,7 @@ export const ProductCard = memo(({ product, index = 0 }) => {
 
   const translatedName = language === 'ta' && product.tamil_name ? product.tamil_name : product.name;
 
-  // Force a varied pseudo-random rating between 3.8 and 5.0 for the UI
-  const displayRating = (
-    3.8 + ((typeof product.id === 'number' ? product.id : (product.id ? product.id.toString().charCodeAt(0) + product.id.toString().length : 10)) % 13) * 0.1
-  ).toFixed(1);
+  const displayRating = product.rating ? Number(product.rating).toFixed(1) : "0.0";
 
 
   const openProduct = () => {

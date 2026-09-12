@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 100px 20px;
+  padding: 40px 20px 100px 20px;
   text-align: center;
 }
 
@@ -87,7 +87,7 @@
 
 @media (max-width: 768px) {
   .journey-editorial-container {
-    padding: 80px 20px;
+    padding: 30px 20px 80px 20px;
   }
   .journey-ed-quote {
     font-size: 1.8rem;

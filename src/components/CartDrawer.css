@@ -203,11 +203,7 @@
   overflow: hidden;
 }
 
-.cart-item-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: transform 0.3s ease;
+.cart-item-img {  mix-blend-mode: multiply;
 }
 
 .cart-item:hover .cart-item-img {

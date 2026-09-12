@@ -288,12 +288,7 @@
   padding: 8px;
 }
 
-.chat-product-img-wrapper img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  filter: brightness(1.08) contrast(1.08);
+.chat-product-img-wrapper img {  mix-blend-mode: multiply;
 }
 
 .chat-product-info {
