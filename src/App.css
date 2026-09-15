@@ -1,0 +1,92 @@
+html, body {
+  width: 100%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Decorative background elements */
+.bg-shape {
+  position: absolute;
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.bg-shape-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--color-secondary);
+  top: -100px;
+  left: -100px;
+}
+
+.bg-shape-2 {
+  width: 500px;
+  height: 500px;
+  background: var(--color-primary-light);
+  bottom: -150px;
+  right: -150px;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0;
+  }
+  
+  .bg-shape-1, .bg-shape-2 {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+/* Floating Wishlist Toast */
+.wishlist-toast {
+  position: fixed;
+  top: 90px;
+  right: 24px;
+  transform: translateX(120%);
+  background: white;
+  color: #111827;
+  padding: 12px 20px;
+  border-radius: 50px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.wishlist-toast.visible {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.wishlist-toast-view {
+  font-weight: 700;
+  color: #22c55e;
+  text-decoration: underline;
+  margin-left: 8px;
+}

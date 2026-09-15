@@ -1,0 +1,92 @@
+.floating-socials-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+}
+
+.float-btn {
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+  min-height: 58px;
+  max-width: 58px;
+  max-height: 58px;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: none;
+  outline: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 3px 8px rgba(0, 0, 0, 0.15);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+  font-size: 0;
+  text-decoration: none;
+}
+
+.float-btn svg,
+.float-icon-svg {
+  display: block;
+  margin: 0 auto;
+  flex-shrink: 0;
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
+}
+
+.float-whatsapp {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+.float-instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.float-btn:hover {
+  transform: translateY(-5px) scale(1.06) translateZ(0);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.35), 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .floating-socials-container {
+    bottom: 24px; 
+    right: 12px;
+    gap: 12px; 
+    z-index: 99;
+  }
+  body.chatbot-open .floating-socials-container,
+  .floating-socials-container:has(.chatbot-window.open) {
+    z-index: 100005 !important;
+  }
+  body.chatbot-open .float-btn {
+    display: none !important;
+  }
+  .float-btn {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    min-height: 46px;
+    max-width: 46px;
+    max-height: 46px;
+  }
+  .float-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+}
