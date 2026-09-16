@@ -88,6 +88,17 @@ export default function Chatbot() {
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('chatbot-open');
+    } else {
+      document.body.classList.remove('chatbot-open');
+    }
+    return () => {
+      document.body.classList.remove('chatbot-open');
+    };
+  }, [isOpen]);
+
   const navigate = useNavigate();
   const { products } = useProducts();
   const { addToCart } = useCart();

@@ -350,6 +350,8 @@ export default function Profile() {
             <button
               className={`saas-nav-item ${activeTab === 'account' ? 'active' : ''}`}
               onClick={() => setActiveTab('account')}
+              title="Profile Settings"
+              aria-label="Profile Settings"
             >
               <User size={18} />
               <span>Profile Settings</span>
@@ -357,6 +359,8 @@ export default function Profile() {
             <button
               className={`saas-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
               onClick={() => setActiveTab('orders')}
+              title="Order History"
+              aria-label="Order History"
             >
               <Package size={18} />
               <span>Order History</span>
@@ -364,6 +368,8 @@ export default function Profile() {
             <button
               className={`saas-nav-item ${activeTab === 'addresses' ? 'active' : ''}`}
               onClick={() => setActiveTab('addresses')}
+              title="Saved Addresses"
+              aria-label="Saved Addresses"
             >
               <MapPin size={18} />
               <span>Saved Addresses</span>
@@ -371,6 +377,8 @@ export default function Profile() {
             <button
               className={`saas-nav-item ${activeTab === 'wishlist' ? 'active' : ''}`}
               onClick={() => setActiveTab('wishlist')}
+              title="Wishlist"
+              aria-label="Wishlist"
             >
               <Heart size={18} />
               <span>Wishlist</span>
@@ -378,12 +386,14 @@ export default function Profile() {
             <button
               className={`saas-nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
               onClick={() => setActiveTab('calendar')}
+              title="Usage Calendar"
+              aria-label="Usage Calendar"
             >
               <Calendar size={18} />
               <span>Usage Calendar</span>
             </button>
             <div className="saas-nav-divider"></div>
-            <button className="saas-nav-item logout" onClick={handleLogout}>
+            <button className="saas-nav-item logout" onClick={handleLogout} title="Sign Out" aria-label="Sign Out">
               <LogOut size={18} />
               <span>Sign Out</span>
             </button>

@@ -606,7 +606,7 @@
   border-radius: 100px;
   font-weight: 600;
   font-size: 0.9rem;
-  margin-bottom: 18px;
+  margin-bottom: 0;
   transition: var(--transition-fast);
 }
 
@@ -614,12 +614,6 @@
   background: var(--primary-color);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-}
-
-.mobile-copyright {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  font-weight: 500;
 }
 
 /* Responsive */

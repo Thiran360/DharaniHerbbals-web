@@ -4,7 +4,7 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(8px);
-  z-index: 99990;
+  z-index: 100020;
   opacity: 0;
   visibility: hidden;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -28,7 +28,7 @@
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  z-index: 99995;
+  z-index: 100025;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
   transform: translateX(120%);
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
@@ -203,7 +203,14 @@
   overflow: hidden;
 }
 
-.cart-item-img {  mix-blend-mode: multiply;
+.cart-item-img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  display: block;
 }
 
 .cart-item:hover .cart-item-img {

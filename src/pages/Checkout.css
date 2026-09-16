@@ -1246,6 +1246,7 @@
 /* Custom Select Dropdown */
 .form-group.relative {
   position: relative;
+  z-index: 20;
 }
 
 .custom-select-trigger {
@@ -1273,7 +1274,7 @@
   top: calc(100% + 4px);
   left: 0;
   right: 0;
-  background: white;
+  background: #ffffff !important;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   max-height: 250px;
@@ -1855,6 +1856,7 @@
   transition: all 0.3s ease;
   box-shadow: none;
   position: relative;
+  z-index: 1;
 }
 
 .step-card:not(:last-child)::before {
@@ -1872,6 +1874,7 @@
   border: none;
   box-shadow: none;
   padding: 0 0 32px 0;
+  z-index: 10;
 }
 
 .step-card-header {
@@ -2050,6 +2053,7 @@
   transition: all 0.3s ease;
   box-shadow: none;
   position: relative;
+  z-index: 1;
 }
 
 .step-card:not(:last-child)::before {
@@ -2067,6 +2071,7 @@
   border: none;
   box-shadow: none;
   padding: 0 0 32px 0;
+  z-index: 10;
 }
 
 .step-card-header {
@@ -2179,6 +2184,36 @@
     border-bottom: 1px solid rgba(0,0,0,0.05) !important;
     padding: 24px 0 !important;
     margin-bottom: 0 !important;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-card.active {
+    z-index: 10;
+  }
+
+  .form-group.relative {
+    position: relative;
+    z-index: 25;
+  }
+
+  .custom-select-dropdown {
+    position: relative !important;
+    top: 6px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-height: 220px !important;
+    margin-bottom: 16px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+    z-index: 30 !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+  }
+
+  .custom-select-overlay {
+    display: none !important;
   }
 
   .step-card:last-child {

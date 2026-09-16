@@ -322,7 +322,6 @@ export default function Navbar() {
               <button className="btn-mobile-login" style={{ border: 'none', background: 'none', color: '#15803d', fontWeight: 'bold' }} onClick={() => { toggleMobileMenu(); openLoginModal(); }}>{t('login')}</button>
             )}
           </div>
-          <p className="mobile-copyright">Â© {new Date().getFullYear()} {t('copyright')}</p>
         </div>
       </div>
     </nav>

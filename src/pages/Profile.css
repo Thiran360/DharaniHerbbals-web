@@ -115,7 +115,7 @@
 .saas-nav-item.active {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
-  box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
 }
 
 .saas-nav-item.active:hover {
@@ -993,26 +993,49 @@
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     justify-content: flex-start !important;
-    gap: 8px !important;
-    padding-bottom: 8px !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 6px 4px 14px 4px !important;
     width: 100% !important;
     -webkit-overflow-scrolling: touch !important;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
   }
   
   .saas-nav::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .saas-nav {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    display: none !important;
   }
   
   .saas-nav-item {
-    flex: 0 0 auto !important;
-    padding: 10px 14px !important;
-    min-width: 50px !important;
+    flex: 0 0 46px !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    aspect-ratio: 1 / 1 !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
     display: flex !important;
+    align-items: center !important;
     justify-content: center !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #64748b !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .saas-nav-item.active {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid #059669 !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  .saas-nav-item.logout {
+    color: #ef4444 !important;
+    background: #fef2f2 !important;
+    border: 1px solid #fee2e2 !important;
   }
 }

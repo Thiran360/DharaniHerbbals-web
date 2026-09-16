@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { MapPin, Phone, CheckCircle, ArrowLeft, Loader2, Plus, Navigation, Trash2, Edit2, ChevronDown, UserCircle, Check, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -121,6 +121,23 @@ export default function Checkout() {
   const [isManualEntry, setIsManualEntry] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState(null);
   const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
+  const stateDropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (stateDropdownRef.current && !stateDropdownRef.current.contains(event.target)) {
+        setIsStateDropdownOpen(false);
+      }
+    }
+    if (isStateDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isStateDropdownOpen]);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [successOrderId, setSuccessOrderId] = useState(null);
   const [activeStep, setActiveStep] = useState(1);
@@ -1129,7 +1146,7 @@ export default function Checkout() {
                               <label>City</label>
                               <input type="text" name="city" value={formData.city} onChange={handleInputChange} required placeholder="e.g. Chennai" />
                             </div>
-                            <div className="form-group relative">
+                            <div className="form-group relative" ref={stateDropdownRef}>
                               <label>State</label>
                               <div className="custom-select-trigger" onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}>
                                 <span style={{ color: formData.state ? '#1e293b' : '#9CA3AF' }}>{formData.state || 'Select State'}</span>

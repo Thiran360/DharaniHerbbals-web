@@ -198,8 +198,6 @@ function Home() {
 
       <CategoryStrip />
 
-      <BrandsSlider />
-
       <div className="page-container" style={{ paddingTop: '20px' }}>
 
         {/* Featured Products Section (Ultra UI Bestsellers) */}
@@ -303,6 +301,9 @@ function Home() {
         </Suspense>
 
       </div>
+
+      {/* Brands Slider Section */}
+      <BrandsSlider />
 
       {/* Footer Section */}
       <Suspense fallback={null}>
