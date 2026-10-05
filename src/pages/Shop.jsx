@@ -410,9 +410,9 @@ export default function Shop() {
         const price = parseFloat(p.customer_price || p.mrp || 0);
         return selectedFilters.price.some(range => {
           if (range === 'Under ₹100') return price < 100;
-          if (range === '₹100 - ₹300') return price >= 100 && price <= 300;
-          if (range === '₹300 - ₹500') return price > 300 && price <= 500;
-          if (range === 'Over ₹500') return price > 500;
+          if (range === '₹100–₹250') return price >= 100 && price <= 250;
+          if (range === '₹250–₹500') return price >= 250 && price <= 500;
+          if (range === 'Above ₹500') return price > 500;
           return true;
         });
       });
@@ -435,19 +435,96 @@ export default function Shop() {
       });
     }
 
-    // Product Type (mocked based on title containing the word)
+    // Product Type
     if (selectedFilters.productType && selectedFilters.productType.length > 0) {
       list = list.filter(p => {
         const name = (p.name || '').toLowerCase();
-        return selectedFilters.productType.some(type => name.includes(type.toLowerCase()));
+        const catName = (p.category_name || '').toLowerCase();
+        return selectedFilters.productType.some(type => {
+          const t = type.toLowerCase();
+          return name.includes(t) || catName.includes(t);
+        });
       });
     }
 
-    // Ingredient (mocked based on title containing the word)
+    // Concern
+    if (selectedFilters.concern && selectedFilters.concern.length > 0) {
+      list = list.filter(p => {
+        const name = (p.name || '').toLowerCase();
+        const catName = (p.category_name || '').toLowerCase();
+        const desc = (p.description || '').toLowerCase();
+        return selectedFilters.concern.some(concern => {
+          const c = concern.toLowerCase();
+          // specifically for generic terms, check across name, category, and description
+          if (c === 'hair care') return catName.includes('hair') || name.includes('hair') || desc.includes('hair');
+          if (c === 'skin care') return catName.includes('skin') || name.includes('skin') || name.includes('face') || desc.includes('skin');
+          if (c === 'baby care') return catName.includes('baby') || name.includes('baby') || desc.includes('baby');
+          if (c === 'digestion') return name.includes('digestion') || desc.includes('digestion') || name.includes('stomach');
+          if (c === 'immunity') return name.includes('immunity') || desc.includes('immunity');
+          if (c === 'general wellness') return catName.includes('wellness') || catName.includes('health') || desc.includes('wellness') || desc.includes('health');
+          
+          return name.includes(c) || catName.includes(c) || desc.includes(c);
+        });
+      });
+    }
+
+
+    // Ingredient
     if (selectedFilters.ingredient && selectedFilters.ingredient.length > 0) {
       list = list.filter(p => {
         const name = (p.name || '').toLowerCase();
-        return selectedFilters.ingredient.some(ing => name.includes(ing.toLowerCase()));
+        const desc = (p.description || '').toLowerCase();
+        return selectedFilters.ingredient.some(ing => {
+          const i = ing.toLowerCase();
+          return name.includes(i) || desc.includes(i);
+        });
+      });
+    }
+
+    // Suitable For
+    if (selectedFilters.suitableFor && selectedFilters.suitableFor.length > 0) {
+      list = list.filter(p => {
+        const name = (p.name || '').toLowerCase();
+        const catName = (p.category_name || '').toLowerCase();
+        const desc = (p.description || '').toLowerCase();
+        return selectedFilters.suitableFor.some(suit => {
+          const s = suit.toLowerCase();
+          if (s === 'men') return name.includes('men') && !name.includes('women');
+          if (s === 'women') return name.includes('women');
+          if (s === 'kids') return name.includes('kid') || name.includes('baby') || catName.includes('baby');
+          
+          return name.includes(s) || catName.includes(s) || desc.includes(s);
+        });
+      });
+    }
+
+    // Availability
+    if (selectedFilters.availability && selectedFilters.availability.length > 0) {
+      list = list.filter(p => {
+        const wantsInStock = selectedFilters.availability.includes('In Stock');
+        const wantsOutOfStock = selectedFilters.availability.includes('Out of Stock');
+        
+        // If both are selected, no need to filter out anything
+        if (wantsInStock && wantsOutOfStock) return true;
+
+        // Derive stock safely from available fields
+        let isOutOfStock = false; // default to in stock if unknown, or handle safely
+        
+        if (p.stock !== undefined) {
+          isOutOfStock = Number(p.stock) <= 0;
+        } else if (p.quantity !== undefined) {
+          isOutOfStock = Number(p.quantity) <= 0;
+        } else if (p.in_stock !== undefined) {
+          isOutOfStock = !p.in_stock;
+        } else if (p.status !== undefined) {
+          const s = String(p.status).toLowerCase();
+          isOutOfStock = (s === 'out_of_stock' || s === 'outofstock');
+        }
+
+        if (wantsInStock) return !isOutOfStock;
+        if (wantsOutOfStock) return isOutOfStock;
+        
+        return true;
       });
     }
 

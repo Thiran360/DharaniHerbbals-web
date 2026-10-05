@@ -14,12 +14,12 @@ export default function Login() {
   const [showOtp, setShowOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
+  const [apiOtp, setApiOtp] = useState('');
   const [otpUserId, setOtpUserId] = useState(null);
   const [isStoreMember, setIsStoreMember] = useState(false);
   const [otpType, setOtpType] = useState('register');
   const [resendTimer, setResendTimer] = useState(0);
-
-  const [apiOtp, setApiOtp] = useState('');          // Stores OTP returned in API response
 
   useEffect(() => {
     let interval = null;
@@ -47,9 +47,10 @@ export default function Login() {
   useEffect(() => { otpTypeRef.current = otpType; }, [otpType]);
   useEffect(() => { isStoreMemberRef.current = isStoreMember; }, [isStoreMember]);
 
-  // Auto-submit OTP as soon as 6 digits are prefilled or entered
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP (even 4 digits) is filled
   useEffect(() => {
-    if (showOtp && otpValue && otpValue.length === 6 && lastSubmittedOtpRef.current !== otpValue && !loading) {
+    const isExactApiOtp = apiOtp && otpValue === apiOtp;
+    if (showOtp && otpValue && (otpValue.length === 6 || isExactApiOtp) && lastSubmittedOtpRef.current !== otpValue && !loading) {
       lastSubmittedOtpRef.current = otpValue;
       const timer = setTimeout(() => {
         if (verifyFnRef.current) {
@@ -58,7 +59,7 @@ export default function Login() {
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [showOtp, otpValue, loading]);
+  }, [showOtp, otpValue, loading, apiOtp]);
 
   const { refreshProducts } = useProducts();
   const { refreshCart } = useCart();
@@ -109,6 +110,7 @@ export default function Login() {
       return;
     }
     setError(null);
+    setSuccessMsg(null);
     setLoading(true);
 
     try {
@@ -125,16 +127,20 @@ export default function Login() {
         setOtpType('login');
         setResendTimer(30);
 
-        // Extract OTP from API response, store in state & prefill input field
+        setSuccessMsg('OTP sent successfully to your mobile number.');
         const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
         if (receivedOtp) {
           const otpStr = String(receivedOtp).replace(/\D/g, '').slice(0, 6);
           setApiOtp(otpStr);
-          setOtpValue(otpStr);
+          if (window.innerWidth <= 768) {
+            setOtpValue(otpStr);
+          } else {
+            setOtpValue('');
+          }
         } else {
           setApiOtp('');
+          setOtpValue('');
         }
-
         setShowOtp(true);
       } else {
         setError(data.message || data.error || 'Login failed. Please try again or ensure you are registered.');
@@ -155,22 +161,41 @@ export default function Login() {
 
   const handleResendOtp = async () => {
     setError(null);
+    setSuccessMsg(null);
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/resend-otp/`, {
+      let response = await fetch(`${API_BASE_URL}/resend-otp/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ phone_number: mobileRef.current, mobile: mobileRef.current })
       });
+
+      // If resend-otp not available, fall back to user-login
+      if (response.status === 404) {
+        response = await fetch(`${API_BASE_URL}/user-login/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+          body: JSON.stringify({ phone_number: mobileRef.current, mobile: mobileRef.current })
+        });
+      }
+
       const data = await response.json();
       if (!response.ok || data.success === false) {
         setError(data.message || 'Failed to resend OTP.');
       } else {
+        setSuccessMsg('OTP sent successfully to your mobile number.');
         const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
         if (receivedOtp) {
           const otpStr = String(receivedOtp).replace(/\D/g, '').slice(0, 6);
           setApiOtp(otpStr);
-          setOtpValue(otpStr);
+          if (window.innerWidth <= 768) {
+            setOtpValue(otpStr);
+          } else {
+            setOtpValue('');
+          }
+        } else {
+          setApiOtp('');
+          setOtpValue('');
         }
         setResendTimer(30);
       }
@@ -191,12 +216,11 @@ export default function Login() {
       return;
     }
     setError(null);
+    setSuccessMsg(null);
     setLoading(true);
 
     try {
-      const verifyUrl = (otpTypeRef.current === 'forgot-password' || otpTypeRef.current === 'store')
-        ? `${API_BASE_URL}/verify-user-login-otp/`
-        : `${API_BASE_URL}/verify-otp/`;
+      const verifyUrl = `${API_BASE_URL}/verify-otp/`;
 
       let response = await fetch(verifyUrl, {
         method: 'POST',
@@ -208,6 +232,13 @@ export default function Login() {
           ...(otpUserIdRef.current && { user_id: otpUserIdRef.current })
         })
       });
+
+      // 404 means user not found or OTP expired on backend
+      if (response.status === 404) {
+        setError('OTP expired or invalid. Please request a new OTP.');
+        setLoading(false);
+        return;
+      }
 
       let data = await response.json();
 
@@ -221,13 +252,20 @@ export default function Login() {
           } catch (e) {}
         }
 
-        const userObj = data.user || {};
+        let rawUser = data.user;
+        if (Array.isArray(rawUser) && rawUser.length > 0) {
+          rawUser = rawUser[0];
+        } else if (Array.isArray(rawUser) && rawUser.length === 0) {
+          rawUser = {};
+        }
+        const userObj = rawUser || {};
         const user = {
           ...userObj,
           id: userObj.id || data.user_id || data.id || otpUserIdRef.current,
           phone_number: userObj.phone_number || userObj.mobile || mobileRef.current,
           mobile: userObj.mobile || userObj.phone_number || mobileRef.current,
           name: userObj.name || data.name || (isStoreMemberRef.current ? 'Store Member' : 'Dharani Customer'),
+          email: userObj.email || data.email || null,
           is_store_member: userObj.is_store_member ?? data.is_store_member ?? isStoreMemberRef.current,
           role: userObj.role || data.role || (isStoreMemberRef.current ? 'store' : 'customer')
         };
@@ -243,15 +281,15 @@ export default function Login() {
         if (typeof refreshCart === 'function') refreshCart();
         
         setTimeout(() => {
-          if (user.is_store_member || user.role === 'store' || user.role === 'admin') {
-            window.location.href = '/admin';
-          } else {
-            window.location.href = window.location.pathname;
-          }
+          window.location.href = window.location.pathname;
         }, 300);
 
       } else {
-        setError(data.message || data.error || 'Invalid OTP. Please try again.');
+        if (data.message && String(data.message).toLowerCase().includes('expire')) {
+          setError('OTP expired. Please request a new OTP.');
+        } else {
+          setError(data.message || data.error || 'Invalid OTP. Please try again.');
+        }
       }
     } catch (err) {
       setError('Network error. Please try again later.');
@@ -332,7 +370,7 @@ export default function Login() {
                     <p className="otp-sent-text" style={{ marginBottom: '15px' }}>
                       Verification code sent to <br />
                       <strong>+91 {mobile}</strong>
-                      <button type="button" className="edit-mobile-btn" onClick={() => { setShowOtp(false); setOtpValue(''); setApiOtp(''); lastSubmittedOtpRef.current = null; }}>Edit</button>
+                      <button type="button" className="edit-mobile-btn" onClick={() => { setShowOtp(false); setOtpValue(''); lastSubmittedOtpRef.current = null; }}>Edit</button>
                     </p>
 
                     {/*
@@ -388,6 +426,7 @@ export default function Login() {
                     </div>
                   </div>
 
+                  {successMsg && <div className="success-message" style={{color: '#10b981', fontSize: '0.85rem', marginBottom: '15px', padding: '10px', background: '#d1fae5', borderRadius: '8px', textAlign: 'center'}}>{successMsg}</div>}
                   {error && <div className="error-message">{error}</div>}
 
                   <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>

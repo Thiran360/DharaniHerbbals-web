@@ -339,6 +339,7 @@ function AppContent() {
       {!isAdminRoute && !isPoliciesRoute && <FloatingSocials />}
       {!isAdminRoute && !isPoliciesRoute && <GlobalOrderPopup />}
       {!isAdminRoute && <Login />}
+      <WishlistToastNotification />
       <main className="main-content" style={isAdminRoute ? { padding: 0 } : {}}>
         <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '1.2rem', color: '#15803d' }}>Loading...</div>}>
           <Routes>
@@ -369,14 +370,16 @@ function WishlistToastNotification() {
   const { recentWishlistAction } = useWishlist();
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
+  const [toastType, setToastType] = useState('added');
   const { language } = useLanguage();
   let timerRef = useRef(null);
 
   useEffect(() => {
-    if (recentWishlistAction && recentWishlistAction.type === 'added') {
+    if (recentWishlistAction) {
+      setToastType(recentWishlistAction.type || 'added');
       setVisible(true);
       if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setVisible(false), 3000);
+      timerRef.current = setTimeout(() => setVisible(false), 2000);
     }
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -391,8 +394,12 @@ function WishlistToastNotification() {
         navigate('/profile', { state: { activeTab: 'wishlist' } });
       }}
     >
-      <Heart size={20} fill="#22c55e" color="#22c55e" />
-      <span>{language === 'ta' ? 'விருப்பப்பட்டியலில் சேர்க்கப்பட்டது' : 'Added to Wishlist'}</span>
+      <Heart size={20} fill={toastType === 'added' ? "#22c55e" : "transparent"} color={toastType === 'added' ? "#22c55e" : "#ef4444"} />
+      <span>
+        {toastType === 'added' 
+          ? (language === 'ta' ? 'விருப்பப்பட்டியலில் சேர்க்கப்பட்டது' : 'Added to Wishlist')
+          : (language === 'ta' ? 'விருப்பப்பட்டியலில் இருந்து நீக்கப்பட்டது' : 'Removed from Wishlist')}
+      </span>
       <span className="wishlist-toast-view">{language === 'ta' ? 'பார்க்க' : 'View'}</span>
     </div>
   );

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { User, Mail, Phone, Package, Heart, LogOut, ChevronRight, Image as ImageIcon, MapPin, Plus, Trash2, ChevronDown, Calendar } from 'lucide-react';
+import { User, Mail, Phone, Package, Heart, LogOut, ChevronRight, Image as ImageIcon, MapPin, Plus, Trash2, ChevronDown, Calendar, ShoppingCart } from 'lucide-react';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -30,13 +30,28 @@ export default function Profile() {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileFormData, setProfileFormData] = useState({ name: '', email: '' });
   const [profileUpdating, setProfileUpdating] = useState(false);
+  
+  // ── Wishlist Add All ──
+  const [addingAllToCart, setAddingAllToCart] = useState(false);
+  const [addAllMessage, setAddAllMessage] = useState(null);
+
+  // ── Mobile number change flow ──
+  const [mobileChangeMode, setMobileChangeMode] = useState('idle'); // 'idle' | 'input' | 'otp'
+  const [newMobile, setNewMobile] = useState('');
+  const [mobileOtp, setMobileOtp] = useState('');
+  const [mobileOtpUserId, setMobileOtpUserId] = useState(null);
+  const [mobileOtpLoading, setMobileOtpLoading] = useState(false);
+  const [mobileOtpError, setMobileOtpError] = useState('');
+  const [mobileOtpSuccess, setMobileOtpSuccess] = useState('');
+  const [mobileResendTimer, setMobileResendTimer] = useState(0);
+  const mobileResendRef = useRef(null);
   const [addressToDelete, setAddressToDelete] = useState(null);
   const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
   const [addressFormData, setAddressFormData] = useState({
     id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false
   });
   const { products, refreshProducts } = useProducts();
-  const { addToCart, refreshCart } = useCart();
+  const { addToCart, refreshCart, cartItems } = useCart();
   const { wishlist, removeFromWishlist } = useWishlist();
   const { language } = useLanguage();
   const { openLoginModal } = useAuthModal();
@@ -69,6 +84,18 @@ export default function Profile() {
         setUserData(parsed);
         const actualUser = parsed.user || parsed;
         if (actualUser && actualUser.id) {
+          fetch(`${API_BASE_URL}/customers/${actualUser.id}/`, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+          }).then(res => res.json()).then(customerData => {
+            let backendUser = customerData;
+            if (Array.isArray(backendUser) && backendUser.length > 0) backendUser = backendUser[0];
+            if (backendUser && (backendUser.email || backendUser.name)) {
+               const merged = { ...actualUser, ...backendUser };
+               const updatedData = { ...parsed, user: merged };
+               localStorage.setItem('user', JSON.stringify(updatedData));
+               setUserData(updatedData);
+            }
+          }).catch(() => {});
           const role1 = (parsed.role || '').toLowerCase();
           const role2 = (parsed.user?.role || '').toLowerCase();
           const type1 = (parsed.user_type || '').toLowerCase();
@@ -185,9 +212,15 @@ export default function Profile() {
     const actualUser = userData.user || userData;
     setProfileUpdating(true);
 
+    const userRole = (actualUser.role || '').toLowerCase();
+    const isB2B = ['retailer', 'reseller', 'staff', 'store', 'store_member'].includes(userRole);
+    const updateEndpoint = isB2B
+      ? `${API_BASE_URL}/retailers/${actualUser.id}/`
+      : `${API_BASE_URL}/customers/${actualUser.id}/`;
+
     try {
-      const response = await fetch(`${API_BASE_URL}/customers/${actualUser.id}/`, {
-        method: 'PUT',
+      const response = await fetch(updateEndpoint, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'ngrok-skip-browser-warning': 'true'
@@ -214,6 +247,117 @@ export default function Profile() {
       alert('Error updating profile');
     } finally {
       setProfileUpdating(false);
+    }
+  };
+
+  // ── Mobile number change: Step 1 – Send OTP ──
+  const handleSendMobileOtp = async () => {
+    const digits = newMobile.replace(/\D/g, '');
+    if (digits.length !== 10) {
+      setMobileOtpError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+    const actualUser = userData?.user || userData;
+    const currentMobile = (actualUser?.mobile || actualUser?.phone_number || '').replace(/\D/g, '');
+    if (digits === currentMobile) {
+      setMobileOtpError('New number is the same as your current number.');
+      return;
+    }
+    setMobileOtpError('');
+    setMobileOtpLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/user-login/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+        body: JSON.stringify({ mobile: digits, phone_number: digits })
+      });
+      const data = await res.json();
+      if (res.ok && data.success !== false) {
+        if (data.user_id) setMobileOtpUserId(data.user_id);
+        setMobileChangeMode('otp');
+        setMobileOtp('');
+        setMobileOtpError('');
+        // Start 30-second resend timer
+        setMobileResendTimer(30);
+        if (mobileResendRef.current) clearInterval(mobileResendRef.current);
+        mobileResendRef.current = setInterval(() => {
+          setMobileResendTimer(prev => {
+            if (prev <= 1) { clearInterval(mobileResendRef.current); return 0; }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        setMobileOtpError(data.message || data.error || 'Failed to send OTP. Please try again.');
+      }
+    } catch {
+      setMobileOtpError('Network error. Please try again.');
+    } finally {
+      setMobileOtpLoading(false);
+    }
+  };
+
+  // ── Mobile number change: Step 2 – Verify OTP & Update ──
+  const handleVerifyMobileOtp = async () => {
+    const digits = newMobile.replace(/\D/g, '');
+    if (mobileOtp.length < 4) {
+      setMobileOtpError('Please enter the OTP sent to your new number.');
+      return;
+    }
+    setMobileOtpError('');
+    setMobileOtpLoading(true);
+    try {
+      // Verify OTP
+      const verifyRes = await fetch(`${API_BASE_URL}/verify-otp/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+        body: JSON.stringify({
+          phone_number: digits,
+          mobile: digits,
+          otp: mobileOtp,
+          ...(mobileOtpUserId && { user_id: mobileOtpUserId })
+        })
+      });
+      const verifyData = await verifyRes.json();
+
+      if (!verifyRes.ok || verifyData.success === false) {
+        setMobileOtpError(verifyData.message || verifyData.error || 'Invalid OTP. Please try again.');
+        setMobileOtpLoading(false);
+        return;
+      }
+
+      // OTP verified — now PATCH the user's mobile number
+      const actualUser = userData?.user || userData;
+      const userRole = (actualUser?.role || '').toLowerCase();
+      const isB2B = ['retailer', 'reseller', 'staff', 'store', 'store_member'].includes(userRole);
+      const updateEndpoint = isB2B
+        ? `${API_BASE_URL}/retailers/${actualUser.id}/`
+        : `${API_BASE_URL}/customers/${actualUser.id}/`;
+
+      const patchRes = await fetch(updateEndpoint, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+        body: JSON.stringify({ mobile: digits, phone_number: digits })
+      });
+      const patchData = await patchRes.json();
+
+      if (patchRes.ok) {
+        const updatedUser = { ...actualUser, mobile: digits, phone_number: digits };
+        const updatedUserData = { ...userData, user: updatedUser };
+        localStorage.setItem('user', JSON.stringify(updatedUserData));
+        setUserData(updatedUserData);
+        setMobileOtpSuccess('✅ Mobile number updated successfully!');
+        setMobileChangeMode('idle');
+        setNewMobile('');
+        setMobileOtp('');
+        setMobileOtpUserId(null);
+        if (mobileResendRef.current) clearInterval(mobileResendRef.current);
+      } else {
+        setMobileOtpError(patchData.message || 'Failed to update mobile number.');
+      }
+    } catch {
+      setMobileOtpError('Network error. Please try again.');
+    } finally {
+      setMobileOtpLoading(false);
     }
   };
 
@@ -318,6 +462,76 @@ export default function Profile() {
   const handleEditAddress = (addr) => {
     setAddressFormData(addr);
     setShowAddressForm(true);
+  };
+
+  const handleAddAllToCart = async () => {
+    if (wishlist.length === 0 || addingAllToCart) return;
+    
+    setAddingAllToCart(true);
+    setAddAllMessage(null);
+
+    let addedCount = 0;
+    const outOfStockNames = [];
+
+    for (const item of wishlist) {
+      const pId = item.product || item.product_id || item.id;
+      const matchedProduct = products.find(p => String(p.id) === String(pId));
+      
+      if (!matchedProduct) continue;
+
+      // Check if already in cart
+      const alreadyInCart = cartItems && cartItems.some(cItem => String(cItem.id) === String(matchedProduct.id));
+      if (alreadyInCart) {
+        // Skip so we do not increase the existing quantity
+        continue;
+      }
+
+      let isOutOfStock = false;
+      if (matchedProduct.stock !== undefined) {
+        isOutOfStock = Number(matchedProduct.stock) <= 0;
+      } else if (matchedProduct.quantity !== undefined) {
+        isOutOfStock = Number(matchedProduct.quantity) <= 0;
+      } else if (matchedProduct.in_stock !== undefined) {
+        isOutOfStock = !matchedProduct.in_stock;
+      } else if (matchedProduct.status !== undefined) {
+        const s = String(matchedProduct.status).toLowerCase();
+        isOutOfStock = (s === 'out_of_stock' || s === 'outofstock');
+      }
+
+      if (isOutOfStock) {
+        const itemName = matchedProduct.name || item.name || item.product_name;
+        outOfStockNames.push(itemName);
+        continue;
+      }
+
+      try {
+        await addToCart(matchedProduct, 1);
+        addedCount++;
+      } catch (e) {
+        console.error("Failed to add item to cart", e);
+      }
+    }
+
+    setAddingAllToCart(false);
+
+    if (addedCount > 0) {
+      const skippedMsg = outOfStockNames.length > 0 ? ` (Skipped unavailable: ${outOfStockNames.join(', ')})` : '';
+      setAddAllMessage({
+        type: 'success',
+        text: `${addedCount} product${addedCount > 1 ? 's' : ''} added to your cart.${skippedMsg}`
+      });
+      if (refreshCart) refreshCart();
+    } else if (outOfStockNames.length > 0) {
+      setAddAllMessage({
+        type: 'error',
+        text: `Products are out of stock: ${outOfStockNames.join(', ')}`
+      });
+    } else {
+      setAddAllMessage({
+        type: 'error',
+        text: 'No new products were added (they might already be in your cart).'
+      });
+    }
   };
 
   if (!userData)  {
@@ -430,8 +644,9 @@ export default function Profile() {
                     />
                   </div>
                   <div className="form-group" style={{ opacity: 0.6 }}>
-                    <label>Mobile Number (Cannot be changed)</label>
+                    <label>Mobile Number</label>
                     <input type="text" value={mobile} disabled />
+                    <small style={{ color: '#6b7280', fontSize: '0.78rem', marginTop: '4px', display: 'block' }}>To change your mobile number, use the "Change" option on the profile view.</small>
                   </div>
                   <div className="address-form-actions">
                     <button type="button" className="btn-cancel" onClick={() => setIsEditingProfile(false)} disabled={profileUpdating}>Cancel</button>
@@ -440,11 +655,13 @@ export default function Profile() {
                 </form>
               ) : (
                 <>
+                  {mobileOtpSuccess && (
+                    <div className="profile-mobile-success">{mobileOtpSuccess}</div>
+                  )}
+
                   <div className="profile-info-grid">
                     <div className="profile-info-card">
-                      <div className="info-icon">
-                        <User size={20} />
-                      </div>
+                      <div className="info-icon"><User size={20} /></div>
                       <div className="info-details">
                         <label>Full Name</label>
                         <p>{name}</p>
@@ -452,22 +669,72 @@ export default function Profile() {
                     </div>
 
                     <div className="profile-info-card">
-                      <div className="info-icon">
-                        <Mail size={20} />
-                      </div>
+                      <div className="info-icon"><Mail size={20} /></div>
                       <div className="info-details">
                         <label>Email Address</label>
                         <p>{email}</p>
                       </div>
                     </div>
 
-                    <div className="profile-info-card">
-                      <div className="info-icon">
-                        <Phone size={20} />
-                      </div>
-                      <div className="info-details">
+                    {/* Mobile Number card with inline change flow */}
+                    <div className="profile-info-card profile-mobile-card">
+                      <div className="info-icon"><Phone size={20} /></div>
+                      <div className="info-details" style={{ flex: 1 }}>
                         <label>Mobile Number</label>
-                        <p>{mobile}</p>
+
+                        {mobileChangeMode === 'idle' && (
+                          <div className="profile-mobile-view">
+                            <p>{mobile}</p>
+                          </div>
+                        )}
+
+                        {mobileChangeMode === 'input' && (
+                          <div className="profile-mobile-input-row">
+                            <input
+                              type="tel"
+                              className="mobile-change-input"
+                              placeholder="Enter new 10-digit number"
+                              maxLength={10}
+                              value={newMobile}
+                              onChange={(e) => { setNewMobile(e.target.value.replace(/\D/g, '').slice(0, 10)); setMobileOtpError(''); }}
+                            />
+                            {mobileOtpError && <p className="profile-mobile-error">{mobileOtpError}</p>}
+                            <div className="profile-mobile-actions">
+                              <button type="button" className="btn-cancel" onClick={() => { setMobileChangeMode('idle'); setMobileOtpError(''); }} disabled={mobileOtpLoading}>Cancel</button>
+                              <button type="button" className="btn-save" onClick={handleSendMobileOtp} disabled={mobileOtpLoading || newMobile.length < 10}>
+                                {mobileOtpLoading ? 'Sending...' : 'Send OTP'}
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {mobileChangeMode === 'otp' && (
+                          <div className="profile-mobile-otp-row">
+                            <p className="profile-otp-hint">OTP sent to <strong>+91 {newMobile}</strong></p>
+                            <input
+                              type="tel" autoComplete="one-time-code" className="mobile-change-input" placeholder="Enter 6-digit OTP"
+                              maxLength={6}
+                              value={mobileOtp}
+                              onChange={(e) => { setMobileOtp(e.target.value.replace(/\D/g, '').slice(0, 6)); setMobileOtpError(''); }}
+                              autoFocus
+                            />
+                            {mobileOtpError && <p className="profile-mobile-error">{mobileOtpError}</p>}
+                            <div className="profile-mobile-actions">
+                              <button type="button" className="btn-cancel" onClick={() => { setMobileChangeMode('input'); setMobileOtpError(''); }} disabled={mobileOtpLoading}>Back</button>
+                              <button type="button" className="btn-save" onClick={handleVerifyMobileOtp} disabled={mobileOtpLoading || mobileOtp.length < 4}>
+                                {mobileOtpLoading ? 'Verifying...' : 'Verify & Update'}
+                              </button>
+                            </div>
+                            <button
+                              type="button"
+                              className="profile-resend-otp"
+                              onClick={handleSendMobileOtp}
+                              disabled={mobileResendTimer > 0 || mobileOtpLoading}
+                            >
+                              {mobileResendTimer > 0 ? `Resend OTP in ${mobileResendTimer}s` : 'Resend OTP'}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -720,13 +987,46 @@ export default function Profile() {
 
           {activeTab === 'wishlist' && (
             <div className="profile-wishlist" style={{ marginTop: 0 }}>
-              <div className="profile-content-header">
-                <h1>Wishlist</h1>
-                <p>Items you've saved for later.</p>
+              <div className="profile-content-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '15px' }}>
+                <div>
+                  <h1>MY WISHLIST</h1>
+                  <p>{wishlist.length} item{wishlist.length === 1 ? '' : 's'} saved</p>
+                </div>
+                {wishlist.length > 0 && (
+                  <button 
+                    className="btn-add-all-to-cart" 
+                    onClick={handleAddAllToCart}
+                    disabled={addingAllToCart}
+                  >
+                    <ShoppingCart size={18} />
+                    {addingAllToCart ? 'Adding...' : 'Add All to Cart'}
+                  </button>
+                )}
               </div>
 
+              {addAllMessage && (
+                <div className={`address-message ${addAllMessage.type === 'success' ? 'success' : 'error'}`} style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>{addAllMessage.text}</span>
+                  {addAllMessage.type === 'success' && (
+                    <button 
+                      onClick={() => navigate('/profile', { state: { activeTab: 'cart' } })} // Though cart is generally a drawer, navigate might open cart or redirect. Let's redirect to /shop or open cart. Wait, cart is opened by addToCart or navbar.
+                      style={{ background: 'transparent', border: '1px solid #10b981', color: '#10b981', padding: '4px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}
+                      onClickCapture={(e) => {
+                         e.preventDefault();
+                         // The site uses a cart drawer controlled by context, we should tell user to click cart icon or reload
+                         window.scrollTo({ top: 0, behavior: 'smooth' });
+                         // Also clear message
+                         setTimeout(() => setAddAllMessage(null), 3000);
+                      }}
+                    >
+                      View Cart
+                    </button>
+                  )}
+                </div>
+              )}
+
               {wishlist.length > 0 ? (
-                <div className="wishlist-grid">
+                <div className="wishlist-list-container">
                   {wishlist.map((item) => {
                     const pId = item.product || item.product_id || item.id;
                     const matchedProduct = products.find(p => String(p.id) === String(pId)) || {};
@@ -742,34 +1042,39 @@ export default function Profile() {
                     const itemIdToUse = matchedProduct.id || pId;
 
                     return (
-                      <div key={item.id || itemIdToUse} className="wishlist-card">
-                        {itemImage ? (
-                          <img src={itemImage} alt={itemName} className="wishlist-card-img" />
-                        ) : (
-                          <div className="wishlist-card-img" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f1f5f9' }}>
-                            <ImageIcon size={40} color="#cbd5e1" />
-                          </div>
-                        )}
-                        <div className="wishlist-card-details">
-                          <h4>{language === 'ta' && itemTamilName ? itemTamilName : itemName}</h4>
-                          <p>{itemPrice}</p>
+                      <div key={item.id || itemIdToUse} className="wishlist-row">
+                        <div className="wishlist-row-img-wrapper">
+                          {itemImage ? (
+                            <img src={itemImage} alt={itemName} className="wishlist-row-img" />
+                          ) : (
+                            <div className="wishlist-row-img placeholder">
+                              <ImageIcon size={30} color="#cbd5e1" />
+                            </div>
+                          )}
                         </div>
-                        <div className="wishlist-card-actions">
-                          <button
-                            className="btn-wishlist-cart"
-                            onClick={() => {
-                              addToCart(matchedProduct.id ? matchedProduct : item);
-                              removeFromWishlist(itemIdToUse);
-                            }}
-                          >
-                            Add to Cart
-                          </button>
-                          <button
-                            className="btn-wishlist-remove"
-                            onClick={() => removeFromWishlist(itemIdToUse)}
-                          >
-                            Remove
-                          </button>
+                        <div className="wishlist-row-content">
+                          <div className="wishlist-row-details">
+                            <h4>{language === 'ta' && itemTamilName ? itemTamilName : itemName}</h4>
+                            <p>{itemPrice}</p>
+                          </div>
+                          <div className="wishlist-row-actions">
+                            <button
+                              className="btn-add-all-to-cart"
+                              onClick={() => {
+                                addToCart(matchedProduct.id ? matchedProduct : item);
+                              }}
+                            >
+                              <ShoppingCart size={16} />
+                              Add to Cart
+                            </button>
+                            <button
+                              className="btn-wishlist-row-remove"
+                              onClick={() => removeFromWishlist(itemIdToUse)}
+                              title="Remove from wishlist"
+                            >
+                              <Heart size={16} color="#ef4444" /> Remove
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );

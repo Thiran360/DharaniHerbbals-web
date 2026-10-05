@@ -25,57 +25,61 @@ export default function Checkout() {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const statusParam = params.get('order_status');
-    const orderIdParam = params.get('order_id') || params.get('orderId'); // Support both snake_case and camelCase
-
-    if (statusParam === 'success') {
-      if (orderIdParam) {
-        setLoading(true);
-        fetch(`${API_BASE_URL}/paytm/status/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
-          },
-          body: JSON.stringify({ order_id: String(orderIdParam) })
-        })
-          .then(res => res.json())
-          .then(statusData => {
-            if (
-              statusData.success === true ||
-              statusData.body?.resultInfo?.resultStatus === 'TXN_SUCCESS' ||
-              statusData.status === 'TXN_SUCCESS' ||
-              statusData.payment_status === 'TXN_SUCCESS' ||
-              statusData.message === 'Payment updated'
-            ) {
-              setSuccessOrderId(orderIdParam);
-              setShowSuccessPopup(true);
-            } else {
-              setError(statusData.message || 'Payment verification failed on the server.');
-            }
-          })
-          .catch(err => {
-            console.error("Status verification error:", err);
-            // Fallback to success if network error but url says success, to avoid blocking user
-            setSuccessOrderId(orderIdParam);
-            setShowSuccessPopup(true);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } else {
-        // If they didn't pass order_id in URL, just show success directly
-        setSuccessOrderId('Completed');
-        setShowSuccessPopup(true);
+    const statusParam = params.get('order_status') || params.get('status') || params.get('payment_status') || params.get('txStatus');
+    const orderIdParam = params.get('order_id') || params.get('orderId') || params.get('merchantOrderId');
+    let xGlToken = params.get('x_gl_token') || params.get('token') || params.get('gateway_transaction_id');
+    if (!xGlToken) {
+      for (const [key, value] of params.entries()) {
+        if (value && typeof value === 'string' && (value.startsWith('gl_o-') || value.startsWith('gl_'))) {
+          xGlToken = value;
+          break;
+        }
       }
-    } else if (statusParam === 'failed') {
-      setError('Payment failed or was cancelled during redirect.');
+    }
+
+    const isSuccess = ['success','SUCCESS','TXN_SUCCESS','CHARGED'].includes(statusParam);
+    const isFailed = ['failed','FAILED','failure','FAILURE','CANCELLED'].includes(statusParam);
+
+    if (xGlToken || isSuccess || orderIdParam || isFailed) {
+      setLoading(true);
+      
+      const formData = new FormData();
+      formData.append('order_id', orderIdParam || '');
+      formData.append('order_status', statusParam || 'success');
+      if (xGlToken) formData.append('x_gl_token', xGlToken);
+
+      fetch(`${API_BASE_URL}/payglocal/callback/`, {
+        method: 'POST',
+        headers: { 'ngrok-skip-browser-warning': 'true' },
+        body: formData,
+          keepalive: true
+        }).catch(e => console.error('Callback error', e));
+
+      if (xGlToken) {
+        fetch(`${API_BASE_URL}/payglocal/checkin/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+          body: JSON.stringify({ gateway_transaction_id: xGlToken }),
+            keepalive: true
+          }).catch(e => console.error('Checkin error', e));
+      }
+
+      if (isSuccess || xGlToken) {
+        setSuccessOrderId(orderIdParam || 'Completed');
+        setShowSuccessPopup(true);
+        setLoading(false);
+        // The modal itself has a useEffect that will navigate to '/' after 3 seconds
+      } else {
+        setLoading(false);
+        setError('Payment failed or was cancelled. Please try again.');
+      }
     }
   }, [location]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('paytm');
+  const isB2BUserUI = user?.is_store_member || ['retailer', 'reseller', 'staff'].includes(user?.role);
+  const [paymentMethod, setPaymentMethod] = useState('payglocal');
   const [createdOrderId, setCreatedOrderId] = useState(null);
   const [isPaytmLoaded, setIsPaytmLoaded] = useState(true); // Assume loaded from index.html
 
@@ -144,13 +148,12 @@ export default function Checkout() {
 
   useEffect(() => {
     if (showSuccessPopup) {
-      refreshCart();
       const timer = setTimeout(() => {
-        navigate('/');
+        window.location.href = '/?order_placed=success';
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [showSuccessPopup, navigate, refreshCart]);
+  }, [showSuccessPopup]);
 
   useEffect(() => {
     // Check if user is logged in
@@ -454,7 +457,7 @@ export default function Checkout() {
       });
 
       if (addrRes.ok) {
-        const savedAddr = await addrRes.json();
+        const text = await addrRes.text(); let savedAddr = {}; try { savedAddr = text ? JSON.parse(text) : {}; } catch(e) { console.error("JSON parse error on addrRes:", text); }
         let newId = savedAddr.id || savedAddr.address_id || formData.id;
 
         const res = await fetch(`${API_BASE_URL}/address/${currentUserId}/`, {
@@ -478,7 +481,7 @@ export default function Checkout() {
         setCheckoutView('selected');
         setError(null);
       } else {
-        const errData = await addrRes.json();
+        const text = await addrRes.text(); let errData = {}; try { errData = text ? JSON.parse(text) : {}; } catch(e) { console.error("JSON parse error on addrRes err:", text); }
         setError(errData.message || errData.error || "Failed to save address");
       }
     } catch (err) {
@@ -489,6 +492,7 @@ export default function Checkout() {
   };
 
   const handlePlaceOrder = async (e) => {
+    if (loading) return;
     e.preventDefault();
     if (!user) return;
 
@@ -523,7 +527,7 @@ export default function Checkout() {
         });
 
         if (addrRes.ok) {
-          const savedAddr = await addrRes.json();
+          const text = await addrRes.text(); let savedAddr = {}; try { savedAddr = text ? JSON.parse(text) : {}; } catch(e) { console.error("JSON parse error on addrRes:", text); }
           if (savedAddr && savedAddr.id) {
             finalAddressId = savedAddr.id;
           } else if (savedAddr && savedAddr.address_id) {
@@ -557,8 +561,8 @@ export default function Checkout() {
             customer_type: user.role || "customer",
             category: user.role || "customer",
             role: user.role || "customer",
-            total_amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
-            amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
+            total_amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0)).toFixed(2)),
+            amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0)).toFixed(2)),
             email: user?.email || guestInfo?.email || "customer@dharaniherbbals.in",
             name: formData.full_name || "Customer"
           })
@@ -577,6 +581,53 @@ export default function Checkout() {
         setCreatedOrderId(internalOrderId);
       }
 
+      const calculatedAmount = grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0)).toFixed(2));
+
+      // B2B users - skip payment gateway
+      const isB2B = user?.is_store_member || ['retailer', 'reseller', 'staff'].includes(user?.role);
+      const backendRole = checkoutData?.role || checkoutData?.customer_role || checkoutData?.customer_type;
+      const isB2BActual = isB2B || ['retailer', 'reseller', 'staff'].includes(backendRole) || checkoutData?.payment_method === 'credit';
+      if (isB2BActual) {
+        setSuccessOrderId(internalOrderId);
+        setShowSuccessPopup(true);
+        setLoading(false);
+        return;
+      }
+
+      // PayGlocal payment
+      if (paymentMethod === 'payglocal') {
+        try {
+          const payglocalRes = await fetch(`${API_BASE_URL}/payglocal/create/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+            body: JSON.stringify({
+              order_id: internalOrderId,
+              amount: calculatedAmount,
+              user_id: currentUserId,
+              mobile: formData.phone || user?.mobile || '9999999999',
+              email: user?.email || guestInfo?.email || 'customer@dharaniherbbals.in',
+              return_url: window.location.origin + '/checkout'
+            })
+          });
+          const pgText = await payglocalRes.text();
+          let payglocalData = {};
+          try { payglocalData = pgText ? JSON.parse(pgText) : {}; } catch(e) {}
+          const redirectUrl = payglocalData.payment_url || payglocalData.redirect_url || payglocalData.response?.data?.redirectUrl;
+          if (payglocalRes.ok && redirectUrl) {
+            window.location.href = redirectUrl;
+            return;
+          } else {
+            setError(payglocalData.message || payglocalData.error || 'Payment initiation failed. Please try again.');
+            setLoading(false);
+            return;
+          }
+        } catch (err) {
+          setError('Network error while connecting to payment gateway. Please try again.');
+          setLoading(false);
+          return;
+        }
+      }
+
       if (paymentMethod === 'paytm') {
         if (!isPaytmLoaded || !window.Paytm || !window.Paytm.CheckoutJS) {
           alert("Paytm is still loading. Please wait a second and try again.");
@@ -586,7 +637,23 @@ export default function Checkout() {
 
         let finalPaytmData;
 
-        const calculatedAmount = grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2));
+        const calculatedAmount = grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0)).toFixed(2));
+
+      // Define checkoutData if we didn't go through the block
+      if (typeof checkoutData === 'undefined') {
+        var checkoutData = null;
+      }
+
+      const isB2B = user?.is_store_member || ['retailer', 'reseller', 'staff'].includes(user?.role);
+      const backendRole = checkoutData?.role || checkoutData?.customer_role || checkoutData?.customer_type;
+      const isB2BActual = isB2B || ['retailer', 'reseller', 'staff'].includes(backendRole) || checkoutData?.payment_method === 'credit';
+      
+      if (isB2BActual) {
+        setSuccessOrderId(internalOrderId);
+        setShowSuccessPopup(true);
+        setLoading(false);
+        return;
+      }
         
         if (!finalPaytmData) {
           // Call Paytm Initiate API
@@ -759,10 +826,11 @@ export default function Checkout() {
   }
 
   // Also don't block if we have an error to show, or if we are verifying payment
-  if (cartItems.length === 0 && !showSuccessPopup && !error && !isVerifyingPayment) {
+  const hasPaymentParams = new URLSearchParams(location.search).has('order_status') || new URLSearchParams(location.search).has('order_id') || new URLSearchParams(location.search).has('x_gl_token');
+  if (cartItems.length === 0 && !showSuccessPopup && !error && !isVerifyingPayment && !hasPaymentParams) {
     return (
-      <div className="checkout-page-wrapper" style={{ alignItems: 'center' }}>
-        <Loader2 size={40} className="spinner text-primary" style={{ color: '#16A34A' }} />
+      <div className="checkout-page-wrapper" style={{ alignItems: 'center', padding: '50px' }}>
+        <h2>Your cart is empty</h2>
       </div>
     );
   }
@@ -1212,8 +1280,8 @@ export default function Checkout() {
                 <div className="step-card-body fade-in-up" style={{ marginTop: '20px' }}>
                   <div className="payment-options">
                     <label className="payment-option selected" style={{ flex: 1, padding: '20px', border: '2px solid #16A34A', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', background: '#F0FDF4' }}>
-                      <input type="radio" name="paymentMethod" value="paytm" checked={true} readOnly style={{ accentColor: '#16A34A', width: '20px', height: '20px' }} />
-                      <span style={{ fontWeight: '600', color: '#111827', fontSize: '1.1rem' }}>Paytm / UPI / Cards</span>
+                      <input type="radio" name="paymentMethod" value="payglocal" checked={true} readOnly style={{ accentColor: '#16A34A', width: '20px', height: '20px' }} />
+                      <span style={{ fontWeight: '600', color: '#111827', fontSize: '1.1rem' }}>PayGlocal (Credit/Debit/International)</span>
                     </label>
                   </div>
                   {error && <div className="checkout-error-alert" style={{ marginTop: '20px' }}>{error}</div>}
@@ -1244,13 +1312,13 @@ export default function Checkout() {
             <div className="summary-totals">
               <div className="total-row"><span>Subtotal</span><span>₹{cartTotal}</span></div>
               <div className="total-row"><span>Shipping Charge</span>{shippingCost === 0 ? <span className="text-free">Free</span> : <span>₹{shippingCost}</span>}</div>
-              <div className="total-row"><span>CGST</span><span>₹{(Number(cgst) || 0).toFixed(2)}</span></div>
-              <div className="total-row"><span>SGST</span><span>₹{(Number(sgst) || 0).toFixed(2)}</span></div>
-              <div className="total-row"><span>IGST</span><span>₹{(Number(igst) || 0).toFixed(2)}</span></div>
-              <div className="total-row"><span>Tax Total</span><span>₹{(Number(taxTotal) || 0).toFixed(2)}</span></div>
+              
+              
+              
+              
               <div className="total-row grand-total" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '16px', marginTop: '8px' }}>
                 <span>Total</span>
-                <span style={{ fontSize: '1.8rem', color: '#16A34A' }}>₹{grandTotal !== null ? grandTotal.toFixed(2) : (cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)}</span>
+                <span style={{ fontSize: "1.8rem", color: "#16A34A" }}>₹{grandTotal !== null ? grandTotal.toFixed(2) : (cartTotal + (shippingCost || 0)).toFixed(2)}</span>
               </div>
             </div>
 

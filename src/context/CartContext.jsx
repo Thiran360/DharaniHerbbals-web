@@ -16,6 +16,7 @@ export function CartProvider({ children }) {
   const [taxTotal, setTaxTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartToastMsg, setCartToastMsg] = useState('');
   const { products } = useProducts();
   const { openLoginModal } = useAuthModal();
 
@@ -58,7 +59,7 @@ export function CartProvider({ children }) {
           return null;
         }
 
-        const data = await res.json();
+        const text = await res.text(); let data = {}; try { data = text ? JSON.parse(text) : {}; } catch(e) { console.error("JSON parse error:", text); }
         if (data) {
           let itemsArray = [];
           if (Array.isArray(data)) {
@@ -89,7 +90,7 @@ export function CartProvider({ children }) {
             setShippingCost(parseFloat(data.shipping) || 0);
           }
           if (data.gst_total !== undefined) {
-            setTaxAmount(parseFloat(data.gst_total) || 0);
+            setTaxAmount(0);
           } else if (data.tax !== undefined) {
             setTaxAmount(parseFloat(data.tax) || 0);
           } else if (data.tax_amount !== undefined) {
@@ -97,17 +98,15 @@ export function CartProvider({ children }) {
           }
 
           // New separate tax fields
-          if (data.cgst !== undefined) setCgst(parseFloat(data.cgst) || 0);
-          if (data.sgst !== undefined) setSgst(parseFloat(data.sgst) || 0);
-          if (data.igst !== undefined) setIgst(parseFloat(data.igst) || 0);
+          if (data.cgst !== undefined) setCgst(0);
+          if (data.sgst !== undefined) setSgst(0);
+          if (data.igst !== undefined) setIgst(0);
           if (data.tax_total !== undefined) {
             setTaxTotal(parseFloat(data.tax_total) || 0);
             // Fallback taxAmount if not set above
             setTaxAmount(prev => prev || parseFloat(data.tax_total) || 0);
           }
-          if (data.grand_total !== undefined) {
-            setGrandTotal(parseFloat(data.grand_total) || 0);
-          }
+          setGrandTotal(null);
         }
       } catch (err) {
         console.error(err);
@@ -130,7 +129,7 @@ export function CartProvider({ children }) {
     }
   }, [cartItems]);
 
-  const addToCart = async (product, quantity = 1, variationId = null) => {
+  const addToCart = async (product, quantity = 1, variationId = null, silent = false) => {
     const user = getUser();
 
     if (!user) {
@@ -145,14 +144,10 @@ export function CartProvider({ children }) {
       if (existingItem.variation_id === variationId) {
         // Same variation -> just add quantity
         updateQuantity(product.id, quantity);
-        setIsCartOpen(true);
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
-          zIndex: 100000
-        });
+        if (!silent) {
+          setCartToastMsg('Quantity updated in cart!');
+            setTimeout(() => setCartToastMsg(''), 3000);
+        }
         return;
       } else {
         // Different variation -> Backend doesn't support multiple variations of the same product.
@@ -182,7 +177,7 @@ export function CartProvider({ children }) {
       });
 
       if (!response.ok) {
-        const errData = await response.json();
+        const text = await response.text(); let errData = {}; try { errData = text ? JSON.parse(text) : {}; } catch(e) { console.error("JSON parse error:", text); }
         if (errData.message && errData.message.toLowerCase().includes('user')) {
           localStorage.removeItem('user');
           if (typeof openLoginModal === 'function') openLoginModal();
@@ -193,14 +188,21 @@ export function CartProvider({ children }) {
       await refreshCart();
     } catch (err) { console.error(err); }
 
-    setIsCartOpen(true);
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
-      zIndex: 100000
-    });
+    if (!silent) {
+      if (cartItems.length === 0) {
+          setIsCartOpen(true);
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
+            zIndex: 100000
+          });
+        } else {
+          setCartToastMsg('Item added to cart!');
+          setTimeout(() => setCartToastMsg(''), 3000);
+        }
+    }
   };
 
   const removeFromCart = async (productId) => {
@@ -288,7 +290,7 @@ export function CartProvider({ children }) {
       const priceStr = typeof item.price === 'string' ? item.price.replace(/[^\d.]/g, '') : item.price;
       const price = parseFloat(priceStr) || 0;
       const gstRate = item.gst_percentage || 0;
-      totalTax += (price * item.quantity * (gstRate / 100));
+      totalTax += 0;
     });
 
     // Split tax into CGST and SGST equally (assuming local state)
@@ -335,6 +337,27 @@ export function CartProvider({ children }) {
       refreshCart
     }}>
       {children}
+      {cartToastMsg && (
+        <div style={{
+          position: 'fixed',
+          top: '30px',
+          right: '30px',
+          backgroundColor: '#10b981',
+          color: 'white',
+          padding: '12px 24px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          zIndex: 999999,
+          fontWeight: '600',
+          fontSize: '15px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          {cartToastMsg}
+        </div>
+      )}
     </CartContext.Provider>
   );
 }

@@ -17,6 +17,26 @@ export default function OtpVerification() {
   const lastSubmittedOtpRef = useRef(null);
 
   useEffect(() => {
+    // Only run on mobile devices (width <= 768px)
+    if (window.innerWidth <= 768 && 'OTPCredential' in window) {
+      const abortController = new AbortController();
+      
+      navigator.credentials.get({
+        otp: { transport: ['sms'] },
+        signal: abortController.signal
+      }).then(otpRes => {
+        if (otpRes && otpRes.code) {
+          setOtp(otpRes.code);
+        }
+      }).catch(err => {
+        console.warn('WebOTP error or aborted:', err);
+      });
+
+      return () => abortController.abort();
+    }
+  }, []);
+
+  useEffect(() => {
     if (location.state?.otp) {
       const prefilled = String(location.state.otp).replace(/\D/g, '').slice(0, 6);
       setOtp(prefilled);
@@ -171,8 +191,7 @@ export default function OtpVerification() {
               <div style={{ position: 'relative', marginTop: '4px' }}>
                 <input
                   id="otp"
-                  type="text"
-                  className="input-field"
+                  type="text" autoComplete="one-time-code" className="input-field"
                   placeholder="e.g. 123456"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}

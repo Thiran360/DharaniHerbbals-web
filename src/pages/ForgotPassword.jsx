@@ -32,7 +32,7 @@ export default function ForgotPassword() {
     setError(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/user-login/`, {
+      const response = await fetch(`${API_BASE_URL}/generate-otp/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export default function ForgotPassword() {
         throw new Error('Please enter a valid OTP.');
       }
 
-      const response = await fetch(`${API_BASE_URL}/verify-user-login-otp/`, {
+      const response = await fetch(`${API_BASE_URL}/verify-otp/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

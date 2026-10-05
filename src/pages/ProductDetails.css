@@ -2187,10 +2187,12 @@
 /* Actions Block */
 .pd-premium-actions-wrapper {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
   margin-top: 12px;
   margin-bottom: 12px;
+  width: 100%;
 }
 .premium-qty-selector {
   display: flex;
@@ -2613,6 +2615,7 @@
   font-size: 0.95rem;
   line-height: 1.7;
   color: #475569;
+  text-align: justify;
 }
 
 .bento-trust-item {
@@ -2696,3 +2699,48 @@
 }
 .bento-delivery-msg.success { color: #16a34a; }
 .bento-delivery-msg.error { color: #ef4444; }
+
+
+/* Buy Now Button Styles */
+.premium-buy-now-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 46px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+  width: 100%;
+}
+.premium-buy-now-btn:hover {
+  background-color: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.3);
+}
+@media (max-width: 768px) {
+  .premium-buy-now-btn {
+    height: 52px !important;
+    min-height: 52px !important;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    width: 100%;
+  }
+}
+
+.pd-action-buttons-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+@media (max-width: 375px) {
+  .pd-action-buttons-row {
+    flex-direction: column;
+  }
+}

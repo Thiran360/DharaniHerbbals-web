@@ -119,7 +119,9 @@ export function WishlistProvider({ children }) {
     }
 
     // Optimistic UI update
+    const removedItem = wishlist.find(item => (item.product !== undefined ? item.product === productId : item.id === productId));
     setWishlist((prev) => prev.filter((item) => (item.product !== undefined ? item.product !== productId : item.id !== productId)));
+    setRecentWishlistAction({ type: 'removed', product: removedItem || { id: productId }, timestamp: Date.now() });
 
     if (user) {
       try {

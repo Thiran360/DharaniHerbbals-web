@@ -1,29 +1,42 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Search, User, ShoppingBag, Zap, X, Home, Info, Phone } from 'lucide-react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Search, User, ShoppingBag, X, Home, Info, Phone, Heart, Clock, Package, MapPin, RefreshCw, LogOut, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
+import { useWishlist } from '../context/WishlistContext';
 import confetti from 'canvas-confetti';
 import BrandLogoVideo from './BrandLogoVideo';
 import './Navbar.css';
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [user, setUser] = useState(null);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const accountMenuRef = useRef(null);
+  const suggestionsRef = useRef(null);
+  const [recentSearches, setRecentSearches] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('dharani_recent_searches') || '[]'); } catch { return []; }
+  });
   const { toggleCart, cartCount } = useCart();
   const { products, refreshProducts } = useProducts();
   const { openLoginModal } = useAuthModal();
+  const { wishlist } = useWishlist();
+  const wishlistCount = wishlist.length;
   const location = useLocation();
 
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  // Max 3 for keyboard-navigable suggestions
+  const visibleProducts = filteredProducts.slice(0, 3);
 
   const rafIdRef = useRef(null);
   const handleScroll = useCallback(() => {
@@ -82,12 +95,172 @@ export default function Navbar() {
       if (!e.target.closest('.desktop-search-bar') && !e.target.closest('.mobile-search-bar')) {
         setShowSuggestions(false);
       }
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target)) {
+        setShowAccountMenu(false);
+      }
     };
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+  // Derive first letter of logged-in user's name
+  const actualUser = user?.user || user;
+  const userName = actualUser?.name || '';
+  const userInitial = userName && !['Dharani Customer', 'Vedan Customer', 'Guest User', 'Store Member'].includes(userName)
+    ? userName.trim().charAt(0).toUpperCase()
+    : null;
+
+  // Logout handler
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    setUser(null);
+    setShowAccountMenu(false);
+    if (refreshProducts) refreshProducts();
+    window.dispatchEvent(new Event('user-login-status-changed'));
+    navigate('/');
+  };
+
+  // ── Recent Searches helpers ──
+  const saveSearch = (keyword) => {
+    const trimmed = keyword.trim();
+    if (!trimmed) return;
+    setRecentSearches(prev => {
+      const filtered = prev.filter(k => k.toLowerCase() !== trimmed.toLowerCase());
+      const updated = [trimmed, ...filtered].slice(0, 8);
+      try { localStorage.setItem('dharani_recent_searches', JSON.stringify(updated)); } catch {}
+      return updated;
+    });
+  };
+
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    try { localStorage.removeItem('dharani_recent_searches'); } catch {}
+  };
+
+  // Called when user clicks a product suggestion
+  const handleProductClick = (productName) => {
+    saveSearch(productName);
+    setShowSuggestions(false);
+    setSearchQuery('');
+    setActiveIndex(-1);
+  };
+
+  // Called when user clicks a recent search keyword
+  const handleRecentClick = (keyword) => {
+    setSearchQuery(keyword);
+    setShowSuggestions(true);
+    saveSearch(keyword);
+    setActiveIndex(-1);
+  };
+
+  // Full keyboard navigation handler
+  const handleSearchKeyDown = (e) => {
+    if (!showSuggestions) return;
+
+    if (searchQuery) {
+      // Navigate product suggestions
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setActiveIndex(prev => {
+          const next = prev < visibleProducts.length - 1 ? prev + 1 : 0;
+          // Scroll item into view
+          setTimeout(() => {
+            const el = suggestionsRef.current?.querySelector(`[data-idx="${next}"]`);
+            el?.scrollIntoView({ block: 'nearest' });
+          }, 0);
+          return next;
+        });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setActiveIndex(prev => {
+          const next = prev > 0 ? prev - 1 : visibleProducts.length - 1;
+          setTimeout(() => {
+            const el = suggestionsRef.current?.querySelector(`[data-idx="${next}"]`);
+            el?.scrollIntoView({ block: 'nearest' });
+          }, 0);
+          return next;
+        });
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeIndex >= 0 && visibleProducts[activeIndex]) {
+          const p = visibleProducts[activeIndex];
+          handleProductClick(p.name);
+          navigate(`/product/${p.id}`);
+        } else if (searchQuery.trim()) {
+          saveSearch(searchQuery.trim());
+        }
+      } else if (e.key === 'Escape') {
+        setShowSuggestions(false);
+        setActiveIndex(-1);
+      }
+    } else {
+      // Recent searches: Enter on focused keyword
+      if (e.key === 'Escape') {
+        setShowSuggestions(false);
+        setActiveIndex(-1);
+      }
+    }
+  };
+
+  // Shared dropdown renderer
+  const renderDropdown = () => {
+    if (!showSuggestions) return null;
+
+    // Typing: show keyboard-navigable product suggestions (max 3)
+    if (searchQuery) {
+      return (
+        <div className="search-suggestions-dropdown" ref={suggestionsRef}>
+          {visibleProducts.length > 0 ? (
+            visibleProducts.map((p, idx) => (
+              <Link
+                to={`/product/${p.id}`}
+                key={p.id}
+                data-idx={idx}
+                className={`search-suggestion-item${activeIndex === idx ? ' search-suggestion-active' : ''}`}
+                onClick={() => handleProductClick(p.name)}
+                tabIndex={-1}
+              >
+                <img src={p.image} alt={p.name} />
+                <div className="suggestion-info">
+                  <span className="suggestion-name">{p.name}</span>
+                  <span className="suggestion-price">{p.price}</span>
+                </div>
+                {activeIndex === idx && (
+                  <span className="suggestion-kbd-hint">↵</span>
+                )}
+              </Link>
+            ))
+          ) : (
+            <div className="search-suggestion-item empty">{t('noProductsFound')}</div>
+          )}
+        </div>
+      );
+    }
+
+    // Focused, empty query: show recent searches
+    if (recentSearches.length === 0) return null;
+    return (
+      <div className="search-suggestions-dropdown">
+        <div className="recent-searches-header">
+          <span className="recent-searches-label">Recent Searches</span>
+          <button className="recent-searches-clear" onClick={clearRecentSearches}>Clear All</button>
+        </div>
+        {recentSearches.map((kw, i) => (
+          <button
+            key={i}
+            className="search-suggestion-item recent-search-item"
+            onClick={() => handleRecentClick(kw)}
+          >
+            <Clock size={15} className="recent-search-icon" />
+            <span className="suggestion-name">{kw}</span>
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <nav className={`navbar-ultra ${scrolled ? 'scrolled' : ''}`}>
@@ -155,37 +328,89 @@ export default function Navbar() {
               placeholder={t('searchPlaceholder')}
               className="search-input" 
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); }}
+              onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); setActiveIndex(-1); }}
               onFocus={() => setShowSuggestions(true)}
+              onKeyDown={handleSearchKeyDown}
+              aria-autocomplete="list"
+              aria-expanded={showSuggestions}
+              role="combobox"
             />
-            {showSuggestions && searchQuery && (
-              <div className="search-suggestions-dropdown">
-                {filteredProducts.length > 0 ? (
-                  filteredProducts.slice(0, 5).map(p => (
-                    <Link to={`/product/${p.id}`} key={p.id} className="search-suggestion-item">
-                      <img src={p.image} alt={p.name} />
-                      <div className="suggestion-info">
-                        <span className="suggestion-name">{p.name}</span>
-                        <span className="suggestion-price">{p.price}</span>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="search-suggestion-item empty">{t('noProductsFound')}</div>
-                )}
-              </div>
-            )}
+            {renderDropdown()}
           </div>
           <div className="action-capsule">
-            {user ? (
-              <Link to="/profile" className="capsule-btn icon-only user-btn" aria-label="Account">
-                <User size={20} strokeWidth={2} />
-              </Link>
-            ) : (
-              <button className="capsule-btn icon-only user-btn" aria-label="Account" onClick={openLoginModal}>
-                <User size={20} strokeWidth={2} />
-              </button>
-            )}
+            {/* Wishlist Button */}
+            <button
+              className="capsule-btn icon-only wishlist-btn"
+              aria-label="Wishlist"
+              onClick={() => {
+                if (user) {
+                  navigate('/profile', { state: { activeTab: 'wishlist' } });
+                } else {
+                  openLoginModal();
+                }
+              }}
+            >
+              <div className="wishlist-icon-wrapper">
+                <Heart size={20} strokeWidth={2} />
+                {wishlistCount > 0 && <span className="wishlist-badge">{wishlistCount}</span>}
+              </div>
+            </button>
+            {/* Account Avatar / Login Button */}
+            <div className="nav-account-wrapper" ref={accountMenuRef}>
+              {user ? (
+                <>
+                  <button
+                    className="capsule-btn icon-only nav-avatar-btn"
+                    aria-label="My Account"
+                    onClick={() => setShowAccountMenu(prev => !prev)}
+                  >
+                    {userInitial ? (
+                      <span className="nav-user-avatar">{userInitial}</span>
+                    ) : (
+                      <User size={20} strokeWidth={2} />
+                    )}
+                  </button>
+
+                  {showAccountMenu && (
+                    <div className="nav-account-dropdown">
+                      {userInitial && (
+                        <div className="nav-account-dropdown-header">
+                          <span className="nav-account-avatar-lg">{userInitial}</span>
+                          <div>
+                            <p className="nav-account-name">{userName}</p>
+                            <p className="nav-account-sub">My Account</p>
+                          </div>
+                        </div>
+                      )}
+                      <div className="nav-account-divider" />
+                      <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'orders' } }); setShowAccountMenu(false); }}>
+                        <Package size={15} /> My Orders
+                      </button>
+                      <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'wishlist' } }); setShowAccountMenu(false); }}>
+                        <Heart size={15} /> Wishlist
+                      </button>
+                      <button className="nav-account-item" onClick={() => { navigate('/shop'); setShowAccountMenu(false); }}>
+                        <RefreshCw size={15} /> Buy Again
+                      </button>
+                      <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'addresses' } }); setShowAccountMenu(false); }}>
+                        <MapPin size={15} /> Saved Addresses
+                      </button>
+                      <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'account' } }); setShowAccountMenu(false); }}>
+                        <User size={15} /> Account Details
+                      </button>
+                      <div className="nav-account-divider" />
+                      <button className="nav-account-item nav-account-logout" onClick={handleLogout}>
+                        <LogOut size={15} /> Logout
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <button className="capsule-btn icon-only user-btn" aria-label="Account" onClick={openLoginModal}>
+                  <User size={20} strokeWidth={2} />
+                </button>
+              )}
+            </div>
             <button 
               className="capsule-btn cart-btn" 
               aria-label="Shopping Bag" 
@@ -219,26 +444,11 @@ export default function Navbar() {
             placeholder={t('searchPlaceholder')}
             className="search-input" 
             value={searchQuery}
-            onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); }}
+            onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); setActiveIndex(-1); }}
             onFocus={() => setShowSuggestions(true)}
+            onKeyDown={handleSearchKeyDown}
           />
-          {showSuggestions && searchQuery && (
-            <div className="search-suggestions-dropdown">
-              {filteredProducts.length > 0 ? (
-                filteredProducts.slice(0, 5).map(p => (
-                  <Link to={`/product/${p.id}`} key={p.id} className="search-suggestion-item">
-                    <img src={p.image} alt={p.name} />
-                    <div className="suggestion-info">
-                      <span className="suggestion-name">{p.name}</span>
-                      <span className="suggestion-price">{p.price}</span>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div className="search-suggestion-item empty">{t('noProductsFound')}</div>
-              )}
-            </div>
-          )}
+          {renderDropdown()}
         </div>
       </div>
       
@@ -278,10 +488,34 @@ export default function Navbar() {
           </NavLink>
           {user && (
             <NavLink to="/profile" className="mobile-nav-link" onClick={toggleMobileMenu} style={{ transitionDelay: '0.3s' }}>
-              <div className="nav-icon-box"><User size={22} /></div>
+              <div className="nav-icon-box">
+                {userInitial ? (
+                  <span className="mobile-nav-avatar">{userInitial}</span>
+                ) : (
+                  <User size={22} />
+                )}
+              </div>
               <span>{t('myAccount')}</span>
             </NavLink>
           )}
+          <NavLink
+            to={user ? '/profile' : '#'}
+            state={{ activeTab: 'wishlist' }}
+            className="mobile-nav-link"
+            onClick={(e) => {
+              if (!user) { e.preventDefault(); openLoginModal(); }
+              toggleMobileMenu();
+            }}
+            style={{ transitionDelay: '0.35s' }}
+          >
+            <div className="nav-icon-box" style={{ position: 'relative' }}>
+              <Heart size={22} />
+              {wishlistCount > 0 && (
+                <span className="mobile-wishlist-badge">{wishlistCount}</span>
+              )}
+            </div>
+            <span>Wishlist</span>
+          </NavLink>
         </div>
         
         <div className="mobile-drawer-footer">

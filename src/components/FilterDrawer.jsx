@@ -7,17 +7,32 @@ const FILTER_CATEGORIES = [
   {
     id: 'productType',
     label: 'Product Type',
-    options: ['Powder', 'Soap', 'Oil', 'Gel', 'Shampoo', 'Food', 'Others']
+    options: ['Powder', 'Soap', 'Oil', 'Gel', 'Shampoo', 'Food', 'Tea', 'Malt', 'Snacks', 'Lehyam', 'Others']
   },
   {
     id: 'concern',
     label: 'Concern',
-    options: ['Acne & Pimples', 'Hairfall', 'Dry Skin', 'Dandruff', 'Immunity', 'Digestion']
+    options: ['Hair Care', 'Skin Care', 'Digestion', 'Immunity', 'General Wellness', 'Baby Care']
   },
   {
     id: 'ingredient',
     label: 'Ingredient',
-    options: ['Aloe Vera', 'Turmeric', 'Neem', 'Hibiscus', 'Amla', 'Sandalwood', 'Rose']
+    options: ['Beetroot', 'Turmeric', 'Amla', 'Neem', 'Hibiscus', 'Moringa', 'Vetiver', 'Kuppaimeni']
+  },
+  {
+    id: 'suitableFor',
+    label: 'Suitable For',
+    options: ['Men', 'Women', 'Kids', 'Family']
+  },
+  {
+    id: 'price',
+    label: 'Price Range',
+    options: ['Under ₹100', '₹100–₹250', '₹250–₹500', 'Above ₹500']
+  },
+  {
+    id: 'availability',
+    label: 'Availability',
+    options: ['In Stock', 'Out of Stock']
   }
 ];
 

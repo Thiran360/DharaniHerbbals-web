@@ -75,6 +75,8 @@ html, body {
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border: 1px solid rgba(34, 197, 94, 0.2);
+  font-size: 0.95rem;
+  white-space: nowrap;
 }
 
 .wishlist-toast.visible {
@@ -89,4 +91,34 @@ html, body {
   color: #22c55e;
   text-decoration: underline;
   margin-left: 8px;
+}
+
+@media (max-width: 768px) {
+  .wishlist-toast {
+    top: auto;
+    bottom: 80px;
+    right: 12px;
+    left: 12px;
+    transform: translateY(120px);
+    padding: 8px 14px;
+    border-radius: 12px;
+    gap: 8px;
+    font-size: 0.78rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .wishlist-toast.visible {
+    transform: translateY(0);
+  }
+
+  .wishlist-toast-view {
+    font-size: 0.78rem;
+    margin-left: 4px;
+  }
+
+  .wishlist-toast svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
 }

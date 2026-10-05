@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ProductCard } from './Shop';
-import { ShoppingCart, ShieldCheck, Leaf, Truck, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Share2, MessageCircle, Camera, Copy, Check, Package, Plus, Star, MessageSquare, FileText, CheckCircle } from 'lucide-react';
+import { ShoppingCart, ShieldCheck, Leaf, Truck, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Share2, MessageCircle, Camera, Copy, Check, Package, Plus, Star, MessageSquare, FileText, CheckCircle, ArrowLeft } from 'lucide-react';
 import imgLifestyle from '../assets/herbal_lifestyle.png';
 import imgIngredients from '../assets/herbal_ingredients.png';
 import imgTexture from '../assets/herbal_texture.png';
@@ -13,6 +13,7 @@ import './ProductDetails.css';
 
 export default function ProductDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { products, loading } = useProducts();
   const sliderRef = useRef(null);
   const trackRef = useRef(null);
@@ -413,7 +414,7 @@ export default function ProductDetails() {
     window.scrollTo(0, 0);
     setCurrentImgIndex(0);
     setQuantity(1);
-    setActiveTab('description');
+    setActiveTab('description'); setCrmGalleryImages([]); setFetchedVariations([]); setFetchedKeyBenefits([]);
     let active = true;
 
     if (id) {
@@ -743,11 +744,20 @@ export default function ProductDetails() {
 
   return (
     <div className="pd-pro-wrapper">
-      {/* Breadcrumbs */}
-      <div className="pd-breadcrumbs">
-        <Link to="/">{t('home')}</Link>
-        <span className="separator">/</span>
-        <span className="current">{translatedName}</span>
+      {/* Breadcrumbs & Back Button */}
+      <div className="pd-breadcrumbs" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <button 
+          onClick={() => navigate(-1)} 
+          style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#334155', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', flexShrink: 0 }} 
+          title="Go Back"
+        >
+          <ArrowLeft size={18} />
+        </button>
+        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+          <Link to="/">{t('home')}</Link>
+          <span className="separator" style={{ margin: '0 8px' }}>/</span>
+          <span className="current">{translatedName}</span>
+        </div>
       </div>
 
       <div className="pd-pro-container">
@@ -926,10 +936,13 @@ export default function ProductDetails() {
               <input type="text" value={quantity} readOnly />
               <button type="button" onClick={() => setQuantity(quantity + 1)}>+</button>
             </div>
-            <button type="button" className="premium-add-btn" onClick={() => addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id)}>
+            <div className="pd-action-buttons-row">
+              <button type="button" className="premium-add-btn" onClick={() => addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id)}>
               <ShoppingCart size={20} strokeWidth={2.5} />
               <span>{t('addToCart')}</span>
             </button>
+            <button type="button" className="premium-buy-now-btn" onClick={async () => { await addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id, true); navigate('/checkout'); }}><span>Buy Now</span></button>
+            </div>
           </div>
 
           {/* Ultra-Modern Bento Section */}
