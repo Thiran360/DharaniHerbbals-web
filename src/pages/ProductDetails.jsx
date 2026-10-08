@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ProductCard } from './Shop';
 import { ShoppingCart, ShieldCheck, Leaf, Truck, ChevronDown, ChevronUp, Share2, MessageCircle, Camera, Copy, Check, Package, Plus, Star, MessageSquare, FileText, CheckCircle } from 'lucide-react';
 import imgLifestyle from '../assets/herbal_lifestyle.png';
@@ -9,9 +9,21 @@ import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
 import './ProductDetails.css';
+import './Shop.css';
+
+const cleanDescription = (text) => {
+  if (!text) return '';
+  return text
+    .replace(/_x000D_\n?/g, ' ')
+    .replace(/_x000D_/g, ' ')
+    .replace(/\\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
 
 export default function ProductDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { products, loading } = useProducts();
   const sliderRef = useRef(null);
   const trackRef = useRef(null);
@@ -141,13 +153,25 @@ export default function ProductDetails() {
   const [ingredientsExpanded, setIngredientsExpanded] = useState(true);
   const [ingredientsTab, setIngredientsTab] = useState('key');
   const { addToCart } = useCart();
+  const [justAdded, setJustAdded] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 2000);
+  };
+
+  const handleBuyNow = () => {
+    addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id);
+    navigate('/checkout');
+  };
 
   const defaultDesc = "Experience the incredible benefits of our completely natural, 100% organic herbal formulation. Carefully crafted using traditional methods and sustainably sourced ingredients to ensure the highest quality for your holistic wellness journey. Free from harmful chemicals, parabens, and artificial preservatives.";
 
   // Translation states
   const [translatedName, setTranslatedName] = useState(product ? product.name : '');
   const [translatedSubtitle, setTranslatedSubtitle] = useState(product ? product.subtitle : '');
-  const [translatedDesc, setTranslatedDesc] = useState(product ? (product.description || defaultDesc) : '');
+  const [translatedDesc, setTranslatedDesc] = useState(product ? cleanDescription(product.description || defaultDesc) : '');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -157,37 +181,6 @@ export default function ProductDetails() {
     let active = true;
 
     if (id) {
-      // Fetch CRM product images for Product Gallery section
-      fetch(`https://api.codingboss.in/herbal/product-images/${id}/`, {
-        headers: { 'ngrok-skip-browser-warning': 'true' }
-      })
-        .then(res => {
-          if (!res.ok) {
-            // Silently ignore 404s as it just means no extra images exist
-            if (res.status === 404) return null;
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          return res.json();
-        })
-        .then(data => {
-          if (active && data) {
-            // Check if the response itself is an array, or if it's wrapped in data/success
-            let imagesArray = [];
-            if (Array.isArray(data)) {
-              imagesArray = data;
-            } else if (data.data && Array.isArray(data.data)) {
-              imagesArray = data.data;
-            } else if (data.images && Array.isArray(data.images)) {
-              imagesArray = data.images;
-            }
-
-            setCrmGalleryImages(imagesArray);
-          }
-        })
-        .catch(err => {
-          if (active) console.warn("Failed to fetch CRM product images:", err.message);
-        });
-
       // Fetch CRM product key benefits
       fetch(`https://api.codingboss.in/herbal/products/${id}/key-points/`, {
         headers: { 'ngrok-skip-browser-warning': 'true' }
@@ -321,7 +314,7 @@ export default function ProductDetails() {
     setTranslatedName(language === 'ta' && product.tamil_name ? product.tamil_name : product.name);
 
     setTranslatedSubtitle(product.subtitle);
-    setTranslatedDesc(product.description || defaultDesc);
+    setTranslatedDesc(cleanDescription(product.description || defaultDesc));
 
     if (language === 'ta') {
       // 2. Subtitle (single call, not per-card)
@@ -332,9 +325,9 @@ export default function ProductDetails() {
       }
 
       // 3. Description (single call)
-      const descText = product.description || defaultDesc;
+      const descText = cleanDescription(product.description || defaultDesc);
       translateText(descText).then(res => {
-        if (active && res) setTranslatedDesc(res);
+        if (active && res) setTranslatedDesc(cleanDescription(res));
       });
     }
 
@@ -369,11 +362,24 @@ export default function ProductDetails() {
   const mediaItems = [];
 
   if (product.image) {
-    mediaItems.push({ type: 'image', src: product.image, thumb: product.image });
+    mediaItems.push({ type: 'image', src: product.image, thumb: product.image, label: 'Main View' });
   }
 
   if (crmGalleryImages.length > 0) {
-    mediaItems.push(...crmGalleryImages.map(imgObj => ({ type: 'image', src: imgObj.image, thumb: imgObj.image })));
+    crmGalleryImages.forEach((imgObj, i) => {
+      const src = typeof imgObj === 'string' ? imgObj : (imgObj.image || imgObj.url);
+      if (src && src !== product.image) {
+        mediaItems.push({ type: 'image', src, thumb: src, label: `Gallery ${i + 1}` });
+      }
+    });
+  }
+
+  // Include professional secondary herbal formulation & ingredients views
+  if (imgIngredients && !mediaItems.some(m => m.src === imgIngredients)) {
+    mediaItems.push({ type: 'image', src: imgIngredients, thumb: imgIngredients, label: 'Ingredients' });
+  }
+  if (imgLifestyle && !mediaItems.some(m => m.src === imgLifestyle)) {
+    mediaItems.push({ type: 'image', src: imgLifestyle, thumb: imgLifestyle, label: 'Wellness' });
   }
 
   const currentMedia = mediaItems[currentImgIndex];
@@ -555,21 +561,25 @@ export default function ProductDetails() {
             </div>
           </div>
 
-          {/* Horizontal Thumbnails - ONLY SHOW IF CRM IMAGES EXIST */}
-          {crmGalleryImages.length > 0 && (
+          {/* Horizontal Thumbnails Gallery */}
+          {mediaItems.length > 1 && (
             <div className="pd-pro-thumbnails-horizontal">
               {mediaItems.map((media, idx) => (
                 <div
                   key={idx}
                   className={`pd-pro-thumb ${currentImgIndex === idx ? 'active' : ''}`}
                   onClick={() => scrollToSlide(idx)}
+                  title={media.label || `View ${idx + 1}`}
                 >
                   <img
-                    src={media.thumb}
-                    alt={`Gallery ${idx + 1}`}
+                    src={media.thumb || '/logo.png'}
+                    alt={`${translatedName} - View ${idx + 1}`}
+                    loading="lazy"
                     onError={(e) => {
-                      if (!e.target.dataset.retried) {
-                        e.target.dataset.retried = 'true';
+                      if (e.target.src !== window.location.origin + '/logo.png') {
+                        e.target.src = '/logo.png';
+                        e.target.style.objectFit = 'contain';
+                        e.target.style.padding = '6px';
                       }
                     }}
                   />
@@ -598,7 +608,7 @@ export default function ProductDetails() {
                 ({String(product.weight_volume).includes('.') ? parseFloat(product.weight_volume) * 1000 : product.weight_volume} {product.unit && product.unit.toUpperCase() === 'GM' ? 'g' : (product.unit ? product.unit.toLowerCase() : '')})
               </span>
             )}
-            <p className="tax-inclusive">{t('taxInclusive')}</p>
+            <span className="tax-inclusive" style={{ marginLeft: '12px', fontSize: '0.85rem', color: '#9ca3af', fontWeight: '400' }}>{t('taxInclusive')}</span>
           </div>
 
           {fetchedVariations && fetchedVariations.length > 0 && (
@@ -626,16 +636,37 @@ export default function ProductDetails() {
 
           <div className="pd-pro-divider"></div>
 
-          {/* Add to Cart Actions */}
+          {/* Add to Cart & Buy Now Actions */}
           <div className="pd-premium-actions-wrapper">
             <div className="premium-qty-selector">
               <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
               <input type="text" value={quantity} readOnly />
               <button type="button" onClick={() => setQuantity(quantity + 1)}>+</button>
             </div>
-            <button type="button" className="premium-add-btn" onClick={() => addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id)}>
-              <ShoppingCart size={20} strokeWidth={2.5} />
-              <span>{t('addToCart')}</span>
+            <button 
+              type="button" 
+              className={`premium-add-btn ${justAdded ? 'is-added' : ''}`} 
+              onClick={handleAddToCart}
+              style={justAdded ? { background: '#16a34a', borderColor: '#16a34a', color: '#ffffff' } : {}}
+            >
+              {justAdded ? (
+                <>
+                  <CheckCircle size={20} />
+                  <span>Added to Cart ✓</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingCart size={20} strokeWidth={2.5} />
+                  <span>{t('addToCart')}</span>
+                </>
+              )}
+            </button>
+            <button 
+              type="button" 
+              className="premium-buy-btn" 
+              onClick={handleBuyNow}
+            >
+              <span>{language === 'ta' ? 'இப்போதே வாங்க' : 'Buy Now'}</span>
             </button>
           </div>
 
@@ -647,8 +678,8 @@ export default function ProductDetails() {
                 <FileText size={18} className="bento-icon text-indigo" />
                 <h3>{t('descriptionLabel')}</h3>
               </div>
-              <p className="bento-text">
-                {translatedDesc}
+              <p className="bento-text" style={{ textAlign: 'justify' }}>
+                {cleanDescription(translatedDesc)}
               </p>
             </div>
 
@@ -910,12 +941,14 @@ export default function ProductDetails() {
       <div className="pd-pro-divider" style={{ marginTop: '60px', marginBottom: '20px' }}></div>
 
       <div className="related-products-section" style={{ maxWidth: '1200px', margin: '40px auto 0' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', fontWeight: 800, marginBottom: 'clamp(20px, 4vw, 40px)', color: '#111827' }}>{t('relatedProducts')}</h2>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', fontWeight: 800, marginBottom: 'clamp(20px, 4vw, 40px)', color: '#111827' }}>
+          {language === 'ta' ? 'நீங்களும் விரும்பலாம்' : 'You May Also Like'}
+        </h2>
         <div className="shop-grid">
           {[
             ...products.filter(p => p.id !== product.id && p.category_name === product.category_name),
             ...products.filter(p => p.id !== product.id && p.category_name !== product.category_name)
-          ].slice(0, 4).map(p => (
+          ].slice(0, 6).map(p => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>

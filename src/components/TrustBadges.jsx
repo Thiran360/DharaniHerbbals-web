@@ -53,51 +53,28 @@ export default function TrustBadges() {
   return (
     <div className="prof-trust-container" ref={containerRef}>
       
-      {/* Top Stats Marquee */}
-        <div className={`prof-stats-marquee-container ${isVisible ? 'reveal-active' : ''}`}>
-        <div className="prof-stats-marquee-track">
+      {/* Trust-Building Stats Container (4-Column Clean Layout Matching Reference) */}
+      <div className={`prof-stats-card-container ${isVisible ? 'reveal-active' : ''}`}>
+        <div className="prof-stats-grid">
           
-          {/* Group 1 */}
-          <div className="prof-stat-item">
-            <h3 className="prof-stat-number">{yearsCount}+</h3>
-            <p className="prof-stat-label">{t('legacyOfTrust')}</p>
-          </div>
-          <div className="prof-stat-divider"></div>
-          <div className="prof-stat-item">
-            <h3 className="prof-stat-number">{customersCount}L+</h3>
-            <p className="prof-stat-label">{t('customersServed')}</p>
-          </div>
-          <div className="prof-stat-divider"></div>
-          <div className="prof-stat-item">
+          <div className="prof-stat-col">
             <h3 className="prof-stat-number">{productsCount}+</h3>
             <p className="prof-stat-label">{t('productsCrafted')}</p>
           </div>
-          <div className="prof-stat-divider"></div>
-          <div className="prof-stat-item">
-            <h3 className="prof-stat-number">{purityCount}%</h3>
-            <p className="prof-stat-label">{t('chemicalFree')}</p>
-          </div>
-          <div className="prof-stat-divider"></div>
 
-          {/* Group 2 (Duplicate for seamless loop) */}
-          <div className="prof-stat-item">
-            <h3 className="prof-stat-number">{yearsCount}+</h3>
-            <p className="prof-stat-label">{t('legacyOfTrust')}</p>
+          <div className="prof-stat-col">
+            <h3 className="prof-stat-number">4.9+</h3>
+            <p className="prof-stat-label">{t('customerRating')}</p>
           </div>
-          <div className="prof-stat-divider"></div>
-          <div className="prof-stat-item">
+
+          <div className="prof-stat-col">
             <h3 className="prof-stat-number">{customersCount}L+</h3>
-            <p className="prof-stat-label">{t('customersServed')}</p>
+            <p className="prof-stat-label">{t('satisfiedCustomers')}</p>
           </div>
-          <div className="prof-stat-divider"></div>
-          <div className="prof-stat-item">
-            <h3 className="prof-stat-number">{productsCount}+</h3>
-            <p className="prof-stat-label">{t('productsCrafted')}</p>
-          </div>
-          <div className="prof-stat-divider"></div>
-          <div className="prof-stat-item">
-            <h3 className="prof-stat-number">{purityCount}%</h3>
-            <p className="prof-stat-label">{t('chemicalFree')}</p>
+
+          <div className="prof-stat-col">
+            <h3 className="prof-stat-number">{yearsCount}+</h3>
+            <p className="prof-stat-label">{t('yearsOfExcellence')}</p>
           </div>
 
         </div>

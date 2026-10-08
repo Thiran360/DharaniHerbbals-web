@@ -36,86 +36,19 @@ import BrandsSlider from './components/BrandsSlider';
 import FloatingSocials from './components/FloatingSocials';
 import BrandLogoVideo from './components/BrandLogoVideo';
 
-const ShoppableVideos = lazy(() => import('./components/ShoppableVideos'));
+const InstagramSection = lazy(() => import('./components/InstagramSection'));
 const GoogleReviews = lazy(() => import('./components/GoogleReviews'));
 const HandpickedDeals = lazy(() => import('./components/HandpickedDeals'));
 import OurJourney from './components/OurJourney';
 import Footer from './components/Footer';
 const TrustBadges = lazy(() => import('./components/TrustBadges'));
 
-import s1 from './assets/S1.jpeg';
-import s2 from './assets/S2.jpeg';
-import s3 from './assets/S3.jpeg';
-import s4 from './assets/S4.jpeg';
-import s5 from './assets/S5.jpeg';
-import s6 from './assets/S6.jpeg';
 import GlobalOrderPopup from './components/GlobalOrderPopup';
 // Using dynamic products now from ProductsContext
 
 function Home() {
   const { products } = useProducts();
   const { t } = useLanguage();
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const promoSliderRef = useRef(null);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (!isMobile) return;
-
-    let isInteracting = false;
-    let timeoutId = null;
-    let intervalId = null;
-
-    const startAutoScroll = () => {
-      intervalId = setInterval(() => {
-        const container = promoSliderRef.current;
-        if (!container || isInteracting) return;
-
-        const { scrollLeft, scrollWidth, clientWidth } = container;
-        const cardWidth = 296; // 280px card width + 16px gap
-
-        if (scrollLeft + clientWidth >= scrollWidth - 20) {
-          container.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          container.scrollBy({ left: cardWidth, behavior: 'smooth' });
-        }
-      }, 3500);
-    };
-
-    const handleInteraction = () => {
-      isInteracting = true;
-      if (intervalId) clearInterval(intervalId);
-      if (timeoutId) clearTimeout(timeoutId);
-
-      timeoutId = setTimeout(() => {
-        isInteracting = false;
-        startAutoScroll();
-      }, 6000);
-    };
-
-    const container = promoSliderRef.current;
-    if (container) {
-      container.addEventListener('touchstart', handleInteraction, { passive: true });
-      container.addEventListener('mousedown', handleInteraction);
-    }
-
-    startAutoScroll();
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-      if (timeoutId) clearTimeout(timeoutId);
-      if (container) {
-        container.removeEventListener('touchstart', handleInteraction);
-        container.removeEventListener('mousedown', handleInteraction);
-      }
-    };
-  }, [isMobile]);
-
   const [mostLovedIds, setMostLovedIds] = useState([]);
 
   useEffect(() => {
@@ -141,15 +74,6 @@ function Home() {
   }
 
   const navigate = useNavigate();
-
-  const [promoAds] = useState([
-    { img: s1, alt: "Promo 1", productId: 1260 },
-    { img: s2, alt: "Promo 2", productId: 1142 },
-    { img: s3, alt: "Promo 3", productId: 1243 },
-    { img: s4, alt: "Promo 4", productId: 1138 },
-    { img: s5, alt: "Promo 5", productId: 1248 },
-    { img: s6, alt: "Promo 6", productId: 1249 }
-  ]);
 
 
   return (
@@ -209,42 +133,9 @@ function Home() {
             <HandpickedDeals />
           </div>
 
-          {/* Shoppable Videos Section */}
+          {/* Combined Instagram & Social Media Section */}
           <div className="reveal">
-            <ShoppableVideos />
-          </div>
-
-          {/* Bento Grid Ads Section */}
-          <div className="reveal bento-header with-margin-top" style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.2) 0%, rgba(34,197,94,0.1) 100%)', borderColor: 'rgba(74,222,128,0.3)' }}>
-            {/* Decorative background blob */}
-            <div className="bento-header-blob left"></div>
-
-            <div className="bento-title-col">
-              <h2 className="bento-title-text">
-                <BrandLogoVideo />
-                <div>{t('apothecaryReserve')}</div>
-              </h2>
-            </div>
-
-            <div className="bento-desc-col">
-              <p className="bento-desc-text">
-                {t('apothecaryDesc')}
-              </p>
-            </div>
-          </div>
-
-          {/* Auto-Sliding Promo Train */}
-          <div ref={promoSliderRef} className="promo-slider-container reveal-stagger">
-            <div className="promo-train-track">
-              {(isMobile ? promoAds : [...promoAds, ...promoAds]).map((ad, index) => (
-                <div key={index} className="promo-slider-item" onClick={() => navigate(`/product/${ad.productId}`)}>
-                  <img src={ad.img} alt={ad.alt} className="promo-slider-img" loading="lazy" decoding="async" />
-                  <div className="promo-slider-action">
-                    <span className="arrow-icon">↗</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <InstagramSection />
           </div>
 
           {/* Google Reviews Marquee Section */}

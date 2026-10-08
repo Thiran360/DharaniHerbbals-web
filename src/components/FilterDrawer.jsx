@@ -7,29 +7,52 @@ const FILTER_CATEGORIES = [
   {
     id: 'productType',
     label: 'Product Type',
-    options: ['Powder', 'Soap', 'Oil', 'Gel', 'Shampoo', 'Food', 'Others']
+    labelTa: 'பொருள் வகை',
+    options: ['Powder', 'Soap', 'Oil', 'Gel', 'Shampoo', 'Food', 'Tea', 'Malt', 'Snacks', 'Lehyam', 'Others']
   },
   {
     id: 'concern',
     label: 'Concern',
-    options: ['Acne & Pimples', 'Hairfall', 'Dry Skin', 'Dandruff', 'Immunity', 'Digestion']
+    labelTa: 'பிரச்சனை',
+    options: ['Hair Care', 'Skin Care', 'Digestion', 'Immunity', 'General Wellness', 'Baby Care']
   },
   {
     id: 'ingredient',
     label: 'Ingredient',
-    options: ['Aloe Vera', 'Turmeric', 'Neem', 'Hibiscus', 'Amla', 'Sandalwood', 'Rose']
+    labelTa: 'மூலிகைகள்',
+    options: ['Beetroot', 'Turmeric', 'Amla', 'Neem', 'Hibiscus', 'Moringa', 'Vetiver', 'Kuppaimeni']
+  },
+  {
+    id: 'suitableFor',
+    label: 'Suitable For',
+    labelTa: 'பொருத்தமானது',
+    options: ['Men', 'Women', 'Kids', 'Family']
+  },
+  {
+    id: 'price',
+    label: 'Price Range',
+    labelTa: 'விலை வரம்பு',
+    options: ['Under ₹100', '₹100–₹250', '₹250–₹500', 'Above ₹500']
+  },
+  {
+    id: 'availability',
+    label: 'Availability',
+    labelTa: 'இருப்பு நிலை',
+    options: ['In Stock', 'Out of Stock']
   }
 ];
 
 export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSelectedFilters }) {
   const { language } = useLanguage();
-  const [openAccordion, setOpenAccordion] = useState('productType');
+  const [openAccordions, setOpenAccordions] = useState(['productType', 'availability']);
 
   // Local state so we only apply when the user clicks "Apply"
   const [localFilters, setLocalFilters] = useState(selectedFilters || {});
 
   const toggleAccordion = (id) => {
-    setOpenAccordion(openAccordion === id ? null : id);
+    setOpenAccordions(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
   };
 
   const handleCheckboxChange = (categoryId, option) => {
@@ -94,8 +117,9 @@ export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSele
 
         <div className="filter-content">
           {FILTER_CATEGORIES.map((category) => {
-            const isOpenAccordion = openAccordion === category.id;
+            const isOpenAccordion = openAccordions.includes(category.id);
             const selectedCount = (localFilters[category.id] || []).length;
+            const categoryTitle = language === 'ta' && category.labelTa ? category.labelTa : category.label;
             
             return (
               <div key={category.id} className="filter-accordion">
@@ -104,7 +128,7 @@ export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSele
                   onClick={() => toggleAccordion(category.id)}
                 >
                   <span>
-                    {category.label} 
+                    {categoryTitle} 
                     {selectedCount > 0 && <span style={{color: '#22c55e', marginLeft: '6px'}}>({selectedCount})</span>}
                   </span>
                   <ChevronDown size={20} />

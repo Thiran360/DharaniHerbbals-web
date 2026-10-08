@@ -408,6 +408,40 @@ a:hover {
   font-weight: 500;
 }
 
+/* ── Desktop Compact Layout (1024px and up) ── */
+@media (min-width: 1024px) {
+  .bento-header {
+    padding: 18px 24px;
+    margin-bottom: 28px;
+    gap: 20px;
+    border-radius: 18px;
+  }
+
+  .bento-header.with-margin-top {
+    margin-top: 36px;
+  }
+
+  .bento-title-text {
+    font-size: 1.65rem;
+  }
+
+  .bento-desc-col {
+    padding-left: 20px;
+  }
+
+  .bento-desc-text {
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .bento-title-badge {
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+  }
+}
+
+
 /* Mobile Responsive Overrides */
 @media (max-width: 768px) {
   .bento-header {

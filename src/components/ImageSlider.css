@@ -662,3 +662,55 @@
   66% { transform: translate(-50px, 100px) scale(0.8); }
   100% { transform: translate(0, 0) scale(1); }
 }
+
+/* ── Desktop Compact Layout (1024px and up) ── */
+@media (min-width: 1024px) {
+  .slider-container {
+    height: 52vh;
+    min-height: 420px;
+    max-height: 490px;
+  }
+
+  .promo-slide {
+    padding-top: 86px;
+  }
+
+  .promo-main-title {
+    font-size: 2.15rem;
+    margin-bottom: 14px;
+    line-height: 1.25;
+  }
+
+  .promo-offer-box {
+    padding: 6px 18px;
+    font-size: 1.35rem;
+    margin-bottom: 20px;
+  }
+
+  .promo-shop-btn {
+    padding: 8px 20px;
+    font-size: 0.85rem;
+  }
+
+  .promo-product-col {
+    flex: 0 1 250px;
+  }
+
+  .promo-product-img {
+    max-width: 190px;
+  }
+
+  .promo-starburst {
+    width: 90px;
+    height: 90px;
+  }
+
+  .promo-sb-number {
+    font-size: 1.6rem;
+  }
+
+  .promo-sb-text {
+    font-size: 0.75rem;
+  }
+}
+

@@ -382,3 +382,29 @@
   width: 100%;
 }
 
+/* ── Desktop Compact Layout (1024px and up) ── */
+@media (min-width: 1024px) {
+  .gr-container {
+    padding: 32px 0;
+  }
+
+  .gr-marquee-container {
+    margin-bottom: 24px;
+    padding: 10px 0;
+  }
+
+  .gr-marquee-track {
+    gap: 16px;
+  }
+
+  .gr-show-more-container {
+    margin-top: 18px;
+  }
+
+  .gr-show-more-btn {
+    padding: 8px 24px;
+    font-size: 0.9rem;
+  }
+}
+
+

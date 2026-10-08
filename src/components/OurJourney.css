@@ -1,8 +1,8 @@
 .journey-editorial-container {
   width: 100%;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 100px 20px;
+  padding: 80px 20px;
   text-align: center;
 }
 
@@ -13,46 +13,46 @@
 }
 
 .journey-ed-sub {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: 3.5px;
   color: #16a34a;
   font-weight: 800;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .journey-ed-intro {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: #4b5563;
-  line-height: 1.6;
-  margin-bottom: 60px;
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: #374151;
+  line-height: 1.45;
+  margin-bottom: 40px;
 }
 
 .journey-ed-quote {
-  font-family: 'Georgia', serif;
-  font-size: 3.5rem;
+  font-family: 'Georgia', 'Playfair Display', serif;
+  font-size: 3.8rem;
   font-weight: 400;
   color: #111827;
-  line-height: 1.2;
-  margin-bottom: 60px;
+  line-height: 1.18;
+  margin-bottom: 42px;
   font-style: italic;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
 }
 
 .journey-ed-narrative {
   width: 100%;
-  max-width: 700px;
-  margin: 0 auto 60px auto;
+  max-width: 780px;
+  margin: 0 auto 50px auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .journey-ed-narrative p {
   font-size: 1.15rem;
-  color: #374151;
-  line-height: 1.8;
+  color: #4b5563;
+  line-height: 1.75;
   margin: 0;
   text-align: center;
 }
@@ -60,10 +60,10 @@
 .journey-ed-image-wrapper {
   width: 100%;
   max-width: 800px;
-  margin: 0 auto 60px auto;
+  margin: 0 auto 40px auto;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
 .journey-ed-image {
@@ -75,7 +75,7 @@
 }
 
 .journey-ed-image-wrapper:hover .journey-ed-image {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .journey-ed-closing {
@@ -87,12 +87,63 @@
 
 @media (max-width: 768px) {
   .journey-editorial-container {
-    padding: 80px 20px;
-  }
-  .journey-ed-quote {
-    font-size: 1.8rem;
+    padding: 60px 20px;
   }
   .journey-ed-intro {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+  }
+  .journey-ed-quote {
+    font-size: 2.2rem;
+    margin-bottom: 28px;
+    line-height: 1.25;
+  }
+  .journey-ed-narrative p {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .journey-ed-closing {
     font-size: 1.2rem;
   }
 }
+
+/* ── Desktop Layout (1024px and up) ── */
+@media (min-width: 1024px) {
+  .journey-editorial-container {
+    padding: 70px 20px;
+  }
+
+  .journey-ed-sub {
+    margin-bottom: 18px;
+  }
+
+  .journey-ed-intro {
+    font-size: 1.55rem;
+    margin-bottom: 38px;
+  }
+
+  .journey-ed-quote {
+    font-size: 3.8rem;
+    margin-bottom: 42px;
+  }
+
+  .journey-ed-narrative {
+    margin: 0 auto 44px auto;
+    gap: 20px;
+  }
+
+  .journey-ed-narrative p {
+    font-size: 1.15rem;
+    line-height: 1.75;
+  }
+
+  .journey-ed-image-wrapper {
+    margin: 0 auto 36px auto;
+    max-width: 760px;
+  }
+
+  .journey-ed-closing {
+    font-size: 1.45rem;
+  }
+}
+

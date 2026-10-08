@@ -66,8 +66,8 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // First try store login
-      let response = await fetch('https://api.codingboss.in/herbal/store/login/', {
+      // 1. Primary: user-login (sends OTP for customers & store members)
+      let response = await fetch('https://api.codingboss.in/herbal/user-login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,63 +76,102 @@ export default function Login() {
         body: JSON.stringify({ mobile: mobileNumber, phone_number: mobileNumber })
       });
 
-      let data = await response.json();
+      let data = null;
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        console.warn('JSON parse error from user-login:', parseErr);
+      }
 
-      if (response.ok && data.success !== false) {
+      if (response.ok && data && data.success !== false) {
+        if (data.user_id) setOtpUserId(data.user_id);
+        setIsStoreMember(false);
+        setOtpType('user-login');
+        setShowOtp(true);
+        return;
+      }
+
+      // 2. Fallback: store login
+      response = await fetch('https://api.codingboss.in/herbal/store/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
+        body: JSON.stringify({ mobile: mobileNumber, phone_number: mobileNumber })
+      });
+
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        data = null;
+      }
+
+      if (response.ok && data && data.success !== false) {
         if (data.user_id) setOtpUserId(data.user_id);
         setIsStoreMember(true);
         setOtpType('store');
         setShowOtp(true);
-      } else {
-        // Fallback to customer register
-        response = await fetch('https://api.codingboss.in/herbal/register/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
-          },
-          body: JSON.stringify({
-            mobile: mobileNumber,
-            phone_number: mobileNumber,
-            email: `${mobileNumber}@guest.com`,
-            password: 'GuestPassword123!',
-            name: 'Guest User'
-          })
-        });
+        return;
+      }
 
+      // 3. Fallback: generate-otp endpoint
+      response = await fetch('https://api.codingboss.in/herbal/generate-otp/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
+        body: JSON.stringify({ mobile: mobileNumber, phone_number: mobileNumber })
+      });
+
+      try {
         data = await response.json();
+      } catch (parseErr) {
+        data = null;
+      }
 
-        if (response.ok && data.success !== false && (!data.message || !data.message.includes('already exists'))) {
-          if (data.user_id) setOtpUserId(data.user_id);
-          setIsStoreMember(false);
-          setOtpType('register');
-          setShowOtp(true);
-        } else {
-          // If register fails because mobile exists (or any other failure), fallback to forgot-password to send OTP to existing user
-          response = await fetch('https://api.codingboss.in/herbal/forgot-password/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'ngrok-skip-browser-warning': 'true'
-            },
-            body: JSON.stringify({ phone_number: mobileNumber, mobile: mobileNumber })
-          });
+      if (response.ok && data && data.success !== false) {
+        if (data.user_id) setOtpUserId(data.user_id);
+        setIsStoreMember(false);
+        setOtpType('generate-otp');
+        setShowOtp(true);
+        return;
+      }
 
-          data = await response.json();
+      // 4. Fallback: register endpoint
+      response = await fetch('https://api.codingboss.in/herbal/register/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
+        body: JSON.stringify({
+          mobile: mobileNumber,
+          phone_number: mobileNumber,
+          email: `${mobileNumber}@guest.com`,
+          password: 'GuestPassword123!',
+          name: 'Guest User'
+        })
+      });
 
-          if (response.ok && data.success !== false) {
-            if (data.user_id) setOtpUserId(data.user_id);
-            setIsStoreMember(false);
-            setOtpType('forgot-password');
-            setShowOtp(true);
-          } else {
-            setError(data.message || data.error || 'Login failed. Please try again.');
-          }
-        }
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        data = null;
+      }
+
+      if (response.ok && data && data.success !== false) {
+        if (data.user_id) setOtpUserId(data.user_id);
+        setIsStoreMember(false);
+        setOtpType('register');
+        setShowOtp(true);
+      } else {
+        setError(data?.message || data?.error || 'Unable to send OTP. Please check your number.');
       }
     } catch (err) {
       console.error('Send OTP Error:', err);
-      setError('Network error. Please try again later.');
+      setError('Unable to send OTP. Please check your network and try again.');
     } finally {
       setLoading(false);
     }
@@ -162,9 +201,12 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const verifyUrl = (otpType === 'forgot-password' || otpType === 'store')
-        ? 'https://api.codingboss.in/herbal/verify-forgot-password-otp/'
-        : 'https://api.codingboss.in/herbal/verify-otp/';
+      let verifyUrl = 'https://api.codingboss.in/herbal/verify-otp/';
+      if (otpType === 'user-login') {
+        verifyUrl = 'https://api.codingboss.in/herbal/verify-user-login-otp/';
+      } else if (otpType === 'store' || otpType === 'forgot-password') {
+        verifyUrl = 'https://api.codingboss.in/herbal/verify-forgot-password-otp/';
+      }
 
       let response = await fetch(verifyUrl, {
         method: 'POST',
@@ -180,7 +222,38 @@ export default function Login() {
         })
       });
 
-      let data = await response.json();
+      let data = null;
+      try {
+        data = await response.json();
+      } catch (e) {
+        data = null;
+      }
+
+      // If user-login verification failed or endpoint returned error, fallback to verify-otp
+      if ((!response.ok || !data || data.success === false) && verifyUrl !== 'https://api.codingboss.in/herbal/verify-otp/') {
+        try {
+          const fallbackRes = await fetch('https://api.codingboss.in/herbal/verify-otp/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'ngrok-skip-browser-warning': 'true'
+            },
+            body: JSON.stringify({
+              phone_number: mobile,
+              mobile: mobile,
+              otp: currentOtp,
+              ...(otpUserId && { user_id: otpUserId })
+            })
+          });
+          const fallbackData = await fallbackRes.json();
+          if (fallbackRes.ok && fallbackData && fallbackData.success !== false) {
+            response = fallbackRes;
+            data = fallbackData;
+          }
+        } catch (fbErr) {
+          console.warn('Fallback verify error:', fbErr);
+        }
+      }
 
       if (response.ok && data.success !== false) {
 

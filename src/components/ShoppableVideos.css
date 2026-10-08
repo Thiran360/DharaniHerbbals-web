@@ -249,3 +249,31 @@
   .sv-nav-btn.left { left: 0px; }
   .sv-nav-btn.right { right: 0px; }
 }
+
+/* ── Desktop Compact Layout (1024px and up) ── */
+@media (min-width: 1024px) {
+  .shoppable-videos-container {
+    padding: 36px 0;
+  }
+
+  .sv-header {
+    margin-bottom: 20px;
+  }
+
+  .sv-track {
+    padding: 10px 0;
+    gap: 18px;
+  }
+
+  .sv-card.ultra {
+    flex: 0 0 240px;
+    height: 380px;
+    border-radius: 18px;
+  }
+
+  .sv-nav-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+

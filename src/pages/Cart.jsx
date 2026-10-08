@@ -1,13 +1,17 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Trash2, ShoppingBag, ArrowLeft, ArrowRight, Minus, Plus } from 'lucide-react';
+import { Trash2, ShoppingBag, ArrowLeft, ArrowRight, Minus, Plus, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuthModal } from '../context/AuthModalContext';
 import { useLanguage } from '../context/LanguageContext';
 import './Cart.css';
 
 export default function Cart() {
-  const { cartItems, removeFromCart, updateQuantity, cartTotal, taxTotal, shippingCost } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, cartTotal, cgst, sgst, igst, taxTotal, shippingCost, grandTotal } = useCart();
+  const { openLoginModal } = useAuthModal();
   const { language } = useLanguage();
   const navigate = useNavigate();
+
+  const isUserLoggedIn = typeof window !== 'undefined' && localStorage.getItem('user') !== null;
 
   const handleCheckout = () => {
     navigate('/checkout');
@@ -53,7 +57,14 @@ export default function Cart() {
                   <li key={item.id} className="cart-page-item">
                     <div className="cart-item-product">
                       <div className="cart-img-box">
-                        <img src={item.image} alt={item.name} />
+                        <img
+                          src={item.image || '/logo.png'}
+                          alt={item.name}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/logo.png';
+                          }}
+                        />
                       </div>
                       <div className="cart-item-info">
                         <h3>{language === 'ta' && item.tamil_name ? item.tamil_name : item.name}</h3>
@@ -93,29 +104,87 @@ export default function Cart() {
 
             {/* Right Column: Order Summary */}
             <div className="cart-summary-section">
+              {!isUserLoggedIn && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+                  border: '1px solid #bbf7d0',
+                  borderRadius: '12px',
+                  padding: '12px 16px',
+                  marginBottom: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '10px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#166534', fontSize: '0.85rem' }}>
+                    <Sparkles size={16} color="#16a34a" />
+                    <span>Sign in to unlock exclusive offers</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => openLoginModal()}
+                    style={{
+                      background: '#16a34a',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '6px 12px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      fontSize: '0.82rem',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    Sign In
+                  </button>
+                </div>
+              )}
               <div className="cart-summary-card">
                 <h3 className="summary-title">Order Summary</h3>
                 
                 <div className="summary-row">
                   <span>Subtotal</span>
-                  <span className="summary-val">₹{cartTotal}</span>
+                  <span className="summary-val">₹{cartTotal.toFixed(2)}</span>
                 </div>
                 
                 <div className="summary-row">
                   <span>Shipping</span>
-                  <span className="summary-val">₹{shippingCost.toFixed(2)}</span>
+                  <span className="summary-val">
+                    {shippingCost === 0 ? (
+                      <span className="text-free" style={{ color: '#16a34a', fontWeight: '600' }}>Free</span>
+                    ) : (
+                      `₹${shippingCost.toFixed(2)}`
+                    )}
+                  </span>
                 </div>
+
+                <div className="summary-row">
+                  <span>CGST</span>
+                  <span className="summary-val">₹{cgst.toFixed(2)}</span>
+                </div>
+
+                <div className="summary-row">
+                  <span>SGST</span>
+                  <span className="summary-val">₹{sgst.toFixed(2)}</span>
+                </div>
+
+                {Number(igst) > 0 && (
+                  <div className="summary-row">
+                    <span>IGST</span>
+                    <span className="summary-val">₹{Number(igst).toFixed(2)}</span>
+                  </div>
+                )}
                 
                 <div className="summary-row">
-                  <span>Tax</span>
+                  <span>Tax Total</span>
                   <span className="summary-val">₹{taxTotal.toFixed(2)}</span>
                 </div>
                 
                 <div className="summary-divider"></div>
                 
                 <div className="summary-row total-row">
-                  <span>Estimated Total</span>
-                  <span className="summary-total-val">₹{(cartTotal + shippingCost + taxTotal).toFixed(2)}</span>
+                  <span>Total</span>
+                  <span className="summary-total-val" style={{ color: '#16a34a', fontWeight: '800' }}>₹{grandTotal.toFixed(2)}</span>
                 </div>
                 
                 <button className="btn-cart-checkout" onClick={handleCheckout}>

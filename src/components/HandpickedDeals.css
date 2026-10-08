@@ -293,3 +293,27 @@
     margin-bottom: 12px;
   }
 }
+
+/* ── Desktop Compact Layout (1024px and up) ── */
+@media (min-width: 1024px) {
+  .deals-container {
+    padding: 32px 0;
+  }
+
+  .deals-header {
+    margin-bottom: 20px;
+  }
+
+  .deals-title {
+    font-size: 1.8rem;
+  }
+
+  .deals-subtitle {
+    font-size: 0.92rem;
+  }
+
+  .deals-grid {
+    gap: 16px;
+  }
+}
+

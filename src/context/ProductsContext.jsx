@@ -58,6 +58,10 @@ export function ProductsProvider({ children }) {
     }
   });
 
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const openFilterDrawer = () => setIsFilterOpen(true);
+  const closeFilterDrawer = () => setIsFilterOpen(false);
+
   const refreshProducts = () => {
     if (products.length === 0) {
       setLoading(true);
@@ -156,15 +160,19 @@ export function ProductsProvider({ children }) {
             rating: 4.8,
             reviews: p.stock > 0 ? (p.stock * 3) : 124,
             badge: p.is_new ? 'NEW' : '',
-            badgeColor: p.is_new ? 'green' : '',
-            image: (p.image && p.image.startsWith('/'))
-              ? `${baseUrl}${p.image}`
-              : (p.image || null),
+            image: (() => {
+              if (!p.image) return '/logo.png';
+              let cleaned = p.image.startsWith('/') ? `${baseUrl}${p.image}` : p.image;
+              cleaned = cleaned.replace('images//', 'images/');
+              return cleaned;
+            })(),
             category_name: p.category_name,
             description: p.description,
             weight_volume: displayWeight,
             unit: displayUnit,
             gst_percentage: p.gst_percentage || 0,
+            stock: p.stock !== undefined ? Number(p.stock) : 10,
+            in_stock: p.is_out_of_stock ? false : (p.stock !== undefined ? Number(p.stock) > 0 : true),
             variations: p.variations || []
           };
         });
@@ -219,7 +227,7 @@ export function ProductsProvider({ children }) {
   }, []);
 
   return (
-    <ProductsContext.Provider value={{ products, loading, refreshProducts }}>
+    <ProductsContext.Provider value={{ products, loading, refreshProducts, isFilterOpen, setIsFilterOpen, openFilterDrawer, closeFilterDrawer }}>
       {children}
     </ProductsContext.Provider>
   );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { User, Mail, Phone, Package, Heart, LogOut, ChevronRight, Image as ImageIcon, MapPin, Plus, Trash2, ChevronDown, Calendar } from 'lucide-react';
+import { User, Mail, Phone, Package, Heart, LogOut, ChevronRight, Image as ImageIcon, MapPin, Plus, Trash2, ChevronDown, Calendar, ShoppingBag } from 'lucide-react';
 import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -331,6 +331,9 @@ export default function Profile() {
               {name.charAt(0).toUpperCase()}
             </div>
             <h2 className="profile-name">{name}</h2>
+            <p className="profile-email">
+              {email !== 'No email provided' ? email : (user.mobile ? `${user.mobile}@guest.com` : '9344849211@guest.com')}
+            </p>
           </div>
 
           <div className="profile-nav">
@@ -339,24 +342,21 @@ export default function Profile() {
               onClick={() => setActiveTab('account')}
             >
               <User size={18} />
-              <span>Account Details</span>
-              <ChevronRight size={16} className="chevron" />
+              <span>Profile Settings</span>
             </button>
             <button
               className={`profile-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
               onClick={() => setActiveTab('orders')}
             >
               <Package size={18} />
-              <span>My Orders</span>
-              <ChevronRight size={16} className="chevron" />
+              <span>Order History</span>
             </button>
             <button
               className={`profile-nav-item ${activeTab === 'addresses' ? 'active' : ''}`}
               onClick={() => setActiveTab('addresses')}
             >
               <MapPin size={18} />
-              <span>My Addresses</span>
-              <ChevronRight size={16} className="chevron" />
+              <span>Saved Addresses</span>
             </button>
             <button
               className={`profile-nav-item ${activeTab === 'wishlist' ? 'active' : ''}`}
@@ -364,7 +364,6 @@ export default function Profile() {
             >
               <Heart size={18} />
               <span>Wishlist</span>
-              <ChevronRight size={16} className="chevron" />
             </button>
             <button
               className={`profile-nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
@@ -372,7 +371,6 @@ export default function Profile() {
             >
               <Calendar size={18} />
               <span>Usage Calendar</span>
-              <ChevronRight size={16} className="chevron" />
             </button>
             <button className="profile-nav-item logout-btn" onClick={handleLogout}>
               <LogOut size={18} />
@@ -700,13 +698,33 @@ export default function Profile() {
 
           {activeTab === 'wishlist' && (
             <div className="profile-wishlist" style={{ marginTop: 0 }}>
-              <div className="profile-content-header">
-                <h1>Wishlist</h1>
-                <p>Items you've saved for later.</p>
+              <div className="profile-wishlist-header">
+                <div>
+                  <h1 className="wishlist-page-title">MY WISHLIST</h1>
+                  <p className="wishlist-page-subtitle">
+                    {wishlist.length} {wishlist.length === 1 ? 'item saved' : 'items saved'}
+                  </p>
+                </div>
+                {wishlist.length > 0 && (
+                  <button
+                    type="button"
+                    className="btn-wishlist-add-all"
+                    onClick={() => {
+                      wishlist.forEach((item) => {
+                        const pId = item.product || item.product_id || item.id;
+                        const matchedProduct = products.find(p => String(p.id) === String(pId)) || {};
+                        addToCart(matchedProduct.id ? matchedProduct : item);
+                      });
+                    }}
+                  >
+                    <ShoppingBag size={18} />
+                    <span>Add All to Cart</span>
+                  </button>
+                )}
               </div>
 
               {wishlist.length > 0 ? (
-                <div className="wishlist-grid">
+                <div className="wishlist-list-container">
                   {wishlist.map((item) => {
                     const pId = item.product || item.product_id || item.id;
                     const matchedProduct = products.find(p => String(p.id) === String(pId)) || {};
@@ -722,35 +740,56 @@ export default function Profile() {
                     const itemIdToUse = matchedProduct.id || pId;
 
                     return (
-                      <div key={item.id || itemIdToUse} className="wishlist-card">
-                        {itemImage ? (
-                          <img src={itemImage} alt={itemName} className="wishlist-card-img" />
-                        ) : (
-                          <div className="wishlist-card-img" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f1f5f9' }}>
-                            <ImageIcon size={40} color="#cbd5e1" />
+                      <div key={item.id || itemIdToUse} className="wishlist-row-card">
+                        <div className="wishlist-row-main">
+                          <div
+                            className="wishlist-row-img-wrap"
+                            onClick={() => navigate(`/product/${itemIdToUse}`)}
+                          >
+                            {itemImage ? (
+                              <img
+                                src={itemImage}
+                                alt={itemName}
+                                className="wishlist-row-img"
+                                onError={(e) => {
+                                  e.currentTarget.onerror = null;
+                                  e.currentTarget.src = '/logo.png';
+                                }}
+                              />
+                            ) : (
+                              <div className="placeholder-img"><ImageIcon size={28} /></div>
+                            )}
                           </div>
-                        )}
-                        <div className="wishlist-card-details">
-                          <h4>{language === 'ta' && itemTamilName ? itemTamilName : itemName}</h4>
-                          <p>{itemPrice}</p>
+                          <div className="wishlist-row-info">
+                            <h3
+                              className="wishlist-row-title"
+                              onClick={() => navigate(`/product/${itemIdToUse}`)}
+                            >
+                              {language === 'ta' && itemTamilName ? itemTamilName : itemName}
+                            </h3>
+                            <div className="wishlist-row-price">{itemPrice}</div>
+                            <button
+                              type="button"
+                              className="wishlist-row-add-btn"
+                              onClick={() => {
+                                addToCart(matchedProduct.id ? matchedProduct : item);
+                              }}
+                            >
+                              <ShoppingBag size={15} />
+                              <span>Add to Cart</span>
+                            </button>
+                          </div>
                         </div>
-                        <div className="wishlist-card-actions">
-                          <button
-                            className="btn-wishlist-cart"
-                            onClick={() => {
-                              addToCart(matchedProduct.id ? matchedProduct : item);
-                              removeFromWishlist(itemIdToUse);
-                            }}
-                          >
-                            Add to Cart
-                          </button>
-                          <button
-                            className="btn-wishlist-remove"
-                            onClick={() => removeFromWishlist(itemIdToUse)}
-                          >
-                            Remove
-                          </button>
-                        </div>
+
+                        <button
+                          type="button"
+                          className="wishlist-row-remove-btn"
+                          onClick={() => removeFromWishlist(itemIdToUse)}
+                          aria-label="Remove item from wishlist"
+                        >
+                          <Heart size={16} className="wishlist-remove-icon" />
+                          <span>Remove</span>
+                        </button>
                       </div>
                     );
                   })}

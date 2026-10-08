@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { MapPin, Phone, CheckCircle, ArrowLeft, Loader2, Plus, Navigation, Trash2, Edit2, ChevronDown, UserCircle, Check } from 'lucide-react';
+import { MapPin, Phone, CheckCircle, ArrowLeft, Loader2, Plus, Navigation, Trash2, Edit2, ChevronDown, UserCircle, Check, Sparkles, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
+import { useProducts } from '../context/ProductsContext';
+import { useWishlist } from '../context/WishlistContext';
 import './Checkout.css';
 
 const INDIAN_STATES = [
@@ -16,7 +18,9 @@ const INDIAN_STATES = [
 ];
 
 export default function Checkout() {
-  const { cartItems, cartTotal, shippingCost, taxAmount, cgst, sgst, igst, taxTotal, grandTotal, refreshCart } = useCart();
+  const { cartItems, cartTotal, shippingCost, taxAmount, cgst, sgst, igst, taxTotal, grandTotal, refreshCart, addToCart } = useCart();
+  const { products } = useProducts();
+  const { isInWishlist, toggleWishlist } = useWishlist ? useWishlist() : { isInWishlist: () => false, toggleWishlist: () => {} };
   const { language } = useLanguage();
   const { openLoginModal } = useAuthModal();
   const navigate = useNavigate();
@@ -97,7 +101,101 @@ export default function Checkout() {
     });
   };
 
-  const [guestInfo, setGuestInfo] = useState({ name: '', email: '' });
+  const [guestInfo, setGuestInfo] = useState({ name: '', email: '', phone: '' });
+
+  // Optional Cross-Sell Recommendations: Add Before You Checkout
+  const [addingRecId, setAddingRecId] = useState(null);
+  const [addedRecIds, setAddedRecIds] = useState(() => new Set());
+
+  const recommendedProducts = useMemo(() => {
+    if (!products || products.length === 0 || !cartItems || cartItems.length === 0) {
+      return [];
+    }
+
+    // Exclude products originally in cart (keep items that were just added from recommendations visible as "Added")
+    const existingCartIds = new Set(
+      cartItems
+        .filter(item => !addedRecIds.has(item.id))
+        .map(item => String(item.id))
+    );
+
+    const cartCategories = new Set(
+      cartItems
+        .map(item => String(item.category || item.category_name || '').trim().toLowerCase())
+        .filter(Boolean)
+    );
+
+    const cartNamesLower = cartItems.map(item => String(item.name || '').toLowerCase()).join(' ');
+    const hasHair = cartCategories.has('hair') || cartNamesLower.includes('hair') || cartNamesLower.includes('shampoo') || cartNamesLower.includes('oil');
+    const hasSkin = cartCategories.has('skin') || cartNamesLower.includes('skin') || cartNamesLower.includes('face') || cartNamesLower.includes('soap');
+    const hasWellness = cartCategories.has('wellness') || cartCategories.has('health') || cartNamesLower.includes('wellness') || cartNamesLower.includes('immunity');
+    const hasFood = cartCategories.has('food') || cartNamesLower.includes('food') || cartNamesLower.includes('tea') || cartNamesLower.includes('honey');
+    const hasPooja = cartCategories.has('pooja') || cartCategories.has('poojas') || cartNamesLower.includes('pooja') || cartNamesLower.includes('deepam');
+    const hasBaby = cartCategories.has('baby') || cartNamesLower.includes('baby');
+
+    const candidates = products.filter(p => {
+      if (!p || !p.id) return false;
+      if (existingCartIds.has(String(p.id))) return false;
+      if (!p.price) return false;
+      return true;
+    });
+
+    const scored = candidates.map(p => {
+      let score = 0;
+      const cat = String(p.category || p.category_name || '').trim().toLowerCase();
+      const name = String(p.name || '').toLowerCase();
+
+      // If already added via this section, keep with highest score
+      if (addedRecIds.has(p.id)) {
+        score += 100;
+      }
+
+      if (cartCategories.has(cat)) {
+        score += 25;
+      }
+
+      if (hasHair && (cat === 'hair' || name.includes('shampoo') || name.includes('hair pack') || name.includes('hair serum') || name.includes('hair oil'))) {
+        score += 18;
+      }
+      if (hasSkin && (cat === 'skin' || name.includes('cream') || name.includes('face pack') || name.includes('lotion') || name.includes('soap') || name.includes('gel'))) {
+        score += 18;
+      }
+      if (hasWellness && (cat === 'wellness' || cat === 'health' || name.includes('herbal') || name.includes('syrup') || name.includes('capsule'))) {
+        score += 18;
+      }
+      if (hasFood && (cat === 'food' || name.includes('tea') || name.includes('honey') || name.includes('powder') || name.includes('mix'))) {
+        score += 18;
+      }
+      if (hasPooja && (cat.includes('pooja') || name.includes('pooja') || name.includes('oil') || name.includes('dhoop'))) {
+        score += 18;
+      }
+      if (hasBaby && (cat.includes('baby') || name.includes('baby'))) {
+        score += 18;
+      }
+
+      if (p.rating && parseFloat(p.rating) >= 4.5) {
+        score += 2;
+      }
+
+      return { product: p, score };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 3).map(s => s.product);
+  }, [products, cartItems, addedRecIds]);
+
+  const handleAddRecommendation = async (recProduct) => {
+    if (addedRecIds.has(recProduct.id) || addingRecId === recProduct.id) return;
+    setAddingRecId(recProduct.id);
+    try {
+      await addToCart(recProduct);
+      setAddedRecIds(prev => new Set(prev).add(recProduct.id));
+    } catch (err) {
+      console.error("Failed to add recommendation to cart:", err);
+    } finally {
+      setAddingRecId(null);
+    }
+  };
 
   const [isContactConfirmed, setIsContactConfirmed] = useState(false);
   const [formData, setFormData] = useState({
@@ -146,9 +244,9 @@ export default function Checkout() {
 
         // Initialize guest info if available
         if (userData.name === 'Guest User' || userData.name === 'Dharani Customer' || userData.email?.includes('@guest.com')) {
-          setGuestInfo({ name: '', email: '' });
+          setGuestInfo({ name: '', email: '', phone: userData.mobile || '' });
         } else {
-          setGuestInfo({ name: userData.name || '', email: userData.email || '' });
+          setGuestInfo({ name: userData.name || '', email: userData.email || '', phone: userData.mobile || '' });
         }
 
         const currentUserId = userData.id || userData.user_id;
@@ -210,7 +308,9 @@ export default function Checkout() {
             if (err.message === 'USER_NOT_FOUND') {
               // The user session is invalid / backend DB was reset
               localStorage.removeItem('user');
-              openLoginModal();
+              setUser(null);
+              setActiveStep(1);
+              setCheckoutView('form');
               return;
             }
             console.error(err);
@@ -222,19 +322,48 @@ export default function Checkout() {
         // handle error
       }
     } else {
-      // Not logged in, redirect to login
-      navigate('/login?redirect=checkout');
+      // Guest User entering checkout - Do not redirect to login
+      setUser(null);
+      setActiveStep(1);
+      setCheckoutView('form');
+      setShowFullAddressForm(true);
+      setIsManualEntry(true);
     }
   }, [navigate]);
 
+  // Listen for login status changes if modal is completed while on checkout
+  useEffect(() => {
+    const handleAuthChange = () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const parsed = JSON.parse(storedUser);
+          const userData = parsed.user || parsed;
+          setUser(userData);
+          if (userData.name) setFormData(prev => ({ ...prev, full_name: userData.name }));
+          if (userData.mobile) setFormData(prev => ({ ...prev, phone: userData.mobile }));
+          setActiveStep(2);
+          if (typeof refreshCart === 'function') refreshCart();
+        } catch (e) {}
+      }
+    };
+    window.addEventListener('user-login-status-changed', handleAuthChange);
+    return () => window.removeEventListener('user-login-status-changed', handleAuthChange);
+  }, [refreshCart]);
+
   // If cart is empty, redirect to shop
   useEffect(() => {
-    // Only redirect if we've had a chance to load user and cart is genuinely empty
-    // Also, don't redirect if we are currently showing the success popup
-    if (user && cartItems.length === 0 && !loading && !error && !showSuccessPopup) {
-      navigate('/shop');
+    if (cartItems.length === 0 && !loading && !error && !showSuccessPopup) {
+      const timer = setTimeout(() => {
+        const saved = localStorage.getItem('dharani_cart');
+        const hasSaved = saved && JSON.parse(saved).length > 0;
+        if (!hasSaved && cartItems.length === 0) {
+          navigate('/shop');
+        }
+      }, 700);
+      return () => clearTimeout(timer);
     }
-  }, [cartItems, navigate, loading, error, user, showSuccessPopup]);
+  }, [cartItems, navigate, loading, error, showSuccessPopup]);
 
   // Refetch cart/shipping cost whenever the selected state or address changes
   useEffect(() => {
@@ -266,38 +395,70 @@ export default function Checkout() {
   };
 
   const handleSaveGuestInfo = async () => {
-    if (!guestInfo.name || !guestInfo.email) {
-      alert("Please fill in both name and email.");
+    if (!guestInfo.name || !guestInfo.name.trim()) {
+      alert("Please enter your full name.");
+      return;
+    }
+    const cleanPhone = (guestInfo.phone || formData.phone || '').trim().replace(/\D/g, '');
+    if (!cleanPhone || cleanPhone.length < 10) {
+      alert("Please enter a valid 10-digit mobile number.");
       return;
     }
 
-    // Immediately update local state so the user can proceed to Shipping
-    const updatedUser = { ...user, name: guestInfo.name, email: guestInfo.email };
+    setLoading(true);
+    const guestEmail = guestInfo.email && guestInfo.email.trim() ? guestInfo.email.trim() : `${cleanPhone}@guest.com`;
+
+    let assignedUserId = user?.id || user?.user_id;
+
+    if (!assignedUserId) {
+      try {
+        const regRes = await fetch('https://api.codingboss.in/herbal/register/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+          },
+          body: JSON.stringify({
+            mobile: cleanPhone,
+            phone_number: cleanPhone,
+            email: guestEmail,
+            password: 'GuestPassword123!',
+            name: guestInfo.name.trim()
+          })
+        });
+        const regData = await regRes.json();
+        if (regRes.ok && regData && regData.user_id) {
+          assignedUserId = regData.user_id;
+        }
+      } catch (err) {
+        console.warn("Guest backend registration:", err);
+      }
+    }
+
+    const updatedUser = {
+      id: assignedUserId || 1,
+      name: guestInfo.name.trim(),
+      email: guestEmail,
+      mobile: cleanPhone,
+      role: 'customer'
+    };
+
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
 
-    if (formData.full_name === 'Guest User' || formData.full_name === 'Dharani Customer' || !formData.full_name) {
-      setFormData(prev => ({ ...prev, full_name: guestInfo.name }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      full_name: guestInfo.name.trim(),
+      phone: cleanPhone
+    }));
 
     setIsContactConfirmed(true);
     setActiveStep(2);
+    setLoading(false);
 
-    // Attempt to sync with backend silently
-    try {
-      const currentUserId = user.id || user.user_id;
-      if (!currentUserId) return;
-
-      await fetch(`https://api.codingboss.in/herbal/customers/${currentUserId}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true'
-        },
-        body: JSON.stringify({ name: guestInfo.name, email: guestInfo.email })
-      });
-    } catch (e) {
-      console.error('Failed to sync contact info to backend (non-blocking)', e);
+    // Sync guest cart items to backend
+    if (typeof refreshCart === 'function') {
+      refreshCart();
     }
   };
 
@@ -539,8 +700,8 @@ export default function Checkout() {
             customer_type: user.role || "customer",
             category: user.role || "customer",
             role: user.role || "customer",
-            total_amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
-            amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
+            total_amount: grandTotal,
+            amount: grandTotal,
             email: user?.email || guestInfo?.email || "customer@dharaniherbbals.com",
             name: formData.full_name || "Customer"
           })
@@ -578,7 +739,7 @@ export default function Checkout() {
             },
             body: JSON.stringify({
               order_id: internalOrderId,
-              amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)),
+              amount: grandTotal,
               user_id: currentUserId,
               mobile: formData.phone || user?.mobile || "9999999999",
               email: user?.email || guestInfo?.email || "customer@dharaniherbbals.com"
@@ -788,7 +949,7 @@ export default function Checkout() {
           <div className="checkout-form-section">
 
             {/* STEP 1: CONTACT */}
-            {user && (user.name === 'Guest User' || user.name === 'Dharani Customer' || !user.email || user.email.includes('@guest.com')) && (
+            {(!user || (user && (user.name === 'Guest User' || user.name === 'Dharani Customer' || !user.email || user.email.includes('@guest.com')))) && (
               <div className={`step-card ${activeStep === 1 ? 'active' : ''}`}>
                 <div className="step-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: activeStep > 1 ? 'pointer' : 'default' }} onClick={() => activeStep > 1 && setActiveStep(1)}>
                   <h3 className="modern-contact-title" style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: 0, fontSize: '1.2rem', color: activeStep >= 1 ? '#111827' : '#9CA3AF' }}>
@@ -802,24 +963,109 @@ export default function Checkout() {
 
                 {activeStep === 1 ? (
                   <div className="step-card-body fade-in-up">
-                    <p className="modern-contact-subtitle" style={{ marginBottom: '20px' }}>We'll use this to send you order updates and receipts.</p>
+                    {/* Optional Sign In Choice / Banner */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+                      border: '1px solid #bbf7d0',
+                      borderRadius: '12px',
+                      padding: '14px 18px',
+                      marginBottom: '20px',
+                      gap: '12px',
+                      flexWrap: 'wrap'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '1.2rem' }}>✨</span>
+                        <div>
+                          <strong style={{ color: '#166534', fontSize: '0.95rem', display: 'block' }}>Already have an account?</strong>
+                          <span style={{ color: '#15803d', fontSize: '0.85rem' }}>Sign in to unlock exclusive offers & use saved addresses</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => openLoginModal()}
+                        style={{
+                          background: '#16a34a',
+                          color: '#ffffff',
+                          border: 'none',
+                          borderRadius: '8px',
+                          padding: '8px 18px',
+                          fontSize: '0.9rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 4px rgba(22, 163, 74, 0.2)'
+                        }}
+                      >
+                        Sign In
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', margin: '16px 0', gap: '12px' }}>
+                      <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }} />
+                      <span style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '600' }}>Or Continue As Guest</span>
+                      <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }} />
+                    </div>
+
+                    <p className="modern-contact-subtitle" style={{ marginBottom: '20px', color: '#64748b' }}>
+                      We'll use your details to send you order updates and delivery notifications.
+                    </p>
+
                     <div className="modern-floating-form">
                       <div className="modern-input-group">
-                        <input type="text" id="guest-name" value={guestInfo.name} onChange={(e) => setGuestInfo({ ...guestInfo, name: e.target.value })} className="modern-floating-input" placeholder=" " />
-                        <label htmlFor="guest-name" className="modern-floating-label">Full Name</label>
+                        <input
+                          type="text"
+                          id="guest-name"
+                          value={guestInfo.name}
+                          onChange={(e) => setGuestInfo({ ...guestInfo, name: e.target.value })}
+                          className="modern-floating-input"
+                          placeholder=" "
+                        />
+                        <label htmlFor="guest-name" className="modern-floating-label">Full Name *</label>
                       </div>
+
                       <div className="modern-input-group">
-                        <input type="email" id="guest-email" value={guestInfo.email} onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })} className="modern-floating-input" placeholder=" " />
-                        <label htmlFor="guest-email" className="modern-floating-label">Email Address</label>
+                        <input
+                          type="tel"
+                          id="guest-phone"
+                          value={guestInfo.phone || ''}
+                          onChange={(e) => setGuestInfo({ ...guestInfo, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                          className="modern-floating-input"
+                          placeholder=" "
+                        />
+                        <label htmlFor="guest-phone" className="modern-floating-label">Mobile Number (10 Digits) *</label>
+                      </div>
+
+                      <div className="modern-input-group">
+                        <input
+                          type="email"
+                          id="guest-email"
+                          value={guestInfo.email}
+                          onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
+                          className="modern-floating-input"
+                          placeholder=" "
+                        />
+                        <label htmlFor="guest-email" className="modern-floating-label">Email Address (Optional)</label>
                       </div>
                     </div>
-                    <button type="button" className="btn-place-order" onClick={handleSaveGuestInfo} disabled={loading} style={{ marginTop: '20px', padding: '14px 24px', fontSize: '1.05rem', width: 'auto' }}>
-                      Continue to Shipping
+
+                    <button
+                      type="button"
+                      className="btn-place-order"
+                      onClick={handleSaveGuestInfo}
+                      disabled={loading}
+                      style={{ marginTop: '20px', padding: '14px 24px', fontSize: '1.05rem', width: 'auto' }}
+                    >
+                      Continue to Shipping →
                     </button>
                   </div>
                 ) : (
                   <div className="step-card-summary">
-                    <p style={{ margin: 0, color: '#6B7280' }}>{guestInfo.email || user.email}</p>
+                    <p style={{ margin: 0, color: '#1e293b', fontWeight: '600' }}>{guestInfo.name || user?.name || 'Guest User'}</p>
+                    <p style={{ margin: '4px 0 0', color: '#6B7280' }}>
+                      {guestInfo.phone || user?.mobile || formData.phone} • {guestInfo.email || user?.email}
+                    </p>
                   </div>
                 )}
               </div>
@@ -829,7 +1075,7 @@ export default function Checkout() {
             <div className={`step-card ${activeStep === 2 ? 'active' : ''}`}>
               <div className="step-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: activeStep > 2 ? 'pointer' : 'default' }} onClick={() => activeStep > 2 && setActiveStep(2)}>
                 <h3 className="modern-contact-title" style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: 0, fontSize: '1.2rem', color: activeStep >= 2 ? '#111827' : '#9CA3AF' }}>
-                  <span className={`step-badge ${activeStep > 2 ? 'completed' : ''} ${activeStep < 2 ? 'pending' : ''}`}>{activeStep > 2 ? <Check size={16} strokeWidth={3} /> : ((user && (user.name === 'Guest User' || !user.email)) ? '2' : '1')}</span>
+                  <span className={`step-badge ${activeStep > 2 ? 'completed' : ''} ${activeStep < 2 ? 'pending' : ''}`}>{activeStep > 2 ? <Check size={16} strokeWidth={3} /> : ((!user || (user && (user.name === 'Guest User' || !user.email))) ? '2' : '1')}</span>
                   Shipping Address
                 </h3>
                 {activeStep > 2 && (
@@ -1029,7 +1275,7 @@ export default function Checkout() {
             <div className={`step-card ${activeStep === 3 ? 'active' : ''}`}>
               <div className="step-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3 className="modern-contact-title" style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: 0, fontSize: '1.2rem', color: activeStep >= 3 ? '#111827' : '#9CA3AF' }}>
-                  <span className={`step-badge ${activeStep < 3 ? 'pending' : ''}`}>{((user && (user.name === 'Guest User' || !user.email)) ? '3' : '2')}</span>
+                  <span className={`step-badge ${activeStep < 3 ? 'pending' : ''}`}>{((!user || (user && (user.name === 'Guest User' || !user.email))) ? '3' : '2')}</span>
                   Payment Method
                 </h3>
               </div>
@@ -1055,7 +1301,14 @@ export default function Checkout() {
               {cartItems.map(item => (
                 <div key={item.id} className="summary-item">
                   <div className="summary-item-img-box">
-                    <img src={item.image} alt={item.name} />
+                    <img
+                      src={item.image || '/logo.png'}
+                      alt={item.name}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/logo.png';
+                      }}
+                    />
                     <span className="summary-item-qty">{item.quantity}</span>
                   </div>
                   <div className="summary-item-info">
@@ -1066,16 +1319,98 @@ export default function Checkout() {
               ))}
             </div>
 
+            {/* OPTIONAL & LIMITED: Add Before You Checkout */}
+            {recommendedProducts.length > 0 && (
+              <div className="checkout-recommendations-wrapper">
+                <div className="checkout-rec-header">
+                  <Sparkles size={16} className="checkout-rec-icon" />
+                  <h3 className="checkout-rec-title">
+                    {language === 'ta' ? 'செக்அவுட் செய்வதற்கு முன் சேர்க்கவும்' : 'Add Before You Checkout'}
+                  </h3>
+                </div>
+                <div className="checkout-rec-grid">
+                  {recommendedProducts.map(recProduct => {
+                    const isWish = isInWishlist ? isInWishlist(recProduct.id) : false;
+                    const isAdded = addedRecIds.has(recProduct.id);
+                    const isAdding = addingRecId === recProduct.id;
+                    const displayName = language === 'ta' && recProduct.tamil_name ? recProduct.tamil_name : recProduct.name;
+
+                    return (
+                      <div key={recProduct.id} className="checkout-rec-card">
+                        <div className="checkout-rec-img-box">
+                          <img
+                            src={recProduct.image || '/logo.png'}
+                            alt={displayName}
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = '/logo.png';
+                            }}
+                          />
+                          {toggleWishlist && (
+                            <button
+                              type="button"
+                              className={`checkout-rec-wish-btn ${isWish ? 'active' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleWishlist(recProduct);
+                              }}
+                              title={isWish ? "In Wishlist" : "Add to Wishlist"}
+                              aria-label="Wishlist"
+                            >
+                              <Heart size={12} fill={isWish ? "#ef4444" : "none"} color={isWish ? "#ef4444" : "#94a3b8"} />
+                            </button>
+                          )}
+                        </div>
+                        <div className="checkout-rec-info">
+                          <h4 className="checkout-rec-name" title={displayName}>{displayName}</h4>
+                          <span className="checkout-rec-price">{recProduct.price}</span>
+                        </div>
+                        <button
+                          type="button"
+                          className={`checkout-rec-add-btn ${isAdded ? 'added' : ''}`}
+                          onClick={() => handleAddRecommendation(recProduct)}
+                          disabled={isAdding}
+                        >
+                          {isAdding ? (
+                            <Loader2 size={12} className="spinner" />
+                          ) : isAdded ? (
+                            <>
+                              <Check size={12} />
+                              <span>Added</span>
+                            </>
+                          ) : (
+                            <>
+                              <Plus size={12} />
+                              <span>Add</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <div className="summary-totals">
-              <div className="total-row"><span>Subtotal</span><span>₹{cartTotal}</span></div>
-              <div className="total-row"><span>Shipping Charge</span>{shippingCost === 0 ? <span className="text-free">Free</span> : <span>₹{shippingCost}</span>}</div>
+              <div className="total-row"><span>Subtotal</span><span>₹{cartTotal.toFixed(2)}</span></div>
+              <div className="total-row">
+                <span>Shipping</span>
+                {shippingCost === 0 ? (
+                  <span className="text-free" style={{ color: '#16a34a', fontWeight: '600' }}>Free</span>
+                ) : (
+                  <span>₹{shippingCost.toFixed(2)}</span>
+                )}
+              </div>
               <div className="total-row"><span>CGST</span><span>₹{(Number(cgst) || 0).toFixed(2)}</span></div>
               <div className="total-row"><span>SGST</span><span>₹{(Number(sgst) || 0).toFixed(2)}</span></div>
-              <div className="total-row"><span>IGST</span><span>₹{(Number(igst) || 0).toFixed(2)}</span></div>
+              {Number(igst) > 0 && (
+                <div className="total-row"><span>IGST</span><span>₹{Number(igst).toFixed(2)}</span></div>
+              )}
               <div className="total-row"><span>Tax Total</span><span>₹{(Number(taxTotal) || 0).toFixed(2)}</span></div>
               <div className="total-row grand-total" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '16px', marginTop: '8px' }}>
                 <span>Total</span>
-                <span style={{ fontSize: '1.8rem', color: '#16A34A' }}>₹{grandTotal !== null ? grandTotal.toFixed(2) : (cartTotal + (shippingCost || 0) + (taxAmount || 0)).toFixed(2)}</span>
+                <span style={{ fontSize: '1.8rem', color: '#16A34A', fontWeight: '800' }}>₹{grandTotal.toFixed(2)}</span>
               </div>
             </div>
 

@@ -122,3 +122,38 @@
   }
   .brands-track { gap: 15px; padding-right: 15px; }
 }
+
+/* ── Desktop Compact Layout (1024px and up) ── */
+@media (min-width: 1024px) {
+  .brands-slider-section {
+    padding: 14px 0;
+    margin: 6px 0;
+  }
+
+  .brands-slider-header {
+    margin-bottom: 18px;
+  }
+
+  .brands-title {
+    font-size: 1.45rem;
+    letter-spacing: 2px;
+  }
+
+  .brands-divider {
+    width: 60px;
+    height: 3px;
+    margin-top: 8px;
+  }
+
+  .brands-track {
+    gap: 50px;
+    padding-right: 50px;
+  }
+
+  .brand-logo-wrapper {
+    width: 88px;
+    height: 88px;
+    padding: 8px;
+  }
+}
+

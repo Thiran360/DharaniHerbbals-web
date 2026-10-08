@@ -7,13 +7,7 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
-  const [shippingCost, setShippingCost] = useState(null);
-  const [taxAmount, setTaxAmount] = useState(0);
-  const [cgst, setCgst] = useState(0);
-  const [sgst, setSgst] = useState(0);
-  const [igst, setIgst] = useState(0);
-  const [taxTotal, setTaxTotal] = useState(0);
-  const [grandTotal, setGrandTotal] = useState(null);
+  const [serverShippingCost, setServerShippingCost] = useState(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { products } = useProducts();
   const { openLoginModal } = useAuthModal();
@@ -30,6 +24,38 @@ export function CartProvider({ children }) {
   const refreshCart = async (params = {}) => {
     const user = getUser();
     if (user) {
+      // Sync guest cart items to user server cart if any exist
+      try {
+        const savedGuestCart = localStorage.getItem('dharani_cart');
+        if (savedGuestCart) {
+          const guestItems = JSON.parse(savedGuestCart);
+          if (Array.isArray(guestItems) && guestItems.length > 0) {
+            for (const gItem of guestItems) {
+              try {
+                await fetch('https://api.codingboss.in/herbal/carts/', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true'
+                  },
+                  body: JSON.stringify({
+                    user_id: user.id,
+                    product_id: gItem.id,
+                    quantity: gItem.quantity || 1,
+                    ...(gItem.variation_id && { variation_id: gItem.variation_id })
+                  })
+                });
+              } catch (e) {
+                console.error("Cart item merge error:", e);
+              }
+            }
+          }
+          localStorage.removeItem('dharani_cart');
+        }
+      } catch (err) {
+        console.error("Guest cart merge exception:", err);
+      }
+
       let url = `https://api.codingboss.in/herbal/carts/?user_id=${user.id}`;
       if (params.address_id) {
         url += `&address_id=${params.address_id}`;
@@ -46,7 +72,6 @@ export function CartProvider({ children }) {
 
         if (!res.ok && (res.status === 404 || res.status === 401)) {
           localStorage.removeItem('user');
-          openLoginModal();
           return null;
         }
 
@@ -72,33 +97,13 @@ export function CartProvider({ children }) {
             variation_name: item.variation_name
           })));
           if (data.delivery_charge !== undefined) {
-            setShippingCost(parseFloat(data.delivery_charge) || 0);
+            setServerShippingCost(parseFloat(data.delivery_charge) || 0);
           } else if (data.shipping_charge !== undefined) {
-            setShippingCost(parseFloat(data.shipping_charge) || 0);
+            setServerShippingCost(parseFloat(data.shipping_charge) || 0);
           } else if (data.shipping_price !== undefined) {
-            setShippingCost(parseFloat(data.shipping_price) || 0);
+            setServerShippingCost(parseFloat(data.shipping_price) || 0);
           } else if (data.shipping !== undefined) {
-            setShippingCost(parseFloat(data.shipping) || 0);
-          }
-          if (data.gst_total !== undefined) {
-            setTaxAmount(parseFloat(data.gst_total) || 0);
-          } else if (data.tax !== undefined) {
-            setTaxAmount(parseFloat(data.tax) || 0);
-          } else if (data.tax_amount !== undefined) {
-            setTaxAmount(parseFloat(data.tax_amount) || 0);
-          }
-
-          // New separate tax fields
-          if (data.cgst !== undefined) setCgst(parseFloat(data.cgst) || 0);
-          if (data.sgst !== undefined) setSgst(parseFloat(data.sgst) || 0);
-          if (data.igst !== undefined) setIgst(parseFloat(data.igst) || 0);
-          if (data.tax_total !== undefined) {
-            setTaxTotal(parseFloat(data.tax_total) || 0);
-            // Fallback taxAmount if not set above
-            setTaxAmount(prev => prev || parseFloat(data.tax_total) || 0);
-          }
-          if (data.grand_total !== undefined) {
-            setGrandTotal(parseFloat(data.grand_total) || 0);
+            setServerShippingCost(parseFloat(data.shipping) || 0);
           }
         }
       } catch (err) {
@@ -106,8 +111,15 @@ export function CartProvider({ children }) {
       }
     } else {
       const savedCart = localStorage.getItem('dharani_cart');
-      if (savedCart) setCartItems(JSON.parse(savedCart));
-      else setCartItems([]);
+      if (savedCart) {
+        try {
+          setCartItems(JSON.parse(savedCart));
+        } catch {
+          setCartItems([]);
+        }
+      } else {
+        setCartItems([]);
+      }
     }
   };
 
@@ -125,12 +137,66 @@ export function CartProvider({ children }) {
   const addToCart = async (product, quantity = 1, variationId = null) => {
     const user = getUser();
 
+    // Guest User Flow - No forced sign-in
     if (!user) {
-      openLoginModal();
+      setCartItems(prevItems => {
+        const existingIndex = prevItems.findIndex(item =>
+          item.id === product.id && (variationId ? item.variation_id === variationId : true)
+        );
+
+        if (existingIndex > -1) {
+          const updated = [...prevItems];
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            quantity: updated[existingIndex].quantity + quantity
+          };
+          return updated;
+        } else {
+          let formattedPrice = '₹0';
+          if (product.price) {
+            if (typeof product.price === 'string') {
+              formattedPrice = product.price.startsWith('₹') ? product.price : `₹${product.price}`;
+            } else {
+              formattedPrice = `₹${parseFloat(product.price).toFixed(0)}`;
+            }
+          }
+
+          let variationName = product.variation_name || '';
+          if (variationId && product.variations && Array.isArray(product.variations)) {
+            const vMatch = product.variations.find(v => v.id === variationId || v.variation_id === variationId);
+            if (vMatch) {
+              variationName = vMatch.name || vMatch.variation_name || vMatch.weight || variationName;
+            }
+          }
+
+          const newItem = {
+            id: product.id,
+            cartItemId: `guest_${product.id}_${variationId || 'default'}_${Date.now()}`,
+            name: product.name,
+            image: product.image || (product.images && product.images[0]?.image) || '/logo.png',
+            price: formattedPrice,
+            quantity: quantity,
+            variation_id: variationId || null,
+            variation_name: variationName,
+            gst_percentage: product.gst_percentage || 0
+          };
+
+          return [...prevItems, newItem];
+        }
+      });
+
+      setIsCartOpen(true);
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
+        zIndex: 100000
+      });
       return;
     }
 
-    // Check if the exact product is already in cart
+    // Logged-in User Flow
     const existingItem = cartItems.find(item => item.id === product.id);
 
     if (existingItem) {
@@ -139,16 +205,15 @@ export function CartProvider({ children }) {
         updateQuantity(product.id, quantity);
         setIsCartOpen(true);
         confetti({
-          particleCount: 100,
-          spread: 70,
+          particleCount: 80,
+          spread: 60,
           origin: { y: 0.6 },
           colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
           zIndex: 100000
         });
         return;
       } else {
-        // Different variation -> Backend doesn't support multiple variations of the same product.
-        // We must delete the old one before adding the new one.
+        // Different variation -> Delete the old one before adding the new one
         try {
           await fetch(`https://api.codingboss.in/herbal/carts/${existingItem.cartItemId}/`, {
             method: 'DELETE',
@@ -177,8 +242,23 @@ export function CartProvider({ children }) {
         const errData = await response.json();
         if (errData.message && errData.message.toLowerCase().includes('user')) {
           localStorage.removeItem('user');
-          if (typeof openLoginModal === 'function') openLoginModal();
-          return; // Stop execution
+          // Add to guest cart as fallback so action is never lost
+          setCartItems(prevItems => [
+            ...prevItems,
+            {
+              id: product.id,
+              cartItemId: `guest_${product.id}_${Date.now()}`,
+              name: product.name,
+              image: product.image || '/logo.png',
+              price: typeof product.price === 'string' && product.price.startsWith('₹') ? product.price : `₹${product.price}`,
+              quantity: quantity,
+              variation_id: variationId || null,
+              variation_name: product.variation_name || '',
+              gst_percentage: product.gst_percentage || 0
+            }
+          ]);
+          setIsCartOpen(true);
+          return;
         }
       }
 
@@ -187,8 +267,8 @@ export function CartProvider({ children }) {
 
     setIsCartOpen(true);
     confetti({
-      particleCount: 100,
-      spread: 70,
+      particleCount: 80,
+      spread: 60,
       origin: { y: 0.6 },
       colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
       zIndex: 100000
@@ -202,7 +282,7 @@ export function CartProvider({ children }) {
     // Optimistic UI Update - instantly remove it
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
 
-    if (user && itemToRemove && itemToRemove.cartItemId) {
+    if (user && itemToRemove && itemToRemove.cartItemId && !String(itemToRemove.cartItemId).startsWith('guest_')) {
       try {
         await fetch(`https://api.codingboss.in/herbal/cart/${itemToRemove.cartItemId}/`, {
           method: 'DELETE',
@@ -228,7 +308,7 @@ export function CartProvider({ children }) {
       prevItems.map(i => i.id === productId ? { ...i, quantity: newQuantity } : i)
     );
 
-    if (user && item.cartItemId) {
+    if (user && item.cartItemId && !String(item.cartItemId).startsWith('guest_')) {
       try {
         await fetch(`https://api.codingboss.in/herbal/cart/${item.cartItemId}/`, {
           method: 'PUT',
@@ -267,44 +347,73 @@ export function CartProvider({ children }) {
       const liveProduct = productById.get(String(item.id));
       return {
         ...item,
-        tamil_name: liveProduct ? liveProduct.tamil_name : item.name,
-        gst_percentage: liveProduct ? parseFloat(liveProduct.gst_percentage) || 0 : 0,
+        tamil_name: liveProduct ? liveProduct.tamil_name : (item.tamil_name || item.name),
+        gst_percentage: liveProduct ? (parseFloat(liveProduct.gst_percentage) || 0) : (parseFloat(item.gst_percentage) || 0),
       };
     });
   }, [cartItems, productById]);
 
-  // Compute calculated taxes locally based on enriched cart items
-  const localTaxes = useMemo(() => {
+  // Centralized single-source calculation for Cart and Checkout
+  const pricing = useMemo(() => {
+    let subtotal = 0;
     let totalTax = 0;
+
     enrichedCartItems.forEach(item => {
       const priceStr = typeof item.price === 'string' ? item.price.replace(/[^\d.]/g, '') : item.price;
-      const price = parseFloat(priceStr) || 0;
-      const gstRate = item.gst_percentage || 0;
-      totalTax += (price * item.quantity * (gstRate / 100));
+      const unitPrice = parseFloat(priceStr) || 0;
+      const qty = parseInt(item.quantity, 10) || 1;
+      const lineTotal = unitPrice * qty;
+      subtotal += lineTotal;
+
+      const gstRate = parseFloat(item.gst_percentage) || 0;
+      if (gstRate > 0) {
+        // Price is inclusive of tax. Tax = Price - (Price / (1 + (gstRate / 100)))
+        const basePrice = lineTotal / (1 + (gstRate / 100));
+        totalTax += (lineTotal - basePrice);
+      }
     });
 
-    // Split tax into CGST and SGST equally (assuming local state)
+    subtotal = parseFloat(subtotal.toFixed(2));
+    totalTax = parseFloat(totalTax.toFixed(2));
+
+    const cgst = parseFloat((totalTax / 2).toFixed(2));
+    const sgst = parseFloat((totalTax / 2).toFixed(2));
+    const igst = 0;
+
+    // Shipping rules:
+    // Subtotal 0 -> 0
+    // Subtotal >= 500 -> Free (0)
+    // Subtotal < 500 -> server delivery charge if present, else 50
+    let shipping = 0;
+    if (subtotal > 0) {
+      if (subtotal >= 500) {
+        shipping = 0;
+      } else if (serverShippingCost !== null && serverShippingCost !== undefined) {
+        shipping = serverShippingCost;
+      } else {
+        shipping = 50;
+      }
+    }
+
+    const discountAmount = 0;
+    // Do NOT add totalTax to grandTotal since prices are inclusive of tax
+    const grand = parseFloat((Math.max(0, subtotal - discountAmount) + shipping).toFixed(2));
+
     return {
+      subtotal,
+      cartTotal: subtotal,
+      shippingCost: shipping,
+      isFreeShipping: shipping === 0 && subtotal > 0,
+      cgst,
+      sgst,
+      igst,
       taxTotal: totalTax,
-      cgst: totalTax / 2,
-      sgst: totalTax / 2,
-      igst: 0
+      taxAmount: totalTax,
+      discountAmount,
+      grandTotal: grand,
+      finalTotal: grand
     };
-  }, [enrichedCartItems]);
-
-  const cartTotal = useMemo(() => {
-    return enrichedCartItems.reduce((total, item) => {
-      // Parse price strings like "₹249.00" to floats
-      const priceStr = typeof item.price === 'string' ? item.price.replace(/[^\d.]/g, '') : item.price;
-      const price = parseFloat(priceStr) || 0;
-      return total + price * item.quantity;
-    }, 0);
-  }, [enrichedCartItems]);
-
-  const calculatedShippingCost = useMemo(() => {
-    return cartTotal > 0 && cartTotal < 500 ? 50 : 0;
-  }, [cartTotal]);
-
+  }, [enrichedCartItems, serverShippingCost]);
 
   return (
     <CartContext.Provider value={{
@@ -316,14 +425,18 @@ export function CartProvider({ children }) {
       toggleCart,
       closeCart,
       cartCount,
-      cartTotal,
-      shippingCost: shippingCost !== null ? shippingCost : calculatedShippingCost,
-      taxAmount: taxAmount || localTaxes.taxTotal,
-      cgst: cgst || localTaxes.cgst,
-      sgst: sgst || localTaxes.sgst,
-      igst: igst || localTaxes.igst,
-      taxTotal: taxTotal || localTaxes.taxTotal,
-      grandTotal: grandTotal,
+      subtotal: pricing.subtotal,
+      cartTotal: pricing.subtotal,
+      shippingCost: pricing.shippingCost,
+      isFreeShipping: pricing.isFreeShipping,
+      cgst: pricing.cgst,
+      sgst: pricing.sgst,
+      igst: pricing.igst,
+      taxTotal: pricing.taxTotal,
+      taxAmount: pricing.taxTotal,
+      discountAmount: pricing.discountAmount,
+      grandTotal: pricing.grandTotal,
+      finalTotal: pricing.grandTotal,
       refreshCart
     }}>
       {children}

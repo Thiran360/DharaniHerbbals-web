@@ -205,3 +205,37 @@
     border-radius: 6px;
   }
 }
+
+/* ── Desktop Compact Layout (1025px and up) ── */
+@media (min-width: 1025px) {
+  .category-strip-container {
+    padding: 16px 20px 14px 20px;
+    margin-top: 8px;
+  }
+
+  .category-strip-scroll {
+    gap: 20px;
+    padding: 4px 10px;
+  }
+
+  .category-item {
+    gap: 10px;
+    min-width: 95px;
+  }
+
+  .category-blob-wrapper {
+    width: 82px;
+    height: 82px;
+  }
+
+  .category-all-icon {
+    width: 74px;
+    height: 74px;
+    font-size: 0.8rem;
+  }
+
+  .category-btn {
+    padding: 5px 14px;
+    font-size: 0.82rem;
+  }
+}

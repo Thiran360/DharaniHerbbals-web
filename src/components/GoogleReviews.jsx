@@ -55,7 +55,6 @@ const reviewsData = [
 export default function GoogleReviews() {
   const { t } = useLanguage();
   const textTrackRef = useRef(null);
-  const textTrackRightRef = useRef(null);
   const [showAllReviews, setShowAllReviews] = useState(false);
 
   useEffect(() => {
@@ -68,27 +67,11 @@ export default function GoogleReviews() {
         ref.current.scrollBy({ left: amount, behavior: 'smooth' });
       }
     };
-    
-    const autoScrollRight = (ref, amount) => {
-      if (!ref.current) return;
-      const { scrollLeft, scrollWidth } = ref.current;
-      if (scrollLeft <= 10) {
-        ref.current.scrollTo({ left: scrollWidth, behavior: 'smooth' });
-      } else {
-        ref.current.scrollBy({ left: -amount, behavior: 'smooth' });
-      }
-    };
-
-    if (textTrackRightRef.current) {
-      textTrackRightRef.current.scrollLeft = 800;
-    }
 
     const intervalLeft = setInterval(() => autoScrollLeft(textTrackRef, 400), 3000);
-    const intervalRight = setInterval(() => autoScrollRight(textTrackRightRef, 400), 3000);
 
     return () => {
       clearInterval(intervalLeft);
-      clearInterval(intervalRight);
     };
   }, []);
 
@@ -159,36 +142,11 @@ export default function GoogleReviews() {
           </div>
         </div>
 
-      {!showAllReviews ? (
-        <>
-          {/* Sliding Text Reviews Marquee - Moving Left */}
-          <div className="gr-marquee-container reveal" style={{ marginBottom: '20px' }}>
-            <div className="gr-marquee-track" ref={textTrackRef}>
-              {[...reviewsData, ...reviewsData].map((review, i) => renderReviewCard(review, 'left', i))}
-            </div>
-          </div>
-          
-          {/* Sliding Text Reviews Marquee - Moving Right */}
-          <div className="gr-marquee-container reveal">
-            <div className="gr-marquee-track" ref={textTrackRightRef}>
-              {[...reviewsData].reverse().concat([...reviewsData].reverse()).map((review, i) => renderReviewCard(review, 'right', i))}
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="gr-all-reviews-grid reveal">
-          {[...reviewsData, ...reviewsData, ...reviewsData, ...reviewsData].map((review, i) => renderReviewCard(review, 'grid', i))}
+      {/* Single Sliding Text Reviews Marquee (One Row Only) */}
+      <div className="gr-marquee-container reveal" style={{ marginBottom: '20px' }}>
+        <div className="gr-marquee-track" ref={textTrackRef}>
+          {[...reviewsData, ...reviewsData].map((review, i) => renderReviewCard(review, 'single', i))}
         </div>
-      )}
-
-      {/* Show More Button */}
-      <div className="gr-show-more-container reveal">
-        <button 
-          className="gr-show-more-btn"
-          onClick={() => setShowAllReviews(!showAllReviews)}
-        >
-          {showAllReviews ? 'Show Less' : 'Show More Reviews'}
-        </button>
       </div>
 
     </div>

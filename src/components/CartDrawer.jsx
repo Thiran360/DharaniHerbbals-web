@@ -1,6 +1,8 @@
-import { X, Trash2, ShoppingBag } from 'lucide-react';
+import { X, Trash2, ShoppingBag, Sparkles, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useProducts } from '../context/ProductsContext';
+import { useAuthModal } from '../context/AuthModalContext';
 import { useLanguage } from '../context/LanguageContext';
 import './CartDrawer.css';
 
@@ -13,8 +15,17 @@ export default function CartDrawer() {
     updateQuantity, 
     cartTotal 
   } = useCart();
+  const { products } = useProducts();
+  const { openLoginModal } = useAuthModal();
   const { language } = useLanguage();
   const navigate = useNavigate();
+
+  const isUserLoggedIn = typeof window !== 'undefined' && localStorage.getItem('user') !== null;
+
+  // Filter recommendations: avoid items already in cart
+  const recommendedProducts = products
+    .filter((p) => !cartItems.some((item) => item.id === p.id))
+    .slice(0, 5);
 
   const handleCheckout = () => {
     closeCart();
@@ -42,6 +53,43 @@ export default function CartDrawer() {
           </button>
         </div>
 
+        {!isUserLoggedIn && cartItems.length > 0 && (
+          <div style={{
+            margin: '10px 16px 0',
+            padding: '10px 14px',
+            background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+            border: '1px solid #bbf7d0',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '10px',
+            fontSize: '0.82rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#166534' }}>
+              <Sparkles size={15} color="#16a34a" />
+              <span>Sign in to unlock exclusive offers</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => { closeCart(); openLoginModal(); }}
+              style={{
+                background: '#16a34a',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '6px',
+                padding: '5px 12px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              Sign In
+            </button>
+          </div>
+        )}
+
         <div className="cart-body">
           {cartItems.length === 0 ? (
             <div className="cart-empty">
@@ -56,7 +104,15 @@ export default function CartDrawer() {
               {cartItems.map((item) => (
                 <li key={item.id} className="cart-item">
                   <div className="cart-item-img-wrapper">
-                    <img src={item.image} alt={item.name} className="cart-item-img" />
+                    <img
+                      src={item.image || '/logo.png'}
+                      alt={item.name}
+                      className="cart-item-img"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/logo.png';
+                      }}
+                    />
                   </div>
                   
                   <div className="cart-item-details">
@@ -84,13 +140,33 @@ export default function CartDrawer() {
               ))}
             </ul>
           )}
+
+          {/* Cart Recommendations */}
+          {cartItems.length > 0 && recommendedProducts.length > 0 && (
+            <div className="cart-recommendations">
+              <h4 className="cart-rec-title">You May Also Like</h4>
+              <div className="cart-rec-slider">
+                {recommendedProducts.map((p) => (
+                  <div key={p.id} className="cart-rec-card" onClick={() => { closeCart(); navigate(`/product/${p.id}`); }}>
+                    <div className="cart-rec-img-wrap">
+                      <img src={p.image || '/logo.png'} alt={p.name} />
+                    </div>
+                    <div className="cart-rec-info">
+                      <p className="cart-rec-name">{language === 'ta' && p.tamil_name ? p.tamil_name : p.name}</p>
+                      <p className="cart-rec-price">{p.price}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {cartItems.length > 0 && (
           <div className="cart-footer">
             <div className="cart-subtotal">
               <span>Subtotal</span>
-              <span className="cart-total-price">₹{cartTotal}</span>
+              <span className="cart-total-price">₹{Number(cartTotal).toFixed(2)}</span>
             </div>
             <p className="cart-taxes-note">Taxes and shipping calculated at checkout.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
