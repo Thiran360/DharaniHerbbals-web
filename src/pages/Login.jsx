@@ -132,11 +132,7 @@ export default function Login() {
         if (receivedOtp) {
           const otpStr = String(receivedOtp).replace(/\D/g, '').slice(0, 6);
           setApiOtp(otpStr);
-          if (window.innerWidth <= 768) {
-            setOtpValue(otpStr);
-          } else {
-            setOtpValue('');
-          }
+          setOtpValue('');
         } else {
           setApiOtp('');
           setOtpValue('');
@@ -188,11 +184,7 @@ export default function Login() {
         if (receivedOtp) {
           const otpStr = String(receivedOtp).replace(/\D/g, '').slice(0, 6);
           setApiOtp(otpStr);
-          if (window.innerWidth <= 768) {
-            setOtpValue(otpStr);
-          } else {
-            setOtpValue('');
-          }
+          setOtpValue('');
         } else {
           setApiOtp('');
           setOtpValue('');
