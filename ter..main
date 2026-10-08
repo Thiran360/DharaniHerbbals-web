@@ -1,0 +1,208 @@
+[1mdiff --git a/clean.js b/clean.js[m
+[1mdeleted file mode 100644[m
+[1mindex f9ec744..0000000[m
+[1m--- a/clean.js[m
+[1m+++ /dev/null[m
+[36m@@ -1,28 +0,0 @@[m
+[31m-import Jimp from 'jimp';[m
+[31m-[m
+[31m-async function cleanLogo() {[m
+[31m-  const image = await Jimp.read('public/logo_frame.png');[m
+[31m-  [m
+[31m-  // Crop to center (assume 1920x1080, logo is roughly in center)[m
+[31m-  // Let's crop a 400x400 square from the center[m
+[31m-  image.crop(1920/2 - 200, 1080/2 - 200, 400, 400);[m
+[31m-  [m
+[31m-  // Iterate over all pixels to remove checkerboard background[m
+[31m-  image.scan(0, 0, image.bitmap.width, image.bitmap.height, function(x, y, idx) {[m
+[31m-    const r = this.bitmap.data[idx + 0];[m
+[31m-    const g = this.bitmap.data[idx + 1];[m
+[31m-    const b = this.bitmap.data[idx + 2];[m
+[31m-    [m
+[31m-    const minVal = Math.min(r, g, b);[m
+[31m-    [m
+[31m-    // Remove white/light grey checkerboard[m
+[31m-    if (minVal > 150 && Math.abs(r - g) < 20 && Math.abs(g - b) < 20) {[m
+[31m-      this.bitmap.data[idx + 3] = 0; // Alpha channel to 0[m
+[31m-    }[m
+[31m-  });[m
+[31m-  [m
+[31m-  await image.writeAsync('public/logo_clean.png');[m
+[31m-  console.log('Done!');[m
+[31m-}[m
+[31m-[m
+[31m-cleanLogo();[m
+[1mdiff --git a/clean2.mjs b/clean2.mjs[m
+[1mdeleted file mode 100644[m
+[1mindex cbdf19b..0000000[m
+[1m--- a/clean2.mjs[m
+[1m+++ /dev/null[m
+[36m@@ -1,19 +0,0 @@[m
+[31m-import Jimp from 'jimp';[m
+[31m-[m
+[31m-const image = await Jimp.read('public/logo_frame2.png');[m
+[31m-[m
+[31m-image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {[m
+[31m-  const r = this.bitmap.data[idx + 0];[m
+[31m-  const g = this.bitmap.data[idx + 1];[m
+[31m-  const b = this.bitmap.data[idx + 2];[m
+[31m-[m
+[31m-  const minVal = Math.min(r, g, b);[m
+[31m-[m
+[31m-  // Remove light grey/white background[m
+[31m-  if (minVal > 140 && Math.abs(r - g) < 20 && Math.abs(g - b) < 20) {[m
+[31m-    this.bitmap.data[idx + 3] = 0;[m
+[31m-  }[m
+[31m-});[m
+[31m-[m
+[31m-await image.writeAsync('public/logo_static.png');[m
+[31m-console.log('Saved logo_static.png');[m
+[1mdiff --git a/compress.mjs b/compress.mjs[m
+[1mdeleted file mode 100644[m
+[1mindex 849f2b2..0000000[m
+[1m--- a/compress.mjs[m
+[1m+++ /dev/null[m
+[36m@@ -1,43 +0,0 @@[m
+[31m-import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';[m
+[31m-import ffmpeg from 'fluent-ffmpeg';[m
+[31m-import path from 'path';[m
+[31m-import { statSync } from 'fs';[m
+[31m-[m
+[31m-ffmpeg.setFfmpegPath(ffmpegInstaller.path);[m
+[31m-[m
+[31m-const inputPath = path.resolve('public/videos/vedanmart.mp4');[m
+[31m-const outputPath = path.resolve('public/videos/vedanmart_small.mp4');[m
+[31m-const framePath = path.resolve('public/logo_frame2.png');[m
+[31m-[m
+[31m-console.log('Compressing video at higher quality...');[m
+[31m-[m
+[31m-// Step 1: Compress video[m
+[31m-ffmpeg(inputPath)[m
+[31m-  .videoFilters(['crop=ih:ih', 'scale=400:400'])[m
+[31m-  .outputOptions([[m
+[31m-    '-c:v libx264',[m
+[31m-    '-crf 24',[m
+[31m-    '-preset slow',[m
+[31m-    '-movflags faststart',[m
+[31m-    '-an',[m
+[31m-    '-r 24'[m
+[31m-  ])[m
+[31m-  .output(outputPath)[m
+[31m-  .on('end', () => {[m
+[31m-    const size = statSync(outputPath).size;[m
+[31m-    console.log('Video done! Size:', (size / 1024).toFixed(1), 'KB');[m
+[31m-[m
+[31m-    // Step 2: Extract a frame from the NEW compressed video[m
+[31m-    console.log('Extracting frame...');[m
+[31m-    ffmpeg(outputPath)[m
+[31m-      .seekInput(0.5)[m
+[31m-      .frames(1)[m
+[31m-      .output(framePath)[m
+[31m-      .on('end', () => {[m
+[31m-        console.log('Frame extracted!');[m
+[31m-      })[m
+[31m-      .on('error', err => console.error('Frame error:', err.message))[m
+[31m-      .run();[m
+[31m-  })[m
+[31m-  .on('error', err => console.error('Video error:', err.message))[m
+[31m-  .run();[m
+[1mdiff --git a/endpoints.html b/endpoints.html[m
+[1mindex 71f04c0..c2b6aae 100644[m
+Binary files a/endpoints.html and b/endpoints.html differ
+[1mdiff --git a/endpoints.txt b/endpoints.txt[m
+[1mindex 17366e0..9b6148a 100644[m
+Binary files a/endpoints.txt and b/endpoints.txt differ
+[1mdiff --git a/extract.js b/extract.js[m
+[1mdeleted file mode 100644[m
+[1mindex bde6210..0000000[m
+[1m--- a/extract.js[m
+[1m+++ /dev/null[m
+[36m@@ -1,33 +0,0 @@[m
+[31m-import puppeteer from 'puppeteer';[m
+[31m-import path from 'path';[m
+[31m-[m
+[31m-(async () => {[m
+[31m-  const browser = await puppeteer.launch();[m
+[31m-  const page = await browser.newPage();[m
+[31m-  [m
+[31m-  // We can load a simple HTML containing the video and capture a screenshot[m
+[31m-  const html = `[m
+[31m-    <html>[m
+[31m-      <body style="margin: 0; padding: 0;">[m
+[31m-        <video id="vid" src="file://${path.resolve('public/videos/vedanmart.mp4').replace(/\\/g, '/')}" autoplay muted style="width: 1920px; height: 1080px;"></video>[m
+[31m-        <script>[m
+[31m-          const v = document.getElementById('vid');[m
+[31m-          v.oncanplay = () => {[m
+[31m-            v.currentTime = 1.0; // seek to 1 sec[m
+[31m-          };[m
+[31m-        </script>[m
+[31m-      </body>[m
+[31m-    </html>[m
+[31m-  `;[m
+[31m-  [m
+[31m-  await page.setContent(html);[m
+[31m-  await page.setViewport({ width: 1920, height: 1080 });[m
+[31m-  [m
+[31m-  // wait for seek[m
+[31m-  await new Promise(r => setTimeout(r, 2000));[m
+[31m-  [m
+[31m-  await page.screenshot({ path: 'public/logo_frame.png' });[m
+[31m-  [m
+[31m-  await browser.close();[m
+[31m-  console.log('done');[m
+[31m-})();[m
+[1mdiff --git a/extract2.mjs b/extract2.mjs[m
+[1mdeleted file mode 100644[m
+[1mindex 43e78e3..0000000[m
+[1m--- a/extract2.mjs[m
+[1m+++ /dev/null[m
+[36m@@ -1,21 +0,0 @@[m
+[31m-import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';[m
+[31m-import ffmpeg from 'fluent-ffmpeg';[m
+[31m-import path from 'path';[m
+[31m-import { statSync } from 'fs';[m
+[31m-[m
+[31m-ffmpeg.setFfmpegPath(ffmpegInstaller.path);[m
+[31m-[m
+[31m-const inputPath = path.resolve('public/videos/vedanmart_small.mp4');[m
+[31m-const outputPath = path.resolve('public/logo_frame2.png');[m
+[31m-[m
+[31m-console.log('Extracting frame...');[m
+[31m-[m
+[31m-ffmpeg(inputPath)[m
+[31m-  .seekInput(0.5)[m
+[31m-  .frames(1)[m
+[31m-  .output(outputPath)[m
+[31m-  .on('end', () => {[m
+[31m-    console.log('Done! Size:', (statSync(outputPath).size / 1024).toFixed(1), 'KB');[m
+[31m-  })[m
+[31m-  .on('error', err => console.error('Error:', err.message))[m
+[31m-  .run();[m
+[1mdiff --git a/fetch-css.cjs b/fetch-css.cjs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..b46ad9b[m
+[1m--- /dev/null[m
+[1m+++ b/fetch-css.cjs[m
+[36m@@ -0,0 +1,24 @@[m
+[32m+[m[32mconst https = require('https');[m
+[32m+[m[32mhttps.get('https://dharaniherbbals.in/shop', (res) => {[m
+[32m+[m[32m  let data = '';[m
+[32m+[m[32m  res.on('data', (chunk) => data += chunk);[m
+[32m+[m[32m  res.on('end', () => {[m
+[32m+[m[32m    const match = data.match(/<link rel=\"stylesheet\" crossorigin href=\"(\/assets\/Shop-[^\"]+\.css)\">/);[m
+[32m+[m[32m    if (match) {[m
+[32m+[m[32m      https.get('https://dharaniherbbals.in' + match[1], (cssRes) => {[m
+[32m+[m[32m        let cssData = '';[m
+[32m+[m[32m        cssRes.on('data', (chunk) => cssData += chunk);[m
+[32m+[m[32m        cssRes.on('end', () => {[m
+[32m+[m[32m          const blocks = cssData.split('}');[m
+[32m+[m[32m          blocks.forEach(block => {[m
+[32m+[m[32m            if (block.includes('.shop-hero-heading') || block.includes('.shop-hero-subheading') || block.includes('.shop-hero-badge') || block.includes('.shop-hero-cta-btn')) {[m
+[32m+[m[32m              console.log(block + '}');[m
+[32m+[m[32m            }[m
+[32m+[m[32m          });[m
+[32m+[m[32m        });[m
+[32m+[m[32m      });[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      console.log('No CSS found');[m
+[32m+[m[32m    }[m
