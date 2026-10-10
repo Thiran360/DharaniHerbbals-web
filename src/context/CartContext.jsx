@@ -189,19 +189,15 @@ export function CartProvider({ children }) {
     } catch (err) { console.error(err); }
 
     if (!silent) {
-      if (cartItems.length === 0) {
-          setIsCartOpen(true);
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
-            zIndex: 100000
-          });
-        } else {
-          setCartToastMsg('Product added to cart successfully');
-          setTimeout(() => setCartToastMsg(''), 3000);
-        }
+      setCartToastMsg('Product added to cart successfully');
+      setTimeout(() => setCartToastMsg(''), 3000);
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
+        zIndex: 100000
+      });
     }
   };
 

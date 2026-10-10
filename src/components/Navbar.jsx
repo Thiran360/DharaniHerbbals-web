@@ -65,7 +65,13 @@ export default function Navbar() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setShowSuggestions(false);
-    setSearchQuery('');
+    const params = new URLSearchParams(location.search);
+    const q = params.get('search') || params.get('q') || '';
+    if (location.pathname === '/shop' && q) {
+      setSearchQuery(q);
+    } else if (location.pathname !== '/shop') {
+      setSearchQuery('');
+    }
 
     const checkUser = () => {
       const storedUser = localStorage.getItem('user');
@@ -169,6 +175,22 @@ export default function Navbar() {
     setShowSuggestions(false);
     setActiveIndex(-1);
     navigate(`/shop?search=${encodeURIComponent(q)}`);
+    setTimeout(() => {
+      const el = document.querySelector('.shop-results-bar') || document.querySelector('.shop-body');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  // Form submit handler — works with Enter key, mobile "Search" button, and icon click
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (showSuggestions && activeIndex >= 0 && visibleProducts[activeIndex]) {
+      const p = visibleProducts[activeIndex];
+      handleProductClick(p.name);
+      navigate(`/product/${p.id}`);
+    } else {
+      executeSearch();
+    }
   };
 
   // Full keyboard navigation handler
@@ -226,29 +248,49 @@ export default function Navbar() {
     if (!showSuggestions) return null;
 
     // Typing: show keyboard-navigable product suggestions (max 3)
-    if (searchQuery) {
+        if (searchQuery) {
       return (
         <div className="search-suggestions-dropdown" ref={suggestionsRef}>
           {visibleProducts.length > 0 ? (
-            visibleProducts.map((p, idx) => (
-              <Link
-                to={`/product/${p.id}`}
-                key={p.id}
-                data-idx={idx}
-                className={`search-suggestion-item${activeIndex === idx ? ' search-suggestion-active' : ''}`}
-                onClick={() => handleProductClick(p.name)}
-                tabIndex={-1}
+            <>
+              <div className="search-suggestions-header">
+                <span>{language === 'ta' ? 'பொருட்கள்' : 'Products'} ({filteredProducts.length})</span>
+              </div>
+              {visibleProducts.map((p, idx) => (
+                <Link
+                  to={`/product/${p.id}`}
+                  key={p.id}
+                  data-idx={idx}
+                  className={`search-suggestion-item${activeIndex === idx ? ' search-suggestion-active' : ''}`}
+                  onClick={() => handleProductClick(p.name)}
+                  tabIndex={-1}
+                >
+                  <img 
+                    src={p.image || '/logo.png'} 
+                    alt={p.name} 
+                    onError={(e) => { e.target.src = '/logo.png'; }}
+                  />
+                  <div className="suggestion-info">
+                    <span className="suggestion-name">{language === 'ta' && p.tamil_name ? p.tamil_name : p.name}</span>
+                    <span className="suggestion-price">{p.price}</span>
+                  </div>
+                  {activeIndex === idx && (
+                    <span className="suggestion-kbd-hint">↵</span>
+                  )}
+                </Link>
+              ))}
+              <button
+                type="button"
+                className="search-view-all-results-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  executeSearch();
+                }}
               >
-                <img src={p.image} alt={p.name} />
-                <div className="suggestion-info">
-                  <span className="suggestion-name">{language === 'ta' && p.tamil_name ? p.tamil_name : p.name}</span>
-                  <span className="suggestion-price">{p.price}</span>
-                </div>
-                {activeIndex === idx && (
-                  <span className="suggestion-kbd-hint">↵</span>
-                )}
-              </Link>
-            ))
+                <Search size={14} />
+                <span>{language === 'ta' ? `"${searchQuery}" - அனைத்து ${filteredProducts.length} முடிவுகளையும் பார்க்க` : `View all ${filteredProducts.length} results for "${searchQuery}"`}</span>
+              </button>
+            </>
           ) : (
             <div className="search-suggestion-item empty">{t('noProductsFound')}</div>
           )}
@@ -323,11 +365,10 @@ export default function Navbar() {
             <div className="lang-slider-pill"></div>
           </div>
           
-          <div className="desktop-search-bar">
+          <form className="desktop-search-bar" onSubmit={handleSearchSubmit} role="search">
             <button
-              type="button"
+              type="submit"
               className="search-icon-btn"
-              onClick={() => executeSearch()}
               aria-label="Search products"
               style={{ background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'inherit' }}
             >
@@ -338,15 +379,46 @@ export default function Navbar() {
               placeholder={t('searchPlaceholder')}
               className="search-input" 
               value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); setActiveIndex(-1); }}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchQuery(val);
+                setShowSuggestions(true);
+                setActiveIndex(-1);
+                if (location.pathname === '/shop') {
+                  const newParams = new URLSearchParams(location.search);
+                  if (val.trim()) {
+                    newParams.set('search', val.trim());
+                  } else {
+                    newParams.delete('search');
+                  }
+                  navigate(`/shop?${newParams.toString()}`, { replace: true });
+                }
+              }}
               onFocus={() => setShowSuggestions(true)}
               onKeyDown={handleSearchKeyDown}
               aria-autocomplete="list"
               aria-expanded={showSuggestions}
               role="combobox"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                className="search-clear-btn"
+                onClick={() => {
+                  setSearchQuery('');
+                  setShowSuggestions(false);
+                  if (location.pathname === '/shop' && (new URLSearchParams(location.search)).get('search')) {
+                    navigate('/shop');
+                  }
+                }}
+                style={{ background: 'none', border: 'none', padding: '0 4px', cursor: 'pointer', color: '#94a3b8', display: 'flex', alignItems: 'center' }}
+                aria-label="Clear search"
+              >
+                <X size={15} />
+              </button>
+            )}
             {renderDropdown()}
-          </div>
+          </form>
           <div className="action-capsule">
             {/* Wishlist Button */}
             <button
@@ -428,14 +500,7 @@ export default function Navbar() {
               className="capsule-btn cart-btn" 
               aria-label="Shopping Bag" 
               onClick={() => {
-                toggleCart();
-                confetti({
-                  particleCount: 80,
-                  spread: 60,
-                  origin: { y: 0.1, x: 0.9 }, // Top right corner where the icon is
-                  colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
-                  zIndex: 100000
-                });
+                navigate('/cart');
               }}
             >
               <div className="cart-icon-wrapper">
@@ -468,41 +533,59 @@ export default function Navbar() {
           <NavLink to="/shop?category=Offers" className="sec-nav-item offers-item">
             <Tag size={18} /> {t('offers')}
           </NavLink>
-          {/* Filter By Button - right corner */}
-          <button
-            className="sec-nav-filter-btn"
-            onClick={() => navigate('/shop?filter=open')}
-            aria-label="Filter Products"
-          >
-            <SlidersHorizontal size={15} />
-            {t('filterBy')}
-          </button>
+          {/* Filter By Button - only on shop/category pages (Hair to Baby, etc.), hidden on Home page */}
+          {location.pathname === '/shop' && (
+            <button
+              className="sec-nav-filter-btn"
+              onClick={() => navigate('/shop?filter=open')}
+              aria-label="Filter Products"
+            >
+              <SlidersHorizontal size={15} />
+              {t('filterBy')}
+            </button>
+          )}
         </div>
       </div>
       
       {/* Mobile Search Row */}
       <div className="mobile-search-row">
-        <div className="mobile-search-bar">
+        <form className="mobile-search-bar" onSubmit={handleSearchSubmit} role="search">
           <button
-            type="button"
+            type="submit"
             className="search-icon-btn"
-            onClick={() => executeSearch()}
             aria-label="Search products"
             style={{ background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'inherit' }}
           >
             <Search size={18} strokeWidth={2} className="search-icon" />
           </button>
           <input 
-            type="text" 
-            placeholder={t('searchPlaceholder')}
-            className="search-input" 
+              type="text" 
+              placeholder={t('searchPlaceholder')}
+              className="search-input" 
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); setActiveIndex(-1); }}
             onFocus={() => setShowSuggestions(true)}
             onKeyDown={handleSearchKeyDown}
           />
+          {searchQuery && (
+            <button
+              type="button"
+              className="search-clear-btn"
+              onClick={() => {
+                setSearchQuery('');
+                setShowSuggestions(false);
+                if (location.pathname === '/shop' && (new URLSearchParams(location.search)).get('search')) {
+                  navigate('/shop');
+                }
+              }}
+              style={{ background: 'none', border: 'none', padding: '0 4px', cursor: 'pointer', color: '#94a3b8', display: 'flex', alignItems: 'center' }}
+              aria-label="Clear search"
+            >
+              <X size={15} />
+            </button>
+          )}
           {renderDropdown()}
-        </div>
+        </form>
       </div>
       
       {/* Mobile Menu Overlay */}

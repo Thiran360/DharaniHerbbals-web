@@ -374,6 +374,16 @@ export default function Shop() {
       });
   }, []);
 
+  // searchQueryParam-scroll
+  useEffect(() => {
+    if (searchQueryParam) {
+      setTimeout(() => {
+        const el = document.querySelector('.shop-results-bar') || document.querySelector('.shop-body');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+  }, [searchQueryParam]);
+
   useEffect(() => {
     if (searchQueryParam) {
       setTranslatedHeroCat(language === 'ta' ? `"${searchQueryParam}" தேடல் முடிவுகள்` : `Search: "${searchQueryParam}"`);
@@ -617,7 +627,9 @@ export default function Shop() {
 
   const heroTagText = t(catConfig.tagKey) || catConfig.defaultTag;
   const heroSubText = t(catConfig.subKey) || catConfig.defaultSub;
-  const heroTitleText = activeCategory === 'All' ? t('exploreOurProducts') : (translatedHeroCat || catConfig.defaultTitle);
+  const heroTitleText = searchQueryParam 
+    ? (language === 'ta' ? `"${searchQueryParam}" தேடல் முடிவுகள்` : `Search Results for "${searchQueryParam}"`)
+    : (activeCategory === 'All' ? t('exploreOurProducts') : (translatedHeroCat || catConfig.defaultTitle));
   const heroBgImg = catConfig.bgImage || imgAll;
 
   return (
@@ -686,7 +698,8 @@ export default function Shop() {
       </div>
 
       {/* ── Hero Banner: Always shown on desktop with image; on mobile shown only when activeCategory === 'All' ── */}
-      <div className={`shop-hero ${activeCategory && activeCategory !== 'All' ? 'shop-hero-desktop-only shop-hero-category' : ''}`}>
+      {!searchQueryParam && (
+        <div className={`shop-hero ${activeCategory && activeCategory !== 'All' ? 'shop-hero-desktop-only shop-hero-category' : ''}`}>
         <div className="shop-hero-container">
           <div className="shop-hero-content">
             <span className="shop-hero-tag"><Leaf size={14} /> {heroTagText}</span>
@@ -712,6 +725,7 @@ export default function Shop() {
           </div>
         </div>
       </div>
+      )}
 
       <div className="shop-body">
 
@@ -727,8 +741,35 @@ export default function Shop() {
         <div className="shop-results-bar">
           <p className="shop-results-text">
             {t('showing')} <strong>{filteredProducts.length}</strong> {t('of')} <strong>{products.length}</strong> {t('products')}
-            {activeCategory !== 'All' && <> {t('in')} <strong className="shop-results-cat">{translatedHeroCat}</strong></>}
+            {searchQueryParam && (
+              <> {language === 'ta' ? 'தேடல்' : 'for'} <strong className="shop-results-cat">"{searchQueryParam}"</strong></>
+            )}
+            {!searchQueryParam && activeCategory !== 'All' && <> {t('in')} <strong className="shop-results-cat">{translatedHeroCat}</strong></>}
           </p>
+          {searchQueryParam && (
+            <button 
+              className="shop-clear-search-btn"
+              onClick={() => {
+                setSearchParams({});
+              }}
+              style={{
+                marginLeft: '14px',
+                background: '#fee2e2',
+                color: '#dc2626',
+                border: 'none',
+                padding: '5px 14px',
+                borderRadius: '20px',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              {language === 'ta' ? 'தேடலை நீக்குக ✕' : 'Clear Search ✕'}
+            </button>
+          )}
         </div>
 
         {/* ── Skeleton loading ── */}
@@ -752,7 +793,11 @@ export default function Shop() {
           <div className="shop-empty">
             <div className="shop-empty-emoji">🌿</div>
             <h3 className="shop-empty-title">{t('noProductsFound')}</h3>
-            <p className="shop-empty-desc">{t('noItemsAvailable')}</p>
+            <p className="shop-empty-desc">
+              {searchQueryParam 
+                ? (language === 'ta' ? `"${searchQueryParam}" உடன் பொருந்தும் பொருட்கள் எதுவும் இல்லை.` : `No products matched "${searchQueryParam}". Try another term or browse our complete collection.`)
+                : t('noItemsAvailable')}
+            </p>
             <button className="shop-empty-btn" onClick={() => handleCategoryClick('All')}>
               {t('browseAll')}
             </button>

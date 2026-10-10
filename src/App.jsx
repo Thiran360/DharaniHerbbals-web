@@ -310,7 +310,7 @@ function AppContent() {
     <div className="app-container">
       <ScrollToTop />
       {!isAdminRoute && <Navbar />}
-      {!isAdminRoute && <CartDrawer />}
+      {/* Direct /cart navigation is now active */}
       {!isAdminRoute && !isPoliciesRoute && <FloatingSocials />}
       {!isAdminRoute && !isPoliciesRoute && <GlobalOrderPopup />}
       <Suspense fallback={null}>

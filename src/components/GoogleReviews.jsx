@@ -27,7 +27,7 @@ const reviewsData = [
     id: 3,
     name: 'Suresh M',
     initial: 'S',
-    bgColor: '#5a7bf6',
+    bgColor: '#0284c7',
     time: '2 months ago',
     text: 'Authentic Ayurvedic products. Very satisfied with the results.',
     rating: 5,
@@ -36,7 +36,7 @@ const reviewsData = [
     id: 4,
     name: 'Lakshmi V',
     initial: 'L',
-    bgColor: '#8a5af6',
+    bgColor: '#7c3aed',
     time: '1 week ago',
     text: 'Pure and natural products. Excellent for wellness. Thank you!',
     rating: 5,
@@ -45,9 +45,36 @@ const reviewsData = [
     id: 5,
     name: 'Amit S',
     initial: 'A',
-    bgColor: '#5a7bf6',
+    bgColor: '#ea580c',
     time: '1 month ago',
     text: 'Amazing supplements and great packaging. Highly recommended for daily use.',
+    rating: 5,
+  },
+  {
+    id: 6,
+    name: 'Kavitha P',
+    initial: 'K',
+    bgColor: '#16a34a',
+    time: '2 weeks ago',
+    text: 'Completely natural hair care solutions. Really visible improvement in hair fall.',
+    rating: 5,
+  },
+  {
+    id: 7,
+    name: 'Dinesh Kumar',
+    initial: 'D',
+    bgColor: '#0d9488',
+    time: '3 months ago',
+    text: 'Fast dispatch and prompt response from support. Quality is exceptional.',
+    rating: 4.5,
+  },
+  {
+    id: 8,
+    name: 'Priya N',
+    initial: 'P',
+    bgColor: '#db2777',
+    time: '2 weeks ago',
+    text: 'Traditional and pure herbs. Very gentle on sensitive skin. Loved the soaps!',
     rating: 5,
   },
 ];
@@ -55,22 +82,23 @@ const reviewsData = [
 export default function GoogleReviews() {
   const { t } = useLanguage();
   const textTrackRef = useRef(null);
+  const isHoveredRef = useRef(false);
     
   useEffect(() => {
     const autoScrollLeft = (ref, amount) => {
-      if (!ref.current) return;
+      if (!ref.current || isHoveredRef.current) return;
       const { scrollLeft, scrollWidth, clientWidth } = ref.current;
-      if (scrollLeft + clientWidth >= scrollWidth - 10) {
+      if (scrollLeft + clientWidth >= scrollWidth - 15) {
         ref.current.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
         ref.current.scrollBy({ left: amount, behavior: 'smooth' });
       }
     };
     
-    const intervalLeft = setInterval(() => autoScrollLeft(textTrackRef, 400), 3000);
+    const intervalLeft = setInterval(() => autoScrollLeft(textTrackRef, 320), 3000);
     return () => {
       clearInterval(intervalLeft);
-      };
+    };
   }, []);
 
   const renderStars = (rating) => {
@@ -141,9 +169,14 @@ export default function GoogleReviews() {
         </div>
 
       {/* Sliding Text Reviews Marquee - Moving Left */}
-          <div className="gr-marquee-container reveal" style={{ marginBottom: '20px' }}>
+          <div 
+            className="gr-marquee-container reveal" 
+            style={{ marginBottom: '20px' }}
+            onMouseEnter={() => { isHoveredRef.current = true; }}
+            onMouseLeave={() => { isHoveredRef.current = false; }}
+          >
             <div className="gr-marquee-track" ref={textTrackRef}>
-              {[...reviewsData, ...reviewsData].map((review, i) => renderReviewCard(review, 'left', i))}
+              {reviewsData.map((review, i) => renderReviewCard(review, 'review', i))}
             </div>
           </div>
 

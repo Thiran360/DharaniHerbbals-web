@@ -61,6 +61,9 @@ function SocialCard({ item, addToCart }) {
     return () => clearTimeout(timer);
   }, []);
 
+  const productPrice = item.price || '₹199';
+  const oldPrice = '₹' + (parseInt(productPrice.replace(/[^0-9]/g, '') || '199') + 100);
+
   return (
     <div className={`social-card ${item.type}`} ref={cardRef}>
       {/* Background Media */}
@@ -87,6 +90,20 @@ function SocialCard({ item, addToCart }) {
         <span>{item.type === 'reel' ? 'Reel' : 'Post'}</span>
       </div>
 
+      {/* Top Right Instagram Arrow */}
+      <a 
+        href="https://www.instagram.com/dharani_herbbals" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="social-post-arrow-btn top-corner"
+        aria-label="View on Instagram"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+      </a>
+
       {/* Play Icon for Reels */}
       {item.type === 'reel' && (
         <div className="social-play-icon">
@@ -97,39 +114,36 @@ function SocialCard({ item, addToCart }) {
         </div>
       )}
 
-      {item.type === 'reel' ? (
-        <>
-          {/* Title Overlay in Video */}
-          <div className="social-gradient"></div>
-          <div className="social-video-title">
-            {item.title}
-          </div>
+      {/* Title Overlay in Video / Post */}
+      <div className="social-gradient"></div>
+      <div className="social-video-title">
+        {item.title}
+      </div>
 
-          {/* Bottom Product Strip (Vilvah Style) */}
-          <div className="social-product-strip">
-            <div className="social-product-img">
-              <img src={item.productImg || item.imgUrl} alt={item.title} />
-            </div>
-            <div className="social-product-prices">
-              <span className="social-product-price">{item.price}</span>
-              <span className="social-product-old-price">₹{parseInt(item.price.replace(/[^0-9]/g, '')) + 100}</span>
-            </div>
-            <button className="social-product-cart-btn" onClick={(e) => { e.stopPropagation(); addToCart({ id: item.id, name: item.title, price: item.price, image: item.productImg || item.imgUrl }); }}>
-              Cart
-            </button>
-          </div>
-        </>
-      ) : (
-        /* Post Style (Square with Arrow Button) */
-        <div className="social-post-overlay">
-          <a href="https://www.instagram.com/dharani_herbbals" target="_blank" rel="noopener noreferrer" className="social-post-arrow-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
-          </a>
+      {/* Bottom Product Strip with Cart Button for ALL cards */}
+      <div className="social-product-strip">
+        <div className="social-product-img">
+          <img src={item.productImg || item.imgUrl} alt={item.title} />
         </div>
-      )}
+        <div className="social-product-prices">
+          <span className="social-product-price">{productPrice}</span>
+          <span className="social-product-old-price">{oldPrice}</span>
+        </div>
+        <button 
+          className="social-product-cart-btn" 
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            addToCart({ 
+              id: item.id, 
+              name: item.title, 
+              price: productPrice, 
+              image: item.productImg || item.imgUrl 
+            }); 
+          }}
+        >
+          Cart
+        </button>
+      </div>
     </div>
   );
 }

@@ -760,11 +760,22 @@ export default function Profile() {
 
           {activeTab === 'addresses' && (
             <div className="profile-addresses">
-              <div className="profile-content-header has-action">
+              <div className="profile-content-header has-action" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
                   <h1>My Addresses</h1>
                   <p>Manage your shipping addresses for quick checkout.</p>
                 </div>
+                {!showAddressForm && (
+                  <button 
+                    className="btn-add-address-sm"
+                    onClick={() => {
+                      setAddressFormData({ id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false });
+                      setShowAddressForm(true);
+                    }}
+                  >
+                    <Plus size={16} /> Add Address
+                  </button>
+                )}
               </div>
 
               {showAddressForm ? (
@@ -853,13 +864,17 @@ export default function Profile() {
                           </div>
                         </div>
                       ))}
-                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
-                        <button className="btn-add-address" onClick={() => {
+                      <div 
+                        className="address-card-new-dashed"
+                        onClick={() => {
                           setAddressFormData({ id: null, full_name: '', phone: '', address: '', city: '', state: '', pincode: '', latitude: '11.0168', longitude: '76.9558', is_default: false });
                           setShowAddressForm(true);
-                        }}>
-                          <Plus size={18} /> Add Another Address
-                        </button>
+                        }}
+                      >
+                        <div className="dashed-plus-circle">
+                          <Plus size={20} />
+                        </div>
+                        <span>+ Add Address</span>
                       </div>
                     </>
                   ) : (
