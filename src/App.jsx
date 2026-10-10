@@ -7,8 +7,9 @@ import { useProducts } from './context/ProductsContext';
 import { useLanguage } from './context/LanguageContext';
 import { useWishlist } from './context/WishlistContext';
 import ImageSlider from './components/ImageSlider';
-import { Heart } from 'lucide-react';
+import { Heart, Leaf, Shield, CheckCircle, Package } from 'lucide-react';
 import { API_BASE_URL } from './services/api';
+import ShoppableVideos from './components/ShoppableVideos';
 
 // Critical components loaded synchronously
 import Shop, { ProductCard } from './pages/Shop';
@@ -37,7 +38,6 @@ import BrandsSlider from './components/BrandsSlider';
 import FloatingSocials from './components/FloatingSocials';
 import BrandLogoVideo from './components/BrandLogoVideo';
 
-const ShoppableVideos = lazy(() => import('./components/ShoppableVideos'));
 const GoogleReviews = lazy(() => import('./components/GoogleReviews'));
 const HandpickedDeals = lazy(() => import('./components/HandpickedDeals'));
 import OurJourney from './components/OurJourney';
@@ -192,115 +192,90 @@ function Home() {
 
 
   return (
-    <div style={{ width: '100%' }}>
-      {/* Full-width Image Slider */}
-      <ImageSlider />
+    <div style={{ width: '100%', paddingTop: '140px', background: '#fff' }}>
+      
+      {/* 1. Shop by Category (Moved to top as requested) */}
+      <section style={{ padding: '20px 5% 40px 5%', textAlign: 'center', background: '#fff' }}>
+        <CategoryStrip />
+      </section>
 
-      <CategoryStrip />
+      {/* 2. Full Image Hero Section */}
+      <section style={{ 
+        position: 'relative', 
+        width: 'calc(100% - 40px)', 
+        margin: '0 auto',
+        height: 'calc(100vh - 140px)',
+        background: 'url(/hero-mockup.jpg) center/cover no-repeat',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0',
+        borderRadius: '30px',
+        overflow: 'hidden',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+      }}>
+        <Link to="/shop" style={{ display: 'block', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 10 }}>
+           {/* Invisible clickable overlay over the whole image so they can click the button in the image */}
+        </Link>
+      </section>
 
-      <div className="page-container" style={{ paddingTop: '20px' }}>
-
-        {/* Featured Products Section (Ultra UI Bestsellers) */}
-        <div className="reveal bento-header" style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.2) 0%, rgba(34,197,94,0.1) 100%)', borderColor: 'rgba(74,222,128,0.3)' }}>
-          {/* Decorative background blob */}
-          <div className="bento-header-blob left"></div>
-
-          <div className="bento-title-col">
-            <h2 className="bento-title-text">
-              <BrandLogoVideo />
-              {(() => {
-                const words = t('featuredTitle').split(' ');
-                const lastWord = words.pop();
-                return (
-                  <div style={{ flex: 1, minWidth: 0, wordWrap: 'break-word' }}>
-                    {words.join(' ')} <span className="highlight">{lastWord}</span>
-                  </div>
-                );
-              })()}
-            </h2>
+      {/* 3. Trending Products Section */}
+      <section style={{ padding: '60px 5%', background: '#fff' }}>
+        {/* Shopify-style Header Banner */}
+        <div style={{ 
+          background: '#e8f3ec', 
+          borderRadius: '16px', 
+          padding: '30px 40px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          marginBottom: '40px',
+          flexWrap: 'wrap',
+          gap: '20px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: '1 1 400px' }}>
+            <Leaf size={48} color="#166534" />
+            <h2 style={{ fontFamily: 'Lora, serif', fontSize: '3rem', color: '#0f172a', margin: 0, fontStyle: 'italic' }}>Our Most Loved Picks.</h2>
           </div>
-
-          <div className="bento-desc-col">
-            <p className="bento-desc-text">
-              {t('featuredSubtitle')}
+          <div style={{ flex: '1 1 400px', borderLeft: '2px solid #cbd5e1', paddingLeft: '30px' }}>
+            <p style={{ color: '#334155', fontSize: '1.2rem', margin: 0, fontWeight: 500, lineHeight: 1.5 }}>
+              Immerse yourself in our quintessential collection of highly sought after botanical remedies, meticulously crafted to deliver an uncompromised standard of holistic nourishment and transformative wellness.
             </p>
           </div>
         </div>
 
-        {/* Reuse the same ProductCard with full Tamil translation support */}
-        <div className="shop-grid reveal-stagger" style={{ marginTop: '8px' }}>
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        {/* Vilvah-style Product Cards */}
+        <div style={{ flex: 1, overflowX: 'auto', paddingBottom: '40px' }}>
+          <div className="shop-grid" style={{ display: 'flex', gap: '24px', minWidth: 'max-content', padding: '10px 0' }}>
+            {featuredProducts.slice(0, 6).map((product) => (
+              <div key={product.id} style={{ width: '280px', height: 'auto', display: 'flex' }}>
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <div className="reveal" style={{ textAlign: 'center', marginTop: '40px' }}>
-          <Link to="/shop" className="btn-view-more">
-            {t('viewAll')} &gt;
-          </Link>
+
+
+      {/* 4.5 Shoppable Videos (Insta Reels) */}
+      <ShoppableVideos />
+
+
+      <Suspense fallback={<div style={{ height: '50vh' }}></div>}>
+        {/* Remaining original sections (Reviews, Trust Badges, etc) */}
+        <div className="reveal">
+          <GoogleReviews />
         </div>
+        <div className="reveal">
+          <OurJourney />
+        </div>
+        <div className="reveal">
+          <TrustBadges />
+        </div>
+      </Suspense>
 
-        <Suspense fallback={<div style={{ height: '50vh' }}></div>}>
-          {/* Handpicked Deals Section */}
-          <div className="reveal" style={{ marginTop: '40px' }}>
-            <HandpickedDeals />
-          </div>
-
-          {/* Shoppable Videos Section */}
-          <div className="reveal">
-            <ShoppableVideos />
-          </div>
-
-          {/* Bento Grid Ads Section */}
-          <div className="reveal bento-header with-margin-top" style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.2) 0%, rgba(34,197,94,0.1) 100%)', borderColor: 'rgba(74,222,128,0.3)' }}>
-            {/* Decorative background blob */}
-            <div className="bento-header-blob left"></div>
-
-            <div className="bento-title-col">
-              <h2 className="bento-title-text">
-                <BrandLogoVideo />
-                <div>{t('apothecaryReserve')}</div>
-              </h2>
-            </div>
-
-            <div className="bento-desc-col">
-              <p className="bento-desc-text">
-                {t('apothecaryDesc')}
-              </p>
-            </div>
-          </div>
-
-          {/* Auto-Sliding Promo Train */}
-          <div ref={promoSliderRef} className="promo-slider-container reveal-stagger">
-            <div className="promo-train-track">
-              {(isMobile ? promoAds : [...promoAds, ...promoAds]).map((ad, index) => (
-                <div key={index} className="promo-slider-item" onClick={() => navigate(`/product/${ad.productId}`)}>
-                  <img src={ad.img} alt={ad.alt} className="promo-slider-img" loading="lazy" decoding="async" />
-                  <div className="promo-slider-action">
-                    <span className="arrow-icon">↗</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Google Reviews Marquee Section */}
-          <div className="reveal">
-            <GoogleReviews />
-          </div>
-
-          {/* Our Journey Section */}
-          <div className="reveal">
-            <OurJourney />
-          </div>
-
-          {/* Trust Badges Section */}
-          <div className="reveal">
-            <TrustBadges />
-          </div>
-        </Suspense>
-
-      </div>
 
       {/* Brands Slider Section */}
       <BrandsSlider />
@@ -338,7 +313,9 @@ function AppContent() {
       {!isAdminRoute && <CartDrawer />}
       {!isAdminRoute && !isPoliciesRoute && <FloatingSocials />}
       {!isAdminRoute && !isPoliciesRoute && <GlobalOrderPopup />}
-      {!isAdminRoute && <Login />}
+      <Suspense fallback={null}>
+        {!isAdminRoute && <Login />}
+      </Suspense>
       <WishlistToastNotification />
       <main className="main-content" style={isAdminRoute ? { padding: 0 } : {}}>
         <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '1.2rem', color: '#15803d' }}>Loading...</div>}>

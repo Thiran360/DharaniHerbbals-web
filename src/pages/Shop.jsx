@@ -12,7 +12,7 @@ import hairBannerImg from '../assets/hair_banner_transparent.png';
 import imgBody from '../assets/body_soap_transparent.png';
 import imgFood from '../assets/pirandai_pickle_transparent_v2.png';
 import imgSkin from '../assets/aloe_vera_face_pack_transparent.png';
-import imgHealth from '../assets/sathu_maavu_transparent.png';
+import imgHealth from '../assets/beverage_transparent.png';
 import imgBaby from '../assets/nalangu_powder_transparent_v2.png';
 import imgPoojas from '../assets/pooja_oil_transparent_v2.png';
 import imgBeverages from '../assets/beverage_transparent.png';
@@ -341,6 +341,17 @@ export default function Shop() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({});
 
+  // Auto-open filter drawer when navigated with ?filter=open (from navbar button)
+  useEffect(() => {
+    if (searchParams.get('filter') === 'open') {
+      setIsFilterOpen(true);
+      // Clean up the URL param so it doesn't persist
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('filter');
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     fetch(`${API_BASE_URL}/categories/`, {
       headers: {
@@ -626,6 +637,41 @@ export default function Shop() {
         </div>
       )}
 
+      {/* ── Filter Bar + Category Tabs (Moved above Hero) ── */}
+      <div className="shop-filter-bar" style={{ margin: '0 2% 24px 2%', borderRadius: '16px', border: 'none', background: 'transparent', padding: '0', boxShadow: 'none', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+        <div className="shop-filter-left" onClick={() => setIsFilterOpen(true)} style={{ cursor: 'pointer', background: '#fff', padding: '12px 24px', borderRadius: '30px', display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', border: '1px solid rgba(46,125,50,0.1)', flexShrink: 0 }}>
+          <SlidersHorizontal size={20} className="shop-filter-icon" />
+          <span className="shop-filter-label" style={{ userSelect: 'none', fontWeight: '600' }}>{t('filterBy')}</span>
+          {Object.keys(selectedFilters).length > 0 && (
+            <span style={{
+              backgroundColor: '#22c55e',
+              color: 'white',
+              borderRadius: '50%',
+              width: '20px',
+              height: '20px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              marginLeft: '4px'
+            }}>
+              {Object.values(selectedFilters).flat().length}
+            </span>
+          )}
+        </div>
+        {/* Category Pill Tabs */}
+        <div className="shop-tabs-scroll" style={{ flex: 1 }}>
+          {categories.map((cat) => (
+            <CategoryTab
+              key={cat}
+              cat={cat}
+              activeCategory={activeCategory}
+              onClick={() => handleCategoryClick(cat)}
+            />
+          ))}
+        </div>
+      </div>
+
       {/* ── Hero Banner: Always shown on desktop with image; on mobile shown only when activeCategory === 'All' ── */}
       <div className={`shop-hero ${activeCategory && activeCategory !== 'All' ? 'shop-hero-desktop-only shop-hero-category' : ''}`}>
         <div className="shop-hero-container">
@@ -663,40 +709,6 @@ export default function Shop() {
             {t('translating')}
           </div>
         )}
-
-        {/* ── Filter Bar ── */}
-        <div className="shop-filter-bar">
-          <div className="shop-filter-left" onClick={() => setIsFilterOpen(true)} style={{ cursor: 'pointer' }}>
-            <SlidersHorizontal size={20} className="shop-filter-icon" />
-            <span className="shop-filter-label" style={{ userSelect: 'none' }}>{t('filterBy')}</span>
-            {Object.keys(selectedFilters).length > 0 && (
-              <span style={{
-                backgroundColor: '#22c55e',
-                color: 'white',
-                borderRadius: '50%',
-                width: '20px',
-                height: '20px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '12px',
-                marginLeft: '8px'
-              }}>
-                {Object.values(selectedFilters).flat().length}
-              </span>
-            )}
-          </div>
-          <div className="shop-tabs-scroll">
-            {categories.map((cat) => (
-              <CategoryTab
-                key={cat}
-                cat={cat}
-                activeCategory={activeCategory}
-                onClick={() => handleCategoryClick(cat)}
-              />
-            ))}
-          </div>
-        </div>
 
         {/* ── Results info ── */}
         <div className="shop-results-bar">

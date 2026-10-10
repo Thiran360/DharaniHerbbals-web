@@ -122,7 +122,7 @@ export default function GoogleReviews() {
       <div className="gr-orb gr-orb-1"></div>
       <div className="gr-orb gr-orb-2"></div>
       
-      <div className="reveal bento-header" style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.2) 0%, rgba(34,197,94,0.1) 100%)', borderColor: 'rgba(74,222,128,0.3)' }}>
+      <div className="reveal bento-header" style={{ background: '#f8fafc', borderColor: '#e2e8f0' }}>
           {/* Decorative background blob */}
           <div className="bento-header-blob left"></div>
           

@@ -4,6 +4,7 @@ import { MapPin, Phone, CheckCircle, ArrowLeft, Loader2, Plus, Navigation, Trash
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
+import { useProducts } from '../context/ProductsContext';
 import { API_BASE_URL } from '../services/api';
 import './Checkout.css';
 
@@ -17,9 +18,14 @@ const INDIAN_STATES = [
 ];
 
 export default function Checkout() {
-  const { cartItems, cartTotal, shippingCost, taxAmount, cgst, sgst, igst, taxTotal, grandTotal, refreshCart } = useCart();
+  const { cartItems, cartTotal, shippingCost, taxAmount, cgst, sgst, igst, taxTotal, grandTotal, refreshCart, addToCart } = useCart();
   const { language } = useLanguage();
   const { openLoginModal } = useAuthModal();
+  const { products } = useProducts();
+  
+  const checkoutRecommendations = (products || [])
+    .filter(p => !cartItems.some(ci => ci.id === p.id))
+    .slice(0, 2);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -1312,15 +1318,47 @@ export default function Checkout() {
             <div className="summary-totals">
               <div className="total-row"><span>Subtotal</span><span>₹{cartTotal}</span></div>
               <div className="total-row"><span>Shipping Charge</span>{shippingCost === 0 ? <span className="text-free">Free</span> : <span>₹{shippingCost}</span>}</div>
+              <div className="total-row"><span>Applicable GST</span><span>₹{taxTotal.toFixed(2)}</span></div>
               
               
               
               
               <div className="total-row grand-total" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '16px', marginTop: '8px' }}>
-                <span>Total</span>
-                <span style={{ fontSize: "1.8rem", color: "#16A34A" }}>₹{grandTotal !== null ? grandTotal.toFixed(2) : (cartTotal + (shippingCost || 0)).toFixed(2)}</span>
+                <span>Total Payable</span>
+                <span style={{ fontSize: "1.8rem", color: "#16A34A", fontWeight: 'bold' }}>₹{grandTotal !== null ? grandTotal.toFixed(2) : (cartTotal + (shippingCost || 0) + taxTotal).toFixed(2)}</span>
               </div>
             </div>
+            {/* ADD BEFORE YOU CHECKOUT SECTION */}
+            {checkoutRecommendations.length > 0 && (
+              <div className="checkout-recommendations" style={{ marginTop: '24px', borderTop: '1px dashed #e2e8f0', paddingTop: '20px' }}>
+                <h4 style={{ fontSize: '1.1rem', color: '#1e293b', marginBottom: '16px', fontWeight: '700' }}>Add Before You Checkout</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {checkoutRecommendations.map(product => (
+                    <div key={product.id} className="checkout-rec-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f8fbf8', padding: '10px', borderRadius: '12px', border: '1px solid rgba(46, 125, 50, 0.1)' }}>
+                      <div style={{ width: '56px', height: '56px', borderRadius: '8px', background: '#ffffff', overflow: 'hidden', flexShrink: 0, padding: '4px', border: '1px solid rgba(46, 125, 50, 0.05)' }}>
+                        <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h5 style={{ margin: 0, fontSize: '0.9rem', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {language === 'ta' && product.tamil_name ? product.tamil_name : product.name}
+                        </h5>
+                        <p style={{ margin: '4px 0 0', fontSize: '0.95rem', fontWeight: '700', color: '#0f172a' }}>
+                          ₹{product.customer_price || product.mrp || product.price}
+                        </p>
+                      </div>
+                      <button 
+                        onClick={() => addToCart(product, 1)}
+                        style={{ background: '#ffffff', border: '1px solid #16A34A', color: '#16A34A', borderRadius: '50px', padding: '6px 14px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', transition: 'all 0.2s' }}
+                        onMouseOver={(e) => { e.currentTarget.style.background = '#16A34A'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#16A34A'; }}
+                      >
+                        <Plus size={14} /> Add
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* MASTER CHECKOUT BUTTON */}
             <div className="master-action-container" style={{ marginTop: '32px' }}>

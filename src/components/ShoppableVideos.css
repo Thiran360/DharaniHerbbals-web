@@ -1,30 +1,94 @@
 .shoppable-videos-container {
   width: 100%;
-  padding: 80px 0;
-  background: #fdfcfb;
+  padding: 60px 20px;
+  background: #ffffff;
   overflow: hidden;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
-.sv-header {
-  text-align: left;
-  margin-bottom: 50px;
+/* Header Section */
+.social-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
 }
 
+.social-header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.social-handle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f97316; /* orange */
+  color: white;
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.social-section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.social-section-subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.social-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.social-follow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.social-follow-btn:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Carousel Track */
 .sv-wrapper {
   position: relative;
-  max-width: 1400px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
 }
 
 .sv-track {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   overflow-x: auto;
+  align-items: center;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding: 20px 0;
+  padding: 30px 10px;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -33,216 +97,262 @@
   display: none;
 }
 
-.sv-card.ultra {
-  flex: 0 0 300px;
-  height: 500px;
+/* Social Card */
+.social-card {
   scroll-snap-align: center;
-  border-radius: 24px;
+  border-radius: 20px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #000;
   cursor: pointer;
-  background: black;
 }
 
-.sv-card.ultra:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(34, 197, 94, 0.15);
+.social-card.reel {
+  flex: 0 0 260px;
+  height: 460px; /* Tall 9:16 vertical ratio */
 }
 
-/* Background Autoplaying Video */
-.sv-video-bg {
+.social-card.post {
+  flex: 0 0 340px;
+  height: 340px; /* Perfect square */
+}
+
+.social-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.social-media-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Make iframe unclickable so it plays seamlessly in bg! */
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
 }
 
-.sv-video-bg.mobile {
-  pointer-events: auto;
-  transform: none;
-  z-index: 1;
-}
-
-.sv-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.sv-video-thumb {
-  width: 100%;
-  height: 100%;
-  border: none;
-  padding: 0;
-  background-color: #0f172a;
-  background-position: center;
-  background-size: cover;
-  color: white;
-  cursor: pointer;
+.social-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  z-index: 2;
+  backdrop-filter: blur(4px);
 }
 
-.sv-video-thumb::before {
-  content: '';
+.social-badge.reel {
+  background-color: rgba(249, 115, 22, 0.9); /* orange */
+}
+
+.social-badge.post {
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.social-play-icon {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.45) 100%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
 }
 
-.sv-video-thumb svg {
-  position: relative;
+.social-card:hover .social-play-icon {
+  opacity: 1;
+}
+
+.social-gradient {
+  position: absolute;
+  bottom: 0; left: 0; width: 100%; height: 60%;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
   z-index: 1;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
 }
 
-.sv-gradient-overlay {
+/* Vilvah-Style White Product Strip */
+.social-product-strip {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 60%;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Glassmorphism Product Panel */
-.sv-glass-panel {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  padding: 12px;
+  background: white;
+  padding: 10px;
   display: flex;
   align-items: center;
   gap: 12px;
-  z-index: 3;
-  transition: transform 0.4s ease, background 0.4s ease;
+  z-index: 10;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
-.sv-card.ultra:hover .sv-glass-panel {
-  transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.sv-product-img-wrapper {
-  width: 54px;
-  height: 54px;
-  background: white;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+.social-product-img {
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
 }
 
-.sv-product-img {
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
+.social-product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.sv-product-details {
+.social-product-prices {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.sv-product-title {
-  font-size: 0.95rem;
+.social-product-price {
   font-weight: 800;
-  color: white;
-  margin: 0 0 4px 0;
+  font-size: 1.05rem;
+  color: #111827;
   line-height: 1.1;
-  letter-spacing: 0.5px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-.sv-product-price {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #a3e635; /* Lime green pop on dark bg */
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+.social-product-old-price {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-decoration: line-through;
 }
 
-.sv-buy-btn {
+.social-product-cart-btn {
+  background-color: #799F44; /* Vilvah matching green */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.social-product-cart-btn:hover {
+  background-color: #628236;
+}
+
+.social-video-title {
+  position: absolute;
+  bottom: 70px; /* Above the white strip */
+  left: 12px;
+  right: 12px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1a202c;
+  padding: 6px 12px;
+  border-radius: 50px;
+  text-shadow: none;
+  margin: 0 auto;
+  width: max-content;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Post Style - Arrow Button */
+.social-post-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 40%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.social-post-arrow-btn {
+  pointer-events: auto;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
   background: white;
-  color: #111;
-  border: none;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: transform 0.3s ease, background 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  color: #111827;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.sv-buy-btn:hover {
-  background: #22c55e;
-  color: white;
-  transform: scale(1.1) rotate(-10deg);
+.social-post-arrow-btn:hover {
+  transform: scale(1.1);
+  background: #f9fafb;
 }
 
-/* Nav Buttons */
+/* Navigation Buttons */
 .sv-nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
   background: white;
   border-radius: 50%;
-  border: none;
+  border: 1px solid #f3f4f6;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #111;
+  color: #111827;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   z-index: 10;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-.sv-nav-btn.left { left: -27px; }
-.sv-nav-btn.right { right: -27px; }
+.sv-nav-btn.left { left: -24px; }
+.sv-nav-btn.right { right: -24px; }
 
 .sv-nav-btn:hover {
-  background: #22c55e;
-  color: white;
-  transform: translateY(-50%) scale(1.1);
+  background: #f9fafb;
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
-@media (max-width: 1460px) {
+/* Responsive */
+@media (max-width: 1320px) {
   .sv-nav-btn.left { left: 10px; }
   .sv-nav-btn.right { right: 10px; }
 }
 
 @media (max-width: 768px) {
-  .sv-card.ultra {
-    flex: 0 0 260px;
-    height: 420px;
+  .social-header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
-  .sv-nav-btn { 
-    display: flex; 
-    width: 44px;
-    height: 44px;
+  
+  .social-card {
+    flex: 0 0 240px;
+    height: 340px;
+  }
+  
+  .sv-nav-btn {
+    width: 40px;
+    height: 40px;
   }
   .sv-nav-btn.left { left: 0px; }
   .sv-nav-btn.right { right: 0px; }

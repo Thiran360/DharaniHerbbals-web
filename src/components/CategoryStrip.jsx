@@ -10,7 +10,7 @@ import imgHair from '../assets/chemparuthi_shampoo_transparent_v3.png';
 import imgBody from '../assets/body_soap_transparent.png';
 import imgFood from '../assets/pirandai_pickle_transparent_v2.png';
 import imgSkin from '../assets/aloe_vera_face_pack_transparent.png';
-import imgHealth from '../assets/sathu_maavu_transparent.png';
+import imgHealth from '../assets/beverage_transparent.png';
 import imgBaby from '../assets/nalangu_powder_transparent_v2.png';
 import imgPoojas from '../assets/pooja_oil_transparent_v2.png';
 import imgBeverages from '../assets/beverage_transparent.png';
@@ -136,7 +136,7 @@ export default function CategoryStrip() {
               className={`category-item cat-animate-up ${activeCategory === category.name ? 'category-item--active' : ''}`}
               style={{ animationDelay: `${(index + 1) * 0.04}s` }}
             >
-              <div className={`category-blob-wrapper ${[].includes(category.name) ? 'has-css-blob' : ''}`}>
+              <div className={`category-blob-wrapper has-css-blob`}>
                 <img
                   src={categoryImage ? `${categoryImage}?v=42` : ''}
                   alt={category.name}

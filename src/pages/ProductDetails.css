@@ -2,8 +2,8 @@
   max-width: 100%;
   margin: 0;
   padding: 120px 40px 80px;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  color: #1e293b;
+  background: #fcfcfc;
+  color: #2b332b;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
 }
@@ -73,8 +73,8 @@
   margin: 0 auto;
   background: #ffffff;
   padding: 60px;
-  border-radius: 40px;
-  box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08), inset 0 2px 4px rgba(255,255,255,0.8);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04), 0 2px 10px rgba(0, 0, 0, 0.02);
   border: 1px solid rgba(255,255,255,0.4);
 }
 
@@ -305,7 +305,7 @@
 }
 
 .badge-blue {
-  background: #2563eb;
+  background: #15803d;
 }
 
 /* Image Share Button */
@@ -1711,7 +1711,7 @@
 .pd-summary-sentiment {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #2b332b;
   margin: 10px 0 25px;
 }
 
@@ -1739,7 +1739,7 @@
 
 /* Left Column - Empty State */
 .pd-empty-reviews-card {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: #fcfcfc;
   border: 1px dashed #cbd5e1;
   border-radius: 20px;
   padding: 50px 30px;
@@ -1789,7 +1789,7 @@
 
 .pd-review-form-card h3 {
   font-size: 1.4rem;
-  color: #1e293b;
+  color: #2b332b;
   margin: 0 0 25px 0;
   font-weight: 700;
 }
@@ -1919,7 +1919,7 @@
 .pd-reviewer-info h5 {
   margin: 0 0 4px 0;
   font-size: 1.1rem;
-  color: #1e293b;
+  color: #2b332b;
   font-weight: 700;
 }
 
@@ -2022,7 +2022,7 @@
 .pd-big-rating {
   font-size: 3.5rem;
   font-weight: 800;
-  color: #1e293b;
+  color: #2b332b;
   line-height: 1;
 }
 
@@ -2294,7 +2294,7 @@
 .bg-green-light { background: #dcfce7; }
 .text-green { color: #16a34a; }
 .bg-blue-light { background: #dbeafe; }
-.text-blue { color: #2563eb; }
+.text-blue { color: #15803d; }
 .bg-orange-light { background: #ffedd5; }
 .text-orange { color: #ea580c; }
 .premium-trust-pill span {
@@ -2720,7 +2720,7 @@
   width: 100%;
 }
 .premium-buy-now-btn:hover {
-  background-color: #1e293b;
+  background-color: #2b332b;
   transform: translateY(-2px);
   box-shadow: 0 12px 25px rgba(15, 23, 42, 0.3);
 }

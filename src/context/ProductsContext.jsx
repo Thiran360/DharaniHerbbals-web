@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { API_BASE_URL, NGROK_DOMAIN } from '../services/api';
+import { shopifyClient, isShopifyConfigured } from '../services/shopify';
 
 const ProductsContext = createContext();
 

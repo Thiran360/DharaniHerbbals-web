@@ -199,7 +199,7 @@ export function CartProvider({ children }) {
             zIndex: 100000
           });
         } else {
-          setCartToastMsg('Item added to cart!');
+          setCartToastMsg('Product added to cart successfully');
           setTimeout(() => setCartToastMsg(''), 3000);
         }
     }

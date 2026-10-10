@@ -2,13 +2,13 @@
 
 /* Navbar.css - Ultra Modern UI */
 :root {
-  --nav-height: 84px;
-  --nav-height-scrolled: 70px;
-  --primary-color: #10b981; /* Modern Emerald Green */
+  --nav-height: 72px;
+  --nav-height-scrolled: 60px;
+  --primary-color: var(--color-primary); /* Modern Emerald Green / Forest Green */
   --text-dark: #0f172a;
   --text-muted: #64748b;
-  --bg-glass: rgba(255, 255, 255, 0.75);
-  --bg-glass-scrolled: rgba(255, 255, 255, 0.9);
+  --bg-glass: #ffffff;
+  --bg-glass-scrolled: #ffffff;
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s ease-out;
 }
@@ -32,12 +32,12 @@
   height: var(--nav-height);
   background: var(--bg-glass);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 24px;
+  border-radius: 0; border-bottom: 1px solid var(--border); border-top: none; border-left: none; border-right: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: none;
   transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: auto;
   transform: translateZ(0);
@@ -52,7 +52,7 @@
   height: var(--nav-height-scrolled);
   background: var(--bg-glass-scrolled);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  border-radius: 100px;
+  border-radius: 0;
 }
 
 /* Left Section: Logo */
@@ -102,7 +102,7 @@
   text-overflow: ellipsis;
   max-width: 100%;
   min-width: 0;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.2px;
   line-height: 1.05;
@@ -114,7 +114,7 @@
   text-overflow: ellipsis;
   max-width: 100%;
   min-width: 0;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.2px;
   line-height: 1.05;
@@ -169,7 +169,7 @@
   color: #1e293b; /* Dark slate */
   font-family: 'Georgia', serif;
   font-style: italic;
-  font-size: clamp(0.95rem, 1.2vw, 1.15rem); /* Dynamic font size */
+  font-size: clamp(0.85rem, 1vw, 1rem); /* Dynamic font size */
   font-weight: 400;
   text-decoration: none;
   position: relative;
@@ -224,12 +224,12 @@
 }
 
 .desktop-search-bar:focus-within {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08), inset 0 0 0 1.5px #16a34a;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08), inset 0 0 0 1.5px var(--color-primary);
   transform: translateY(-1px);
 }
 
 .desktop-search-bar .search-icon {
-  color: #16a34a;
+  color: var(--color-primary);
   margin-right: 10px;
 }
 
@@ -303,7 +303,7 @@
 }
 .suggestion-price {
   font-size: 0.85rem;
-  color: #16a34a;
+  color: var(--color-primary);
   font-weight: 700;
 }
 .search-suggestion-item.empty {
@@ -315,18 +315,18 @@
 
 /* Keyboard-navigation active highlight */
 .search-suggestion-active {
-  background: #f0fdf4 !important;
-  border-left: 3px solid #10b981;
+  background: var(--color-bg-light) !important;
+  border-left: 3px solid var(--color-primary);
 }
 
 .search-suggestion-active .suggestion-name {
-  color: #059669;
+  color: var(--color-primary);
 }
 
 .suggestion-kbd-hint {
   margin-left: auto;
   font-size: 0.75rem;
-  color: #10b981;
+  color: var(--color-primary);
   font-weight: 700;
   background: #d1fae5;
   border-radius: 6px;
@@ -356,15 +356,15 @@
   cursor: pointer;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #10b981;
+  color: var(--color-primary);
   padding: 2px 6px;
   border-radius: 6px;
   font-family: inherit;
   transition: background 0.18s, color 0.18s;
 }
 .recent-searches-clear:hover {
-  background: #f0fdf4;
-  color: #059669;
+  background: var(--color-bg-light);
+  color: var(--color-primary);
 }
 .recent-search-item {
   width: 100%;
@@ -523,7 +523,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%);
   color: #fff;
   font-size: 0.9rem;
   font-weight: 800;
@@ -566,14 +566,14 @@
   align-items: center;
   gap: 12px;
   padding: 16px 16px 12px;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg-light) 100%);
 }
 
 .nav-account-avatar-lg {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%);
   color: #fff;
   font-size: 1.1rem;
   font-weight: 800;
@@ -594,7 +594,7 @@
 
 .nav-account-sub {
   font-size: 0.75rem;
-  color: #10b981;
+  color: var(--color-primary);
   font-weight: 600;
   margin: 2px 0 0;
 }
@@ -624,7 +624,7 @@
 
 .nav-account-item:hover {
   background: #f8fafc;
-  color: #10b981;
+  color: var(--color-primary);
 }
 
 .nav-account-item svg {
@@ -634,7 +634,7 @@
 }
 
 .nav-account-item:hover svg {
-  color: #10b981;
+  color: var(--color-primary);
 }
 
 .nav-account-logout {
@@ -656,7 +656,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary) 100%);
   color: #fff;
   font-size: 0.85rem;
   font-weight: 800;
@@ -1072,11 +1072,11 @@
   }
   
   .mobile-search-bar:focus-within {
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08), inset 0 0 0 1.5px #16a34a;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08), inset 0 0 0 1.5px var(--color-primary);
   }
 
   .mobile-search-bar .search-icon {
-    color: #16a34a;
+    color: var(--color-primary);
     margin-right: 12px;
   }
 
@@ -1319,7 +1319,7 @@
   bottom: 3px;
   left: 3px;
   width: calc(50% - 3px);
-  background: linear-gradient(135deg, var(--primary-color, #10b981), #059669);
+  background: linear-gradient(135deg, var(--primary-color, var(--color-primary)), var(--color-primary));
   border-radius: 100px;
   z-index: 1;
   transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -1378,4 +1378,107 @@
   }
 }
 
+/* --- Secondary Navbar --- */
+.secondary-navbar-wrapper {
+  background: #ffffff;
+  width: 100vw;
+  margin-left: -24px;
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  pointer-events: auto;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
 
+.secondary-navbar-container {
+  max-width: 1280px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  overflow-x: auto;
+  gap: 12px;
+}
+
+.secondary-navbar-container::-webkit-scrollbar {
+  display: none;
+}
+
+.sec-nav-item {
+  color: #1e293b;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  padding: 6px 12px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.sec-nav-item:hover {
+  color: var(--primary-color);
+}
+
+.sec-nav-item.home-item {
+  background: #e6f7ec;
+  color: var(--color-primary);
+  border-radius: 100px;
+  padding: 8px 18px;
+  font-weight: 700;
+}
+
+.sec-nav-item.bestsellers-item {
+  color: #ef4444;
+}
+
+.sec-nav-item.bestsellers-item svg {
+  color: #ef4444;
+}
+
+.sec-nav-item.offers-item {
+  color: #f59e0b;
+}
+
+.sec-nav-item.offers-item svg {
+  color: #f59e0b;
+}
+
+/* Hide on mobile devices for simplicity since they have a hamburger menu */
+@media (max-width: 1050px) {
+  .secondary-navbar-wrapper {
+    display: none;
+  }
+}
+
+
+/* --- Filter By Button in Secondary Navbar --- */
+.sec-nav-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #0b2b1d;
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 7px 16px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: auto;
+  box-shadow: 0 2px 8px rgba(11, 43, 29, 0.25);
+}
+
+.sec-nav-filter-btn:hover {
+  background: #166534;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(11, 43, 29, 0.35);
+}

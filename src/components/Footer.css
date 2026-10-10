@@ -2,13 +2,13 @@
 
 /* Base Footer Wrapper */
 .footer-wrapper {
-  background-color: #022c22; /* Deep Forest Green */
-  color: #f8fafc;
+  background-color: #0b2b1d; /* Deep Dark Green */
+  color: #e2e8f0;
   padding: 80px 20px 60px 20px;
   position: relative;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
-  border-top: 1px  solid rgba(16, 185, 129, 0.1);
+  border-top: none;
 }
 
 /* Emerald Aurora Background Effect */
@@ -58,7 +58,7 @@
 
 .footer-powered-by {
   font-size: 0.85rem;
-  color: #a7f3d0;
+  color: #475569;
   margin-top: 12px;
   font-weight: 400;
   letter-spacing: 0.5px;
@@ -70,7 +70,7 @@
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.25rem;
   line-height: 1.8;
-  color: #a7f3d0; /* Soft Emerald */
+  color: #e2e8f0; /* Light text for dark bg */
   margin-bottom: 40px;
   max-width: 600px;
   font-weight: 400;
@@ -89,7 +89,7 @@
 }
 
 .footer-inline-links a {
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
@@ -105,7 +105,7 @@
 }
 
 .footer-inline-links .separator {
-  color: #047857;
+  color: #4ade80; /* Light green separator */
   font-size: 1.2rem;
 }
 
@@ -129,11 +129,11 @@
 }
 
 .footer-inline-contact a:hover {
-  color: #fff;
+  color: #ffffff;
 }
 
 .footer-inline-contact .separator {
-  color: #064e3b;
+  color: #4ade80;
 }
 
 /* Social Row */
@@ -164,21 +164,21 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid #4ade80;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #a7f3d0;
-  background: rgba(2, 44, 34, 0.5);
+  color: #4ade80;
+  background: transparent;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .social-icon-link:hover {
-  color: #022c22;
-  background: #34d399;
-  border-color: #34d399;
+  color: #0b2b1d;
+  background: #4ade80;
+  border-color: #4ade80;
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(52, 211, 153, 0.3);
+  box-shadow: 0 8px 20px rgba(74, 222, 128, 0.3);
 }
 
 /* Responsive */

@@ -49,6 +49,7 @@ export default function TrustBadges() {
   const customersCount = useCountUp(6, 2500, isVisible);
   const productsCount = useCountUp(350, 2000, isVisible);
   const purityCount = useCountUp(100, 2000, isVisible);
+  const trustPointsCount = useCountUp(1000, 2500, isVisible);
 
   return (
     <div className="prof-trust-container" ref={containerRef}>
@@ -78,6 +79,11 @@ export default function TrustBadges() {
             <p className="prof-stat-label">{t('chemicalFree')}</p>
           </div>
           <div className="prof-stat-divider"></div>
+          <div className="prof-stat-item">
+            <h3 className="prof-stat-number">{trustPointsCount}+</h3>
+            <p className="prof-stat-label">Verified Trusted Customer</p>
+          </div>
+          <div className="prof-stat-divider"></div>
 
           {/* Group 2 (Duplicate for seamless loop) */}
           <div className="prof-stat-item">
@@ -98,6 +104,11 @@ export default function TrustBadges() {
           <div className="prof-stat-item">
             <h3 className="prof-stat-number">{purityCount}%</h3>
             <p className="prof-stat-label">{t('chemicalFree')}</p>
+          </div>
+          <div className="prof-stat-divider"></div>
+          <div className="prof-stat-item">
+            <h3 className="prof-stat-number">{trustPointsCount}+</h3>
+            <p className="prof-stat-label">Verified Trusted Customer</p>
           </div>
 
         </div>

@@ -2,11 +2,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ShoppingBag, ArrowLeft, ArrowRight, Minus, Plus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useProducts } from '../context/ProductsContext';
 import './Cart.css';
 
 export default function Cart() {
-  const { cartItems, removeFromCart, updateQuantity, cartTotal, taxTotal, shippingCost } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, cartTotal, taxTotal, shippingCost, addToCart } = useCart();
   const { language } = useLanguage();
+  const { products } = useProducts();
+  
+  const recommendedProducts = (products || [])
+    .filter(p => !cartItems.some(ci => ci.id === p.id))
+    .slice(0, 3);
   const navigate = useNavigate();
 
   const handleCheckout = () => {
@@ -89,6 +95,57 @@ export default function Cart() {
                   </li>
                 ))}
               </ul>
+
+              {/* Price Transparency Strip */}
+              <div className="cart-trust-strip" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', background: '#f0fdf4', padding: '16px', borderRadius: '12px', marginTop: '24px', border: '1px solid #dcfce7' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px' }}>
+                  <div style={{ background: '#dcfce7', color: '#16a34a', padding: '8px', borderRadius: '50%' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                  </div>
+                  <span style={{ fontSize: '0.8rem', fontWeight: '600', color: '#166534' }}>Price<br/>Transparency</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px' }}>
+                  <div style={{ background: '#dcfce7', color: '#16a34a', padding: '8px', borderRadius: '50%' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  </div>
+                  <span style={{ fontSize: '0.8rem', fontWeight: '600', color: '#166534' }}>Clear Price<br/>Breakdown</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px' }}>
+                  <div style={{ background: '#dcfce7', color: '#16a34a', padding: '8px', borderRadius: '50%' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+                  </div>
+                  <span style={{ fontSize: '0.8rem', fontWeight: '600', color: '#166534' }}>No Hidden<br/>Charges</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px' }}>
+                  <div style={{ background: '#dcfce7', color: '#16a34a', padding: '8px', borderRadius: '50%' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                  </div>
+                  <span style={{ fontSize: '0.8rem', fontWeight: '600', color: '#166534' }}>Same Total<br/>at Checkout</span>
+                </div>
+              </div>
+
+              {/* Recommendations Section */}
+              {recommendedProducts.length > 0 && (
+                <div className="cart-recommendations">
+                  <h3 className="recommendations-title">You May Also Like</h3>
+                  <div className="recommendations-grid">
+                    {recommendedProducts.map(product => (
+                      <div key={product.id} className="rec-card">
+                        <div className="rec-img-box">
+                          <img src={product.image} alt={product.name} />
+                        </div>
+                        <div className="rec-info">
+                          <h4>{language === 'ta' && product.tamil_name ? product.tamil_name : product.name}</h4>
+                          <p className="rec-price">₹{product.customer_price || product.mrp || product.price}</p>
+                          <button className="btn-rec-add" onClick={() => addToCart(product, 1)}>
+                            <Plus size={14} /> Add
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right Column: Order Summary */}
@@ -107,15 +164,15 @@ export default function Cart() {
                 </div>
                 
                 <div className="summary-row">
-                  <span>Tax</span>
+                  <span>Applicable GST</span>
                   <span className="summary-val">₹{taxTotal.toFixed(2)}</span>
                 </div>
                 
                 <div className="summary-divider"></div>
                 
                 <div className="summary-row total-row">
-                  <span>Estimated Total</span>
-                  <span className="summary-total-val">₹{(cartTotal + shippingCost + taxTotal).toFixed(2)}</span>
+                  <span>Total Payable</span>
+                  <span className="summary-total-val" style={{ color: '#16a34a', fontWeight: 'bold' }}>₹{(cartTotal + shippingCost + taxTotal).toFixed(2)}</span>
                 </div>
                 
                 <button className="btn-cart-checkout" onClick={handleCheckout}>

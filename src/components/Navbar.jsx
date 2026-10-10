@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Search, User, ShoppingBag, X, Home, Info, Phone, Heart, Clock, Package, MapPin, RefreshCw, LogOut, ChevronDown } from 'lucide-react';
+import { Search, User, ShoppingBag, X, Home, Info, Phone, Heart, Clock, Package, MapPin, RefreshCw, LogOut, ChevronDown, Flame, Tag, SlidersHorizontal } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -285,21 +285,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Navigation Links */}
-        <div className="nav-links-center">
-          <NavLink to="/" className="nav-link" end>
-            <span className="nav-link-text">{t('home')}</span>
-          </NavLink>
-          <NavLink to="/shop" className="nav-link">
-            <span className="nav-link-text">{t('shopAll')}</span>
-          </NavLink>
-          <NavLink to="/about" className="nav-link">
-            <span className="nav-link-text">{t('aboutUs')}</span>
-          </NavLink>
-          <NavLink to="/contact" className="nav-link">
-            <span className="nav-link-text">{t('contact')}</span>
-          </NavLink>
-        </div>
+        {/* Center: Navigation Links (Moved to secondary bar) */}
 
         {/* Right: Action Icons */}
         <div className="nav-icons-right">
@@ -432,6 +418,38 @@ export default function Navbar() {
               <span className="cart-text">{t('cart')} {cartCount > 0 ? `(${cartCount})` : ''}</span>
             </button>
           </div>
+        </div>
+      </div>
+      
+      {/* Desktop Secondary Navbar */}
+      <div className="secondary-navbar-wrapper">
+        <div className="secondary-navbar-container">
+          <NavLink to="/" className="sec-nav-item home-item" end>
+            Home
+          </NavLink>
+          <NavLink to="/shop?sort=bestsellers" className="sec-nav-item bestsellers-item">
+            <Flame size={18} /> Best Sellers
+          </NavLink>
+          <NavLink to="/shop?category=Hair" className="sec-nav-item">Hair</NavLink>
+          <NavLink to="/shop?category=Skin" className="sec-nav-item">Skin</NavLink>
+          <NavLink to="/shop?category=Body" className="sec-nav-item">Body</NavLink>
+          <NavLink to="/shop?category=Health%20%26%20Wellness" className="sec-nav-item">Health & Wellness</NavLink>
+          <NavLink to="/shop?category=Food" className="sec-nav-item">Food</NavLink>
+          <NavLink to="/shop?category=Baby" className="sec-nav-item">Baby</NavLink>
+          <NavLink to="/shop?category=Poojas" className="sec-nav-item">Poojas</NavLink>
+          <NavLink to="/shop?category=Beverages" className="sec-nav-item">Beverages</NavLink>
+          <NavLink to="/shop?category=Offers" className="sec-nav-item offers-item">
+            <Tag size={18} /> Offers
+          </NavLink>
+          {/* Filter By Button - right corner */}
+          <button
+            className="sec-nav-filter-btn"
+            onClick={() => navigate('/shop?filter=open')}
+            aria-label="Filter Products"
+          >
+            <SlidersHorizontal size={15} />
+            Filter By
+          </button>
         </div>
       </div>
       

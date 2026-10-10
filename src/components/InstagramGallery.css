@@ -1,0 +1,146 @@
+.instagram-section {
+  width: 100%;
+  padding: 60px 20px;
+  background-color: #f0fdf4;
+  overflow: hidden;
+}
+
+.insta-header-row {
+  max-width: 1280px;
+  margin: 0 auto 30px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.insta-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.insta-subtitle {
+  font-size: 1rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+.btn-insta-follow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #22c55e;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+.btn-insta-follow:hover {
+  background-color: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+}
+
+.insta-gallery-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 20px;
+}
+
+.insta-gallery-container::-webkit-scrollbar {
+  display: none;
+}
+
+.insta-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+}
+
+.insta-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  cursor: pointer;
+  display: block;
+}
+
+.insta-card.post {
+  width: 160px;
+  height: 160px;
+}
+
+.insta-card.reel {
+  width: 160px;
+  height: 280px;
+}
+
+.insta-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.insta-card:hover .insta-img {
+  transform: scale(1.1);
+}
+
+.insta-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+  font-weight: 600;
+}
+
+.insta-card:hover .insta-overlay {
+  opacity: 1;
+}
+
+.insta-play-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  background: rgba(0,0,0,0.5);
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .insta-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .insta-card.post {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .insta-card.reel {
+    width: 140px;
+    height: 240px;
+  }
+}

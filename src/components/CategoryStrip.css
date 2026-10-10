@@ -1,7 +1,7 @@
 .category-strip-container {
   width: 100%;
-  background-color: #ffffff; /* Clean white background */
-  border-bottom: 1px solid #f1f5f9;
+  background-color: var(--color-bg-light); /* Clean premium cream background */
+  border-bottom: 1px solid rgba(44, 85, 48, 0.1);
   padding: 30px 20px 20px 20px;
   margin-top: 25px;
   overflow: hidden;
@@ -87,19 +87,18 @@
 .has-css-blob::before {
   content: '';
   position: absolute;
-  top: 15%;
+  top: 10%;
   left: 10%;
   width: 80%;
   height: 80%;
-  background: #c3deb5; /* Soft herbal green */
-  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  background: #dcedc8; /* Light green circle like Vilvah */
+  border-radius: 50%;
   z-index: 0;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .category-item:hover .has-css-blob::before {
-  border-radius: 50% 50% 40% 60% / 50% 40% 60% 40%;
-  transform: scale(1.05) rotate(5deg);
+  transform: scale(1.05);
 }
 
 .category-img.flip-horizontal {
@@ -128,13 +127,13 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  flex-grow: 1; /* Stretch to match sibling heights */
-  padding: 8px 16px; /* Balanced padding */
-  border: 1px solid #a8a8a8; /* Thin grey border as in the screenshot */
-  border-radius: 8px; /* Rounded rectangle (squircle) as in screenshot */
+  flex-grow: 1;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db; /* Thin grey border */
+  border-radius: 50px; /* Capsule shape like Vilvah */
   background: #ffffff;
-  color: #1a1a1a;
-  font-size: 0.88rem;
+  color: #1f2937;
+  font-size: 0.95rem;
   font-weight: 500;
   text-align: center;
   line-height: 1.3;
@@ -172,8 +171,8 @@
   line-height: 1.2;
   padding: 0 4px;
   font-weight: 800;
-  color: #15803d;
-  background: #e8f5e9; /* soft pastel green matching generated blobs */
+  color: var(--color-primary);
+  background: var(--color-secondary); /* soft pastel green matching generated blobs */
   border-radius: 50%;
   border: 1px solid rgba(76, 175, 80, 0.1);
   transition: all 0.3s ease;

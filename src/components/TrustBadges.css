@@ -200,7 +200,7 @@
     animation: none;
   }
 
-  .prof-stats-marquee-track > :nth-child(n+9) {
+  .prof-stats-marquee-track > :nth-child(n+11) {
     display: none;
   }
   
@@ -210,12 +210,15 @@
   }
 
   .prof-stat-item:nth-child(1),
-  .prof-stat-item:nth-child(3) {
+  .prof-stat-item:nth-child(3),
+  .prof-stat-item:nth-child(5),
+  .prof-stat-item:nth-child(7) {
     border-bottom: 1px solid #eef2f7;
   }
 
   .prof-stat-item:nth-child(1),
-  .prof-stat-item:nth-child(5) {
+  .prof-stat-item:nth-child(5),
+  .prof-stat-item:nth-child(9) {
     border-right: 1px solid #eef2f7;
   }
 
