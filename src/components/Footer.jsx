@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 import './Footer.css';
 import BrandLogoVideo from './BrandLogoVideo';
 
@@ -39,6 +40,7 @@ function YoutubeIcon() {
 }
 
 export default function Footer() {
+  const { t } = useLanguage();
   const footerRef = useRef(null);
 
   useEffect(() => {
@@ -77,20 +79,20 @@ export default function Footer() {
 
         {/* Mission Statement */}
         <p className="footer-editorial-mission footer-animate">
-          Rooted in Ancient Siddha Wisdom, Elevated by Modern Science. Experience the Pure Potency of Nature's Finest Botanicals.
+          {t('footerMission')}
         </p>
 
         {/* Single Row of Links */}
         <div className="footer-inline-links footer-animate">
-          <Link to="/shop">Shop All</Link>
+          <Link to="/shop">{t('shopAll')}</Link>
           <span className="separator">·</span>
-          <Link to="/about">Our Story</Link>
+          <Link to="/about">{t('ourStory')}</Link>
           <span className="separator">·</span>
-          <Link to="/contact">Contact</Link>
+          <Link to="/contact">{t('contact')}</Link>
           <span className="separator">·</span>
-          <Link to="/policies">POLICIES</Link>
+          <Link to="/policies">{t('policies')}</Link>
           <span className="separator">·</span>
-          <Link to="#">FAQS</Link>
+          <Link to="#">{t('faqs')}</Link>
         </div>
 
         {/* Contact Info (Inline) */}

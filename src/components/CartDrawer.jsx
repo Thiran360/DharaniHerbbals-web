@@ -13,7 +13,7 @@ export default function CartDrawer() {
     updateQuantity, 
     cartTotal 
   } = useCart();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
@@ -34,7 +34,7 @@ export default function CartDrawer() {
         <div className="cart-header">
           <div className="cart-title">
             <ShoppingBag size={24} />
-            <h2>Your Cart</h2>
+            <h2>{t('yourCart')}</h2>
             <span className="cart-count-badge">{cartItems.length}</span>
           </div>
           <button className="cart-close-btn" onClick={closeCart} aria-label="Close Cart">
@@ -46,9 +46,9 @@ export default function CartDrawer() {
           {cartItems.length === 0 ? (
             <div className="cart-empty">
               <ShoppingBag size={48} className="cart-empty-icon" />
-              <p>Your cart is empty.</p>
+              <p>{t('cartEmptyMsg')}</p>
               <button className="btn-continue-shopping" onClick={closeCart}>
-                Continue Shopping
+                {t('continueShopping')}
               </button>
             </div>
           ) : (
@@ -89,19 +89,19 @@ export default function CartDrawer() {
         {cartItems.length > 0 && (
           <div className="cart-footer">
             <div className="cart-subtotal">
-              <span>Subtotal</span>
+              <span>{t('subtotal')}</span>
               <span className="cart-total-price">₹{cartTotal}</span>
             </div>
-            <p className="cart-taxes-note">Taxes and shipping calculated at checkout.</p>
+            <p className="cart-taxes-note">{t('cartTaxesNote')}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <button 
                 className="btn-view-cart" 
                 onClick={() => { closeCart(); navigate('/cart'); }}
               >
-                View Full Cart
+                {t('viewFullCart')}
               </button>
               <button className="btn-checkout" onClick={handleCheckout}>
-                Checkout
+                {t('checkout')}
               </button>
             </div>
           </div>

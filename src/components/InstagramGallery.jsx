@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Play } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import './InstagramGallery.css';
 
 function InstaIcon({ size = 24, color = "currentColor" }) {
@@ -41,17 +42,18 @@ const instaPosts = [
 ];
 
 export default function InstagramGallery() {
+  const { t } = useLanguage();
   const scrollRef = useRef(null);
 
   return (
     <section className="instagram-section">
       <div className="insta-header-row">
         <div>
-          <h2 className="insta-title">Follow Us on Instagram</h2>
-          <p className="insta-subtitle">Discover our natural wellness journey</p>
+          <h2 className="insta-title">{t('followInstagram')}</h2>
+          <p className="insta-subtitle">{t('instaSubtitle')}</p>
         </div>
         <a href="https://www.instagram.com/dharani_herbbals" target="_blank" rel="noopener noreferrer" className="btn-insta-follow">
-          <InstaIcon size={18} /> Follow Us
+          <InstaIcon size={18} /> {t('followUs')}
         </a>
       </div>
 
@@ -62,7 +64,7 @@ export default function InstagramGallery() {
               <img src={post.image} alt="Instagram Post" className="insta-img" loading="lazy" />
               <div className="insta-overlay">
                 <InstaIcon size={24} color="#fff" />
-                <span>View on Instagram</span>
+                <span>{t('viewOnInstagram')}</span>
               </div>
               {post.type === 'reel' && (
                 <div className="insta-play-icon">

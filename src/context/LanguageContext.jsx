@@ -193,6 +193,61 @@ const UI_TRANSLATIONS = {
     contactVisitStore: "Visit Our Store",
     contactFollowUs: "Follow Us",
     contactFollowDesc: "Stay connected with us on social media for the latest updates, health tips, and product launches.",
+    bestSellers: "Best Sellers",
+    offers: "Offers",
+    wishlist: "Wishlist",
+    catHair: "Hair",
+    catSkin: "Skin",
+    catBody: "Body",
+    catHealth: "Health & Wellness",
+    catFood: "Food",
+    catBaby: "Baby",
+    catPoojas: "Poojas",
+    catBeverages: "Beverages",
+    catSnacks: "Snacks",
+    verifiedTrustedCustomer: "Verified Trusted Customer",
+    qualityAssuredBrands: "QUALITY ASSURED BRANDS",
+    exploreOurProducts: "Explore Our Products",
+    buyNow: "Buy Now",
+    ourStory: "Our Story",
+    policies: "Policies",
+    faqs: "FAQs",
+    freeDeliveryPre: "Free Delivery",
+    freeDeliveryDesc: "On orders above ₹750 (Tamil Nadu) / ₹1000 (Other States)",
+    securePayment: "Secure Payment",
+    safeEncrypted: "Safe & encrypted",
+    labTestedProducts: "Lab tested products",
+    stayConnected: "STAY CONNECTED WITH NATURAL WELLNESS",
+    stayConnectedSub: "Receive Herbal Tips, Product Updates, and Exclusive Offers Directly on WhatsApp",
+    enterWhatsApp: "Enter your WhatsApp number",
+    joinWhatsApp: "JOIN NOW ON WHATSAPP",
+    followInstagram: "Follow Us on Instagram",
+    instaSubtitle: "Discover our natural wellness journey",
+    followUs: "Follow Us",
+    viewOnInstagram: "View on Instagram",
+    communityHighlights: "Community & Social Highlights",
+    communitySub: "Real formulations, wellness tips & authentic Ayurvedic lifestyle updates",
+    followOnInstagram: "Follow on Instagram",
+    footerMission: "Rooted in Ancient Siddha Wisdom, Elevated by Modern Science. Experience the Pure Potency of Nature's Finest Botanicals.",
+    yourCart: "Your Cart",
+    cartEmptyMsg: "Your cart is empty.",
+    cartTaxesNote: "Taxes and shipping calculated at checkout.",
+    viewFullCart: "View Full Cart",
+    shoppingCart: "Shopping Cart",
+    itemsInYourCart: "in your cart",
+    orderSummary: "Order Summary",
+    shipping: "Shipping",
+    applicableGst: "Applicable GST",
+    totalPayable: "Total Payable",
+    proceedToCheckout: "Proceed to Checkout",
+    secureCheckout: "Secure checkout guarantee",
+    priceTransparency: "Price Transparency",
+    clearPriceBreakdown: "Clear Price Breakdown",
+    noHiddenCharges: "No Hidden Charges",
+    sameTotalAtCheckout: "Same Total at Checkout",
+    filterOptions: "Filter Options",
+    clearAll: "Clear All",
+    applyFilters: "Apply Filters",
   },
   ta: {
     home: "முகப்பு",
@@ -381,7 +436,78 @@ const UI_TRANSLATIONS = {
     contactVisitStore: "எங்கள் கடையைப் பார்வையிடவும்",
     contactFollowUs: "எங்களைப் பின்தொடரவும்",
     contactFollowDesc: "சமீபத்திய புதுப்பிப்புகள், சுகாதார குறிப்புகள் மற்றும் தயாரிப்பு வெளியீடுகளுக்கு சமூக ஊடகங்களில் எங்களுடன் இணைந்திருங்கள்.",
+    bestSellers: "அதிகம் விற்பனையாகும்",
+    offers: "சலுகைகள்",
+    wishlist: "விருப்பப்பட்டியல்",
+    catHair: "கூந்தல்",
+    catSkin: "சருமம்",
+    catBody: "உடல்",
+    catHealth: "சுகாதாரம் & ஆரோக்கியம்",
+    catFood: "உணவு",
+    catBaby: "குழந்தை",
+    catPoojas: "பூஜை",
+    catBeverages: "பானங்கள்",
+    catSnacks: "சிற்றுண்டி",
+    verifiedTrustedCustomer: "நம்பகமான வாடிக்கையாளர்கள்",
+    qualityAssuredBrands: "தர உத்தரவாதம் அளிக்கப்பட்ட பிராண்டுகள்",
+    exploreOurProducts: "எங்கள் தயாரிப்புகளை ஆராயுங்கள்",
+    buyNow: "இப்போதே வாங்குங்கள்",
+    ourStory: "எங்கள் கதை",
+    policies: "கொள்கைகள்",
+    faqs: "அடிக்கடி கேட்கப்படும் கேள்விகள்",
+    freeDeliveryPre: "இலவச டெலிவரி",
+    freeDeliveryDesc: "₹750 (தமிழ்நாடு) / ₹1000 (பிற மாநிலங்கள்) மேல் இலவச டெலிவரி",
+    securePayment: "பாதுகாப்பான பணம் செலுத்துதல்",
+    safeEncrypted: "பாதுகாப்பானது மற்றும் மறைகுறியாக்கப்பட்டது",
+    labTestedProducts: "ஆய்வக சோதனை செய்யப்பட்ட தயாரிப்புகள்",
+    stayConnected: "இயற்கை ஆரோக்கியத்துடன் இணைந்திருங்கள்",
+    stayConnectedSub: "மூலிகை குறிப்புகள், புதிய தயாரிப்புகள் மற்றும் பிரத்யேக சலுகைகளை வாட்ஸ்அப்பில் நேரடியாகப் பெறுங்கள்",
+    enterWhatsApp: "உங்கள் வாட்ஸ்அப் எண்ணை உள்ளிடவும்",
+    joinWhatsApp: "வாட்ஸ்அப்பில் இணையுங்கள்",
+    followInstagram: "இன்ஸ்டாகிராமில் எங்களைப் பின்தொடரவும்",
+    instaSubtitle: "எங்கள் இயற்கை ஆரோக்கியப் பயணத்தைக் கண்டறியுங்கள்",
+    followUs: "பின்தொடரவும்",
+    viewOnInstagram: "இன்ஸ்டாகிராமில் பார்க்கவும்",
+    communityHighlights: "சமூக சிறப்பம்சங்கள்",
+    communitySub: "உண்மையான சூத்திரங்கள், ஆரோக்கிய குறிப்புகள் மற்றும் ஆயுர்வேத வாழ்க்கை முறை புதுப்பிப்புகள்",
+    followOnInstagram: "இன்ஸ்டாகிராமில் பின்தொடரவும்",
+    footerMission: "பண்டைய சித்த ஞானத்தில் வேரூன்றி, நவீன அறிவியலால் உயர்த்தப்பட்டது. இயற்கையின் மிகச்சிறந்த மூலிகைகளின் தூய ஆற்றலை அனுபவியுங்கள்.",
+    yourCart: "உங்கள் கூடை",
+    cartEmptyMsg: "உங்கள் கூடை காலியாக உள்ளது.",
+    cartTaxesNote: "வரிகள் மற்றும் டெலிவரி கட்டணம் செக் அவுட்டின் போது கணக்கிடப்படும்.",
+    viewFullCart: "முழு கூடையைப் பார்க்கவும்",
+    shoppingCart: "ஷாப்பிங் கூடை",
+    itemsInYourCart: "கூடையில் உள்ளது",
+    orderSummary: "ஆர்டர் சுருக்கம்",
+    shipping: "டெலிவரி கட்டணம்",
+    applicableGst: "ஜிஎஸ்டி வரி",
+    totalPayable: "செலுத்த வேண்டிய மொத்தத் தொகை",
+    proceedToCheckout: "செக் அவுட்டுக்கு தொடரவும்",
+    secureCheckout: "பாதுகாப்பான கட்டண உத்தரவாதம்",
+    priceTransparency: "விலை வெளிப்படைத்தன்மை",
+    clearPriceBreakdown: "தெளிவான விலை விவரம்",
+    noHiddenCharges: "மறைமுக கட்டணங்கள் இல்லை",
+    sameTotalAtCheckout: "செக் அவுட்டிலும் அதே தொகை",
+    filterOptions: "வடிகட்டிகள்",
+    clearAll: "அழிக்க",
+    applyFilters: "பயன்படுத்து",
   }
+};
+
+export const CATEGORY_TRANSLATIONS = {
+  'Hair': { en: 'Hair', ta: 'கூந்தல்' },
+  'Skin': { en: 'Skin', ta: 'சருமம்' },
+  'Body': { en: 'Body', ta: 'உடல்' },
+  'Health & Wellness': { en: 'Health & Wellness', ta: 'சுகாதாரம் & ஆரோக்கியம்' },
+  'Health': { en: 'Health & Wellness', ta: 'சுகாதாரம் & ஆரோக்கியம்' },
+  'Food': { en: 'Food', ta: 'உணவு' },
+  'Baby': { en: 'Baby', ta: 'குழந்தை' },
+  'Poojas': { en: 'Poojas', ta: 'பூஜை' },
+  'Beverages': { en: 'Beverages', ta: 'பானங்கள்' },
+  'Snacks': { en: 'Snacks', ta: 'சிற்றுண்டி' },
+  'All': { en: 'All Products', ta: 'அனைத்து தயாரிப்புகள்' },
+  'Offers': { en: 'Offers', ta: 'சலுகைகள்' },
+  'Best Sellers': { en: 'Best Sellers', ta: 'அதிகம் விற்பனையாகும்' }
 };
 
 export function LanguageProvider({ children }) {
@@ -516,6 +642,16 @@ export function LanguageProvider({ children }) {
     if (!text) return '';
     if (targetLang === 'en') return text;
 
+    // Fast-lookup for categories or predefined terms
+    if (targetLang === 'ta') {
+      const lower = String(text).trim().toLowerCase();
+      for (const [key, val] of Object.entries(CATEGORY_TRANSLATIONS)) {
+        if (key.toLowerCase() === lower) {
+          return val.ta;
+        }
+      }
+    }
+
     const cacheKey = `${text}_${targetLang}`;
     if (translationCache[cacheKey]) {
       return translationCache[cacheKey];
@@ -560,6 +696,18 @@ export function LanguageProvider({ children }) {
     return UI_TRANSLATIONS[language]?.[key] || UI_TRANSLATIONS['en']?.[key] || key;
   }, [language]);
 
+  const tCategory = useCallback((catName) => {
+    if (!catName) return '';
+    const trimmed = String(catName).trim();
+    const lower = trimmed.toLowerCase();
+    for (const [key, val] of Object.entries(CATEGORY_TRANSLATIONS)) {
+      if (key.toLowerCase() === lower) {
+        return val[language] || val['en'] || catName;
+      }
+    }
+    return catName;
+  }, [language]);
+
   // Auto-fetch bulk translations on mount if language is already Tamil
   useEffect(() => {
     if (language === 'ta' && Object.keys(bulkProductNames).length === 0 && !hasAttemptedBulkFetch.current) {
@@ -574,6 +722,7 @@ export function LanguageProvider({ children }) {
         language,
         setLanguage,
         t,
+        tCategory,
         translateText,
         translateProduct,
         fetchBulkProductTranslations,

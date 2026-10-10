@@ -81,7 +81,7 @@ export default function TrustBadges() {
           <div className="prof-stat-divider"></div>
           <div className="prof-stat-item">
             <h3 className="prof-stat-number">{trustPointsCount}+</h3>
-            <p className="prof-stat-label">Verified Trusted Customer</p>
+            <p className="prof-stat-label">{t('verifiedTrustedCustomer')}</p>
           </div>
           <div className="prof-stat-divider"></div>
 
@@ -108,7 +108,7 @@ export default function TrustBadges() {
           <div className="prof-stat-divider"></div>
           <div className="prof-stat-item">
             <h3 className="prof-stat-number">{trustPointsCount}+</h3>
-            <p className="prof-stat-label">Verified Trusted Customer</p>
+            <p className="prof-stat-label">{t('verifiedTrustedCustomer')}</p>
           </div>
 
         </div>

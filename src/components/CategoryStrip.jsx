@@ -48,7 +48,7 @@ export default function CategoryStrip() {
   });
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category');
-  const { t } = useLanguage();
+  const { t, tCategory } = useLanguage();
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/categories/`, {
@@ -144,7 +144,7 @@ export default function CategoryStrip() {
                 />
               </div>
               <div className="category-btn">
-                <span>{category.name} &gt;</span>
+                <span>{tCategory(category.name)} &gt;</span>
               </div>
             </Link>
           );

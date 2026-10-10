@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import './ShoppableVideos.css';
 
@@ -134,6 +135,7 @@ function SocialCard({ item, addToCart }) {
 }
 
 export default function ShoppableVideos() {
+  const { t } = useLanguage();
   const sliderRef = useRef(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -149,12 +151,12 @@ export default function ShoppableVideos() {
           <div className="social-handle-pill">
             <InstaIcon size={16} /> @dharani_herbbals
           </div>
-          <h2 className="social-section-title">Community & Social Highlights</h2>
-          <p className="social-section-subtitle">Real formulations, wellness tips & authentic Ayurvedic lifestyle updates</p>
+          <h2 className="social-section-title">{t('communityHighlights')}</h2>
+          <p className="social-section-subtitle">{t('communitySub')}</p>
         </div>
         <div className="social-header-right">
           <a href="https://www.instagram.com/dharani_herbbals" target="_blank" rel="noopener noreferrer" className="social-follow-btn">
-            <InstaIcon size={18} /> Follow on Instagram
+            <InstaIcon size={18} /> {t('followOnInstagram')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4}}>
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
               <polyline points="15 3 21 3 21 9"></polyline>

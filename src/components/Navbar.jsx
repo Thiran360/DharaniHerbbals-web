@@ -32,11 +32,17 @@ export default function Navbar() {
   const wishlistCount = wishlist.length;
   const location = useLocation();
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  // Max 3 for keyboard-navigable suggestions
-  const visibleProducts = filteredProducts.slice(0, 3);
+  const filteredProducts = products.filter(p => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return false;
+    const nameMatch = (p.name || '').toLowerCase().includes(q);
+    const tamilNameMatch = (p.tamil_name || '').toLowerCase().includes(q);
+    const catMatch = (p.category_name || '').toLowerCase().includes(q);
+    const descMatch = (p.description || '').toLowerCase().includes(q);
+    return nameMatch || tamilNameMatch || catMatch || descMatch;
+  });
+  // Max 5 for suggestions
+  const visibleProducts = filteredProducts.slice(0, 5);
 
   const rafIdRef = useRef(null);
   const handleScroll = useCallback(() => {
@@ -156,8 +162,29 @@ export default function Navbar() {
     setActiveIndex(-1);
   };
 
+  const executeSearch = (query) => {
+    const q = (query !== undefined ? query : searchQuery).trim();
+    if (!q) return;
+    saveSearch(q);
+    setShowSuggestions(false);
+    setActiveIndex(-1);
+    navigate(`/shop?search=${encodeURIComponent(q)}`);
+  };
+
   // Full keyboard navigation handler
   const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (showSuggestions && activeIndex >= 0 && visibleProducts[activeIndex]) {
+        const p = visibleProducts[activeIndex];
+        handleProductClick(p.name);
+        navigate(`/product/${p.id}`);
+      } else if (searchQuery.trim()) {
+        executeSearch();
+      }
+      return;
+    }
+
     if (!showSuggestions) return;
 
     if (searchQuery) {
@@ -166,7 +193,6 @@ export default function Navbar() {
         e.preventDefault();
         setActiveIndex(prev => {
           const next = prev < visibleProducts.length - 1 ? prev + 1 : 0;
-          // Scroll item into view
           setTimeout(() => {
             const el = suggestionsRef.current?.querySelector(`[data-idx="${next}"]`);
             el?.scrollIntoView({ block: 'nearest' });
@@ -183,21 +209,11 @@ export default function Navbar() {
           }, 0);
           return next;
         });
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (activeIndex >= 0 && visibleProducts[activeIndex]) {
-          const p = visibleProducts[activeIndex];
-          handleProductClick(p.name);
-          navigate(`/product/${p.id}`);
-        } else if (searchQuery.trim()) {
-          saveSearch(searchQuery.trim());
-        }
       } else if (e.key === 'Escape') {
         setShowSuggestions(false);
         setActiveIndex(-1);
       }
     } else {
-      // Recent searches: Enter on focused keyword
       if (e.key === 'Escape') {
         setShowSuggestions(false);
         setActiveIndex(-1);
@@ -225,7 +241,7 @@ export default function Navbar() {
               >
                 <img src={p.image} alt={p.name} />
                 <div className="suggestion-info">
-                  <span className="suggestion-name">{p.name}</span>
+                  <span className="suggestion-name">{language === 'ta' && p.tamil_name ? p.tamil_name : p.name}</span>
                   <span className="suggestion-price">{p.price}</span>
                 </div>
                 {activeIndex === idx && (
@@ -308,7 +324,15 @@ export default function Navbar() {
           </div>
           
           <div className="desktop-search-bar">
-            <Search size={18} strokeWidth={2} className="search-icon" />
+            <button
+              type="button"
+              className="search-icon-btn"
+              onClick={() => executeSearch()}
+              aria-label="Search products"
+              style={{ background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'inherit' }}
+            >
+              <Search size={18} strokeWidth={2} className="search-icon" />
+            </button>
             <input 
               type="text" 
               placeholder={t('searchPlaceholder')}
@@ -348,7 +372,8 @@ export default function Navbar() {
                   <button
                     className="capsule-btn icon-only nav-avatar-btn"
                     aria-label="My Account"
-                    onClick={() => setShowAccountMenu(prev => !prev)}
+                    onClick={() => navigate('/profile')}
+                    onMouseEnter={() => setShowAccountMenu(true)}
                   >
                     {userInitial ? (
                       <span className="nav-user-avatar">{userInitial}</span>
@@ -358,22 +383,20 @@ export default function Navbar() {
                   </button>
 
                   {showAccountMenu && (
-                    <div className="nav-account-dropdown">
-                      {userInitial && (
-                        <div className="nav-account-dropdown-header">
-                          <span className="nav-account-avatar-lg">{userInitial}</span>
-                          <div>
-                            <p className="nav-account-name">{userName}</p>
-                            <p className="nav-account-sub">My Account</p>
-                          </div>
+                    <div className="nav-account-dropdown" onMouseLeave={() => setShowAccountMenu(false)}>
+                      <div className="nav-account-dropdown-header" onClick={() => { navigate('/profile'); setShowAccountMenu(false); }} style={{ cursor: 'pointer' }}>
+                        {userInitial && <span className="nav-account-avatar-lg">{userInitial}</span>}
+                        <div>
+                          <p className="nav-account-name">{userName || 'My Account'}</p>
+                          <p className="nav-account-sub">{t('myAccount')}</p>
                         </div>
-                      )}
+                      </div>
                       <div className="nav-account-divider" />
                       <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'orders' } }); setShowAccountMenu(false); }}>
                         <Package size={15} /> My Orders
                       </button>
                       <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'wishlist' } }); setShowAccountMenu(false); }}>
-                        <Heart size={15} /> Wishlist
+                        <Heart size={15} /> {t('wishlist')}
                       </button>
                       <button className="nav-account-item" onClick={() => { navigate('/shop'); setShowAccountMenu(false); }}>
                         <RefreshCw size={15} /> Buy Again
@@ -386,13 +409,17 @@ export default function Navbar() {
                       </button>
                       <div className="nav-account-divider" />
                       <button className="nav-account-item nav-account-logout" onClick={handleLogout}>
-                        <LogOut size={15} /> Logout
+                        <LogOut size={15} /> {t('logout')}
                       </button>
                     </div>
                   )}
                 </>
               ) : (
-                <button className="capsule-btn icon-only user-btn" aria-label="Account" onClick={openLoginModal}>
+                <button
+                  className="capsule-btn icon-only user-btn"
+                  aria-label="Account"
+                  onClick={() => openLoginModal()}
+                >
                   <User size={20} strokeWidth={2} />
                 </button>
               )}
@@ -425,21 +452,21 @@ export default function Navbar() {
       <div className="secondary-navbar-wrapper">
         <div className="secondary-navbar-container">
           <NavLink to="/" className="sec-nav-item home-item" end>
-            Home
+            {t('home')}
           </NavLink>
           <NavLink to="/shop?sort=bestsellers" className="sec-nav-item bestsellers-item">
-            <Flame size={18} /> Best Sellers
+            <Flame size={18} /> {t('bestSellers')}
           </NavLink>
-          <NavLink to="/shop?category=Hair" className="sec-nav-item">Hair</NavLink>
-          <NavLink to="/shop?category=Skin" className="sec-nav-item">Skin</NavLink>
-          <NavLink to="/shop?category=Body" className="sec-nav-item">Body</NavLink>
-          <NavLink to="/shop?category=Health%20%26%20Wellness" className="sec-nav-item">Health & Wellness</NavLink>
-          <NavLink to="/shop?category=Food" className="sec-nav-item">Food</NavLink>
-          <NavLink to="/shop?category=Baby" className="sec-nav-item">Baby</NavLink>
-          <NavLink to="/shop?category=Poojas" className="sec-nav-item">Poojas</NavLink>
-          <NavLink to="/shop?category=Beverages" className="sec-nav-item">Beverages</NavLink>
+          <NavLink to="/shop?category=Hair" className="sec-nav-item">{t('catHair')}</NavLink>
+          <NavLink to="/shop?category=Skin" className="sec-nav-item">{t('catSkin')}</NavLink>
+          <NavLink to="/shop?category=Body" className="sec-nav-item">{t('catBody')}</NavLink>
+          <NavLink to="/shop?category=Health%20%26%20Wellness" className="sec-nav-item">{t('catHealth')}</NavLink>
+          <NavLink to="/shop?category=Food" className="sec-nav-item">{t('catFood')}</NavLink>
+          <NavLink to="/shop?category=Baby" className="sec-nav-item">{t('catBaby')}</NavLink>
+          <NavLink to="/shop?category=Poojas" className="sec-nav-item">{t('catPoojas')}</NavLink>
+          <NavLink to="/shop?category=Beverages" className="sec-nav-item">{t('catBeverages')}</NavLink>
           <NavLink to="/shop?category=Offers" className="sec-nav-item offers-item">
-            <Tag size={18} /> Offers
+            <Tag size={18} /> {t('offers')}
           </NavLink>
           {/* Filter By Button - right corner */}
           <button
@@ -448,7 +475,7 @@ export default function Navbar() {
             aria-label="Filter Products"
           >
             <SlidersHorizontal size={15} />
-            Filter By
+            {t('filterBy')}
           </button>
         </div>
       </div>
@@ -456,7 +483,15 @@ export default function Navbar() {
       {/* Mobile Search Row */}
       <div className="mobile-search-row">
         <div className="mobile-search-bar">
-          <Search size={18} strokeWidth={2} className="search-icon" />
+          <button
+            type="button"
+            className="search-icon-btn"
+            onClick={() => executeSearch()}
+            aria-label="Search products"
+            style={{ background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'inherit' }}
+          >
+            <Search size={18} strokeWidth={2} className="search-icon" />
+          </button>
           <input 
             type="text" 
             placeholder={t('searchPlaceholder')}
@@ -504,7 +539,7 @@ export default function Navbar() {
             <div className="nav-icon-box"><Phone size={22} /></div>
             <span>{t('contact')}</span>
           </NavLink>
-          {user && (
+          {user ? (
             <NavLink to="/profile" className="mobile-nav-link" onClick={toggleMobileMenu} style={{ transitionDelay: '0.3s' }}>
               <div className="nav-icon-box">
                 {userInitial ? (
@@ -515,6 +550,18 @@ export default function Navbar() {
               </div>
               <span>{t('myAccount')}</span>
             </NavLink>
+          ) : (
+            <button
+              className="mobile-nav-link"
+              style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer', font: 'inherit', color: 'inherit' }}
+              onClick={() => {
+                toggleMobileMenu();
+                openLoginModal();
+              }}
+            >
+              <div className="nav-icon-box"><User size={22} /></div>
+              <span>{t('login')} / {t('account')}</span>
+            </button>
           )}
           <NavLink
             to={user ? '/profile' : '#'}
@@ -532,7 +579,7 @@ export default function Navbar() {
                 <span className="mobile-wishlist-badge">{wishlistCount}</span>
               )}
             </div>
-            <span>Wishlist</span>
+            <span>{t('wishlist')}</span>
           </NavLink>
         </div>
         

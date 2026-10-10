@@ -18,7 +18,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 
 // Lazy loaded routes for better performance on less frequent pages
-const Login = lazy(() => import('./pages/Login'));
+import Login from './pages/Login';
 
 const Admin = lazy(() => import('./pages/Admin'));
 const Profile = lazy(() => import('./pages/Profile'));

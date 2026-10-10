@@ -97,8 +97,7 @@ export default function Login() {
   // Derive the array of displayed digits from otpValue
   const otpArray = Array.from({ length: 6 }, (_, i) => otpValue[i] || '');
 
-  const isAlreadyLoggedIn = localStorage.getItem('user') !== null;
-  if (!isLoginModalOpen || isAlreadyLoggedIn) return null;
+  if (!isLoginModalOpen) return null;
 
   // ─── SEND OTP ────────────────────────────────────────────────────
   const handleSendOtp = async (arg) => {

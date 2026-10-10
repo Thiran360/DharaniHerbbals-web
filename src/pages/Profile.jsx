@@ -53,7 +53,7 @@ export default function Profile() {
   const { products, refreshProducts } = useProducts();
   const { addToCart, refreshCart, cartItems } = useCart();
   const { wishlist, removeFromWishlist } = useWishlist();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const { openLoginModal } = useAuthModal();
   const navigate = useNavigate();
 
@@ -189,10 +189,11 @@ export default function Profile() {
         setLoadingOrders(false);
       }
     } else {
-      // If no user found, redirect to login
-      navigate('/login');
+      // If no user found, open login modal and redirect to home
+      openLoginModal();
+      navigate('/');
     }
-  }, [navigate]);
+  }, [navigate, openLoginModal]);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -1065,7 +1066,7 @@ export default function Profile() {
                               }}
                             >
                               <ShoppingCart size={16} />
-                              Add to Cart
+                              {t('addToCart')}
                             </button>
                             <button
                               className="btn-wishlist-row-remove"

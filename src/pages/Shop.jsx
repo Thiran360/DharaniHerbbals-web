@@ -163,7 +163,7 @@ const CATEGORY_HERO_CONFIG = {
 export const ProductCard = memo(({ product, index = 0 }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const { language, translateProduct, bulkProductNames, isBulkLoading, t } = useLanguage();
+  const { language, translateProduct, bulkProductNames, isBulkLoading, t, tCategory } = useLanguage();
 
   const navigate = useNavigate();
 
@@ -224,7 +224,7 @@ export const ProductCard = memo(({ product, index = 0 }) => {
       <div className="uc-info-section">
         <div className="uc-category-tag">
           <Leaf size={12} className="uc-tag-icon" />
-          <span>{product.category_name || 'Snacks'}</span>
+          <span>{tCategory(product.category_name) || t('catSnacks')}</span>
         </div>
 
         <h3 className="uc-title">{translatedName}</h3>
@@ -254,7 +254,7 @@ export const ProductCard = memo(({ product, index = 0 }) => {
           aria-label={t('addToCart')}
         >
           <ShoppingBag size={14} className="uc-btn-icon" />
-          Add to Cart
+          {t('addToCart')}
         </button>
       </div>
 
@@ -291,7 +291,7 @@ export const ProductCard = memo(({ product, index = 0 }) => {
 
 // ─── Category Tab ─────────────────────────────────────────────────────────────
 const CategoryTab = ({ cat, activeCategory, onClick }) => {
-  const { language, translateText, t } = useLanguage();
+  const { language, tCategory, t } = useLanguage();
   const [name, setName] = useState(cat);
 
   useEffect(() => {
@@ -299,14 +299,12 @@ const CategoryTab = ({ cat, activeCategory, onClick }) => {
       setName(t('allProducts'));
       return;
     }
-    let active = true;
     if (language === 'ta') {
-      translateText(cat).then(res => { if (active) setName(res); });
+      setName(tCategory(cat));
     } else {
       setName(cat);
     }
-    return () => { active = false; };
-  }, [language, cat, t]);
+  }, [language, cat, t, tCategory]);
 
   return (
     <button
@@ -324,7 +322,8 @@ export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
   const activeBrand = searchParams.get('brand');
-  const { language, translateText, t, isBulkLoading } = useLanguage();
+  const searchQueryParam = (searchParams.get('search') || searchParams.get('q') || '').trim();
+  const { language, translateText, t, tCategory, isBulkLoading } = useLanguage();
   const [translatedHeroCat, setTranslatedHeroCat] = useState(activeCategory);
 
   const [visibleCount, setVisibleCount] = useState(() => {
@@ -376,22 +375,24 @@ export default function Shop() {
   }, []);
 
   useEffect(() => {
+    if (searchQueryParam) {
+      setTranslatedHeroCat(language === 'ta' ? `"${searchQueryParam}" தேடல் முடிவுகள்` : `Search: "${searchQueryParam}"`);
+      return;
+    }
     if (activeBrand) {
       setTranslatedHeroCat(`Brand: ${activeBrand}`);
       return;
     }
     if (activeCategory === 'All') {
-      setTranslatedHeroCat(t('Explore Our Products'));
+      setTranslatedHeroCat(t('exploreOurProducts'));
       return;
     }
-    let active = true;
     if (language === 'ta') {
-      translateText(activeCategory).then(res => { if (active) setTranslatedHeroCat(res); });
+      setTranslatedHeroCat(tCategory(activeCategory));
     } else {
       setTranslatedHeroCat(activeCategory);
     }
-    return () => { active = false; };
-  }, [language, activeCategory, activeBrand, t]);
+  }, [language, activeCategory, activeBrand, searchQueryParam, t, tCategory]);
 
   const categories = useMemo(() => {
     return ['All', ...apiCategories.map(c => c.name)];
@@ -399,6 +400,18 @@ export default function Shop() {
 
   const filteredProducts = useMemo(() => {
     let list = products || [];
+
+    // 0. Search Keyword Filter
+    if (searchQueryParam) {
+      const q = searchQueryParam.toLowerCase();
+      list = list.filter(p => {
+        const nameMatch = (p.name || '').toLowerCase().includes(q);
+        const tamilNameMatch = (p.tamil_name || '').toLowerCase().includes(q);
+        const catMatch = (p.category_name || '').toLowerCase().includes(q);
+        const descMatch = (p.description || '').toLowerCase().includes(q);
+        return nameMatch || tamilNameMatch || catMatch || descMatch;
+      });
+    }
 
     // 1. Category Filter
     list = activeCategory === 'All'
@@ -562,7 +575,7 @@ export default function Shop() {
     });
 
     return list;
-  }, [products, activeCategory, activeBrand, selectedFilters]);
+  }, [products, activeCategory, activeBrand, searchQueryParam, selectedFilters]);
 
 
   const handleCategoryClick = (cat) => {
@@ -604,7 +617,7 @@ export default function Shop() {
 
   const heroTagText = t(catConfig.tagKey) || catConfig.defaultTag;
   const heroSubText = t(catConfig.subKey) || catConfig.defaultSub;
-  const heroTitleText = activeCategory === 'All' ? t('Explore Our Products') : (translatedHeroCat || catConfig.defaultTitle);
+  const heroTitleText = activeCategory === 'All' ? t('exploreOurProducts') : (translatedHeroCat || catConfig.defaultTitle);
   const heroBgImg = catConfig.bgImage || imgAll;
 
   return (

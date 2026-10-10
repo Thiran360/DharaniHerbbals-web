@@ -941,7 +941,7 @@ export default function ProductDetails() {
               <ShoppingCart size={20} strokeWidth={2.5} />
               <span>{t('addToCart')}</span>
             </button>
-            <button type="button" className="premium-buy-now-btn" onClick={async () => { await addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id, true); navigate('/checkout'); }}><span>Buy Now</span></button>
+            <button type="button" className="premium-buy-now-btn" onClick={async () => { await addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id, true); navigate('/checkout'); }}><span>{t('buyNow')}</span></button>
             </div>
           </div>
 
