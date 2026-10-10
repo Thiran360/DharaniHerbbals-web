@@ -380,19 +380,9 @@ export default function Navbar() {
               className="search-input" 
               value={searchQuery}
               onChange={(e) => {
-                const val = e.target.value;
-                setSearchQuery(val);
+                setSearchQuery(e.target.value);
                 setShowSuggestions(true);
                 setActiveIndex(-1);
-                if (location.pathname === '/shop') {
-                  const newParams = new URLSearchParams(location.search);
-                  if (val.trim()) {
-                    newParams.set('search', val.trim());
-                  } else {
-                    newParams.delete('search');
-                  }
-                  navigate(`/shop?${newParams.toString()}`, { replace: true });
-                }
               }}
               onFocus={() => setShowSuggestions(true)}
               onKeyDown={handleSearchKeyDown}
