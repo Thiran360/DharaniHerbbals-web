@@ -1289,3 +1289,35 @@
   border-color: #16a34a;
   transform: scale(1.08);
 }
+
+@media (max-width: 480px) {
+  .profile-page-wrapper {
+    padding: 135px 12px 30px 12px !important;
+  }
+  .profile-main-content {
+    padding: 20px 12px !important;
+    border-radius: 20px !important;
+  }
+  .saas-sidebar {
+    padding: 20px 12px !important;
+    border-radius: 20px !important;
+  }
+  .profile-content-header h1 {
+    font-size: 1.5rem !important;
+  }
+  .profile-info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .profile-info-card {
+    padding: 14px 12px !important;
+    gap: 12px !important;
+  }
+  .info-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .info-details p {
+    font-size: 0.95rem !important;
+  }
+}

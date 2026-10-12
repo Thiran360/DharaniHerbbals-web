@@ -3,8 +3,25 @@ import { Calendar as CalendarIcon, PackageCheck } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import './UsageCalendar.css';
 
-const DAYS_OF_WEEK_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const DAYS_OF_WEEK_TA = ['ஞாயிறு', 'திங்கள்', 'செவ்வாய்', 'புதன்', 'வியாழன்', 'வெள்ளி', 'சனி'];
+const DAYS_OF_WEEK_EN = [
+  { full: 'Sun', short: 'Sun' },
+  { full: 'Mon', short: 'Mon' },
+  { full: 'Tue', short: 'Tue' },
+  { full: 'Wed', short: 'Wed' },
+  { full: 'Thu', short: 'Thu' },
+  { full: 'Fri', short: 'Fri' },
+  { full: 'Sat', short: 'Sat' },
+];
+
+const DAYS_OF_WEEK_TA = [
+  { full: 'ஞாயிறு', short: 'ஞா' },
+  { full: 'திங்கள்', short: 'திங்' },
+  { full: 'செவ்வாய்', short: 'செவ்' },
+  { full: 'புதன்', short: 'புதன்' },
+  { full: 'வியாழன்', short: 'வியா' },
+  { full: 'வெள்ளி', short: 'வெள்' },
+  { full: 'சனி', short: 'சனி' },
+];
 
 const MONTHS_EN = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -17,7 +34,7 @@ const MONTHS_TA = [
 ];
 
 export default function UsageCalendar({ orders }) {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
 
   const daysOfWeek = language === 'ta' ? DAYS_OF_WEEK_TA : DAYS_OF_WEEK_EN;
   const months = language === 'ta' ? MONTHS_TA : MONTHS_EN;
@@ -96,9 +113,10 @@ export default function UsageCalendar({ orders }) {
         </div>
 
         <div className="calendar-grid">
-          {daysOfWeek.map((day) => (
-            <div key={day} className="calendar-day-header">
-              {day}
+          {daysOfWeek.map((dayObj, index) => (
+            <div key={index} className="calendar-day-header">
+              <span className="day-name-full">{dayObj.full}</span>
+              <span className="day-name-short">{dayObj.short}</span>
             </div>
           ))}
 
