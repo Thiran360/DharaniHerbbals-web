@@ -536,7 +536,7 @@ export default function Profile() {
   };
 
   if (!userData)  {
-    return <div className="profile-loading">Loading your profile...</div>;
+    return <div className="profile-loading">{t('loadingProfile')}</div>;
   }
 
   // Fallback data if API doesn't return everything
@@ -544,6 +544,10 @@ export default function Profile() {
   const name = user.name || 'Dharani Customer';
   const mobile = user.mobile || user.phone_number || '+91 00000 00000';
   const email = user.email || 'No email provided';
+
+  const isGuestOrGeneric = !user.name || user.name === 'Guest User' || user.name === 'Dharani Customer' || user.name === 'Vedan Customer';
+  const displayName = isGuestOrGeneric && language === 'ta' ? t('guestUser') : name;
+  const displayEmail = email === 'No email provided' && language === 'ta' ? t('noEmailProvided') : email;
 
   return (
     <div className="profile-page-wrapper">
@@ -553,11 +557,11 @@ export default function Profile() {
         <div className="saas-sidebar">
           <div className="saas-profile-header">
             <div className="saas-avatar">
-              {name.charAt(0).toUpperCase()}
+              {displayName.charAt(0).toUpperCase()}
             </div>
             <div className="saas-profile-info">
-              <h2 className="saas-name">{name}</h2>
-              <p className="saas-email">{email}</p>
+              <h2 className="saas-name">{displayName}</h2>
+              <p className="saas-email">{displayEmail}</p>
             </div>
           </div>
 
@@ -620,14 +624,14 @@ export default function Profile() {
           {activeTab === 'account' && (
             <>
               <div className="profile-content-header">
-                <h1>Account Details</h1>
-                <p>Manage your personal information and preferences.</p>
+                <h1>{t('accountDetails')}</h1>
+                <p>{t('managePersonalInfo')}</p>
               </div>
 
               {isEditingProfile ? (
                 <form className="address-form" onSubmit={handleEditProfileSubmit}>
                   <div className="form-group">
-                    <label>Full Name</label>
+                    <label>{t('fullName')}</label>
                     <input
                       type="text"
                       value={profileFormData.name}
@@ -636,7 +640,7 @@ export default function Profile() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Email Address</label>
+                    <label>{t('emailAddress')}</label>
                     <input
                       type="email"
                       value={profileFormData.email}
@@ -645,13 +649,13 @@ export default function Profile() {
                     />
                   </div>
                   <div className="form-group" style={{ opacity: 0.6 }}>
-                    <label>Mobile Number</label>
+                    <label>{t('mobileNumber')}</label>
                     <input type="text" value={mobile} disabled />
-                    <small style={{ color: '#6b7280', fontSize: '0.78rem', marginTop: '4px', display: 'block' }}>To change your mobile number, use the "Change" option on the profile view.</small>
+                    <small style={{ color: '#6b7280', fontSize: '0.78rem', marginTop: '4px', display: 'block' }}>{language === 'ta' ? 'மொபைல் எண்ணை மாற்ற, சுயவிவரத்தில் உள்ள விருப்பத்தைப் பயன்படுத்தவும்.' : 'To change your mobile number, use the "Change" option on the profile view.'}</small>
                   </div>
                   <div className="address-form-actions">
-                    <button type="button" className="btn-cancel" onClick={() => setIsEditingProfile(false)} disabled={profileUpdating}>Cancel</button>
-                    <button type="submit" className="btn-save" disabled={profileUpdating}>{profileUpdating ? 'Saving...' : 'Save Profile'}</button>
+                    <button type="button" className="btn-cancel" onClick={() => setIsEditingProfile(false)} disabled={profileUpdating}>{t('cancel')}</button>
+                    <button type="submit" className="btn-save" disabled={profileUpdating}>{profileUpdating ? t('saving') : t('saveProfile')}</button>
                   </div>
                 </form>
               ) : (
@@ -664,16 +668,16 @@ export default function Profile() {
                     <div className="profile-info-card">
                       <div className="info-icon"><User size={20} /></div>
                       <div className="info-details">
-                        <label>Full Name</label>
-                        <p>{name}</p>
+                        <label>{t('fullName')}</label>
+                        <p>{displayName}</p>
                       </div>
                     </div>
 
                     <div className="profile-info-card">
                       <div className="info-icon"><Mail size={20} /></div>
                       <div className="info-details">
-                        <label>Email Address</label>
-                        <p>{email}</p>
+                        <label>{t('emailAddress')}</label>
+                        <p>{displayEmail}</p>
                       </div>
                     </div>
 
@@ -681,7 +685,7 @@ export default function Profile() {
                     <div className="profile-info-card profile-mobile-card">
                       <div className="info-icon"><Phone size={20} /></div>
                       <div className="info-details" style={{ flex: 1 }}>
-                        <label>Mobile Number</label>
+                        <label>{t('mobileNumber')}</label>
 
                         {mobileChangeMode === 'idle' && (
                           <div className="profile-mobile-view">
@@ -694,7 +698,7 @@ export default function Profile() {
                             <input
                               type="tel"
                               className="mobile-change-input"
-                              placeholder="Enter new 10-digit number"
+                              placeholder={language === 'ta' ? 'புதிய 10 இலக்க எண்ணை உள்ளிடவும்' : 'Enter new 10-digit number'}
                               maxLength={10}
                               value={newMobile}
                               onChange={(e) => { setNewMobile(e.target.value.replace(/\D/g, '').slice(0, 10)); setMobileOtpError(''); }}
@@ -703,7 +707,7 @@ export default function Profile() {
                             <div className="profile-mobile-actions">
                               <button type="button" className="btn-cancel" onClick={() => { setMobileChangeMode('idle'); setMobileOtpError(''); }} disabled={mobileOtpLoading}>Cancel</button>
                               <button type="button" className="btn-save" onClick={handleSendMobileOtp} disabled={mobileOtpLoading || newMobile.length < 10}>
-                                {mobileOtpLoading ? 'Sending...' : 'Send OTP'}
+                                {mobileOtpLoading ? (language === 'ta' ? 'அனுப்புகிறது...' : 'Sending...') : t('sendOtp')}
                               </button>
                             </div>
                           </div>
@@ -711,9 +715,9 @@ export default function Profile() {
 
                         {mobileChangeMode === 'otp' && (
                           <div className="profile-mobile-otp-row">
-                            <p className="profile-otp-hint">OTP sent to <strong>+91 {newMobile}</strong></p>
+                            <p className="profile-otp-hint">{language === 'ta' ? 'OTP அனுப்பப்பட்டது:' : 'OTP sent to'} <strong>+91 {newMobile}</strong></p>
                             <input
-                              type="tel" autoComplete="one-time-code" className="mobile-change-input" placeholder="Enter 6-digit OTP"
+                              type="tel" autoComplete="one-time-code" className="mobile-change-input" placeholder={language === 'ta' ? '6 இலக்க OTP உள்ளிடவும்' : 'Enter 6-digit OTP'}
                               maxLength={6}
                               value={mobileOtp}
                               onChange={(e) => { setMobileOtp(e.target.value.replace(/\D/g, '').slice(0, 6)); setMobileOtpError(''); }}
@@ -721,9 +725,9 @@ export default function Profile() {
                             />
                             {mobileOtpError && <p className="profile-mobile-error">{mobileOtpError}</p>}
                             <div className="profile-mobile-actions">
-                              <button type="button" className="btn-cancel" onClick={() => { setMobileChangeMode('input'); setMobileOtpError(''); }} disabled={mobileOtpLoading}>Back</button>
+                              <button type="button" className="btn-cancel" onClick={() => { setMobileChangeMode('input'); setMobileOtpError(''); }} disabled={mobileOtpLoading}>{language === 'ta' ? 'பின்செல்' : 'Back'}</button>
                               <button type="button" className="btn-save" onClick={handleVerifyMobileOtp} disabled={mobileOtpLoading || mobileOtp.length < 4}>
-                                {mobileOtpLoading ? 'Verifying...' : 'Verify & Update'}
+                                {mobileOtpLoading ? (language === 'ta' ? 'சரிபார்க்கிறது...' : 'Verifying...') : t('verifyAndUpdate')}
                               </button>
                             </div>
                             <button
@@ -732,7 +736,7 @@ export default function Profile() {
                               onClick={handleSendMobileOtp}
                               disabled={mobileResendTimer > 0 || mobileOtpLoading}
                             >
-                              {mobileResendTimer > 0 ? `Resend OTP in ${mobileResendTimer}s` : 'Resend OTP'}
+                              {mobileResendTimer > 0 ? (language === 'ta' ? `${mobileResendTimer} நொடியில் மீண்டும் அனுப்பவும்` : `Resend OTP in ${mobileResendTimer}s`) : t('resendOtp')}
                             </button>
                           </div>
                         )}
@@ -745,13 +749,13 @@ export default function Profile() {
                     style={{ marginTop: '20px', width: 'auto' }}
                     onClick={() => {
                       setProfileFormData({
-                        name: (name !== 'Vedan Customer' && name !== 'Dharani Customer') ? name : '',
+                        name: (name !== 'Vedan Customer' && name !== 'Dharani Customer' && name !== 'Guest User') ? name : '',
                         email: email !== 'No email provided' ? email : ''
                       });
                       setIsEditingProfile(true);
                     }}
                   >
-                    Edit Profile
+                    {t('editProfile')}
                   </button>
                 </>
               )}
@@ -762,8 +766,8 @@ export default function Profile() {
             <div className="profile-addresses">
               <div className="profile-content-header has-action" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
-                  <h1>My Addresses</h1>
-                  <p>Manage your shipping addresses for quick checkout.</p>
+                  <h1>{t('myAddresses')}</h1>
+                  <p>{t('manageAddressesDesc')}</p>
                 </div>
                 {!showAddressForm && (
                   <button 
@@ -773,40 +777,40 @@ export default function Profile() {
                       setShowAddressForm(true);
                     }}
                   >
-                    <Plus size={16} /> Add Address
+                    <Plus size={16} /> {t('addAddress')}
                   </button>
                 )}
               </div>
 
               {showAddressForm ? (
                 <div className="address-form-container fade-in">
-                  <h3 style={{ marginBottom: '20px' }}>{addressFormData.id ? 'Edit Address' : 'Add New Address'}</h3>
+                  <h3 style={{ marginBottom: '20px' }}>{addressFormData.id ? t('editAddress') : t('addNewAddress')}</h3>
                   <form className="address-form" onSubmit={handleAddressSubmit}>
                     <div className="form-group">
                       <label>Full Name</label>
                       <input type="text" value={addressFormData.full_name} onChange={(e) => setAddressFormData({ ...addressFormData, full_name: e.target.value })} required placeholder="Enter name" />
                     </div>
                     <div className="form-group">
-                      <label>Phone Number</label>
-                      <input type="tel" value={addressFormData.phone} onChange={(e) => setAddressFormData({ ...addressFormData, phone: e.target.value })} required placeholder="10-digit mobile number" />
+                      <label>{language === 'ta' ? 'தொலைபேசி எண்' : 'Phone Number'}</label>
+                      <input type="tel" value={addressFormData.phone} onChange={(e) => setAddressFormData({ ...addressFormData, phone: e.target.value })} required placeholder={language === 'ta' ? '10 இலக்க மொபைல் எண்' : '10-digit mobile number'} />
                     </div>
                     <div className="form-group">
-                      <label>Address (House No, Building, Street)</label>
-                      <textarea value={addressFormData.address} onChange={(e) => setAddressFormData({ ...addressFormData, address: e.target.value })} required placeholder="Full address" rows="3" />
+                      <label>{t('addressLinePlaceholder')}</label>
+                      <textarea value={addressFormData.address} onChange={(e) => setAddressFormData({ ...addressFormData, address: e.target.value })} required placeholder={language === 'ta' ? 'முழு முகவரி' : 'Full address'} rows="3" />
                     </div>
                     <div className="form-row">
                       <div className="form-group">
-                        <label>City</label>
-                        <input type="text" value={addressFormData.city} onChange={(e) => setAddressFormData({ ...addressFormData, city: e.target.value })} required placeholder="City" />
+                        <label>{t('city')}</label>
+                        <input type="text" value={addressFormData.city} onChange={(e) => setAddressFormData({ ...addressFormData, city: e.target.value })} required placeholder={t('city')} />
                       </div>
                       <div className="form-group relative">
-                        <label>State</label>
+                        <label>{t('state')}</label>
                         <div
                           className="custom-select-trigger"
                           onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
                         >
                           <span style={{ color: addressFormData.state ? '#0f172a' : '#94a3b8' }}>
-                            {addressFormData.state || 'Select State'}
+                            {addressFormData.state || t('selectState')}
                           </span>
                           <ChevronDown size={18} className={isStateDropdownOpen ? 'rotate-180' : ''} style={{ transition: 'transform 0.2s', color: '#64748b' }} />
                         </div>
@@ -833,12 +837,12 @@ export default function Profile() {
                       </div>
                     </div>
                     <div className="form-group" style={{ width: 'calc(50% - 10px)' }}>
-                      <label>PIN Code</label>
-                      <input type="text" value={addressFormData.pincode} onChange={(e) => setAddressFormData({ ...addressFormData, pincode: e.target.value })} required placeholder="PIN Code" />
+                      <label>{t('pincode')}</label>
+                      <input type="text" value={addressFormData.pincode} onChange={(e) => setAddressFormData({ ...addressFormData, pincode: e.target.value })} required placeholder={t('pincode')} />
                     </div>
                     <div className="address-form-actions">
-                      <button type="button" className="btn-cancel" onClick={() => setShowAddressForm(false)}>Cancel</button>
-                      <button type="submit" className="btn-save">Save Address</button>
+                      <button type="button" className="btn-cancel" onClick={() => setShowAddressForm(false)}>{t('cancel')}</button>
+                      <button type="submit" className="btn-save">{t('saveAddress')}</button>
                     </div>
                   </form>
                 </div>
@@ -856,10 +860,10 @@ export default function Profile() {
                           <p className="address-city">{addr.city}, {addr.state} - {addr.pincode}</p>
                           <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
                             <button className="btn-edit-address" onClick={() => handleEditAddress(addr)}>
-                              Edit
+                              {t('edit')}
                             </button>
                             <button className="btn-delete-address" onClick={() => setAddressToDelete(addr.id)}>
-                              <Trash2 size={16} /> Delete
+                              <Trash2 size={16} /> {t('delete')}
                             </button>
                           </div>
                         </div>
@@ -874,14 +878,14 @@ export default function Profile() {
                         <div className="dashed-plus-circle">
                           <Plus size={20} />
                         </div>
-                        <span>+ Add Address</span>
+                        <span>+ {t('addAddress')}</span>
                       </div>
                     </>
                   ) : (
                     <div className="empty-orders">
                       <MapPin size={40} className="empty-icon" />
-                      <p>You haven't saved any addresses yet.</p>
-                      <button className="btn-shop-now" onClick={() => setShowAddressForm(true)}>Add Address</button>
+                      <p>{t('noAddressesYet')}</p>
+                      <button className="btn-shop-now" onClick={() => setShowAddressForm(true)}>{t('addAddress')}</button>
                     </div>
                   )}
                 </div>
@@ -890,11 +894,11 @@ export default function Profile() {
               {addressToDelete && (
                 <div className="delete-modal-overlay">
                   <div className="delete-modal">
-                    <h3>Delete Address</h3>
-                    <p>Are you sure you want to delete this address? This action cannot be undone.</p>
+                    <h3>{t('deleteAddress')}</h3>
+                    <p>{t('deleteAddressConfirmMsg')}</p>
                     <div className="delete-modal-actions">
-                      <button className="btn-cancel" onClick={() => setAddressToDelete(null)}>Cancel</button>
-                      <button className="btn-confirm-delete" onClick={confirmDeleteAddress}>Yes, Delete</button>
+                      <button className="btn-cancel" onClick={() => setAddressToDelete(null)}>{t('cancel')}</button>
+                      <button className="btn-confirm-delete" onClick={confirmDeleteAddress}>{t('yesDelete')}</button>
                     </div>
                   </div>
                 </div>
@@ -905,13 +909,13 @@ export default function Profile() {
           {activeTab === 'orders' && (
             <div className="profile-recent-orders" style={{ marginTop: 0 }}>
               <div className="profile-content-header">
-                <h1>My Orders</h1>
-                <p>View and track your recent orders.</p>
+                <h1>{t('myOrders')}</h1>
+                <p>{t('viewTrackOrders')}</p>
               </div>
 
               {loadingOrders ? (
                 <div className="empty-orders">
-                  <p>Loading your orders...</p>
+                  <p>{t('loadingOrders')}</p>
                 </div>
               ) : orders.length > 0 ? (
                 <div className="orders-list">
@@ -948,7 +952,7 @@ export default function Profile() {
                               )}
                             </div>
                             <div>
-                              <h3>Order</h3>
+                              <h3>{language === 'ta' ? 'ஆர்டர்' : 'Order'}</h3>
                               <p className="order-date">
                                 {new Date(order.created_at).toLocaleDateString()}
                               </p>
@@ -968,7 +972,7 @@ export default function Profile() {
 
                         <div className="order-card-footer">
                           <div className="order-total">
-                            Total: <strong>₹{parseFloat(order.total_amount).toFixed(2)}</strong>
+                            {t('orderTotalLabel')} <strong>₹{parseFloat(order.total_amount).toFixed(2)}</strong>
                           </div>
                           <div style={{ display: 'flex', gap: '10px' }}>
                             {order.status && order.status.toLowerCase() !== 'cancelled' && order.status.toLowerCase() !== 'returned' && (
@@ -976,14 +980,14 @@ export default function Profile() {
                                 className="btn-cancel-order"
                                 onClick={() => handleCancelOrder(order.order_id)}
                               >
-                                Cancel Order
+                                {t('cancelOrder')}
                               </button>
                             )}
                             <button
                                 className="btn-track-order"
                                 onClick={() => navigate(`/track/${order.id || order.order_id}`)}
                             >
-                              Track Order
+                              {t('trackOrder')}
                             </button>
                           </div>
                         </div>
@@ -994,8 +998,8 @@ export default function Profile() {
               ) : (
                 <div className="empty-orders">
                   <Package size={40} className="empty-icon" />
-                  <p>You haven't placed any orders yet.</p>
-                  <button className="btn-shop-now" onClick={() => navigate('/shop')}>Start Shopping</button>
+                  <p>{t('noOrdersYet')}</p>
+                  <button className="btn-shop-now" onClick={() => navigate('/shop')}>{t('startShopping')}</button>
                 </div>
               )}
             </div>
@@ -1005,8 +1009,8 @@ export default function Profile() {
             <div className="profile-wishlist" style={{ marginTop: 0 }}>
               <div className="profile-content-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '15px' }}>
                 <div>
-                  <h1>MY WISHLIST</h1>
-                  <p>{wishlist.length} item{wishlist.length === 1 ? '' : 's'} saved</p>
+                  <h1>{t('myWishlistTitle')}</h1>
+                  <p>{wishlist.length} {wishlist.length === 1 ? t('itemSaved') : t('itemsSaved')}</p>
                 </div>
                 {wishlist.length > 0 && (
                   <button 
@@ -1015,7 +1019,7 @@ export default function Profile() {
                     disabled={addingAllToCart}
                   >
                     <ShoppingCart size={18} />
-                    {addingAllToCart ? 'Adding...' : 'Add All to Cart'}
+                    {addingAllToCart ? t('adding') : t('addAllToCart')}
                   </button>
                 )}
               </div>
@@ -1088,7 +1092,7 @@ export default function Profile() {
                               onClick={() => removeFromWishlist(itemIdToUse)}
                               title="Remove from wishlist"
                             >
-                              <Heart size={16} color="#ef4444" /> Remove
+                              <Heart size={16} color="#ef4444" /> {t('remove')}
                             </button>
                           </div>
                         </div>
@@ -1099,8 +1103,8 @@ export default function Profile() {
               ) : (
                 <div className="empty-orders">
                   <Heart size={40} className="empty-icon" />
-                  <p>Your wishlist is currently empty.</p>
-                  <button className="btn-shop-now" onClick={() => navigate('/shop')}>Explore Products</button>
+                  <p>{t('wishlistEmpty')}</p>
+                  <button className="btn-shop-now" onClick={() => navigate('/shop')}>{t('exploreProducts')}</button>
                 </div>
               )}
             </div>
