@@ -569,7 +569,7 @@ export default function Profile() {
               aria-label="Profile Settings"
             >
               <User size={18} />
-              <span>Profile Settings</span>
+              <span>{t('profileSettings')}</span>
             </button>
             <button
               className={`saas-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
@@ -578,7 +578,7 @@ export default function Profile() {
               aria-label="Order History"
             >
               <Package size={18} />
-              <span>Order History</span>
+              <span>{t('orderHistory')}</span>
             </button>
             <button
               className={`saas-nav-item ${activeTab === 'addresses' ? 'active' : ''}`}
@@ -587,7 +587,7 @@ export default function Profile() {
               aria-label="Saved Addresses"
             >
               <MapPin size={18} />
-              <span>Saved Addresses</span>
+              <span>{t('savedAddresses')}</span>
             </button>
             <button
               className={`saas-nav-item ${activeTab === 'wishlist' ? 'active' : ''}`}
@@ -596,7 +596,7 @@ export default function Profile() {
               aria-label="Wishlist"
             >
               <Heart size={18} />
-              <span>Wishlist</span>
+              <span>{t('wishlist')}</span>
             </button>
             <button
               className={`saas-nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
@@ -605,12 +605,12 @@ export default function Profile() {
               aria-label="Usage Calendar"
             >
               <Calendar size={18} />
-              <span>Usage Calendar</span>
+              <span>{t('usageCalendar')}</span>
             </button>
             <div className="saas-nav-divider"></div>
             <button className="saas-nav-item logout" onClick={handleLogout} title="Sign Out" aria-label="Sign Out">
               <LogOut size={18} />
-              <span>Sign Out</span>
+              <span>{t('logout')}</span>
             </button>
           </nav>
         </div>

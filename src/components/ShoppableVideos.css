@@ -110,13 +110,13 @@
 }
 
 .social-card.reel {
-  flex: 0 0 320px;
-  height: 380px;
+  flex: 0 0 260px;
+  height: 460px; /* Tall 9:16 vertical ratio matching Instagram Reels */
 }
 
 .social-card.post {
-  flex: 0 0 320px;
-  height: 380px;
+  flex: 0 0 260px;
+  height: 460px;
 }
 
 .social-card:hover {
@@ -347,7 +347,7 @@
   
   .social-card {
     flex: 0 0 240px;
-    height: 340px;
+    height: 420px;
   }
   
   .sv-nav-btn {
@@ -359,6 +359,7 @@
 }
 
 .social-post-arrow-btn.top-corner {
+  display: none;
   position: absolute;
   top: 14px;
   right: 14px;

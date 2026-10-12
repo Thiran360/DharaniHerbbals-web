@@ -48,8 +48,11 @@
   margin-bottom: 24px;
 }
 
-.footer-brand-text {
-  color: #ffffff;
+.footer-brand-text,
+.footer-brand-text .brand-text-line1,
+.footer-brand-text .brand-text-line2,
+.footer-brand-text .brand-reg {
+  color: #ffffff !important;
 }
 .footer-brand-text .brand-text-line1,
 .footer-brand-text .brand-text-line2 {

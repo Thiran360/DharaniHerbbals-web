@@ -222,7 +222,7 @@
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   min-width: 0;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
 }
 
 .desktop-search-bar:focus-within {
@@ -241,14 +241,24 @@
   outline: none;
   font-family: inherit;
   font-size: 0.95rem;
-  width: 220px;
-  min-width: 180px;
+  width: 230px;
+  min-width: 200px;
   color: var(--text-dark);
   transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.desktop-search-bar.tamil-search .search-input {
+  width: 250px;
+  min-width: 235px;
+  font-size: 0.9rem;
+}
+
 .desktop-search-bar:focus-within .search-input {
-  width: 260px;
+  width: 270px;
+}
+
+.desktop-search-bar.tamil-search:focus-within .search-input {
+  width: 285px;
 }
 
 .desktop-search-bar .search-input::placeholder {
@@ -314,6 +324,20 @@
   font-size: 0.85rem;
   color: var(--color-primary);
   font-weight: 700;
+}
+.suggestion-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+.suggestion-cat-badge {
+  font-size: 0.72rem;
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
 }
 .search-suggestion-item.empty {
   padding: 24px;
@@ -1532,6 +1556,16 @@
 .search-suggestions-dropdown {
   z-index: 99999 !important;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.16) !important;
+}
+
+@media (max-width: 1050px) {
+  .mobile-search-bar .search-suggestions-dropdown {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    top: calc(100% + 8px) !important;
+  }
 }
 
 /* Remove browser native blue search cross */

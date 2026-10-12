@@ -70,29 +70,32 @@ export default function Footer() {
         {/* Logo */}
         <div className="footer-logo-box footer-animate">
           <Link to="/" className="footer-brand" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none' }}>
-            <div className="brand-text-logo footer-brand-text">
-              <div className="brand-text-line1" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: '1.0' }}>Dharani Herbbals<span className="brand-reg">®</span></div>
-              
+            <div className="brand-text-logo footer-brand-text" style={{ color: '#ffffff' }}>
+              <div className="brand-text-line1" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: '1.0', color: '#ffffff' }}>
+                Dharani Herbbals<span className="brand-reg" style={{ color: '#ffffff' }}>®</span>
+              </div>
             </div>
           </Link>
         </div>
 
-        {/* Mission Statement */}
+        {/* Mission Statement (Always in English) */}
         <p className="footer-editorial-mission footer-animate">
-          {t('footerMission')}
+          Rooted in Ancient Siddha Wisdom, Elevated by Modern Science.
+          <br />
+          Experience the Pure Potency of Nature's Finest Botanicals.
         </p>
 
-        {/* Single Row of Links */}
+        {/* Single Row of Links (Always in English) */}
         <div className="footer-inline-links footer-animate">
-          <Link to="/shop">{t('shopAll')}</Link>
+          <Link to="/shop">SHOP ALL</Link>
           <span className="separator">·</span>
-          <Link to="/about">{t('ourStory')}</Link>
+          <Link to="/about">OUR STORY</Link>
           <span className="separator">·</span>
-          <Link to="/contact">{t('contact')}</Link>
+          <Link to="/contact">CONTACT</Link>
           <span className="separator">·</span>
-          <Link to="/policies">{t('policies')}</Link>
+          <Link to="/policies">POLICIES</Link>
           <span className="separator">·</span>
-          <Link to="#">{t('faqs')}</Link>
+          <Link to="#">FAQS</Link>
         </div>
 
         {/* Contact Info (Inline) */}

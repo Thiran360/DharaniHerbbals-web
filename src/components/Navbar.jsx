@@ -26,7 +26,7 @@ export default function Navbar() {
     try { return JSON.parse(localStorage.getItem('dharani_recent_searches') || '[]'); } catch { return []; }
   });
   const { toggleCart, cartCount } = useCart();
-  const { products, refreshProducts } = useProducts();
+  const { products, refreshProducts, loading } = useProducts();
   const { openLoginModal } = useAuthModal();
   const { wishlist } = useWishlist();
   const wishlistCount = wishlist.length;
@@ -42,7 +42,7 @@ export default function Navbar() {
     return nameMatch || tamilNameMatch || catMatch || descMatch;
   });
   // Max 5 for suggestions
-  const visibleProducts = filteredProducts.slice(0, 5);
+  const visibleProducts = filteredProducts.slice(0, 6);
 
   const rafIdRef = useRef(null);
   const handleScroll = useCallback(() => {
@@ -272,7 +272,10 @@ export default function Navbar() {
                   />
                   <div className="suggestion-info">
                     <span className="suggestion-name">{language === 'ta' && p.tamil_name ? p.tamil_name : p.name}</span>
-                    <span className="suggestion-price">{p.price}</span>
+                    <div className="suggestion-meta">
+                      <span className="suggestion-price">{p.price}</span>
+                      {p.category_name && <span className="suggestion-cat-badge">{p.category_name}</span>}
+                    </div>
                   </div>
                   {activeIndex === idx && (
                     <span className="suggestion-kbd-hint">↵</span>
@@ -365,7 +368,7 @@ export default function Navbar() {
             <div className="lang-slider-pill"></div>
           </div>
           
-          <form className="desktop-search-bar" onSubmit={handleSearchSubmit} role="search">
+          <form className={`desktop-search-bar ${language === 'ta' ? 'tamil-search' : ''}`} onSubmit={handleSearchSubmit} role="search">
             <button
               type="submit"
               className="search-icon-btn"
@@ -385,6 +388,7 @@ export default function Navbar() {
                 setActiveIndex(-1);
               }}
               onFocus={() => setShowSuggestions(true)}
+              onClick={() => setShowSuggestions(true)}
               onKeyDown={handleSearchKeyDown}
               aria-autocomplete="list"
               aria-expanded={showSuggestions}
@@ -449,25 +453,25 @@ export default function Navbar() {
                       <div className="nav-account-dropdown-header" onClick={() => { navigate('/profile'); setShowAccountMenu(false); }} style={{ cursor: 'pointer' }}>
                         {userInitial && <span className="nav-account-avatar-lg">{userInitial}</span>}
                         <div>
-                          <p className="nav-account-name">{userName || 'My Account'}</p>
+                          <p className="nav-account-name">{userName === 'Guest User' ? t('guestUser') : (userName || t('myAccount'))}</p>
                           <p className="nav-account-sub">{t('myAccount')}</p>
                         </div>
                       </div>
                       <div className="nav-account-divider" />
                       <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'orders' } }); setShowAccountMenu(false); }}>
-                        <Package size={15} /> My Orders
+                        <Package size={15} /> {t('myOrders')}
                       </button>
                       <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'wishlist' } }); setShowAccountMenu(false); }}>
                         <Heart size={15} /> {t('wishlist')}
                       </button>
                       <button className="nav-account-item" onClick={() => { navigate('/shop'); setShowAccountMenu(false); }}>
-                        <RefreshCw size={15} /> Buy Again
+                        <RefreshCw size={15} /> {t('buyAgain')}
                       </button>
                       <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'addresses' } }); setShowAccountMenu(false); }}>
-                        <MapPin size={15} /> Saved Addresses
+                        <MapPin size={15} /> {t('savedAddresses')}
                       </button>
                       <button className="nav-account-item" onClick={() => { navigate('/profile', { state: { activeTab: 'account' } }); setShowAccountMenu(false); }}>
-                        <User size={15} /> Account Details
+                        <User size={15} /> {t('accountDetails')}
                       </button>
                       <div className="nav-account-divider" />
                       <button className="nav-account-item nav-account-logout" onClick={handleLogout}>
@@ -539,7 +543,7 @@ export default function Navbar() {
       
       {/* Mobile Search Row */}
       <div className="mobile-search-row">
-        <form className="mobile-search-bar" onSubmit={handleSearchSubmit} role="search">
+        <form className={`mobile-search-bar ${language === 'ta' ? 'tamil-search' : ''}`} onSubmit={handleSearchSubmit} role="search">
           <button
             type="submit"
             className="search-icon-btn"
@@ -555,6 +559,7 @@ export default function Navbar() {
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); setActiveIndex(-1); }}
             onFocus={() => setShowSuggestions(true)}
+            onClick={() => setShowSuggestions(true)}
             onKeyDown={handleSearchKeyDown}
           />
           {searchQuery && (

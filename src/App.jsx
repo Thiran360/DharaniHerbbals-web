@@ -236,11 +236,13 @@ function Home() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: '1 1 400px' }}>
             <Leaf size={48} color="#166534" />
-            <h2 style={{ fontFamily: 'Lora, serif', fontSize: '3rem', color: '#0f172a', margin: 0, fontStyle: 'italic' }}>Our Most Loved Picks.</h2>
+            <h2 style={{ fontFamily: 'Lora, serif', fontSize: '3rem', color: '#0f172a', margin: 0, fontStyle: 'italic' }}>
+              {t('featuredTitle')}
+            </h2>
           </div>
           <div style={{ flex: '1 1 400px', borderLeft: '2px solid #cbd5e1', paddingLeft: '30px' }}>
             <p style={{ color: '#334155', fontSize: '1.2rem', margin: 0, fontWeight: 500, lineHeight: 1.5 }}>
-              Immerse yourself in our quintessential collection of highly sought after botanical remedies, meticulously crafted to deliver an uncompromised standard of holistic nourishment and transformative wellness.
+              {t('featuredSubtitle')}
             </p>
           </div>
         </div>

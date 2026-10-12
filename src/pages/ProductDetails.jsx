@@ -10,6 +10,93 @@ import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
 import { API_BASE_URL } from '../services/api';
 import './ProductDetails.css';
+const BENEFIT_TRANSLATIONS = {
+  'Skin Repair': 'சரும சீரமைப்பு',
+  'Anti-allergy Care': 'ஒவ்வாமை எதிர்ப்பு கவனிப்பு',
+  'Even Tone Support': 'சமமான சரும நிறம்',
+  'Herbal Blend': 'தூய மூலிகை கலவை',
+  'Refreshing Daily Brew': 'புத்துணர்ச்சியூட்டும் தினசரி பானம்',
+  'Natural Antioxidant Support': 'இயற்கை ஆன்டிஆக்ஸிடன்ட் ஆதரவு',
+  'Boosts Focus & Alertness': 'கவனம் மற்றும் விழிப்புணர்வை அதிகரிக்கிறது',
+  'Smooth Energy Lift': 'மென்மையான ஆற்றல் ஊக்கம்',
+  'Natural Sweetener': 'இயற்கை இனிப்பூட்டி',
+  'Rich in Minerals': 'தாதுக்கள் நிறைந்தது',
+  'Made from Pure Sugarcane': 'தூய கரும்பில் இருந்து தயாரிக்கப்பட்டது',
+  'Better Than Refined Sugar': 'சுத்திகரிக்கப்பட்ட சர்க்கரையை விட சிறந்தது',
+  'Rose-Infused Hydration': 'ரோஜா கலந்த நீரேற்றம்',
+  'Oil-Free Freshness': 'எண்ணெய் பசை இல்லாத புத்துணர்ச்சி',
+  'Soothes Sensitive Skin': 'உணர்திறன் வாய்ந்த சருமத்தை அமைதிப்படுத்துகிறது',
+  'Helps Reduce Blackheads': 'கரும்புள்ளிகளை குறைக்க உதவுகிறது',
+  'Gentle Skin Exfoliation': 'மென்மையான சரும உரித்தல்',
+  'Unclogs Pores': 'சரும துளைகளை அடைப்பை நீக்குகிறது',
+  'Brightens Skin': 'சருமத்தை பொலிவாக்குகிறது',
+  'Natural Face Pack Base': 'இயற்கையான ஃபேஸ் பேக் அடிப்படை',
+  'Immune Shield': 'நோய் எதிர்ப்பு கவசம்',
+  'Respiratory Care': 'சுவாச பாதுகாப்பு',
+  'Throat Comfort': 'தொண்டை இதம்',
+  'Liver Wellness': 'கல்லீரல் ஆரோக்கியம்',
+  'Herbal Cold Relief ( Seasonal Wellness )': 'மூலிகை சளி நிவாரணம்',
+  'Natural Body Warmth': 'இயற்கை உடல் கதகதப்பு',
+  'Respiratory Comfort': 'சுவாச ஆறுதல்',
+  'Digestive Support': 'செரிமான ஆதரவு',
+  'Inner Body Cooling': 'உடல் குளிர்ச்சி',
+  'Radiant Skin Support': 'பளபளப்பான சரும ஆதரவு',
+  'Natural Body Cleanse': 'இயற்கை உடல் தூய்மை',
+  'Herbal Rejuvenation': 'மூலிகை புத்துணர்ச்சி',
+  'Polyphenol-Rich Goodness': 'பாலிபினால் நிறைந்த நன்மைகள்',
+  'Supports Glucose Balance': 'குளுக்கோஸ் சமநிலைக்கு உதவுகிறது',
+  'Heart-Friendly Botanicals': 'இதயத்திற்கு உகந்த மூலிகைகள்',
+  'Metabolic Balance Support': 'வளர்சிதை மாற்ற சமநிலை ஆதரவு',
+  'Deeply Moisturizes Skin': 'சருமத்திற்கு ஆழ்ந்த ஈரப்பதம் அளிக்கிறது',
+  'Gently Cleanses Without Drying': 'வறட்சி இல்லாமல் மென்மையாக சுத்தம் செய்யும்',
+  'Leaves Skin Soft & Smooth': 'சருமத்தை மென்மையாகவும் மிருதுவாகவும் மாற்றும்',
+  'Suitable for Daily Use': 'தினசரி பயன்பாட்டிற்கு ஏற்றது',
+  'Supports Natural Hair Darkening': 'இயற்கையான கூந்தல் கருமைக்கு உதவுகிறது',
+  'Root-to-Tip Nourishment': 'வேர் முதல் நுனி வரை ஊட்டமளிக்கிறது',
+  'Herbal Scalp Rejuvenation': 'மூலிகை உச்சந்தலை புத்துணர்ச்சி',
+  'Botanical Hair Revival': 'மூலிகை கூந்தல் புத்துயிர்',
+  'Strengthens Roots': 'வேர்களை வலுப்படுத்துகிறது',
+  'Reduces Hair Fall': 'முடி உதிர்வை குறைக்கிறது',
+  'Adds Natural Shine': 'இயற்கையான பளபளப்பை தருகிறது',
+  'Improves Scalp Health': 'உச்சந்தலையின் ஆரோக்கியத்தை மேம்படுத்துகிறது',
+  'Controls Dandruff': 'பொடுகை கட்டுப்படுத்துகிறது',
+  'Repairs Split Ends': 'பிளவுபட்ட முடிகளை சரிசெய்கிறது',
+  'Nourishes Hair Follicles': 'முடி கால்களுக்கு ஊட்டமளிக்கிறது',
+  'Promotes Hair Growth': 'முடி வளர்ச்சியை தூண்டுகிறது',
+  'Adds Volume': 'முடிக்கு அடர்த்தியை தருகிறது',
+  'Prevents Greying': 'நரை முடி வருவதை தடுக்கிறது',
+  'Softens Hair Texture': 'முடியின் அமைப்பை மென்மையாக்குகிறது',
+  'Detangles Frizz': 'சுருள் முடியை சீராக்குகிறது',
+  'Brightens Skin Tone': 'சரும நிறத்தை பொலிவாக்குகிறது',
+  'Clears Blemishes': 'கரும்புள்ளிகளை நீக்குகிறது',
+  'Deep Hydration': 'ஆழ்ந்த நீரேற்றம்',
+  'Anti-aging Properties': 'முதுமை எதிர்ப்பு பண்புகள்',
+  'Reduces Pigmentation': 'நிறமிகளை குறைக்கிறது',
+  'Tightens Pores': 'துளைகளை இறுக்குகிறது',
+  'Soothes Sunburns': 'சூரிய ஒளியினால் ஏற்படும் எரிச்சலை தணிக்கிறது',
+  'Calms Irritated Skin': 'எரிச்சலூட்டும் சருமத்தை அமைதிப்படுத்துகிறது',
+  'Removes Tan': 'சருமக் கருமையை நீக்குகிறது',
+  'Fights Acne': 'முகப்பருவை எதிர்த்து போராடுகிறது',
+  'Improves Skin Texture': 'சருமத்தின் அமைப்பை மேம்படுத்துகிறது',
+  'Provides Radiant Glow': 'பளபளப்பான பொலிவைத் தருகிறது',
+  'Exfoliates Dead Cells': 'இறந்த செல்களை நீக்குகிறது',
+  'Boosts Immunity': 'நோய் எதிர்ப்பு சக்தியை அதிகரிக்கிறது',
+  'Improves Digestion': 'செரிமானத்தை மேம்படுத்துகிறது',
+  'Rich in Iron': 'இரும்புச்சத்து நிறைந்தது',
+  'Increases Energy': 'ஆற்றலை அதிகரிக்கிறது',
+  'Enhances Stamina': 'உடலின் வலிமையை அதிகரிக்கிறது',
+  'Purifies Blood': 'இரத்தத்தை சுத்திகரிக்கிறது',
+  'Supports Bone Health': 'எலும்பு ஆரோக்கியத்திற்கு உதவுகிறது',
+  'Improves Metabolism': 'வளர்சிதை மாற்றத்தை மேம்படுத்துகிறது',
+  'Rich in Antioxidants': 'ஆன்டிஆக்ஸிடன்ட்கள் நிறைந்தது',
+  'Relieves Stress': 'மன அழுத்தத்தை குறைக்கிறது',
+  'Promotes Overall Wellness': 'ஒட்டுமொத்த ஆரோக்கியத்தை மேம்படுத்துகிறது',
+  '100% Natural Ingredients': '100% இயற்கை பொருட்கள்'
+};
+
+const DESCRIPTION_TRANSLATIONS = {
+  1217: "ஆவாரம்பூ மஞ்சள் சோப்பு என்பது சேதமடைந்த சருமத்தை மெதுவாக சரிசெய்ய வடிவமைக்கப்பட்ட ஒரு மூலிகை கலவையாகும், அதே நேரத்தில் ஒவ்வாமை மற்றும் எரிச்சலைக் குறைக்க உதவுகிறது. ஆவாரம்பூ மற்றும் மஞ்சளின் இயற்கையான நன்மையால் செறிவூட்டப்பட்ட இது, சருமத்தை குணப்படுத்த உதவுகிறது, வீக்கத்தைத் தணிக்கிறது, மேலும் சருமத்தின் நிறத்தை மேம்படுத்துகிறது."
+};
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -571,37 +658,35 @@ export default function ProductDetails() {
   useEffect(() => {
     if (!product) return;
 
-    const key = `${product.id}:${language}`;
-    // Skip if we already ran translation for this exact product+language combo
-    if (translatedRef.current === key) return;
-    translatedRef.current = key;
-
     let active = true;
 
     // Direct assignment for product name
     setTranslatedName(language === 'ta' && product.tamil_name ? product.tamil_name : product.name);
 
-    setTranslatedSubtitle(product.subtitle);
-    setTranslatedDesc(product.description || defaultDesc);
-
     if (language === 'ta') {
-      // 2. Subtitle (single call, not per-card)
+      // 1. Description translation
+      if (DESCRIPTION_TRANSLATIONS[product.id]) {
+        setTranslatedDesc(DESCRIPTION_TRANSLATIONS[product.id]);
+      } else {
+        const descText = product.description || defaultDesc;
+        translateText(descText).then(res => {
+          if (active && res) setTranslatedDesc(res);
+        });
+      }
+
+      // 2. Subtitle
       if (product.subtitle) {
         translateText(product.subtitle).then(res => {
           if (active && res) setTranslatedSubtitle(res);
         });
       }
-
-      // 3. Description (single call)
-      const descText = product.description || defaultDesc;
-      translateText(descText).then(res => {
-        if (active && res) setTranslatedDesc(res);
-      });
+    } else {
+      setTranslatedSubtitle(product.subtitle);
+      setTranslatedDesc(product.description || defaultDesc);
     }
 
     return () => { active = false; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language, product?.id, bulkProductNames]);
+  }, [language, product?.id, product?.name, product?.description]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -891,7 +976,7 @@ export default function ProductDetails() {
               <span className="star">★</span>
               <span className="score">{product.rating ? Number(product.rating).toFixed(1) : "0.0"}</span>
             </div>
-            <span className="reviews-link">{product.reviews} Reviews</span>
+            <span className="reviews-link">{product.reviews} {language === 'ta' ? 'மதிப்புரைகள்' : 'Reviews'}</span>
           </div>
 
           <div className="pd-pro-price-block">
@@ -906,7 +991,7 @@ export default function ProductDetails() {
 
           {fetchedVariations && fetchedVariations.length > 0 && (
             <div className="pd-premium-variations-wrapper">
-              <h4 className="variations-title">{product.variationLabel || 'Weight / Size'}</h4>
+              <h4 className="variations-title">{product.variationLabel || (language === 'ta' ? 'எடை / அளவு' : 'Weight / Size')}</h4>
               <div className="premium-variations-grid">
                 {fetchedVariations.map((v, idx) => (
                   <div
@@ -978,7 +1063,7 @@ export default function ProductDetails() {
             <div className="pd-bento-cell bento-benefits">
               <div className="pd-bento-header">
                 <Star size={18} className="pd-bento-icon text-pink" />
-                <h3>Key Benefits</h3>
+                <h3>{language === 'ta' ? 'முக்கிய நன்மைகள்' : 'Key Benefits'}</h3>
               </div>
               <div className="bento-tags-wrapper">
                 {(() => {
@@ -986,7 +1071,7 @@ export default function ProductDetails() {
                     return fetchedKeyBenefits.map((benefit, index) => (
                       <span key={index} className="bento-tag">
                         <CheckCircle size={12} weight="fill" />
-                        {benefit}
+                        {language === 'ta' ? (BENEFIT_TRANSLATIONS[benefit] || benefit) : benefit}
                       </span>
                     ));
                   }
@@ -1074,7 +1159,7 @@ export default function ProductDetails() {
                   return benefits.map((benefit, index) => (
                     <span key={index} className="bento-tag">
                       <CheckCircle size={12} weight="fill" />
-                      {benefit}
+                      {language === 'ta' ? (BENEFIT_TRANSLATIONS[benefit] || benefit) : benefit}
                     </span>
                   ));
                 })()}
@@ -1085,12 +1170,12 @@ export default function ProductDetails() {
             <div className="pd-bento-cell bento-delivery">
               <div className="pd-bento-header">
                 <Truck size={18} className="pd-bento-icon text-indigo" />
-                <h3>Delivery Check</h3>
+                <h3>{language === 'ta' ? 'டெலிவரி சரிபார்ப்பு' : 'Delivery Check'}</h3>
               </div>
               <div className="bento-pincode-wrapper">
                 <input
                   type="text"
-                  placeholder="Enter 6-digit PIN"
+                  placeholder={language === 'ta' ? '6 இலக்க PIN எண்ணை உள்ளிடவும்' : 'Enter 6-digit PIN'}
                   value={pinCode}
                   onChange={(e) => setPinCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   className="bento-input"
@@ -1102,23 +1187,23 @@ export default function ProductDetails() {
                     if (pinCode.length === 6) {
                       const firstDigit = pinCode.charAt(0);
                       if (firstDigit === '6') {
-                        setDeliveryMessage('Delivery in 2-3 working days.');
+                        setDeliveryMessage(language === 'ta' ? '2-3 வேலை நாட்களில் டெலிவரி செய்யப்படும்.' : 'Delivery in 2-3 working days.');
                       } else if (firstDigit === '5') {
-                        setDeliveryMessage('Delivery in 3-4 working days.');
+                        setDeliveryMessage(language === 'ta' ? '3-4 வேலை நாட்களில் டெலிவரி செய்யப்படும்.' : 'Delivery in 3-4 working days.');
                       } else if (['1', '2', '3', '4', '7', '8', '9'].includes(firstDigit)) {
-                        setDeliveryMessage('Delivery in 5-7 working days.');
+                        setDeliveryMessage(language === 'ta' ? '5-7 வேலை நாட்களில் டெலிவரி செய்யப்படும்.' : 'Delivery in 5-7 working days.');
                       } else {
-                        setDeliveryMessage('Delivery in 3-5 working days.');
+                        setDeliveryMessage(language === 'ta' ? '3-5 வேலை நாட்களில் டெலிவரி செய்யப்படும்.' : 'Delivery in 3-5 working days.');
                       }
                     }
-                    else setDeliveryMessage('Enter a valid 6-digit PIN.');
+                    else setDeliveryMessage(language === 'ta' ? 'சரியான 6 இலக்க PIN எண்ணை உள்ளிடவும்.' : 'Enter a valid 6-digit PIN.');
                   }}
                 >
-                  Verify
+                  {language === 'ta' ? 'சரிபார்க்கவும்' : 'Verify'}
                 </button>
               </div>
               {deliveryMessage && (
-                <p className={`bento-delivery-msg ${deliveryMessage.includes('Enter') ? 'error' : 'success'}`}>
+                <p className={`bento-delivery-msg ${deliveryMessage.includes('Enter') || deliveryMessage.includes('சரியான') ? 'error' : 'success'}`}>
                   {deliveryMessage}
                 </p>
               )}
@@ -1132,7 +1217,7 @@ export default function ProductDetails() {
 
       {/* Modern Customer Reviews Section */}
       <div className="pd-reviews-section">
-        <h2 className="pd-reviews-main-title">Customer Reviews</h2>
+        <h2 className="pd-reviews-main-title">{language === 'ta' ? 'வாடிக்கையாளர் மதிப்புரைகள்' : 'Customer Reviews'}</h2>
 
         <div className="pd-reviews-layout">
           {/* Left Side: Rating Summary Card */}
@@ -1146,12 +1231,23 @@ export default function ProductDetails() {
               })}
             </div>
             <div className="pd-summary-sentiment">
-              {(reviewSummary && reviewSummary.average_rating >= 4) ? 'Excellent' : (reviewSummary && reviewSummary.average_rating >= 3) ? 'Good' : 'Average'}
+              {language === 'ta'
+                ? ((reviewSummary && reviewSummary.average_rating >= 4) ? 'மிகச்சிறந்தது' : (reviewSummary && reviewSummary.average_rating >= 3) ? 'நல்லது' : 'சராசரி')
+                : ((reviewSummary && reviewSummary.average_rating >= 4) ? 'Excellent' : (reviewSummary && reviewSummary.average_rating >= 3) ? 'Good' : 'Average')
+              }
             </div>
             <div className="pd-summary-inner-divider"></div>
             <p className="pd-summary-count">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-              Based on <strong style={{ color: '#16a34a' }}>{reviewSummary ? reviewSummary.total_reviews : 0}</strong> reviews
+              {language === 'ta' ? (
+                <>
+                  <strong style={{ color: '#16a34a' }}>{reviewSummary ? reviewSummary.total_reviews : 0}</strong> மதிப்புரைகளின் அடிப்படையில்
+                </>
+              ) : (
+                <>
+                  Based on <strong style={{ color: '#16a34a' }}>{reviewSummary ? reviewSummary.total_reviews : 0}</strong> reviews
+                </>
+              )}
             </p>
           </div>
 
@@ -1163,7 +1259,9 @@ export default function ProductDetails() {
               const percent = total > 0 ? Math.round((count / total) * 100) : 0;
               return (
                 <div key={stars} className="pd-bar-row" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                  <span className="pd-bar-label" style={{ fontWeight: '700', color: '#334155', minWidth: '55px', fontSize: '1rem' }}>{stars} Star</span>
+                  <span className="pd-bar-label" style={{ fontWeight: '700', color: '#334155', minWidth: '55px', fontSize: '1rem' }}>
+                    {stars} {language === 'ta' ? 'நட்சத்திரம்' : 'Star'}
+                  </span>
                   <div className="pd-bar-track" style={{ flex: 1, height: '10px', background: '#f1f5f9', borderRadius: '10px', overflow: 'hidden' }}>
                     <div className="pd-bar-fill" style={{ width: `${percent}%`, height: '100%', background: '#16a34a', borderRadius: '10px' }}></div>
                   </div>
@@ -1181,8 +1279,8 @@ export default function ProductDetails() {
               <div className="pd-empty-icon-wrapper">
                 <MessageSquare size={36} className="empty-icon" />
               </div>
-              <h4>No reviews yet</h4>
-              <p>Be the first to share your experience with this product!</p>
+              <h4>{language === 'ta' ? 'இன்னும் மதிப்புரைகள் இல்லை' : 'No reviews yet'}</h4>
+              <p>{language === 'ta' ? 'இந்த தயாரிப்பு குறித்த உங்கள் அனுபவத்தைப் பகிர்ந்த முதல் நபராக இருங்கள்!' : 'Be the first to share your experience with this product!'}</p>
             </div>
           ) : (
             <div className="pd-reviews-grid-slider" ref={sliderRef} style={reviews.length <= 2 ? { overflow: 'hidden', flexWrap: 'wrap', justifyContent: 'flex-start' } : {}}>
