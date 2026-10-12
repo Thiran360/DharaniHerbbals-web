@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import './ShoppableVideos.css';
@@ -22,15 +23,110 @@ import s5 from '../assets/S5.jpeg';
 import s6 from '../assets/S6.jpeg';
 
 const socialMediaData = [
-  { id: 1, type: 'reel', videoUrl: '/videos/Carrot%20Malt(JAR).mp4', productImg: p1, title: 'Carrot Malt Drink', subtitle: 'Nourishing herbal recipe', price: '₹249' },
-  { id: 3, type: 'reel', videoUrl: '/videos/Beetroot%20Malt(JAR).mp4', productImg: p2, title: 'Beetroot Malt Daily', subtitle: 'Glowing skin nutrition', price: '₹249' },
-  { id: 5, type: 'reel', videoUrl: '/videos/MULTANI%20MITTI.mp4', productImg: p3, title: 'Multani Mitti Pack', subtitle: 'Deep skin cleansing clay', price: '₹120' },
-  { id: 7, type: 'reel', videoUrl: '/videos/PAASI%20PAYIR.mp4', productImg: p4, title: 'Paasi Payir Powder', subtitle: 'Ancient herbal body wash', price: '₹180' },
-  { id: 9, type: 'reel', videoUrl: '/videos/Wild%20Turmeric.mp4', productImg: p5, title: 'Wild Turmeric Glow', subtitle: 'Authentic Kasturi Manjal', price: '₹140' },
-  { id: 10, type: 'post', imgUrl: s5, title: 'Siddha Wisdom', subtitle: 'Holistic healing care', price: '₹200' },
-  { id: 11, type: 'post', imgUrl: s6, title: 'Daily Essentials', subtitle: 'Pure farm to home', price: '₹150' },
-  { id: 2, type: 'post', imgUrl: post1, title: 'Hair Growth Care', subtitle: 'Pure Katralai Shampoo', price: '₹140' },
-  { id: 8, type: 'post', imgUrl: s4, title: 'Herbal Wellness', subtitle: 'Daily pure living', price: '₹350' }
+  { 
+    id: 1, 
+    productId: 1078, 
+    searchKey: 'Carrot Malt', 
+    type: 'reel', 
+    videoUrl: '/videos/Carrot%20Malt(JAR).mp4', 
+    productImg: p1, 
+    title: 'Carrot Malt Drink', 
+    tamilTitle: 'கேரட் மால்ட் பானம்', 
+    subtitle: 'Nourishing herbal recipe', 
+    price: '₹249' 
+  },
+  { 
+    id: 3, 
+    productId: 1081, 
+    searchKey: 'Beetroot Malt', 
+    type: 'reel', 
+    videoUrl: '/videos/Beetroot%20Malt(JAR).mp4', 
+    productImg: p2, 
+    title: 'Beetroot Malt Daily', 
+    tamilTitle: 'பீட்ரூட் மால்ட்', 
+    subtitle: 'Glowing skin nutrition', 
+    price: '₹249' 
+  },
+  { 
+    id: 5, 
+    productId: 1249, 
+    searchKey: 'Multhani Metti', 
+    type: 'reel', 
+    videoUrl: '/videos/MULTANI%20MITTI.mp4', 
+    productImg: p3, 
+    title: 'Multani Mitti Pack', 
+    tamilTitle: 'முல்தானி மிட்டி பேக்', 
+    subtitle: 'Deep skin cleansing clay', 
+    price: '₹120' 
+  },
+  { 
+    id: 7, 
+    productId: 1156, 
+    searchKey: 'Green Gram', 
+    type: 'reel', 
+    videoUrl: '/videos/PAASI%20PAYIR.mp4', 
+    productImg: p4, 
+    title: 'Paasi Payir Powder', 
+    tamilTitle: 'பாசிப் பயறு பொடி', 
+    subtitle: 'Ancient herbal body wash', 
+    price: '₹180' 
+  },
+  { 
+    id: 9, 
+    productId: 1243, 
+    searchKey: 'Wild Turmeric', 
+    type: 'reel', 
+    videoUrl: '/videos/Wild%20Turmeric.mp4', 
+    productImg: p5, 
+    title: 'Wild Turmeric Glow', 
+    tamilTitle: 'கஸ்தூரி மஞ்சள்', 
+    subtitle: 'Authentic Kasturi Manjal', 
+    price: '₹140' 
+  },
+  { 
+    id: 10, 
+    productId: 1267, 
+    searchKey: 'Hair Oil', 
+    type: 'post', 
+    imgUrl: s5, 
+    title: 'Siddha Wisdom', 
+    tamilTitle: 'சித்த கூந்தல் தைலம்', 
+    subtitle: 'Holistic healing care', 
+    price: '₹200' 
+  },
+  { 
+    id: 11, 
+    productId: 1225, 
+    searchKey: 'Aloe Vera Soap', 
+    type: 'post', 
+    imgUrl: s6, 
+    title: 'Daily Essentials', 
+    tamilTitle: 'அலோவேரா மூலிகை சோப்', 
+    subtitle: 'Pure farm to home', 
+    price: '₹150' 
+  },
+  { 
+    id: 2, 
+    productId: 1250, 
+    searchKey: 'Shampoo', 
+    type: 'post', 
+    imgUrl: post1, 
+    title: 'Hair Growth Care', 
+    tamilTitle: 'கற்றாழை மூலிகை ஷாம்பு', 
+    subtitle: 'Pure Katralai Shampoo', 
+    price: '₹140' 
+  },
+  { 
+    id: 8, 
+    productId: 1272, 
+    searchKey: 'Health Mix', 
+    type: 'post', 
+    imgUrl: s4, 
+    title: 'Herbal Wellness', 
+    tamilTitle: 'பாரம்பரிய சத்து மாவு', 
+    subtitle: 'Daily pure living', 
+    price: '₹350' 
+  }
 ];
 
 function InstaIcon({ size = 16, color = "currentColor" }) {
@@ -43,8 +139,10 @@ function InstaIcon({ size = 16, color = "currentColor" }) {
   );
 }
 
-function SocialCard({ item, addToCart }) {
+function SocialCard({ item, addToCart, products, language }) {
   const [isIntersecting, setIsIntersecting] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [added, setAdded] = useState(false);
   const cardRef = useRef(null);
 
   useEffect(() => {
@@ -61,8 +159,36 @@ function SocialCard({ item, addToCart }) {
     return () => clearTimeout(timer);
   }, []);
 
-  const productPrice = item.price || '₹199';
+  // Match with real database product
+  const matchedProduct = products?.find(p => 
+    p.id === item.productId || 
+    (item.searchKey && p.name?.toLowerCase().includes(item.searchKey.toLowerCase()))
+  );
+
+  const productPrice = item.price || (matchedProduct?.price ? `₹${parseFloat(matchedProduct.price).toFixed(0)}` : '₹199');
   const oldPrice = '₹' + (parseInt(productPrice.replace(/[^0-9]/g, '') || '199') + 100);
+
+  const displayTitle = language === 'ta' && item.tamilTitle ? item.tamilTitle : item.title;
+
+  const handleAddToCart = async (e) => {
+    e.stopPropagation();
+    setIsAdding(true);
+    try {
+      const productToAdd = matchedProduct || {
+        id: item.productId || item.id,
+        name: item.title,
+        price: productPrice,
+        image: item.productImg || item.imgUrl
+      };
+      await addToCart(productToAdd);
+      setAdded(true);
+      setTimeout(() => setAdded(false), 1500);
+    } catch (err) {
+      console.error("Failed to add instagram item to cart:", err);
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <div className={`social-card ${item.type}`} ref={cardRef}>
@@ -80,7 +206,7 @@ function SocialCard({ item, addToCart }) {
             />
           )
         ) : (
-          <img src={item.imgUrl} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src={item.imgUrl} alt={displayTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         )}
       </div>
 
@@ -117,13 +243,13 @@ function SocialCard({ item, addToCart }) {
       {/* Title Overlay in Video / Post */}
       <div className="social-gradient"></div>
       <div className="social-video-title">
-        {item.title}
+        {displayTitle}
       </div>
 
       {/* Bottom Product Strip with Cart Button for ALL cards */}
       <div className="social-product-strip">
         <div className="social-product-img">
-          <img src={item.productImg || item.imgUrl} alt={item.title} />
+          <img src={item.productImg || item.imgUrl} alt={displayTitle} />
         </div>
         <div className="social-product-prices">
           <span className="social-product-price">{productPrice}</span>
@@ -131,17 +257,15 @@ function SocialCard({ item, addToCart }) {
         </div>
         <button 
           className="social-product-cart-btn" 
-          onClick={(e) => { 
-            e.stopPropagation(); 
-            addToCart({ 
-              id: item.id, 
-              name: item.title, 
-              price: productPrice, 
-              image: item.productImg || item.imgUrl 
-            }); 
-          }}
+          onClick={handleAddToCart}
+          disabled={isAdding}
+          aria-label={`Add ${displayTitle} to Cart`}
         >
-          Cart
+          {isAdding
+            ? '...'
+            : added
+            ? (language === 'ta' ? 'சேர்க்கப்பட்டது ✓' : 'Added ✓')
+            : (language === 'ta' ? 'கூடை' : 'Cart')}
         </button>
       </div>
     </div>
@@ -149,9 +273,10 @@ function SocialCard({ item, addToCart }) {
 }
 
 export default function ShoppableVideos() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const sliderRef = useRef(null);
   const { addToCart } = useCart();
+  const { products } = useProducts();
   const navigate = useNavigate();
 
   const scrollLeft = () => sliderRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
@@ -187,7 +312,14 @@ export default function ShoppableVideos() {
 
         <div className="sv-track" ref={sliderRef}>
           {socialMediaData.map((item) => (
-            <SocialCard key={item.id} item={item} addToCart={addToCart} navigate={navigate} />
+            <SocialCard 
+              key={item.id} 
+              item={item} 
+              addToCart={addToCart} 
+              products={products}
+              language={language}
+              navigate={navigate} 
+            />
           ))}
         </div>
 
