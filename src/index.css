@@ -606,11 +606,17 @@ body {
   border: 1px solid #e5e7eb !important;
   border-radius: 50px !important;
   padding: 8px 16px !important;
-  width: 250px !important;
-  display: flex !important;
-  align-items: center !important;
-  position: relative !important;
-  overflow: visible !important;
+  width: 250px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+}
+
+@media (max-width: 1050px) {
+  .desktop-search-bar {
+    display: none !important;
+  }
 }
 
 .desktop-search-bar input {

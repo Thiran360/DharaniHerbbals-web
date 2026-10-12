@@ -141,6 +141,22 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
       aria-label={ariaLabel}
       style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}
     >
+      {/* Fallback static logo shown until video is actively playing */}
+      <img
+        src={LOGO_STATIC}
+        alt={ariaLabel}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          opacity: videoStarted ? 0 : 1,
+          transition: 'opacity 0.3s ease-out',
+          pointerEvents: 'none'
+        }}
+      />
       {/* Animated canvas shown once video is ready */}
       <canvas
         ref={canvasRef}
@@ -148,6 +164,8 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
           width: '100%',
           height: '100%',
           objectFit: 'contain',
+          position: 'relative',
+          zIndex: 1,
           opacity: videoStarted ? 1 : 0,
           transition: 'opacity 0.3s ease-in'
         }}

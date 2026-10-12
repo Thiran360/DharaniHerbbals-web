@@ -1084,7 +1084,7 @@
   }
 
   .desktop-search-bar {
-    display: none;
+    display: none !important;
   }
 
   .mobile-search-row {
