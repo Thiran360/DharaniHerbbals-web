@@ -161,21 +161,31 @@
 
 /* 'All Products' icon styled to blend in as a soft green circle */
 .category-all-icon {
-  width: 90px;
-  height: 90px;
+  width: 96px;
+  height: 96px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 0.95rem; /* reduced from 1.15rem to fit long translations */
+  font-size: 1.05rem;
   line-height: 1.2;
-  padding: 0 4px;
+  padding: 0 10px;
+  box-sizing: border-box;
   font-weight: 800;
   color: var(--color-primary);
   background: var(--color-secondary); /* soft pastel green matching generated blobs */
   border-radius: 50%;
   border: 1px solid rgba(76, 175, 80, 0.1);
   transition: all 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.category-all-icon.tamil-all {
+  font-size: 0.78rem;
+  letter-spacing: -0.2px;
+  font-weight: 700;
+  padding: 0 8px;
 }
 
 .category-item:hover .category-all-icon {
@@ -194,9 +204,15 @@
     height: 90px;
   }
   .category-all-icon {
-    width: 82px;
-    height: 82px;
-    font-size: 0.75rem; /* reduced further for mobile */
+    width: 84px;
+    height: 84px;
+    font-size: 0.9rem;
+    padding: 0 6px;
+  }
+  .category-all-icon.tamil-all {
+    font-size: 0.68rem;
+    letter-spacing: -0.3px;
+    padding: 0 6px;
   }
   .category-btn {
     padding: 6px 16px;

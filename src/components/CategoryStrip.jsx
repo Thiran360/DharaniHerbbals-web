@@ -48,7 +48,7 @@ export default function CategoryStrip() {
   });
   const [searchParams] = useSearchParams();
   const activeCategory = searchParams.get('category');
-  const { t, tCategory } = useLanguage();
+  const { language, t, tCategory } = useLanguage();
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/categories/`, {
@@ -120,7 +120,7 @@ export default function CategoryStrip() {
           style={{ animationDelay: '0s' }}
         >
           <div className="category-blob-wrapper">
-            <div className="category-all-icon">{t('allCategory')}</div>
+            <div className={`category-all-icon ${language === 'ta' ? 'tamil-all' : ''}`}>{t('allCategory')}</div>
           </div>
           <div className="category-btn">
             <span>{t('allProducts')} &gt;</span>
