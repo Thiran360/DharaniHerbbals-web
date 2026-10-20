@@ -16,11 +16,44 @@ const isMobileDeviceOrView = () => {
   return isSmallScreen || isMobileUA || (hasTouch && window.innerWidth <= 1024);
 };
 
-// Clean up any stale saved owner/mobile keys
-try {
-  localStorage.removeItem('dharani_device_owner_mobile');
-  localStorage.removeItem('dharani_saved_mobile');
-} catch (e) {}
+const PRIMARY_USER_PHONE = '9344849211';
+
+const getThisPhoneSavedNumber = () => {
+  try {
+    const saved = localStorage.getItem('dharani_my_mobile');
+    if (saved) return String(saved).replace(/\D/g, '').slice(-10);
+    return '';
+  } catch {
+    return '';
+  }
+};
+
+const isThisPhoneUser = (inputNumber) => {
+  if (!inputNumber) return false;
+  const cleanInput = String(inputNumber).replace(/\D/g, '').slice(-10);
+  if (cleanInput.length !== 10) return false;
+
+  const savedNumber = getThisPhoneSavedNumber();
+
+  // 1. If this phone already has an established user number:
+  // ONLY that exact number is allowed to autofill on this phone!
+  if (savedNumber && savedNumber.length === 10) {
+    return cleanInput === savedNumber;
+  }
+
+  // 2. If this phone does not have an established user yet:
+  // If the owner (9344849211) enters their number, recognize it and save to this phone
+  if (cleanInput === PRIMARY_USER_PHONE) {
+    try {
+      localStorage.setItem('dharani_my_mobile', PRIMARY_USER_PHONE);
+    } catch (e) {}
+    return true;
+  }
+
+  // If another unverified number is entered on a fresh device:
+  // Do NOT autofill via API. Must be manually verified first.
+  return false;
+};
 
 export default function Login() {
   const [mobile, setMobile] = useState('');
@@ -62,11 +95,12 @@ export default function Login() {
   useEffect(() => { otpTypeRef.current = otpType; }, [otpType]);
   useEffect(() => { isStoreMemberRef.current = isStoreMember; }, [isStoreMember]);
 
-  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP is filled for existing user
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP is filled for this phone's user
   useEffect(() => {
-    const isExactApiOtp = !isNewUserRef.current && apiOtp && otpValue === apiOtp;
+    const isPhoneUser = isThisPhoneUser(mobileRef.current);
+    const isExactApiOtp = isPhoneUser && !isNewUserRef.current && apiOtp && otpValue === apiOtp;
     if (showOtp && otpValue && (otpValue.length === 6 || isExactApiOtp) && lastSubmittedOtpRef.current !== otpValue && !loading) {
-      if (isNewUserRef.current && otpValue.length < 6) return;
+      if (!isPhoneUser && otpValue.length < 6) return;
       lastSubmittedOtpRef.current = otpValue;
       const timer = setTimeout(() => {
         if (verifyFnRef.current) {
@@ -112,6 +146,7 @@ export default function Login() {
   useEffect(() => {
     const isMobile = isMobileDeviceOrView();
     if (!showOtp || !isMobile || !('credentials' in navigator)) return;
+    if (!isThisPhoneUser(mobileRef.current)) return;
     if (isNewUserRef.current) return;
     const ac = new AbortController();
     navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal })
@@ -175,12 +210,13 @@ export default function Login() {
         setShowOtp(true);
 
         const isMobile = isMobileDeviceOrView();
+        const isPhoneUser = isThisPhoneUser(mobileNumber);
         const isExistingUser = data.is_new_user === false;
         isNewUserRef.current = data.is_new_user === true;
 
-        // ONLY auto-fill and auto-verify when an EXISTING user account enters their number on mobile
-        // Unregistered / non-existing numbers (is_new_user === true) will NEVER auto-fill or auto-login
-        if (isMobile && isExistingUser && otpStr) {
+        // ONLY auto-fill and auto-verify when THIS phone's user enters their number on mobile
+        // If someone else's number or a non-existing user number is entered on this phone, do NOT auto-fill or auto-login
+        if (isMobile && isPhoneUser && isExistingUser && otpStr) {
           setSuccessMsg('OTP sent via SMS & auto-filled. Verifying...');
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
@@ -249,10 +285,11 @@ export default function Login() {
         setResendTimer(30);
 
         const isMobile = isMobileDeviceOrView();
+        const isPhoneUser = isThisPhoneUser(currentMobile);
         const isExistingUser = data.is_new_user === false;
         isNewUserRef.current = data.is_new_user === true;
 
-        if (isMobile && isExistingUser && otpStr) {
+        if (isMobile && isPhoneUser && isExistingUser && otpStr) {
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
           lastSubmittedOtpRef.current = otpStr;
@@ -342,6 +379,11 @@ export default function Login() {
         try {
           localStorage.setItem('user', JSON.stringify(user));
           if (data.token) localStorage.setItem('token', data.token);
+          const verifiedMobile = user.mobile || user.phone_number || currentMobile || '';
+          const clean10 = String(verifiedMobile).replace(/\D/g, '').slice(-10);
+          if (clean10 && clean10.length === 10) {
+            localStorage.setItem('dharani_my_mobile', clean10);
+          }
         } catch (e) {}
 
         if (typeof closeLoginModal === 'function') closeLoginModal();
