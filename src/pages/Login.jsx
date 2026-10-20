@@ -16,12 +16,31 @@ const isMobileDeviceOrView = () => {
   return isSmallScreen || isMobileUA || (hasTouch && window.innerWidth <= 1024);
 };
 
+const getDeviceOwnerMobile = () => {
+  try {
+    return (
+      localStorage.getItem('dharani_device_owner_mobile') ||
+      localStorage.getItem('dharani_saved_mobile') ||
+      '9344849211'
+    );
+  } catch {
+    return '9344849211';
+  }
+};
+
+const isDeviceOwner = (inputMobile) => {
+  if (!inputMobile) return false;
+  const cleanInput = String(inputMobile).replace(/\D/g, '').slice(-10);
+  const cleanOwner = String(getDeviceOwnerMobile()).replace(/\D/g, '').slice(-10);
+  return cleanInput.length === 10 && cleanInput === cleanOwner;
+};
+
 export default function Login() {
   const [mobile, setMobile] = useState(() => {
     try {
-      return localStorage.getItem('dharani_saved_mobile') || '';
+      return localStorage.getItem('dharani_saved_mobile') || '9344849211';
     } catch {
-      return '';
+      return '9344849211';
     }
   });
   const [otpValue, setOtpValue] = useState('');      // single source of truth for OTP digits
@@ -83,7 +102,7 @@ export default function Login() {
   useEffect(() => {
     if (isLoginModalOpen) {
       try {
-        const saved = localStorage.getItem('dharani_saved_mobile');
+        const saved = localStorage.getItem('dharani_saved_mobile') || getDeviceOwnerMobile();
         setMobile(prev => (prev ? prev : (saved || '')));
       } catch (e) {
         setMobile(prev => prev || '');
@@ -91,13 +110,13 @@ export default function Login() {
     }
   }, [isLoginModalOpen]);
 
-  // When user logs out, clear the saved mobile number so another user sees an empty field
+  // When user logs out, reset state
   useEffect(() => {
     const handleLoginStatusChange = () => {
       try {
         if (!localStorage.getItem('user')) {
-          localStorage.removeItem('dharani_saved_mobile');
-          setMobile('');
+          const owner = getDeviceOwnerMobile();
+          setMobile(owner || '');
         }
       } catch (e) {}
     };
@@ -116,6 +135,7 @@ export default function Login() {
   useEffect(() => {
     const isMobile = isMobileDeviceOrView();
     if (!showOtp || !isMobile || !('credentials' in navigator)) return;
+    if (!isDeviceOwner(mobileRef.current)) return; // Only for device owner
     const ac = new AbortController();
     navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal })
       .then(result => {
@@ -178,11 +198,14 @@ export default function Login() {
         setShowOtp(true);
 
         const isMobile = isMobileDeviceOrView();
-        if (isMobile && otpStr) {
+        const isOwner = isDeviceOwner(mobileNumber);
+
+        // ONLY auto-fill and auto-verify when the user enters THEIR OWN number on mobile
+        // If another person's number is entered, do NOT auto-fill (manual entry required)
+        if (isMobile && isOwner && otpStr) {
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
           lastSubmittedOtpRef.current = otpStr;
-          // Directly auto-verify on mobile so any person using the phone logs in immediately
           setTimeout(() => {
             handleVerifyOtp(otpStr, mobileNumber, userId);
           }, 350);
@@ -244,7 +267,9 @@ export default function Login() {
         setResendTimer(30);
 
         const isMobile = isMobileDeviceOrView();
-        if (isMobile && otpStr) {
+        const isOwner = isDeviceOwner(currentMobile);
+
+        if (isMobile && isOwner && otpStr) {
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
           lastSubmittedOtpRef.current = otpStr;
