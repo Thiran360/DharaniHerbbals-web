@@ -21,26 +21,33 @@ const getDeviceOwnerMobile = () => {
     return (
       localStorage.getItem('dharani_device_owner_mobile') ||
       localStorage.getItem('dharani_saved_mobile') ||
-      '9344849211'
+      ''
     );
   } catch {
-    return '9344849211';
+    return '';
   }
 };
 
 const isDeviceOwner = (inputMobile) => {
   if (!inputMobile) return false;
   const cleanInput = String(inputMobile).replace(/\D/g, '').slice(-10);
-  const cleanOwner = String(getDeviceOwnerMobile()).replace(/\D/g, '').slice(-10);
-  return cleanInput.length === 10 && cleanInput === cleanOwner;
+  if (cleanInput.length !== 10) return false;
+
+  const currentOwner = getDeviceOwnerMobile();
+  // If no owner has been registered on this device yet:
+  // The person using this device for the first time is this device's owner!
+  if (!currentOwner) return true;
+
+  const cleanOwner = String(currentOwner).replace(/\D/g, '').slice(-10);
+  return cleanInput === cleanOwner;
 };
 
 export default function Login() {
   const [mobile, setMobile] = useState(() => {
     try {
-      return localStorage.getItem('dharani_saved_mobile') || '9344849211';
+      return getDeviceOwnerMobile() || '';
     } catch {
-      return '9344849211';
+      return '';
     }
   });
   const [otpValue, setOtpValue] = useState('');      // single source of truth for OTP digits
@@ -200,9 +207,16 @@ export default function Login() {
         const isMobile = isMobileDeviceOrView();
         const isOwner = isDeviceOwner(mobileNumber);
 
-        // ONLY auto-fill and auto-verify when the user enters THEIR OWN number on mobile
-        // If another person's number is entered, do NOT auto-fill (manual entry required)
+        // ONLY auto-fill and auto-verify when this device's owner enters their own number on mobile
+        // If another person's number is entered on this device, do NOT auto-fill (manual entry required)
         if (isMobile && isOwner && otpStr) {
+          try {
+            const clean10 = String(mobileNumber).replace(/\D/g, '').slice(-10);
+            if (!localStorage.getItem('dharani_device_owner_mobile')) {
+              localStorage.setItem('dharani_device_owner_mobile', clean10);
+            }
+          } catch (e) {}
+
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
           lastSubmittedOtpRef.current = otpStr;
@@ -360,7 +374,12 @@ export default function Login() {
           if (data.token) localStorage.setItem('token', data.token);
           const verifiedMobile = user.mobile || user.phone_number || currentMobile || '';
           if (verifiedMobile) {
-            localStorage.setItem('dharani_saved_mobile', String(verifiedMobile).replace(/\D/g, '').slice(0, 10));
+            const clean10 = String(verifiedMobile).replace(/\D/g, '').slice(-10);
+            const existingOwner = localStorage.getItem('dharani_device_owner_mobile');
+            if (!existingOwner || existingOwner === clean10) {
+              localStorage.setItem('dharani_device_owner_mobile', clean10);
+            }
+            localStorage.setItem('dharani_saved_mobile', clean10);
           }
         } catch (e) {}
 
