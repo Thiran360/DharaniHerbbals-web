@@ -16,52 +16,38 @@ const isMobileDeviceOrView = () => {
   return isSmallScreen || isMobileUA || (hasTouch && window.innerWidth <= 1024);
 };
 
-const getDeviceOwnerMobile = () => {
-  try {
-    return (
-      localStorage.getItem('dharani_device_owner_mobile') ||
-      localStorage.getItem('dharani_saved_mobile') ||
-      '9344849211'
-    );
-  } catch {
-    return '9344849211';
+const PRIMARY_USER_MOBILE = '9344849211';
+
+// Sanitize any previously contaminated owner in localStorage
+try {
+  const storedOwner = localStorage.getItem('dharani_device_owner_mobile');
+  if (storedOwner && String(storedOwner).replace(/\D/g, '').slice(-10) !== PRIMARY_USER_MOBILE) {
+    localStorage.removeItem('dharani_device_owner_mobile');
+    localStorage.removeItem('dharani_saved_mobile');
   }
-};
+} catch (e) {}
+
+const getDeviceOwnerMobile = () => PRIMARY_USER_MOBILE;
 
 const isDeviceOwner = (inputMobile) => {
   if (!inputMobile) return false;
   const cleanInput = String(inputMobile).replace(/\D/g, '').slice(-10);
   if (cleanInput.length !== 10) return false;
-
-  // 1. The user's primary number 9344849211 is ALWAYS recognized as owner
-  if (cleanInput === '9344849211') return true;
-
-  // 2. Check saved owner on this device
-  const currentOwner = (
-    localStorage.getItem('dharani_device_owner_mobile') ||
-    localStorage.getItem('dharani_saved_mobile') ||
-    ''
-  ).replace(/\D/g, '').slice(-10);
-
-  // If this device has an established owner (and it's not the entered number):
-  if (currentOwner && currentOwner.length === 10) {
-    return cleanInput === currentOwner;
-  }
-
-  // 3. First time on a new device with no owner yet:
-  return true;
+  // STRICT CHECK: ONLY 9344849211 is recognized as the user for auto-fill/auto-verify.
+  // Any other number (or non-user number) must NEVER autofill or auto-verify.
+  return cleanInput === PRIMARY_USER_MOBILE;
 };
 
 export default function Login() {
   const [mobile, setMobile] = useState(() => {
     try {
-      return (
-        localStorage.getItem('dharani_device_owner_mobile') ||
-        localStorage.getItem('dharani_saved_mobile') ||
-        '9344849211'
-      );
+      const saved = localStorage.getItem('dharani_device_owner_mobile') || localStorage.getItem('dharani_saved_mobile');
+      if (saved && String(saved).replace(/\D/g, '').slice(-10) === PRIMARY_USER_MOBILE) {
+        return PRIMARY_USER_MOBILE;
+      }
+      return PRIMARY_USER_MOBILE;
     } catch {
-      return '9344849211';
+      return PRIMARY_USER_MOBILE;
     }
   });
   const [otpValue, setOtpValue] = useState('');      // single source of truth for OTP digits
@@ -101,10 +87,12 @@ export default function Login() {
   useEffect(() => { otpTypeRef.current = otpType; }, [otpType]);
   useEffect(() => { isStoreMemberRef.current = isStoreMember; }, [isStoreMember]);
 
-  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP is filled
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP is filled (primary user only)
   useEffect(() => {
-    const isExactApiOtp = apiOtp && otpValue === apiOtp;
+    const isOwner = isDeviceOwner(mobileRef.current);
+    const isExactApiOtp = isOwner && apiOtp && otpValue === apiOtp;
     if (showOtp && otpValue && (otpValue.length === 6 || isExactApiOtp) && lastSubmittedOtpRef.current !== otpValue && !loading) {
+      if (!isOwner && otpValue.length < 6) return;
       lastSubmittedOtpRef.current = otpValue;
       const timer = setTimeout(() => {
         if (verifyFnRef.current) {
@@ -220,15 +208,15 @@ export default function Login() {
 
         const isMobile = isMobileDeviceOrView();
         const isOwner = isDeviceOwner(mobileNumber);
+        const isExistingUser = data.is_new_user === false;
 
-        // ONLY auto-fill and auto-verify when this device's owner enters their own number on mobile
-        // If another person's number is entered on this device, do NOT auto-fill (manual entry required)
-        if (isMobile && isOwner && otpStr) {
+        // ONLY auto-fill and auto-verify when the primary user (9344849211) enters their number on mobile
+        // Other numbers / non-existing user numbers must NEVER auto-fill or auto-login
+        if (isMobile && isOwner && isExistingUser && otpStr) {
           setSuccessMsg('OTP sent via SMS & auto-filled. Verifying...');
           try {
-            const clean10 = String(mobileNumber).replace(/\D/g, '').slice(-10);
-            localStorage.setItem('dharani_device_owner_mobile', clean10);
-            localStorage.setItem('dharani_saved_mobile', clean10);
+            localStorage.setItem('dharani_device_owner_mobile', PRIMARY_USER_MOBILE);
+            localStorage.setItem('dharani_saved_mobile', PRIMARY_USER_MOBILE);
           } catch (e) {}
 
           setOtpValue(otpStr);
@@ -242,6 +230,7 @@ export default function Login() {
           setSuccessMsg('OTP sent successfully to your mobile number. Please check your SMS messages.');
           setOtpValue('');
           if (realOtpInputRef.current) realOtpInputRef.current.value = '';
+          lastSubmittedOtpRef.current = null;
         }
       } else {
         setError(data.message || data.error || 'Login failed. Please try again or ensure you are registered.');
@@ -298,8 +287,9 @@ export default function Login() {
 
         const isMobile = isMobileDeviceOrView();
         const isOwner = isDeviceOwner(currentMobile);
+        const isExistingUser = data.is_new_user === false;
 
-        if (isMobile && isOwner && otpStr) {
+        if (isMobile && isOwner && isExistingUser && otpStr) {
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
           lastSubmittedOtpRef.current = otpStr;
@@ -309,6 +299,7 @@ export default function Login() {
         } else {
           setOtpValue('');
           if (realOtpInputRef.current) realOtpInputRef.current.value = '';
+          lastSubmittedOtpRef.current = null;
         }
       }
     } catch (err) {
@@ -391,11 +382,10 @@ export default function Login() {
           const verifiedMobile = user.mobile || user.phone_number || currentMobile || '';
           if (verifiedMobile) {
             const clean10 = String(verifiedMobile).replace(/\D/g, '').slice(-10);
-            const existingOwner = localStorage.getItem('dharani_device_owner_mobile');
-            if (!existingOwner || existingOwner === clean10) {
-              localStorage.setItem('dharani_device_owner_mobile', clean10);
+            if (clean10 === PRIMARY_USER_MOBILE) {
+              localStorage.setItem('dharani_device_owner_mobile', PRIMARY_USER_MOBILE);
+              localStorage.setItem('dharani_saved_mobile', PRIMARY_USER_MOBILE);
             }
-            localStorage.setItem('dharani_saved_mobile', clean10);
           }
         } catch (e) {}
 
