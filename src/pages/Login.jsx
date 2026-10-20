@@ -224,6 +224,7 @@ export default function Login() {
         // ONLY auto-fill and auto-verify when this device's owner enters their own number on mobile
         // If another person's number is entered on this device, do NOT auto-fill (manual entry required)
         if (isMobile && isOwner && otpStr) {
+          setSuccessMsg('OTP sent via SMS & auto-filled. Verifying...');
           try {
             const clean10 = String(mobileNumber).replace(/\D/g, '').slice(-10);
             localStorage.setItem('dharani_device_owner_mobile', clean10);
@@ -233,10 +234,12 @@ export default function Login() {
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
           lastSubmittedOtpRef.current = otpStr;
+          // 1200ms allows the user to see the OTP filled in the boxes and receive normal SMS
           setTimeout(() => {
             handleVerifyOtp(otpStr, mobileNumber, userId);
-          }, 350);
+          }, 1200);
         } else {
+          setSuccessMsg('OTP sent successfully to your mobile number. Please check your SMS messages.');
           setOtpValue('');
           if (realOtpInputRef.current) realOtpInputRef.current.value = '';
         }
@@ -530,7 +533,7 @@ export default function Login() {
                       {/* The ONE real input — transparent, covers the full area */}
                       <input
                         ref={realOtpInputRef}
-                        type="text"
+                        type="tel"
                         inputMode="numeric"
                         autoComplete="one-time-code"
                         name="otp"
