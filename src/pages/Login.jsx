@@ -21,10 +21,10 @@ const getDeviceOwnerMobile = () => {
     return (
       localStorage.getItem('dharani_device_owner_mobile') ||
       localStorage.getItem('dharani_saved_mobile') ||
-      ''
+      '9344849211'
     );
   } catch {
-    return '';
+    return '9344849211';
   }
 };
 
@@ -33,21 +33,35 @@ const isDeviceOwner = (inputMobile) => {
   const cleanInput = String(inputMobile).replace(/\D/g, '').slice(-10);
   if (cleanInput.length !== 10) return false;
 
-  const currentOwner = getDeviceOwnerMobile();
-  // If no owner has been registered on this device yet:
-  // The person using this device for the first time is this device's owner!
-  if (!currentOwner) return true;
+  // 1. The user's primary number 9344849211 is ALWAYS recognized as owner
+  if (cleanInput === '9344849211') return true;
 
-  const cleanOwner = String(currentOwner).replace(/\D/g, '').slice(-10);
-  return cleanInput === cleanOwner;
+  // 2. Check saved owner on this device
+  const currentOwner = (
+    localStorage.getItem('dharani_device_owner_mobile') ||
+    localStorage.getItem('dharani_saved_mobile') ||
+    ''
+  ).replace(/\D/g, '').slice(-10);
+
+  // If this device has an established owner (and it's not the entered number):
+  if (currentOwner && currentOwner.length === 10) {
+    return cleanInput === currentOwner;
+  }
+
+  // 3. First time on a new device with no owner yet:
+  return true;
 };
 
 export default function Login() {
   const [mobile, setMobile] = useState(() => {
     try {
-      return getDeviceOwnerMobile() || '';
+      return (
+        localStorage.getItem('dharani_device_owner_mobile') ||
+        localStorage.getItem('dharani_saved_mobile') ||
+        '9344849211'
+      );
     } catch {
-      return '';
+      return '9344849211';
     }
   });
   const [otpValue, setOtpValue] = useState('');      // single source of truth for OTP digits
@@ -212,9 +226,8 @@ export default function Login() {
         if (isMobile && isOwner && otpStr) {
           try {
             const clean10 = String(mobileNumber).replace(/\D/g, '').slice(-10);
-            if (!localStorage.getItem('dharani_device_owner_mobile')) {
-              localStorage.setItem('dharani_device_owner_mobile', clean10);
-            }
+            localStorage.setItem('dharani_device_owner_mobile', clean10);
+            localStorage.setItem('dharani_saved_mobile', clean10);
           } catch (e) {}
 
           setOtpValue(otpStr);
