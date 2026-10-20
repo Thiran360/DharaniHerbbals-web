@@ -16,40 +16,14 @@ const isMobileDeviceOrView = () => {
   return isSmallScreen || isMobileUA || (hasTouch && window.innerWidth <= 1024);
 };
 
-const PRIMARY_USER_MOBILE = '9344849211';
-
-// Sanitize any previously contaminated owner in localStorage
+// Clean up any stale saved owner/mobile keys
 try {
-  const storedOwner = localStorage.getItem('dharani_device_owner_mobile');
-  if (storedOwner && String(storedOwner).replace(/\D/g, '').slice(-10) !== PRIMARY_USER_MOBILE) {
-    localStorage.removeItem('dharani_device_owner_mobile');
-    localStorage.removeItem('dharani_saved_mobile');
-  }
+  localStorage.removeItem('dharani_device_owner_mobile');
+  localStorage.removeItem('dharani_saved_mobile');
 } catch (e) {}
 
-const getDeviceOwnerMobile = () => PRIMARY_USER_MOBILE;
-
-const isDeviceOwner = (inputMobile) => {
-  if (!inputMobile) return false;
-  const cleanInput = String(inputMobile).replace(/\D/g, '').slice(-10);
-  if (cleanInput.length !== 10) return false;
-  // STRICT CHECK: ONLY 9344849211 is recognized as the user for auto-fill/auto-verify.
-  // Any other number (or non-user number) must NEVER autofill or auto-verify.
-  return cleanInput === PRIMARY_USER_MOBILE;
-};
-
 export default function Login() {
-  const [mobile, setMobile] = useState(() => {
-    try {
-      const saved = localStorage.getItem('dharani_device_owner_mobile') || localStorage.getItem('dharani_saved_mobile');
-      if (saved && String(saved).replace(/\D/g, '').slice(-10) === PRIMARY_USER_MOBILE) {
-        return PRIMARY_USER_MOBILE;
-      }
-      return PRIMARY_USER_MOBILE;
-    } catch {
-      return PRIMARY_USER_MOBILE;
-    }
-  });
+  const [mobile, setMobile] = useState('');
   const [otpValue, setOtpValue] = useState('');      // single source of truth for OTP digits
   const [showOtp, setShowOtp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -81,18 +55,18 @@ export default function Login() {
   const isStoreMemberRef = useRef(false);
   const verifyFnRef = useRef(null);
   const lastSubmittedOtpRef = useRef(null);
+  const isNewUserRef = useRef(false);
 
   useEffect(() => { mobileRef.current = mobile; }, [mobile]);
   useEffect(() => { otpUserIdRef.current = otpUserId; }, [otpUserId]);
   useEffect(() => { otpTypeRef.current = otpType; }, [otpType]);
   useEffect(() => { isStoreMemberRef.current = isStoreMember; }, [isStoreMember]);
 
-  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP is filled (primary user only)
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP is filled for existing user
   useEffect(() => {
-    const isOwner = isDeviceOwner(mobileRef.current);
-    const isExactApiOtp = isOwner && apiOtp && otpValue === apiOtp;
+    const isExactApiOtp = !isNewUserRef.current && apiOtp && otpValue === apiOtp;
     if (showOtp && otpValue && (otpValue.length === 6 || isExactApiOtp) && lastSubmittedOtpRef.current !== otpValue && !loading) {
-      if (!isOwner && otpValue.length < 6) return;
+      if (isNewUserRef.current && otpValue.length < 6) return;
       lastSubmittedOtpRef.current = otpValue;
       const timer = setTimeout(() => {
         if (verifyFnRef.current) {
@@ -107,25 +81,19 @@ export default function Login() {
   const { refreshCart } = useCart();
   const { isLoginModalOpen, closeLoginModal } = useAuthModal();
 
-  // Auto-fill verified mobile number once when login modal opens, only if field is empty
+  // Reset mobile field to empty whenever login modal opens (unless user already typed something)
   useEffect(() => {
     if (isLoginModalOpen) {
-      try {
-        const saved = localStorage.getItem('dharani_saved_mobile') || getDeviceOwnerMobile();
-        setMobile(prev => (prev ? prev : (saved || '')));
-      } catch (e) {
-        setMobile(prev => prev || '');
-      }
+      setMobile(prev => prev || '');
     }
   }, [isLoginModalOpen]);
 
-  // When user logs out, reset state
+  // When user logs out, clear mobile state
   useEffect(() => {
     const handleLoginStatusChange = () => {
       try {
         if (!localStorage.getItem('user')) {
-          const owner = getDeviceOwnerMobile();
-          setMobile(owner || '');
+          setMobile('');
         }
       } catch (e) {}
     };
@@ -144,7 +112,7 @@ export default function Login() {
   useEffect(() => {
     const isMobile = isMobileDeviceOrView();
     if (!showOtp || !isMobile || !('credentials' in navigator)) return;
-    if (!isDeviceOwner(mobileRef.current)) return; // Only for device owner
+    if (isNewUserRef.current) return;
     const ac = new AbortController();
     navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal })
       .then(result => {
@@ -207,18 +175,13 @@ export default function Login() {
         setShowOtp(true);
 
         const isMobile = isMobileDeviceOrView();
-        const isOwner = isDeviceOwner(mobileNumber);
         const isExistingUser = data.is_new_user === false;
+        isNewUserRef.current = data.is_new_user === true;
 
-        // ONLY auto-fill and auto-verify when the primary user (9344849211) enters their number on mobile
-        // Other numbers / non-existing user numbers must NEVER auto-fill or auto-login
-        if (isMobile && isOwner && isExistingUser && otpStr) {
+        // ONLY auto-fill and auto-verify when an EXISTING user account enters their number on mobile
+        // Unregistered / non-existing numbers (is_new_user === true) will NEVER auto-fill or auto-login
+        if (isMobile && isExistingUser && otpStr) {
           setSuccessMsg('OTP sent via SMS & auto-filled. Verifying...');
-          try {
-            localStorage.setItem('dharani_device_owner_mobile', PRIMARY_USER_MOBILE);
-            localStorage.setItem('dharani_saved_mobile', PRIMARY_USER_MOBILE);
-          } catch (e) {}
-
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
           lastSubmittedOtpRef.current = otpStr;
@@ -286,10 +249,10 @@ export default function Login() {
         setResendTimer(30);
 
         const isMobile = isMobileDeviceOrView();
-        const isOwner = isDeviceOwner(currentMobile);
         const isExistingUser = data.is_new_user === false;
+        isNewUserRef.current = data.is_new_user === true;
 
-        if (isMobile && isOwner && isExistingUser && otpStr) {
+        if (isMobile && isExistingUser && otpStr) {
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
           lastSubmittedOtpRef.current = otpStr;
@@ -379,14 +342,6 @@ export default function Login() {
         try {
           localStorage.setItem('user', JSON.stringify(user));
           if (data.token) localStorage.setItem('token', data.token);
-          const verifiedMobile = user.mobile || user.phone_number || currentMobile || '';
-          if (verifiedMobile) {
-            const clean10 = String(verifiedMobile).replace(/\D/g, '').slice(-10);
-            if (clean10 === PRIMARY_USER_MOBILE) {
-              localStorage.setItem('dharani_device_owner_mobile', PRIMARY_USER_MOBILE);
-              localStorage.setItem('dharani_saved_mobile', PRIMARY_USER_MOBILE);
-            }
-          }
         } catch (e) {}
 
         if (typeof closeLoginModal === 'function') closeLoginModal();
