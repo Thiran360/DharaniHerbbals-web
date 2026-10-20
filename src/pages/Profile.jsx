@@ -196,6 +196,8 @@ export default function Profile() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('dharani_saved_mobile');
     window.dispatchEvent(new Event('user-login-status-changed'));
     if (refreshProducts) {
       refreshProducts();

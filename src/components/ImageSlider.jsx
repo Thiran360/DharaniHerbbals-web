@@ -95,7 +95,7 @@ const SliderVideo = memo(function SliderVideo({ slide, isActive }) {
       muted 
       playsInline 
       autoPlay={isActive}
-      preload="auto"
+      preload={isActive ? "metadata" : "none"}
       className={`slide-bg-video ${isActive ? 'active' : ''}`}
       onTimeUpdate={handleTimeUpdate}
       onError={() => setHasVideoError(true)}

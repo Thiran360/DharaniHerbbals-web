@@ -492,3 +492,14 @@ a:hover {
     display: none !important;
   }
 }
+
+
+/* Low-network & CPU optimizations: Skip layout/paint for offscreen sections */
+.promo-slider-container,
+.google-reviews-section,
+.bento-header.with-margin-top,
+.trust-badges-wrapper,
+.brands-slider-container {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 350px;
+}

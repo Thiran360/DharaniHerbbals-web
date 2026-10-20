@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { API_BASE_URL, NGROK_DOMAIN } from '../services/api';
 
 const ProductsContext = createContext();
@@ -30,18 +30,7 @@ export function ProductsProvider({ children }) {
       const cached = localStorage.getItem(getCacheKey());
       if (cached) {
         const parsed = JSON.parse(cached);
-        // Preload the first 8 product images instantly for blazingly fast LCP
-        if (Array.isArray(parsed)) {
-          parsed.slice(0, 8).forEach(p => {
-            if (p.image) {
-              const link = document.createElement('link');
-              link.rel = 'preload';
-              link.as = 'image';
-              link.href = p.image;
-              document.head.appendChild(link);
-            }
-          });
-        }
+
         return parsed;
       }
       return [];
@@ -90,12 +79,19 @@ export function ProductsProvider({ children }) {
       console.error("Failed to parse user data for API selection", e);
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4500);
+
     fetch(apiUrl, {
+      signal: controller.signal,
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        clearTimeout(timeoutId);
+        return res.json();
+      })
       .then(data => {
         // Extract base URL from apiUrl to prepend to images if needed
         let baseUrl = '';
@@ -256,15 +252,22 @@ export function ProductsProvider({ children }) {
 
   useEffect(() => {
     refreshProducts();
-    // Auto-refresh removed for testing purposes
-    // const intervalId = setInterval(() => {
-    //   refreshProducts();
-    // }, 2000);
-    // return () => clearInterval(intervalId);
+
+    const handleOnline = () => {
+      refreshProducts();
+    };
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
   }, []);
 
+  const value = useMemo(() => ({
+    products,
+    loading,
+    refreshProducts
+  }), [products, loading, refreshProducts]);
+
   return (
-    <ProductsContext.Provider value={{ products, loading, refreshProducts }}>
+    <ProductsContext.Provider value={value}>
       {children}
     </ProductsContext.Provider>
   );

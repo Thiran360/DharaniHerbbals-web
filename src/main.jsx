@@ -23,3 +23,16 @@ createRoot(document.getElementById('root')).render(
     </LanguageProvider>
   </StrictMode>,
 )
+
+// Register high-performance Service Worker for offline speed & caching
+if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((err) => {
+      console.warn('Service worker registration ignored:', err);
+    });
+  });
+} else if ('serviceWorker' in navigator) {
+  // Also register in dev mode to allow testing offline mode
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+

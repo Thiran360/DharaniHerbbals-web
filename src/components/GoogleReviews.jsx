@@ -57,8 +57,17 @@ export default function GoogleReviews() {
   const textTrackRef = useRef(null);
     
   useEffect(() => {
+    let isVisible = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.1 }
+    );
+    if (textTrackRef.current) observer.observe(textTrackRef.current);
+
     const autoScrollLeft = (ref, amount) => {
-      if (!ref.current) return;
+      if (!ref.current || !isVisible) return;
       const { scrollLeft, scrollWidth, clientWidth } = ref.current;
       if (scrollLeft + clientWidth >= scrollWidth - 10) {
         ref.current.scrollTo({ left: 0, behavior: 'smooth' });
@@ -67,11 +76,12 @@ export default function GoogleReviews() {
       }
     };
     
-    const intervalLeft = setInterval(() => autoScrollLeft(textTrackRef, 400), 3000);
+    const intervalLeft = setInterval(() => autoScrollLeft(textTrackRef, 400), 3500);
     return () => {
       clearInterval(intervalLeft);
-      };
-  }, []);
+      observer.disconnect();
+    };
+  }, []);;
 
   const renderStars = (rating) => {
     const stars = [];

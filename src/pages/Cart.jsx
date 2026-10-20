@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import './Cart.css';
 
 export default function Cart() {
-  const { cartItems, removeFromCart, updateQuantity, cartTotal, taxTotal, shippingCost } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, cartTotal, shippingCost } = useCart();
   const { language } = useLanguage();
   const navigate = useNavigate();
 
@@ -106,16 +106,11 @@ export default function Cart() {
                   <span className="summary-val">₹{shippingCost.toFixed(2)}</span>
                 </div>
                 
-                <div className="summary-row">
-                  <span>Tax</span>
-                  <span className="summary-val">₹{taxTotal.toFixed(2)}</span>
-                </div>
-                
                 <div className="summary-divider"></div>
                 
                 <div className="summary-row total-row">
                   <span>Estimated Total</span>
-                  <span className="summary-total-val">₹{(cartTotal + shippingCost + taxTotal).toFixed(2)}</span>
+                  <span className="summary-total-val">₹{(cartTotal + shippingCost).toFixed(2)}</span>
                 </div>
                 
                 <button className="btn-cart-checkout" onClick={handleCheckout}>

@@ -23,49 +23,47 @@ const baseVideoData = [
 ];
 
 function LazyVideoCard({ item, addToCart, navigate, actualProduct }) {
-  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const cardRef = useRef(null);
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    // Defer attaching the observer to allow critical assets to load first on mobile data
-    const timer = setTimeout(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setIsIntersecting(true);
-            if (cardRef.current) {
-              observer.unobserve(cardRef.current);
-            }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasLoaded(true);
+          if (videoRef.current) {
+            videoRef.current.play().catch(() => {});
           }
-        },
-        { rootMargin: '0px' }
-      );
-      if (cardRef.current) observer.observe(cardRef.current);
-      
-      // Store observer in ref to disconnect later if needed
-      cardRef.current._observer = observer;
-    }, 100);
+        } else {
+          if (videoRef.current) {
+            videoRef.current.pause();
+          }
+        }
+      },
+      { threshold: 0.15 }
+    );
+    if (cardRef.current) observer.observe(cardRef.current);
 
     return () => {
-      clearTimeout(timer);
-      if (cardRef.current && cardRef.current._observer) {
-        cardRef.current._observer.disconnect();
-      }
+      observer.disconnect();
     };
   }, []);
 
   return (
     <div className="sv-card ultra" ref={cardRef}>
       <div className="sv-video-bg">
-        {isIntersecting && (
+        {hasLoaded && (
           <video
-            className="sv-iframe" // Keep class for dimensions
+            ref={videoRef}
+            className="sv-iframe"
             src={item.videoUrl}
             title={item.title}
             autoPlay
             muted
             loop
             playsInline
+            preload="metadata"
             style={{
               position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover',
               zIndex: 1

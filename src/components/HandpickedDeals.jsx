@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -30,19 +31,24 @@ export default function HandpickedDeals() {
     "deepa oil"
   ];
 
-  let dealProducts = [];
-  const seenNames = new Set();
-  
-  curatedOffersNames.forEach(searchName => {
-    const product = products.find(p => p.name && p.name.toLowerCase().replace(/\s+/g, ' ').includes(searchName));
-    if (product) {
-      const canonicalName = product.name.toLowerCase().trim();
-      if (!seenNames.has(canonicalName)) {
-        dealProducts.push(product);
-        seenNames.add(canonicalName);
+  const dealProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    const result = [];
+    const seenNames = new Set();
+    
+    curatedOffersNames.forEach(searchName => {
+      const product = products.find(p => p.name && p.name.toLowerCase().replace(/\s+/g, ' ').includes(searchName));
+      if (product) {
+        const canonicalName = product.name.toLowerCase().trim();
+        if (!seenNames.has(canonicalName)) {
+          result.push(product);
+          seenNames.add(canonicalName);
+        }
       }
-    }
-  });
+    });
+
+    return result;
+  }, [products]);
 
   return (
     <div className="deals-container">

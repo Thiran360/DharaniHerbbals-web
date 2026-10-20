@@ -116,6 +116,7 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    localStorage.removeItem('dharani_saved_mobile');
     setUser(null);
     setShowAccountMenu(false);
     if (refreshProducts) refreshProducts();
@@ -427,9 +428,9 @@ export default function Navbar() {
             >
               <div className="cart-icon-wrapper">
                 <ShoppingBag size={20} strokeWidth={2} />
-                {cartCount > 0 && <span className="cart-pulse-badge"></span>}
+                {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               </div>
-              <span className="cart-text">{t('cart')} {cartCount > 0 ? `(${cartCount})` : ''}</span>
+              <span className="cart-text">{t('cart')}</span>
             </button>
           </div>
         </div>
@@ -545,8 +546,11 @@ export default function Navbar() {
                 style={{ background: '#ef4444', border: 'none', color: 'white', cursor: 'pointer', fontFamily: 'inherit' }}
                 onClick={() => {
                   localStorage.removeItem('user');
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('dharani_saved_mobile');
                   setUser(null);
                   if (refreshProducts) refreshProducts();
+                  window.dispatchEvent(new Event('user-login-status-changed'));
                   toggleMobileMenu();
                 }}
               >

@@ -51,12 +51,19 @@ export default function CategoryStrip() {
   const { t } = useLanguage();
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
     fetch(`${API_BASE_URL}/categories/`, {
+      signal: controller.signal,
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        clearTimeout(timeoutId);
+        return res.json();
+      })
       .then(data => {
         let catsArray = [];
         if (Array.isArray(data)) {

@@ -1,0 +1,84 @@
+/* Network Status Floating Pill */
+.network-status-capsule {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  z-index: 100010;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  pointer-events: none;
+  opacity: 0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  white-space: nowrap;
+}
+
+.network-status-capsule.visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Offline state (Amber / Charcoal) */
+.network-status-capsule.offline {
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.network-status-capsule.offline .network-icon {
+  color: #fbbf24;
+}
+
+.network-status-icon-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.offline-dot {
+  background: #fbbf24;
+  box-shadow: 0 0 8px #fbbf24;
+  animation: pulse-dot 1.5s infinite;
+}
+
+/* Online state (Emerald) */
+.network-status-capsule.online {
+  background: rgba(16, 185, 129, 0.95);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.network-status-capsule.online .network-icon {
+  color: #ffffff;
+}
+
+.online-dot {
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+@media (max-width: 768px) {
+  .network-status-capsule {
+    bottom: 18px;
+    padding: 8px 16px;
+    font-size: 0.82rem;
+    max-width: calc(100% - 32px);
+  }
+}

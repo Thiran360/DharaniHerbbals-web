@@ -7,7 +7,15 @@ import { API_BASE_URL } from '../services/api';
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const offline = localStorage.getItem('dharani_cart_offline_backup');
+      if (offline) return JSON.parse(offline);
+      const saved = localStorage.getItem('dharani_cart');
+      if (saved) return JSON.parse(saved);
+      return [];
+    } catch { return []; }
+  });
   const [shippingCost, setShippingCost] = useState(null);
   const [taxAmount, setTaxAmount] = useState(0);
   const [cgst, setCgst] = useState(0);
@@ -47,11 +55,16 @@ export function CartProvider({ children }) {
         url += `&state=${encodeURIComponent(params.state)}`;
       }
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4500);
+
         const res = await fetch(url, {
           method: 'GET',
           headers: { 'ngrok-skip-browser-warning': 'true' },
-          cache: 'no-store'
+          cache: 'no-store',
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         if (!res.ok && (res.status === 404 || res.status === 401)) {
           localStorage.removeItem('user');
@@ -124,10 +137,155 @@ export function CartProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    if (!getUser()) {
-      localStorage.setItem('dharani_cart', JSON.stringify(cartItems));
-    }
+    try {
+      localStorage.setItem('dharani_cart_offline_backup', JSON.stringify(cartItems));
+      if (!getUser()) {
+        localStorage.setItem('dharani_cart', JSON.stringify(cartItems));
+      }
+    } catch(e) {}
   }, [cartItems]);
+
+  const triggerCartCrackers = () => {
+    try {
+      const cartElem = document.querySelector('.capsule-btn.cart-btn') || 
+                       document.querySelector('.cart-btn') || 
+                       document.querySelector('.cart-icon-wrapper');
+      
+      let originX = 0.90;
+      let originY = 0.08;
+
+      if (cartElem) {
+        const rect = cartElem.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          originX = (rect.left + rect.width / 2) / window.innerWidth;
+          originY = (rect.top + rect.height / 2) / window.innerHeight;
+        }
+        
+        cartElem.classList.remove('cart-patasu-bounce');
+        void cartElem.offsetWidth;
+        cartElem.classList.add('cart-patasu-bounce');
+        setTimeout(() => cartElem.classList.remove('cart-patasu-bounce'), 1000);
+      }
+
+      // 1. Initial cracker burst
+      confetti({
+        particleCount: 55,
+        angle: 90,
+        spread: 85,
+        origin: { x: originX, y: originY },
+        colors: ['#22c55e', '#eab308', '#ef4444', '#3b82f6', '#ec4899', '#f97316'],
+        startVelocity: 32,
+        gravity: 0.9,
+        ticks: 160,
+        scalar: 1,
+        zIndex: 9999999
+      });
+
+      // 2. Sparkler star shower
+      setTimeout(() => {
+        confetti({
+          particleCount: 40,
+          angle: 110,
+          spread: 75,
+          origin: { x: originX, y: originY },
+          colors: ['#ffd700', '#ff6b6b', '#48dbfb', '#1dd1a1', '#ffffff'],
+          startVelocity: 26,
+          gravity: 0.85,
+          ticks: 140,
+          shapes: ['circle', 'star'],
+          scalar: 1.2,
+          zIndex: 9999999
+        });
+      }, 120);
+
+      // 3. Mini crackle finale
+      setTimeout(() => {
+        confetti({
+          particleCount: 30,
+          angle: 70,
+          spread: 60,
+          origin: { x: originX, y: originY },
+          colors: ['#10b981', '#fbbf24', '#a855f7', '#ff4757'],
+          startVelocity: 22,
+          gravity: 1,
+          ticks: 110,
+          shapes: ['circle'],
+          scalar: 0.9,
+          zIndex: 9999999
+        });
+      }, 240);
+    } catch (err) {
+      console.error('Error triggering cart crackers:', err);
+    }
+  };
+
+  const triggerDrawerPatasu = () => {
+    try {
+      const drawerElem = document.querySelector('.cart-header') || 
+                         document.querySelector('.cart-drawer.open') ||
+                         document.querySelector('.cart-drawer');
+      
+      let originX = 0.86;
+      let originY = 0.14;
+
+      if (drawerElem) {
+        const rect = drawerElem.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          originX = (rect.left + rect.width / 2) / window.innerWidth;
+          originY = (rect.top + 70) / window.innerHeight;
+        }
+      }
+
+      // 1. Main cracker explosion right on the cart drawer
+      confetti({
+        particleCount: 65,
+        angle: 90,
+        spread: 90,
+        origin: { x: originX, y: originY },
+        colors: ['#22c55e', '#eab308', '#ef4444', '#3b82f6', '#ec4899', '#10b981'],
+        startVelocity: 35,
+        gravity: 0.9,
+        ticks: 180,
+        zIndex: 10000000
+      });
+
+      // 2. Golden sparkle and star shower
+      setTimeout(() => {
+        confetti({
+          particleCount: 45,
+          angle: 115,
+          spread: 80,
+          origin: { x: originX, y: originY },
+          colors: ['#ffd700', '#ff6b6b', '#48dbfb', '#1dd1a1', '#ffffff'],
+          startVelocity: 28,
+          gravity: 0.85,
+          ticks: 150,
+          shapes: ['circle', 'star'],
+          scalar: 1.25,
+          zIndex: 10000000
+        });
+      }, 140);
+
+      // 3. Mini crackle sparkles finale
+      setTimeout(() => {
+        confetti({
+          particleCount: 35,
+          angle: 65,
+          spread: 70,
+          origin: { x: originX, y: originY },
+          colors: ['#10b981', '#fbbf24', '#a855f7', '#ff4757'],
+          startVelocity: 24,
+          gravity: 1,
+          ticks: 120,
+          shapes: ['circle'],
+          scalar: 0.9,
+          zIndex: 10000000
+        });
+      }, 280);
+    } catch (err) {
+      console.error('Error triggering drawer patasu:', err);
+    }
+  };
 
   const addToCart = async (product, quantity = 1, variationId = null, silent = false) => {
     const user = getUser();
@@ -186,22 +344,36 @@ export function CartProvider({ children }) {
       }
 
       await refreshCart();
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.warn("Cart network sync deferred (Offline mode active):", err);
+      // Offline fallback: Update local state if network unavailable
+      if (!cartItems.some(item => item.id === product.id)) {
+        const fallbackItem = {
+          id: product.id,
+          cartItemId: 'offline-' + Date.now(),
+          name: product.name,
+          image: product.image,
+          price: product.price,
+          quantity: quantity,
+          variation_id: variationId,
+          variation_name: ''
+        };
+        setCartItems(prev => [...prev, fallbackItem]);
+      }
+    }
 
     if (!silent) {
       if (cartItems.length === 0) {
-          setIsCartOpen(true);
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#22c55e', '#fbbf24', '#f87171', '#a855f7', '#ffffff'],
-            zIndex: 100000
-          });
-        } else {
-          setCartToastMsg('Item added to cart!');
-          setTimeout(() => setCartToastMsg(''), 3000);
-        }
+        setIsCartOpen(true);
+        // Wait for cart drawer to slide in, then burst patasu right on the drawer
+        setTimeout(() => {
+          triggerDrawerPatasu();
+        }, 350);
+      } else {
+        // Subsequent additions (2nd, 3rd, etc.) only show toast without patasu
+        setCartToastMsg('Product added to cart!');
+        setTimeout(() => setCartToastMsg(''), 3000);
+      }
     }
   };
 
@@ -334,7 +506,8 @@ export function CartProvider({ children }) {
       igst: igst || localTaxes.igst,
       taxTotal: taxTotal || localTaxes.taxTotal,
       grandTotal: grandTotal,
-      refreshCart
+      refreshCart,
+      triggerCartCrackers
     }}>
       {children}
       {cartToastMsg && (
@@ -354,7 +527,7 @@ export function CartProvider({ children }) {
           alignItems: 'center',
           gap: '10px'
         }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span style={{ fontSize: '18px' }}>🎉</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           {cartToastMsg}
         </div>
       )}

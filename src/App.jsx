@@ -1,6 +1,7 @@
 import { useEffect, useState, lazy, Suspense, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useNavigate, useLocation, useNavigationType } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import NetworkStatus from './components/NetworkStatus';
 import CartDrawer from './components/CartDrawer';
 import { useCart } from './context/CartContext';
 import { useProducts } from './context/ProductsContext';
@@ -10,11 +11,14 @@ import ImageSlider from './components/ImageSlider';
 import { Heart } from 'lucide-react';
 import { API_BASE_URL } from './services/api';
 
-// Critical components loaded synchronously
-import Shop, { ProductCard } from './pages/Shop';
-import ProductDetails from './pages/ProductDetails';
-import About from './pages/About';
-import Contact from './pages/Contact';
+// Synchronous shared components
+import { ProductCard } from './pages/Shop';
+
+// Lazy loaded page routes for optimal mobile performance and smaller initial bundle
+const Shop = lazy(() => import('./pages/Shop'));
+const ProductDetails = lazy(() => import('./pages/ProductDetails'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 // Lazy loaded routes for better performance on less frequent pages
 const Login = lazy(() => import('./pages/Login'));
@@ -44,12 +48,12 @@ import OurJourney from './components/OurJourney';
 import Footer from './components/Footer';
 const TrustBadges = lazy(() => import('./components/TrustBadges'));
 
-import s1 from './assets/S1.jpeg';
-import s2 from './assets/S2.jpeg';
-import s3 from './assets/S3.jpeg';
-import s4 from './assets/S4.jpeg';
-import s5 from './assets/S5.jpeg';
-import s6 from './assets/S6.jpeg';
+import s1 from './assets/S1.webp';
+import s2 from './assets/S2.webp';
+import s3 from './assets/S3.webp';
+import s4 from './assets/S4.webp';
+import s5 from './assets/S5.webp';
+import s6 from './assets/S6.webp';
 import GlobalOrderPopup from './components/GlobalOrderPopup';
 // Using dynamic products now from ProductsContext
 
@@ -69,16 +73,25 @@ function Home() {
     if (!isMobile) return;
 
     let isInteracting = false;
+    let isVisible = false;
     let timeoutId = null;
     let intervalId = null;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.1 }
+    );
+    if (promoSliderRef.current) observer.observe(promoSliderRef.current);
 
     const startAutoScroll = () => {
       intervalId = setInterval(() => {
         const container = promoSliderRef.current;
-        if (!container || isInteracting) return;
+        if (!container || isInteracting || !isVisible) return;
 
         const { scrollLeft, scrollWidth, clientWidth } = container;
-        const cardWidth = 296; // 280px card width + 16px gap
+        const cardWidth = 296;
 
         if (scrollLeft + clientWidth >= scrollWidth - 20) {
           container.scrollTo({ left: 0, behavior: 'smooth' });
@@ -110,6 +123,7 @@ function Home() {
     return () => {
       if (intervalId) clearInterval(intervalId);
       if (timeoutId) clearTimeout(timeoutId);
+      observer.disconnect();
       if (container) {
         container.removeEventListener('touchstart', handleInteraction);
         container.removeEventListener('mousedown', handleInteraction);
@@ -117,15 +131,27 @@ function Home() {
     };
   }, [isMobile]);
 
-  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState(() => {
+    try {
+      const cached = localStorage.getItem('dharani_featured_cache');
+      return cached ? JSON.parse(cached) : [];
+    } catch { return []; }
+  });
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
     fetch(`${API_BASE_URL}/most-loved/`, {
+      signal: controller.signal,
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        clearTimeout(timeoutId);
+        return res.json();
+      })
       .then(data => {
         const mappedData = data.map(p => {
             const n = p.name ? p.name.toLowerCase().trim() : '';
@@ -175,6 +201,7 @@ function Home() {
             return { ...p, rating: injectedRating, reviews: injectedReviews };
         });
         setFeaturedProducts(mappedData);
+        try { localStorage.setItem('dharani_featured_cache', JSON.stringify(mappedData)); } catch(e) {}
       })
       .catch(err => console.error("Error fetching most loved products:", err));
   }, []);
@@ -335,13 +362,21 @@ function AppContent() {
     <div className="app-container">
       <ScrollToTop />
       {!isAdminRoute && <Navbar />}
+      <NetworkStatus />
       {!isAdminRoute && <CartDrawer />}
       {!isAdminRoute && !isPoliciesRoute && <FloatingSocials />}
       {!isAdminRoute && !isPoliciesRoute && <GlobalOrderPopup />}
       {!isAdminRoute && <Login />}
       <WishlistToastNotification />
       <main className="main-content" style={isAdminRoute ? { padding: 0 } : {}}>
-        <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '1.2rem', color: '#15803d' }}>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '14px', color: '#10b981' }}>
+              <div style={{ width: '36px', height: '36px', border: '3px solid rgba(16, 185, 129, 0.2)', borderTopColor: '#10b981', borderRadius: '50%', animation: 'routeSpin 0.8s linear infinite' }} />
+              <style>{`@keyframes routeSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+            </div>
+          }
+        >
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />

@@ -8,8 +8,22 @@ import { API_BASE_URL } from '../services/api';
 import heartImg from '../assets/heart.png';
 import './Login.css';
 
+const isMobileDeviceOrView = () => {
+  if (typeof window === 'undefined') return false;
+  const isSmallScreen = window.innerWidth <= 992;
+  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent || '');
+  const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  return isSmallScreen || isMobileUA || (hasTouch && window.innerWidth <= 1024);
+};
+
 export default function Login() {
-  const [mobile, setMobile] = useState('');
+  const [mobile, setMobile] = useState(() => {
+    try {
+      return localStorage.getItem('dharani_saved_mobile') || '';
+    } catch {
+      return '';
+    }
+  });
   const [otpValue, setOtpValue] = useState('');      // single source of truth for OTP digits
   const [showOtp, setShowOtp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,7 +61,7 @@ export default function Login() {
   useEffect(() => { otpTypeRef.current = otpType; }, [otpType]);
   useEffect(() => { isStoreMemberRef.current = isStoreMember; }, [isStoreMember]);
 
-  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP (even 4 digits) is filled
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP is filled
   useEffect(() => {
     const isExactApiOtp = apiOtp && otpValue === apiOtp;
     if (showOtp && otpValue && (otpValue.length === 6 || isExactApiOtp) && lastSubmittedOtpRef.current !== otpValue && !loading) {
@@ -65,6 +79,32 @@ export default function Login() {
   const { refreshCart } = useCart();
   const { isLoginModalOpen, closeLoginModal } = useAuthModal();
 
+  // Auto-fill verified mobile number once when login modal opens, only if field is empty
+  useEffect(() => {
+    if (isLoginModalOpen) {
+      try {
+        const saved = localStorage.getItem('dharani_saved_mobile');
+        setMobile(prev => (prev ? prev : (saved || '')));
+      } catch (e) {
+        setMobile(prev => prev || '');
+      }
+    }
+  }, [isLoginModalOpen]);
+
+  // When user logs out, clear the saved mobile number so another user sees an empty field
+  useEffect(() => {
+    const handleLoginStatusChange = () => {
+      try {
+        if (!localStorage.getItem('user')) {
+          localStorage.removeItem('dharani_saved_mobile');
+          setMobile('');
+        }
+      } catch (e) {}
+    };
+    window.addEventListener('user-login-status-changed', handleLoginStatusChange);
+    return () => window.removeEventListener('user-login-status-changed', handleLoginStatusChange);
+  }, []);
+
   // Focus the real input as soon as OTP screen shows — this triggers Android SMS suggestion
   useEffect(() => {
     if (showOtp && realOtpInputRef.current) {
@@ -73,9 +113,9 @@ export default function Login() {
   }, [showOtp]);
 
   // Web OTP API — auto-reads SMS silently on Android Chrome (no user tap needed)
-  // Requires SMS to end with:  @yourdomain.com #123456
   useEffect(() => {
-    if (!showOtp || !('credentials' in navigator)) return;
+    const isMobile = isMobileDeviceOrView();
+    if (!showOtp || !isMobile || !('credentials' in navigator)) return;
     const ac = new AbortController();
     navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal })
       .then(result => {
@@ -105,13 +145,15 @@ export default function Login() {
     if (arg?.preventDefault) arg.preventDefault();
     const mobileNumber = typeof arg === 'string' ? arg : mobile;
 
-    if (mobileNumber.length < 10) {
+    if (!mobileNumber || mobileNumber.length < 10) {
       setError('Please enter a valid 10-digit mobile number');
       return;
     }
     setError(null);
     setSuccessMsg(null);
     setLoading(true);
+    mobileRef.current = mobileNumber;
+    lastSubmittedOtpRef.current = null;
 
     try {
       let response = await fetch(`${API_BASE_URL}/user-login/`, {
@@ -122,22 +164,32 @@ export default function Login() {
       let data = await response.json();
 
       if (response.ok && data.success !== false) {
-        if (data.user_id) setOtpUserId(data.user_id);
+        const userId = data.user_id || null;
+        setOtpUserId(userId);
+        otpUserIdRef.current = userId;
         setIsStoreMember(false);
         setOtpType('login');
         setResendTimer(30);
 
         setSuccessMsg('OTP sent successfully to your mobile number.');
         const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
-        if (receivedOtp) {
-          const otpStr = String(receivedOtp).replace(/\D/g, '').slice(0, 6);
-          setApiOtp(otpStr);
-          setOtpValue('');
-        } else {
-          setApiOtp('');
-          setOtpValue('');
-        }
+        const otpStr = receivedOtp ? String(receivedOtp).replace(/\D/g, '').slice(0, 6) : '';
+        setApiOtp(otpStr);
         setShowOtp(true);
+
+        const isMobile = isMobileDeviceOrView();
+        if (isMobile && otpStr) {
+          setOtpValue(otpStr);
+          if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
+          lastSubmittedOtpRef.current = otpStr;
+          // Directly auto-verify on mobile so any person using the phone logs in immediately
+          setTimeout(() => {
+            handleVerifyOtp(otpStr, mobileNumber, userId);
+          }, 350);
+        } else {
+          setOtpValue('');
+          if (realOtpInputRef.current) realOtpInputRef.current.value = '';
+        }
       } else {
         setError(data.message || data.error || 'Login failed. Please try again or ensure you are registered.');
       }
@@ -152,6 +204,7 @@ export default function Login() {
     const val = e.target.value.replace(/\D/g, '');
     if (val.length <= 10) {
       setMobile(val);
+      mobileRef.current = val;
     }
   };
 
@@ -159,11 +212,13 @@ export default function Login() {
     setError(null);
     setSuccessMsg(null);
     setLoading(true);
+    lastSubmittedOtpRef.current = null;
+    const currentMobile = mobileRef.current || mobile;
     try {
       let response = await fetch(`${API_BASE_URL}/resend-otp/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-        body: JSON.stringify({ phone_number: mobileRef.current, mobile: mobileRef.current })
+        body: JSON.stringify({ phone_number: currentMobile, mobile: currentMobile })
       });
 
       // If resend-otp not available, fall back to user-login
@@ -171,7 +226,7 @@ export default function Login() {
         response = await fetch(`${API_BASE_URL}/user-login/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-          body: JSON.stringify({ phone_number: mobileRef.current, mobile: mobileRef.current })
+          body: JSON.stringify({ phone_number: currentMobile, mobile: currentMobile })
         });
       }
 
@@ -179,17 +234,27 @@ export default function Login() {
       if (!response.ok || data.success === false) {
         setError(data.message || 'Failed to resend OTP.');
       } else {
+        const userId = data.user_id || otpUserIdRef.current;
+        setOtpUserId(userId);
+        otpUserIdRef.current = userId;
         setSuccessMsg('OTP sent successfully to your mobile number.');
         const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
-        if (receivedOtp) {
-          const otpStr = String(receivedOtp).replace(/\D/g, '').slice(0, 6);
-          setApiOtp(otpStr);
-          setOtpValue('');
-        } else {
-          setApiOtp('');
-          setOtpValue('');
-        }
+        const otpStr = receivedOtp ? String(receivedOtp).replace(/\D/g, '').slice(0, 6) : '';
+        setApiOtp(otpStr);
         setResendTimer(30);
+
+        const isMobile = isMobileDeviceOrView();
+        if (isMobile && otpStr) {
+          setOtpValue(otpStr);
+          if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
+          lastSubmittedOtpRef.current = otpStr;
+          setTimeout(() => {
+            handleVerifyOtp(otpStr, currentMobile, userId);
+          }, 350);
+        } else {
+          setOtpValue('');
+          if (realOtpInputRef.current) realOtpInputRef.current.value = '';
+        }
       }
     } catch (err) {
       setError('Network error. Please try again later.');
@@ -199,11 +264,13 @@ export default function Login() {
   };
 
   // ─── VERIFY OTP ──────────────────────────────────────────────────
-  const handleVerifyOtp = async (arg) => {
+  const handleVerifyOtp = async (arg, customMobile, customUserId) => {
     if (arg?.preventDefault) arg.preventDefault();
-    const currentOtp = typeof arg === 'string' ? arg : otpValue;
+    const currentOtp = (typeof arg === 'string' && arg) ? arg : (otpValue || realOtpInputRef.current?.value || '');
+    const currentMobile = (typeof customMobile === 'string' && customMobile) ? customMobile : (mobileRef.current || mobile);
+    const currentUserId = customUserId !== undefined ? customUserId : otpUserIdRef.current;
 
-    if (currentOtp.length < 4) {
+    if (!currentOtp || currentOtp.length < 4) {
       setError('Please enter a valid OTP');
       return;
     }
@@ -218,10 +285,10 @@ export default function Login() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({
-          phone_number: mobileRef.current,
-          mobile: mobileRef.current,
+          phone_number: currentMobile,
+          mobile: currentMobile,
           otp: currentOtp,
-          ...(otpUserIdRef.current && { user_id: otpUserIdRef.current })
+          ...(currentUserId && { user_id: currentUserId })
         })
       });
 
@@ -235,9 +302,10 @@ export default function Login() {
       let data = await response.json();
 
       if (response.ok && data.success !== false) {
-        if (!data.user && data.user_id && !isStoreMemberRef.current) {
+        if (!data.user && (data.user_id || currentUserId) && !isStoreMemberRef.current) {
+          const lookupId = data.user_id || currentUserId;
           try {
-            const userResp = await fetch(`${API_BASE_URL}/customers/${data.user_id}/`, {
+            const userResp = await fetch(`${API_BASE_URL}/customers/${lookupId}/`, {
               headers: { 'ngrok-skip-browser-warning': 'true' }
             });
             if (userResp.ok) data.user = await userResp.json();
@@ -253,9 +321,9 @@ export default function Login() {
         const userObj = rawUser || {};
         const user = {
           ...userObj,
-          id: userObj.id || data.user_id || data.id || otpUserIdRef.current,
-          phone_number: userObj.phone_number || userObj.mobile || mobileRef.current,
-          mobile: userObj.mobile || userObj.phone_number || mobileRef.current,
+          id: userObj.id || data.user_id || data.id || currentUserId,
+          phone_number: userObj.phone_number || userObj.mobile || currentMobile,
+          mobile: userObj.mobile || userObj.phone_number || currentMobile,
           name: userObj.name || data.name || (isStoreMemberRef.current ? 'Store Member' : 'Dharani Customer'),
           email: userObj.email || data.email || null,
           is_store_member: userObj.is_store_member ?? data.is_store_member ?? isStoreMemberRef.current,
@@ -265,6 +333,10 @@ export default function Login() {
         try {
           localStorage.setItem('user', JSON.stringify(user));
           if (data.token) localStorage.setItem('token', data.token);
+          const verifiedMobile = user.mobile || user.phone_number || currentMobile || '';
+          if (verifiedMobile) {
+            localStorage.setItem('dharani_saved_mobile', String(verifiedMobile).replace(/\D/g, '').slice(0, 10));
+          }
         } catch (e) {}
 
         if (typeof closeLoginModal === 'function') closeLoginModal();
@@ -342,12 +414,36 @@ export default function Login() {
                     </div>
                     <input
                       type="tel"
+                      name="mobile"
+                      id="mobile"
+                      autoComplete="tel"
                       className="mobile-input"
                       placeholder="Enter Mobile Number"
                       value={mobile}
                       onChange={handleMobileChange}
+                      onFocus={(e) => e.target.select()}
+                      maxLength={10}
                       required
                     />
+                    {mobile && (
+                      <button
+                        type="button"
+                        onClick={() => { setMobile(''); mobileRef.current = ''; }}
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          padding: '4px 8px',
+                          cursor: 'pointer',
+                          color: '#94a3b8',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                        aria-label="Clear mobile number"
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
                   </div>
 
                   {error && <div className="error-message">{error}</div>}

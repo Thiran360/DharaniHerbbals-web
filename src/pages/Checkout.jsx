@@ -23,13 +23,33 @@ export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const checkinCalledRef = useRef(false);
+
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const statusParam = params.get('order_status') || params.get('status') || params.get('payment_status') || params.get('txStatus');
-    const orderIdParam = params.get('order_id') || params.get('orderId') || params.get('merchantOrderId');
-    let xGlToken = params.get('x_gl_token') || params.get('token') || params.get('gateway_transaction_id');
+    const searchParams = new URLSearchParams(location.search || window.location.search || '');
+    let hashParams = new URLSearchParams('');
+    if (window.location.hash && window.location.hash.includes('?')) {
+      hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+    } else if (window.location.hash && window.location.hash.includes('=')) {
+      hashParams = new URLSearchParams(window.location.hash.replace(/^#\/?/, ''));
+    }
+
+    const getParam = (name) => searchParams.get(name) || hashParams.get(name);
+
+    const statusParam = getParam('order_status') || getParam('status') || getParam('payment_status') || getParam('txStatus') || getParam('status_code');
+    const orderIdParam = getParam('order_id') || getParam('orderId') || getParam('merchantOrderId') || getParam('merchantTxnId');
+
+    let xGlToken = getParam('gateway_transaction_id') ||
+      getParam('gatewayTransactionId') ||
+      getParam('gid') ||
+      getParam('x_gl_token') ||
+      getParam('x-gl-token') ||
+      getParam('token') ||
+      getParam('gl_token') ||
+      getParam('gl_order_id');
+
     if (!xGlToken) {
-      for (const [key, value] of params.entries()) {
+      for (const [key, value] of [...searchParams.entries(), ...hashParams.entries()]) {
         if (value && typeof value === 'string' && (value.startsWith('gl_o-') || value.startsWith('gl_'))) {
           xGlToken = value;
           break;
@@ -37,41 +57,77 @@ export default function Checkout() {
       }
     }
 
-    const isSuccess = ['success','SUCCESS','TXN_SUCCESS','CHARGED'].includes(statusParam);
-    const isFailed = ['failed','FAILED','failure','FAILURE','CANCELLED'].includes(statusParam);
+    // Check saved gateway_transaction_id in storage if returning after gateway redirect
+    let storedGid = null;
+    try {
+      storedGid = sessionStorage.getItem('payglocal_gateway_transaction_id') ||
+        localStorage.getItem('payglocal_gateway_transaction_id') ||
+        (orderIdParam ? (sessionStorage.getItem(`payglocal_gid_${orderIdParam}`) || localStorage.getItem(`payglocal_gid_${orderIdParam}`)) : null);
+    } catch (e) { }
 
-    if (xGlToken || isSuccess || orderIdParam || isFailed) {
+    const finalGatewayTxnId = xGlToken || storedGid;
+
+    const isSuccess = ['success', 'SUCCESS', 'TXN_SUCCESS', 'CHARGED', 'SENT_FOR_CAPTURE', 'AUTHORISED', 'AUTHORIZED', 'COMPLETED', 'completed', 'PAID', 'paid', 'SUCCESSFUL'].includes(statusParam);
+    const isFailed = ['failed', 'FAILED', 'failure', 'FAILURE', 'CANCELLED', 'cancelled', 'DECLINED', 'declined', 'TIMED_OUT'].includes(statusParam);
+
+    const hasPaymentReturn = Boolean(xGlToken || statusParam || orderIdParam || (storedGid && (isSuccess || statusParam)));
+
+    if (hasPaymentReturn) {
       setLoading(true);
-      
+
       const formData = new FormData();
       formData.append('order_id', orderIdParam || '');
       formData.append('order_status', statusParam || 'success');
-      if (xGlToken) formData.append('x_gl_token', xGlToken);
+      if (finalGatewayTxnId) formData.append('x_gl_token', finalGatewayTxnId);
 
+      // Hit PayGlocal callback endpoint
       fetch(`${API_BASE_URL}/payglocal/callback/`, {
         method: 'POST',
         headers: { 'ngrok-skip-browser-warning': 'true' },
         body: formData,
-          keepalive: true
-        }).catch(e => console.error('Callback error', e));
+        keepalive: true
+      }).catch(e => console.error('Callback error', e));
 
-      if (xGlToken) {
-        fetch(`${API_BASE_URL}/payglocal/checkin/`, {
+      // Hit PayGlocal checkin endpoint to update CRM
+      if (finalGatewayTxnId && !checkinCalledRef.current) {
+        checkinCalledRef.current = true;
+        fetch('https://api.codingboss.in/herbal/payglocal/checkin/', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-          body: JSON.stringify({ gateway_transaction_id: xGlToken }),
-            keepalive: true
-          }).catch(e => console.error('Checkin error', e));
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+          },
+          body: JSON.stringify({ gateway_transaction_id: finalGatewayTxnId }),
+          keepalive: true
+        })
+          .then(async (res) => {
+            const resText = await res.text();
+            console.log('CRM checkin updated:', resText);
+            try {
+              sessionStorage.removeItem('payglocal_gateway_transaction_id');
+              localStorage.removeItem('payglocal_gateway_transaction_id');
+              if (orderIdParam) {
+                sessionStorage.removeItem(`payglocal_gid_${orderIdParam}`);
+                localStorage.removeItem(`payglocal_gid_${orderIdParam}`);
+              }
+            } catch (e) { }
+          })
+          .catch(e => console.error('Checkin error', e));
       }
 
-      if (isSuccess || xGlToken) {
+      if (isSuccess || xGlToken || (finalGatewayTxnId && !isFailed)) {
         setSuccessOrderId(orderIdParam || 'Completed');
         setShowSuccessPopup(true);
+        if (typeof refreshCart === 'function') refreshCart();
         setLoading(false);
-        // The modal itself has a useEffect that will navigate to '/' after 3 seconds
-      } else {
+      } else if (isFailed) {
         setLoading(false);
         setError('Payment failed or was cancelled. Please try again.');
+      } else {
+        setSuccessOrderId(orderIdParam || 'Completed');
+        setShowSuccessPopup(true);
+        if (typeof refreshCart === 'function') refreshCart();
+        setLoading(false);
       }
     }
   }, [location]);
@@ -457,7 +513,7 @@ export default function Checkout() {
       });
 
       if (addrRes.ok) {
-        const text = await addrRes.text(); let savedAddr = {}; try { savedAddr = text ? JSON.parse(text) : {}; } catch(e) { console.error("JSON parse error on addrRes:", text); }
+        const text = await addrRes.text(); let savedAddr = {}; try { savedAddr = text ? JSON.parse(text) : {}; } catch (e) { console.error("JSON parse error on addrRes:", text); }
         let newId = savedAddr.id || savedAddr.address_id || formData.id;
 
         const res = await fetch(`${API_BASE_URL}/address/${currentUserId}/`, {
@@ -481,7 +537,7 @@ export default function Checkout() {
         setCheckoutView('selected');
         setError(null);
       } else {
-        const text = await addrRes.text(); let errData = {}; try { errData = text ? JSON.parse(text) : {}; } catch(e) { console.error("JSON parse error on addrRes err:", text); }
+        const text = await addrRes.text(); let errData = {}; try { errData = text ? JSON.parse(text) : {}; } catch (e) { console.error("JSON parse error on addrRes err:", text); }
         setError(errData.message || errData.error || "Failed to save address");
       }
     } catch (err) {
@@ -527,7 +583,7 @@ export default function Checkout() {
         });
 
         if (addrRes.ok) {
-          const text = await addrRes.text(); let savedAddr = {}; try { savedAddr = text ? JSON.parse(text) : {}; } catch(e) { console.error("JSON parse error on addrRes:", text); }
+          const text = await addrRes.text(); let savedAddr = {}; try { savedAddr = text ? JSON.parse(text) : {}; } catch (e) { console.error("JSON parse error on addrRes:", text); }
           if (savedAddr && savedAddr.id) {
             finalAddressId = savedAddr.id;
           } else if (savedAddr && savedAddr.address_id) {
@@ -611,9 +667,20 @@ export default function Checkout() {
           });
           const pgText = await payglocalRes.text();
           let payglocalData = {};
-          try { payglocalData = pgText ? JSON.parse(pgText) : {}; } catch(e) {}
+          try { payglocalData = pgText ? JSON.parse(pgText) : {}; } catch (e) { }
           const redirectUrl = payglocalData.payment_url || payglocalData.redirect_url || payglocalData.response?.data?.redirectUrl;
           if (payglocalRes.ok && redirectUrl) {
+            const gid = payglocalData.gid || payglocalData.response?.gid || payglocalData.gateway_transaction_id || payglocalData.response?.data?.gid;
+            if (gid) {
+              try {
+                sessionStorage.setItem('payglocal_gateway_transaction_id', gid);
+                localStorage.setItem('payglocal_gateway_transaction_id', gid);
+                if (internalOrderId) {
+                  sessionStorage.setItem(`payglocal_gid_${internalOrderId}`, gid);
+                  localStorage.setItem(`payglocal_gid_${internalOrderId}`, gid);
+                }
+              } catch (e) { }
+            }
             window.location.href = redirectUrl;
             return;
           } else {
@@ -639,22 +706,22 @@ export default function Checkout() {
 
         const calculatedAmount = grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0)).toFixed(2));
 
-      // Define checkoutData if we didn't go through the block
-      if (typeof checkoutData === 'undefined') {
-        var checkoutData = null;
-      }
+        // Define checkoutData if we didn't go through the block
+        if (typeof checkoutData === 'undefined') {
+          var checkoutData = null;
+        }
 
-      const isB2B = user?.is_store_member || ['retailer', 'reseller', 'staff'].includes(user?.role);
-      const backendRole = checkoutData?.role || checkoutData?.customer_role || checkoutData?.customer_type;
-      const isB2BActual = isB2B || ['retailer', 'reseller', 'staff'].includes(backendRole) || checkoutData?.payment_method === 'credit';
-      
-      if (isB2BActual) {
-        setSuccessOrderId(internalOrderId);
-        setShowSuccessPopup(true);
-        setLoading(false);
-        return;
-      }
-        
+        const isB2B = user?.is_store_member || ['retailer', 'reseller', 'staff'].includes(user?.role);
+        const backendRole = checkoutData?.role || checkoutData?.customer_role || checkoutData?.customer_type;
+        const isB2BActual = isB2B || ['retailer', 'reseller', 'staff'].includes(backendRole) || checkoutData?.payment_method === 'credit';
+
+        if (isB2BActual) {
+          setSuccessOrderId(internalOrderId);
+          setShowSuccessPopup(true);
+          setLoading(false);
+          return;
+        }
+
         if (!finalPaytmData) {
           // Call Paytm Initiate API
           const paytmRes = await fetch(`${API_BASE_URL}/create-paytm-order/`, {
@@ -983,8 +1050,8 @@ export default function Checkout() {
                                 </svg>
                                 <div className="map-watermark-pin">
                                   <svg width="22" height="26" viewBox="0 0 24 28" fill="none">
-                                    <path d="M12 0C5.37 0 0 5.37 0 12C0 19.5 10.5 27.2 11 27.6C11.3 27.8 11.6 28 12 28C12.4 28 12.7 27.8 13 27.6C13.5 27.2 24 19.5 24 12C24 5.37 18.63 0 12 0Z" fill="#0d7f46"/>
-                                    <circle cx="12" cy="11" r="4" fill="#ffffff"/>
+                                    <path d="M12 0C5.37 0 0 5.37 0 12C0 19.5 10.5 27.2 11 27.6C11.3 27.8 11.6 28 12 28C12.4 28 12.7 27.8 13 27.6C13.5 27.2 24 19.5 24 12C24 5.37 18.63 0 12 0Z" fill="#0d7f46" />
+                                    <circle cx="12" cy="11" r="4" fill="#ffffff" />
                                   </svg>
                                 </div>
                               </div>
@@ -995,8 +1062,8 @@ export default function Checkout() {
                                   <div className="address-pin-circle">
                                     {/* Exact Solid Green Teardrop Pin with White Dot */}
                                     <svg width="20" height="24" viewBox="0 0 24 28" fill="none" className="exact-teardrop-pin">
-                                      <path d="M12 0C5.37 0 0 5.37 0 12C0 19.5 10.5 27.2 11 27.6C11.3 27.8 11.6 28 12 28C12.4 28 12.7 27.8 13 27.6C13.5 27.2 24 19.5 24 12C24 5.37 18.63 0 12 0Z" fill="#0d7f46"/>
-                                      <circle cx="12" cy="11" r="4.2" fill="#ffffff"/>
+                                      <path d="M12 0C5.37 0 0 5.37 0 12C0 19.5 10.5 27.2 11 27.6C11.3 27.8 11.6 28 12 28C12.4 28 12.7 27.8 13 27.6C13.5 27.2 24 19.5 24 12C24 5.37 18.63 0 12 0Z" fill="#0d7f46" />
+                                      <circle cx="12" cy="11" r="4.2" fill="#ffffff" />
                                     </svg>
                                   </div>
                                   <div className="address-street-wrap">
@@ -1024,13 +1091,13 @@ export default function Checkout() {
                               <div className="delivery-icon-circle">
                                 {/* Exact Delivery Truck with Clock Icon */}
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0d7f46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
-                                  <path d="M15 18H9"/>
-                                  <path d="M19 18h2a1 1 0 0 0 1-1v-5l-3-4h-5v10Z"/>
-                                  <circle cx="7" cy="18" r="2"/>
-                                  <circle cx="17" cy="18" r="2"/>
-                                  <circle cx="8" cy="10" r="3.2" stroke="#0d7f46" strokeWidth="1.5" fill="#e6f4ea"/>
-                                  <polyline points="8,8.5 8,10 9.2,10" stroke="#0d7f46" strokeWidth="1.5"/>
+                                  <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
+                                  <path d="M15 18H9" />
+                                  <path d="M19 18h2a1 1 0 0 0 1-1v-5l-3-4h-5v10Z" />
+                                  <circle cx="7" cy="18" r="2" />
+                                  <circle cx="17" cy="18" r="2" />
+                                  <circle cx="8" cy="10" r="3.2" stroke="#0d7f46" strokeWidth="1.5" fill="#e6f4ea" />
+                                  <polyline points="8,8.5 8,10 9.2,10" stroke="#0d7f46" strokeWidth="1.5" />
                                 </svg>
                               </div>
                               <div className="delivery-text-wrap">
@@ -1312,10 +1379,10 @@ export default function Checkout() {
             <div className="summary-totals">
               <div className="total-row"><span>Subtotal</span><span>₹{cartTotal}</span></div>
               <div className="total-row"><span>Shipping Charge</span>{shippingCost === 0 ? <span className="text-free">Free</span> : <span>₹{shippingCost}</span>}</div>
-              
-              
-              
-              
+
+
+
+
               <div className="total-row grand-total" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '16px', marginTop: '8px' }}>
                 <span>Total</span>
                 <span style={{ fontSize: "1.8rem", color: "#16A34A" }}>₹{grandTotal !== null ? grandTotal.toFixed(2) : (cartTotal + (shippingCost || 0)).toFixed(2)}</span>

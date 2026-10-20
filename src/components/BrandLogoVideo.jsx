@@ -16,7 +16,7 @@ function getSharedVideo() {
   sharedVideo.loop = true;
   sharedVideo.muted = true;
   sharedVideo.playsInline = true;
-  sharedVideo.preload = 'auto';
+  sharedVideo.preload = 'metadata';
   sharedVideo.crossOrigin = 'anonymous';
   sharedVideo.style.display = 'none';
   document.body.appendChild(sharedVideo);
@@ -61,7 +61,9 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
     let animationFrameId;
     let running = true;
 
-    const targetSize = variant === 'nav' || variant === 'mobile-nav' ? 150 : 300; // Reduced size for performance
+    const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 2, 2.5) : 2;
+    const baseDimension = variant === 'nav' || variant === 'mobile-nav' ? 64 : 120;
+    const targetSize = Math.round(baseDimension * dpr);
     canvas.width = targetSize;
     canvas.height = targetSize;
 
@@ -78,19 +80,27 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
       if (!running) return;
       animationFrameId = requestAnimationFrame(drawLoop);
 
-      // Only draw if visible and throttle to ~30 FPS (every 33ms) to save CPU/battery
+      // Draw smoothly at ~30 FPS
       if (!isVisible || timestamp - lastDrawTime < 33) return;
       lastDrawTime = timestamp;
 
       const video = sharedVideo;
       if (video && video.videoWidth > 0 && !video.paused) {
-        const zoomFactor = 1.0;
-        const minDim = Math.min(video.videoWidth, video.videoHeight) / zoomFactor;
-        const sx = (video.videoWidth - minDim) / 2;
-        const sy = (video.videoHeight - minDim) / 2;
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        
+        // The animated Dharani logo emblem is vertically centered in the upper portion (0 to ~72% height)
+        const contentHeight = Math.min(vh, Math.round(vw * 0.72));
+        const contentWidth = vw;
+
+        // Proportional centering inside target canvas for maximum sharpness and zero distortion
+        const drawAspect = contentWidth / contentHeight;
+        const drawW = targetSize;
+        const drawH = Math.round(targetSize / drawAspect);
+        const offsetY = Math.round((targetSize - drawH) / 2);
 
         ctx.clearRect(0, 0, targetSize, targetSize);
-        ctx.drawImage(video, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+        ctx.drawImage(video, 0, 0, contentWidth, contentHeight, 0, offsetY, drawW, drawH);
 
         const frame = ctx.getImageData(0, 0, targetSize, targetSize);
         const data32 = new Uint32Array(frame.data.buffer);
@@ -101,15 +111,13 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
           const g = (pixel >> 8) & 0xFF;
           const b = (pixel >> 16) & 0xFF;
           const maxVal = Math.max(r, g, b);
-          const minVal = Math.min(r, g, b);
 
-          if (maxVal < 25) {
+          // Remove only black background while preserving crisp edges and ALL white/light-green leaves
+          if (maxVal < 22) {
             data32[i] = 0;
-          } else if (maxVal < 65) {
-            const alpha = Math.floor((maxVal - 25) * (255 / 40));
+          } else if (maxVal < 60) {
+            const alpha = Math.floor((maxVal - 22) * (255 / 38));
             data32[i] = (pixel & 0x00FFFFFF) | (alpha << 24);
-          } else if (minVal > 150 && Math.abs(r - g) < 20 && Math.abs(g - b) < 20) {
-            data32[i] = 0;
           }
         }
 
@@ -141,6 +149,20 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
       aria-label={ariaLabel}
       style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}
     >
+      {/* Instant static logo so brand is visible immediately on slow 2G/3G */}
+      <img
+        src={LOGO_STATIC}
+        alt={ariaLabel}
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          opacity: videoStarted ? 0 : 1,
+          transition: 'opacity 0.3s ease-in',
+          pointerEvents: 'none'
+        }}
+      />
       {/* Animated canvas shown once video is ready */}
       <canvas
         ref={canvasRef}
