@@ -8,6 +8,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
 import UsageCalendar from '../components/UsageCalendar';
 import { API_BASE_URL, getMyOrdersUrl } from '../services/api';
+import { showAppToast } from '../components/GlobalToast';
 import './Profile.css';
 
 const INDIAN_STATES = [
@@ -205,6 +206,7 @@ export default function Profile() {
     if (refreshCart) {
       refreshCart();
     }
+    showAppToast('Logged out successfully');
     navigate('/login');
   };
 

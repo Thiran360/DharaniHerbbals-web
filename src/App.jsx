@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Link, useNavigate, us
 import Navbar from './components/Navbar';
 import NetworkStatus from './components/NetworkStatus';
 import CartDrawer from './components/CartDrawer';
+import GlobalToast from './components/GlobalToast';
 import { useCart } from './context/CartContext';
 import { useProducts } from './context/ProductsContext';
 import { useLanguage } from './context/LanguageContext';
@@ -367,6 +368,7 @@ function AppContent() {
       {!isAdminRoute && !isPoliciesRoute && <FloatingSocials />}
       {!isAdminRoute && !isPoliciesRoute && <GlobalOrderPopup />}
       {!isAdminRoute && <Login />}
+      <GlobalToast />
       <WishlistToastNotification />
       <main className="main-content" style={isAdminRoute ? { padding: 0 } : {}}>
         <Suspense

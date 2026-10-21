@@ -1,12 +1,21 @@
 import { useRef, useEffect, useState } from 'react';
 
 const LOGO_SRC = '/videos/logo.mp4';
-const LOGO_STATIC = '/favicon.png';
+const LOGO_STATIC = '/logo_3d_bright.png';
 
 // --- Shared singleton video element ---
 let sharedVideo = null;
 let sharedVideoReady = false;
 const readyCallbacks = [];
+
+function notifyVideoReady() {
+  if (sharedVideoReady) return;
+  sharedVideoReady = true;
+  readyCallbacks.forEach(cb => {
+    try { cb(); } catch (e) { /* ignore */ }
+  });
+  readyCallbacks.length = 0;
+}
 
 function getSharedVideo() {
   if (sharedVideo) return sharedVideo;
@@ -15,28 +24,67 @@ function getSharedVideo() {
   sharedVideo.src = LOGO_SRC;
   sharedVideo.loop = true;
   sharedVideo.muted = true;
+  sharedVideo.defaultMuted = true;
   sharedVideo.playsInline = true;
-  sharedVideo.preload = 'metadata';
+  sharedVideo.autoplay = true;
+  sharedVideo.setAttribute('muted', '');
+  sharedVideo.setAttribute('playsinline', '');
+  sharedVideo.setAttribute('webkit-playsinline', '');
+  sharedVideo.setAttribute('autoplay', '');
+  sharedVideo.preload = 'auto';
   sharedVideo.crossOrigin = 'anonymous';
-  sharedVideo.style.display = 'none';
+
+  // Keep in DOM render tree off-screen so iOS Safari and mobile Chrome actively render video frames
+  sharedVideo.style.position = 'fixed';
+  sharedVideo.style.top = '-9999px';
+  sharedVideo.style.left = '-9999px';
+  sharedVideo.style.width = '64px';
+  sharedVideo.style.height = '64px';
+  sharedVideo.style.opacity = '0.01';
+  sharedVideo.style.pointerEvents = 'none';
+  sharedVideo.style.zIndex = '-9999';
   document.body.appendChild(sharedVideo);
 
-  const onReady = () => {
-    if (sharedVideoReady) return;
-    sharedVideoReady = true;
-    sharedVideo.play().catch(() => {});
-    readyCallbacks.forEach(cb => cb());
-    readyCallbacks.length = 0;
+  const attemptPlay = () => {
+    if (!sharedVideo) return;
+    const p = sharedVideo.play();
+    if (p && typeof p.then === 'function') {
+      p.then(() => {
+        notifyVideoReady();
+      }).catch(() => {});
+    }
   };
 
-  if (sharedVideo.readyState >= 3) {
-    onReady();
-  } else {
-    sharedVideo.addEventListener('loadeddata', onReady, { once: true });
-    sharedVideo.addEventListener('canplay', onReady, { once: true });
+  sharedVideo.addEventListener('loadeddata', () => {
+    attemptPlay();
+    notifyVideoReady();
+  });
+  sharedVideo.addEventListener('canplay', () => {
+    attemptPlay();
+    notifyVideoReady();
+  });
+  sharedVideo.addEventListener('playing', () => {
+    notifyVideoReady();
+  });
+  sharedVideo.addEventListener('timeupdate', () => {
+    if (sharedVideo.currentTime > 0) {
+      notifyVideoReady();
+    }
+  });
+
+  // Strict mobile gesture trigger fallback
+  const resumeGesture = () => {
+    if (sharedVideo && (sharedVideo.paused || !sharedVideoReady)) {
+      sharedVideo.play().then(notifyVideoReady).catch(() => {});
+    }
+  };
+  if (typeof window !== 'undefined') {
+    ['touchstart', 'pointerdown', 'scroll', 'click'].forEach(evt => {
+      window.addEventListener(evt, resumeGesture, { passive: true, once: true });
+    });
   }
-  
-  sharedVideo.load();
+
+  attemptPlay();
 
   return sharedVideo;
 }
@@ -67,8 +115,9 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
     canvas.width = targetSize;
     canvas.height = targetSize;
 
-    let isVisible = false;
+    let isVisible = true;
     let lastDrawTime = 0;
+    let renderedFrames = 0;
 
     const observer = new IntersectionObserver(
       ([entry]) => { isVisible = entry.isIntersecting; },
@@ -122,16 +171,21 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
         }
 
         ctx.putImageData(frame, 0, 0);
+
+        // Only reveal animated canvas after valid frames have rendered
+        renderedFrames++;
+        if (renderedFrames >= 3) {
+          setVideoStarted(true);
+        }
       }
     };
 
     // Ensure singleton video is created
     getSharedVideo();
 
-    // Start animated canvas only when video is ready
+    // Start animated canvas loop when video is ready
     onVideoReady(() => {
       if (running) {
-        setVideoStarted(true);
         animationFrameId = requestAnimationFrame(drawLoop);
       }
     });
@@ -149,29 +203,32 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
       aria-label={ariaLabel}
       style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}
     >
-      {/* Instant static logo so brand is visible immediately on slow 2G/3G */}
+      {/* Permanent bright 3D base logo - guaranteed continuous 100% visibility on all devices */}
       <img
         src={LOGO_STATIC}
         alt={ariaLabel}
         style={{
           position: 'absolute',
+          inset: 0,
           width: '100%',
           height: '100%',
           objectFit: 'contain',
-          opacity: videoStarted ? 0 : 1,
-          transition: 'opacity 0.3s ease-in',
+          opacity: 1,
           pointerEvents: 'none'
         }}
       />
-      {/* Animated canvas shown once video is ready */}
+      {/* Animated canvas smoothly layered on top once actively playing */}
       <canvas
         ref={canvasRef}
         style={{
+          position: 'absolute',
+          inset: 0,
           width: '100%',
           height: '100%',
           objectFit: 'contain',
           opacity: videoStarted ? 1 : 0,
-          transition: 'opacity 0.3s ease-in'
+          transition: 'opacity 0.3s ease-in',
+          pointerEvents: 'none'
         }}
       />
     </span>

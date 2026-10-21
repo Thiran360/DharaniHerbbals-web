@@ -1080,6 +1080,7 @@
     justify-content: center;
     overflow: hidden;
     flex-shrink: 0;
+    filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.25));
   }
 
   .nav-icons-right {
@@ -1241,8 +1242,9 @@
 
   .brand-logo-video-wrap--nav,
   .navbar-ultra.scrolled .brand-logo-video-wrap--nav {
-    width: 47px;
-    height: 47px;
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.25));
   }
 
   .brand-reg {
@@ -1307,8 +1309,9 @@
 
   .brand-logo-video-wrap--nav,
   .navbar-ultra.scrolled .brand-logo-video-wrap--nav {
-    width: 43px;
-    height: 43px;
+    width: 44px;
+    height: 44px;
+    filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.25));
   }
 
   .brand-reg {

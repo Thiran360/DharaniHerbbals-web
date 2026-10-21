@@ -13,6 +13,7 @@ import {
   Search
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { showAppToast } from '../components/GlobalToast';
 import './Admin.css';
 
 // Dummy Data
@@ -36,7 +37,11 @@ export default function Admin() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Basic logout logic
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('dharani_saved_mobile');
+    window.dispatchEvent(new Event('user-login-status-changed'));
+    showAppToast('Logged out successfully');
     navigate('/login');
   };
 

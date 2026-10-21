@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { useProducts } from './ProductsContext';
 import { useAuthModal } from './AuthModalContext';
 import { API_BASE_URL } from '../services/api';
+import { showAppToast } from '../components/GlobalToast';
 
 const CartContext = createContext();
 
@@ -24,7 +25,6 @@ export function CartProvider({ children }) {
   const [taxTotal, setTaxTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartToastMsg, setCartToastMsg] = useState('');
   const { products } = useProducts();
   const { openLoginModal } = useAuthModal();
 
@@ -303,8 +303,7 @@ export function CartProvider({ children }) {
         // Same variation -> just add quantity
         updateQuantity(product.id, quantity);
         if (!silent) {
-          setCartToastMsg('Quantity updated in cart!');
-            setTimeout(() => setCartToastMsg(''), 3000);
+          showAppToast('Added to cart successfully');
         }
         return;
       } else {
@@ -363,16 +362,13 @@ export function CartProvider({ children }) {
     }
 
     if (!silent) {
+      showAppToast('Added to cart successfully');
       if (cartItems.length === 0) {
         setIsCartOpen(true);
         // Wait for cart drawer to slide in, then burst patasu right on the drawer
         setTimeout(() => {
           triggerDrawerPatasu();
         }, 350);
-      } else {
-        // Subsequent additions (2nd, 3rd, etc.) only show toast without patasu
-        setCartToastMsg('Product added to cart!');
-        setTimeout(() => setCartToastMsg(''), 3000);
       }
     }
   };
@@ -510,27 +506,6 @@ export function CartProvider({ children }) {
       triggerCartCrackers
     }}>
       {children}
-      {cartToastMsg && (
-        <div style={{
-          position: 'fixed',
-          top: '30px',
-          right: '30px',
-          backgroundColor: '#10b981',
-          color: 'white',
-          padding: '12px 24px',
-          borderRadius: '8px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          zIndex: 999999,
-          fontWeight: '600',
-          fontSize: '15px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px'
-        }}>
-          <span style={{ fontSize: '18px' }}>🎉</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          {cartToastMsg}
-        </div>
-      )}
     </CartContext.Provider>
   );
 }

@@ -8,6 +8,7 @@ import { useAuthModal } from '../context/AuthModalContext';
 import { useWishlist } from '../context/WishlistContext';
 import confetti from 'canvas-confetti';
 import BrandLogoVideo from './BrandLogoVideo';
+import { showAppToast } from './GlobalToast';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -121,6 +122,7 @@ export default function Navbar() {
     setShowAccountMenu(false);
     if (refreshProducts) refreshProducts();
     window.dispatchEvent(new Event('user-login-status-changed'));
+    showAppToast('Logged out successfully');
     navigate('/');
   };
 
@@ -551,6 +553,7 @@ export default function Navbar() {
                   setUser(null);
                   if (refreshProducts) refreshProducts();
                   window.dispatchEvent(new Event('user-login-status-changed'));
+                  showAppToast('Logged out successfully');
                   toggleMobileMenu();
                 }}
               >
