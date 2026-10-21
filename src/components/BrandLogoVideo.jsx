@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
+import logoVideo from '../assets/logo.mp4';
 
-const LOGO_VIDEO = '/videos/logo.mp4';
 const LOGO_POSTER = '/favicon.png';
 
 export default function BrandLogoVideo({ className = '', variant = 'title', ariaLabel = 'Dharani Herbbals logo' }) {
@@ -33,7 +33,7 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
     >
       <video
         ref={videoRef}
-        src={LOGO_VIDEO}
+        src={logoVideo}
         poster={LOGO_POSTER}
         autoPlay
         loop
