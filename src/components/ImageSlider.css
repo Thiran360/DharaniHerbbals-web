@@ -33,21 +33,22 @@
 
 .slide-bg-video {
   position: absolute;
-  top: 0;
+  top: -70px;
   right: 0;
   left: 0;
-  width: 100%; /* Take up full width so we don't need expensive GPU masks for hard edges */
-  height: 100%;
+  width: 100%;
+  height: calc(100% + 80px);
   object-fit: cover;
   object-position: right center; /* Keep the focal point on the right */
   z-index: 0;
   transform: translateZ(0);
   backface-visibility: hidden;
-  /* REMOVED: mask-image - this was causing massive GPU lag (stop-and-go stuttering) on mobile devices! */
 }
 
 @media (min-width: 1025px) {
   .slide-bg-video {
+    top: 0;
+    height: 100%;
     width: 60%;
     left: auto;
     right: 0;
