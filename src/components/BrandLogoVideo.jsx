@@ -172,10 +172,16 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
 
         ctx.putImageData(frame, 0, 0);
 
-        // Only reveal animated canvas after valid frames have rendered
+        // Only reveal animated canvas and fade out static base once valid frames are actively rendering
         renderedFrames++;
-        if (renderedFrames >= 3) {
+        if (renderedFrames >= 3 && !videoStarted) {
           setVideoStarted(true);
+        }
+      } else {
+        // If video ever pauses or stops, smoothly fall back to static image
+        if (video && video.paused && videoStarted) {
+          setVideoStarted(false);
+          renderedFrames = 0;
         }
       }
     };
@@ -203,7 +209,7 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
       aria-label={ariaLabel}
       style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}
     >
-      {/* Permanent bright 3D base logo - guaranteed continuous 100% visibility on all devices */}
+      {/* Single static 3D logo - visible only when video is buffering/paused */}
       <img
         src={LOGO_STATIC}
         alt={ariaLabel}
@@ -213,11 +219,12 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
           width: '100%',
           height: '100%',
           objectFit: 'contain',
-          opacity: 1,
+          opacity: videoStarted ? 0 : 1,
+          transition: 'opacity 0.25s ease',
           pointerEvents: 'none'
         }}
       />
-      {/* Animated canvas smoothly layered on top once actively playing */}
+      {/* Single animated spinning canvas - visible when actively rendering */}
       <canvas
         ref={canvasRef}
         style={{
@@ -227,7 +234,7 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
           height: '100%',
           objectFit: 'contain',
           opacity: videoStarted ? 1 : 0,
-          transition: 'opacity 0.3s ease-in',
+          transition: 'opacity 0.25s ease',
           pointerEvents: 'none'
         }}
       />
