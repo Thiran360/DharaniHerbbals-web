@@ -823,6 +823,7 @@
   z-index: 999;
   pointer-events: auto;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Hardware accelerated */
+  visibility: hidden;
   display: flex;
   flex-direction: column;
   box-shadow: 20px 0 44px rgba(0,0,0,0.12);
@@ -832,6 +833,7 @@
 }
 
 .mobile-menu-drawer.open {
+  visibility: visible;
   transform: translateX(0);
 }
 
