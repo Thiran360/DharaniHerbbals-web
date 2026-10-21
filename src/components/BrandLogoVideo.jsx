@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
-const LOGO_SRC = '/logo_animated.webp';
+const LOGO_VIDEO = '/videos/logo.mp4';
+const LOGO_POSTER = '/favicon.png';
 
 export default function BrandLogoVideo({ className = '', variant = 'title', ariaLabel = 'Dharani Herbbals logo' }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.defaultMuted = true;
+      video.muted = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+    }
+  }, []);
+
   return (
     <span
       className={`brand-logo-video-wrap brand-logo-video-wrap--${variant} ${className}`}
@@ -12,20 +27,28 @@ export default function BrandLogoVideo({ className = '', variant = 'title', aria
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        flexShrink: 0
+        flexShrink: 0,
+        overflow: 'hidden'
       }}
     >
-      <img
-        src={LOGO_SRC}
-        alt={ariaLabel}
-        className="brand-logo-img"
+      <video
+        ref={videoRef}
+        src={LOGO_VIDEO}
+        poster={LOGO_POSTER}
+        autoPlay
+        loop
+        muted
+        playsInline
+        webkit-playsinline="true"
+        preload="auto"
+        aria-hidden="true"
         style={{
           width: '100%',
           height: '100%',
-          objectFit: 'contain',
-          display: 'block',
+          objectFit: 'cover',
+          transform: 'scale(1.45) translateY(13%)',
           pointerEvents: 'none',
-          filter: 'drop-shadow(0 2px 8px rgba(16, 185, 129, 0.3))'
+          display: 'block'
         }}
       />
     </span>
