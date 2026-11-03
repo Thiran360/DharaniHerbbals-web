@@ -24,15 +24,17 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Register high-performance Service Worker for offline speed & caching
-if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      console.warn('Service worker registration ignored:', err);
-    });
-  });
-} else if ('serviceWorker' in navigator) {
-  // Also register in dev mode to allow testing offline mode
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+// Unregister any stale Service Workers and purge caches to guarantee immediate fresh code
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for (const registration of registrations) {
+      registration.unregister();
+    }
+  }).catch(() => {});
+  if (typeof caches !== 'undefined') {
+    caches.keys().then((keys) => {
+      keys.forEach((key) => caches.delete(key));
+    }).catch(() => {});
+  }
 }
 

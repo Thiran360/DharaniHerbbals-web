@@ -1,7 +1,71 @@
+# ----------------------------------------------------------------------
+# Dharani Herbals - Production .htaccess for Apache / LiteSpeed (Hostinger)
+# Ensures WhatsApp, Facebook, and search crawlers receive pre-rendered HTML
+# with dynamic Open Graph tags, images, and prices.
+# ----------------------------------------------------------------------
+
 Options -MultiViews
-RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.html$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ /index.html [QSA,L]
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # --------------------------------------------------------------------
+  # 0. API Reverse Proxy Routing (HTTPS same-origin to Django Backend)
+  # --------------------------------------------------------------------
+  # Route /api/* and /media/* directly to secure PHP reverse proxy, preventing Mixed Content blocks
+  RewriteRule ^api/(.*)$ api_proxy.php?__route=$1 [QSA,L]
+  RewriteRule ^api/?$ api_proxy.php?__route= [QSA,L]
+  RewriteRule ^media/(.*)$ api_proxy.php?__route=media/$1 [QSA,L]
+
+  # --------------------------------------------------------------------
+  # 1. Social Crawler Explicit Routing (WhatsApp, Facebook, Twitter, Telegram, etc.)
+  # --------------------------------------------------------------------
+  # When WhatsApp or Facebook crawler requests /product/:id:
+  # Route directly to the pre-rendered HTML file containing Open Graph metadata.
+  RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|WhatsApp|Twitterbot|TelegramBot|LinkedInBot|Slackbot|SkypeUriPreview|Googlebot|bingbot) [NC]
+  RewriteCond %{REQUEST_URI} ^/product/([0-9]+)/?$
+  RewriteRule ^product/([0-9]+)/?$ product/$1/index.html [L]
+
+  # --------------------------------------------------------------------
+  # 2. Pre-rendered Static Directory & File Matching
+  # --------------------------------------------------------------------
+  # If /product/1255 is requested and product/1255/index.html exists on disk:
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+?)/?$ $1/index.html [L]
+
+  # If /product/1255 is requested and product/1255.html exists on disk:
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
+
+  # --------------------------------------------------------------------
+  # 3. Existing static files (images, JS, CSS, fonts, audio, video)
+  # --------------------------------------------------------------------
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # --------------------------------------------------------------------
+  # 4. Dynamic Server-Side Fallback for newly created products (PHP)
+  # --------------------------------------------------------------------
+  RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|WhatsApp|Twitterbot|TelegramBot|LinkedInBot) [NC]
+  RewriteCond %{REQUEST_URI} ^/product/([0-9]+)/?$
+  RewriteRule ^product/([0-9]+)/?$ product.php?id=$1 [L,QSA]
+
+  # --------------------------------------------------------------------
+  # 5. Standard SPA Fallback
+  # --------------------------------------------------------------------
+  # All other client-side routes fallback to index.html for React Router.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Ensure correct MIME types for modern web assets
+<IfModule mod_mime.c>
+  AddType text/html .html
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType application/json .json
+</IfModule>

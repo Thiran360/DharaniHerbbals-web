@@ -1,8 +1,70 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/og-image",
+      "destination": "/api/og-image"
+    },
+    {
+      "source": "/api/product-preview",
+      "destination": "/api/product-preview"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/proxy?path="
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/proxy?path=$1"
+    },
+    {
+      "source": "/product/:id",
+      "destination": "/product/:id/index.html"
+    },
+    {
+      "source": "/((?!api/).*)",
       "destination": "/"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)\\.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/product/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html; charset=utf-8"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "inline"
+        }
+      ]
     }
   ]
 }

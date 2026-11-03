@@ -5,54 +5,16 @@ import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { useAuthModal } from '../context/AuthModalContext';
 import { API_BASE_URL } from '../services/api';
+import BrandLogoVideo from '../components/BrandLogoVideo';
 import heartImg from '../assets/heart.png';
 import './Login.css';
 
 const isMobileDeviceOrView = () => {
   if (typeof window === 'undefined') return false;
-  const isSmallScreen = window.innerWidth <= 992;
+  // Matches Login.css mobile breakpoint @media (max-width: 800px)
+  const isSmallScreen = window.innerWidth <= 800;
   const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent || '');
-  const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  return isSmallScreen || isMobileUA || (hasTouch && window.innerWidth <= 1024);
-};
-
-const PRIMARY_USER_PHONE = '9344849211';
-
-const getThisPhoneSavedNumber = () => {
-  try {
-    const saved = localStorage.getItem('dharani_my_mobile');
-    if (saved) return String(saved).replace(/\D/g, '').slice(-10);
-    return '';
-  } catch {
-    return '';
-  }
-};
-
-const isThisPhoneUser = (inputNumber) => {
-  if (!inputNumber) return false;
-  const cleanInput = String(inputNumber).replace(/\D/g, '').slice(-10);
-  if (cleanInput.length !== 10) return false;
-
-  const savedNumber = getThisPhoneSavedNumber();
-
-  // 1. If this phone already has an established user number:
-  // ONLY that exact number is allowed to autofill on this phone!
-  if (savedNumber && savedNumber.length === 10) {
-    return cleanInput === savedNumber;
-  }
-
-  // 2. If this phone does not have an established user yet:
-  // If the owner (9344849211) enters their number, recognize it and save to this phone
-  if (cleanInput === PRIMARY_USER_PHONE) {
-    try {
-      localStorage.setItem('dharani_my_mobile', PRIMARY_USER_PHONE);
-    } catch (e) {}
-    return true;
-  }
-
-  // If another unverified number is entered on a fresh device:
-  // Do NOT autofill via API. Must be manually verified first.
-  return false;
+  return isSmallScreen || isMobileUA;
 };
 
 export default function Login() {
@@ -62,10 +24,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
-  const [apiOtp, setApiOtp] = useState('');
+  const [otpAttempt, setOtpAttempt] = useState(0);
   const [otpUserId, setOtpUserId] = useState(null);
   const [isStoreMember, setIsStoreMember] = useState(false);
-  const [otpType, setOtpType] = useState('register');
+  const [otpType, setOtpType] = useState('login');
   const [resendTimer, setResendTimer] = useState(0);
 
   useEffect(() => {
@@ -84,32 +46,16 @@ export default function Login() {
   // Refs for stale-closure-safe access inside async callbacks
   const mobileRef = useRef('');
   const otpUserIdRef = useRef(null);
-  const otpTypeRef = useRef('register');
+  const otpTypeRef = useRef('login');
   const isStoreMemberRef = useRef(false);
   const verifyFnRef = useRef(null);
   const lastSubmittedOtpRef = useRef(null);
-  const isNewUserRef = useRef(false);
+  const isVerifyingRef = useRef(false);
 
   useEffect(() => { mobileRef.current = mobile; }, [mobile]);
   useEffect(() => { otpUserIdRef.current = otpUserId; }, [otpUserId]);
   useEffect(() => { otpTypeRef.current = otpType; }, [otpType]);
   useEffect(() => { isStoreMemberRef.current = isStoreMember; }, [isStoreMember]);
-
-  // Auto-submit OTP as soon as 6 digits are prefilled or entered, or if the exact API OTP is filled for this phone's user
-  useEffect(() => {
-    const isPhoneUser = isThisPhoneUser(mobileRef.current);
-    const isExactApiOtp = isPhoneUser && !isNewUserRef.current && apiOtp && otpValue === apiOtp;
-    if (showOtp && otpValue && (otpValue.length === 6 || isExactApiOtp) && lastSubmittedOtpRef.current !== otpValue && !loading) {
-      if (!isPhoneUser && otpValue.length < 6) return;
-      lastSubmittedOtpRef.current = otpValue;
-      const timer = setTimeout(() => {
-        if (verifyFnRef.current) {
-          verifyFnRef.current(otpValue);
-        }
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [showOtp, otpValue, loading, apiOtp]);
 
   const { refreshProducts } = useProducts();
   const { refreshCart } = useCart();
@@ -142,12 +88,10 @@ export default function Login() {
     }
   }, [showOtp]);
 
-  // Web OTP API — auto-reads SMS silently on Android Chrome (no user tap needed)
+  // Web OTP API — auto-reads incoming SMS on Mobile devices (Android Chrome)
   useEffect(() => {
     const isMobile = isMobileDeviceOrView();
     if (!showOtp || !isMobile || !('credentials' in navigator)) return;
-    if (!isThisPhoneUser(mobileRef.current)) return;
-    if (isNewUserRef.current) return;
     const ac = new AbortController();
     navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal })
       .then(result => {
@@ -155,8 +99,8 @@ export default function Login() {
           const digits = result.code.replace(/\D/g, '').slice(0, 6);
           setOtpValue(digits);
           if (realOtpInputRef.current) realOtpInputRef.current.value = digits;
-          if (digits.length === 6 && verifyFnRef.current) {
-            setTimeout(() => verifyFnRef.current(digits), 50);
+          if (digits.length === 6 && !isVerifyingRef.current) {
+            handleVerifyOtp(digits);
           }
         }
       })
@@ -164,7 +108,7 @@ export default function Login() {
         if (err.name !== 'AbortError') console.log('Web OTP API:', err.message);
       });
     return () => ac.abort();
-  }, [showOtp]);
+  }, [showOtp, otpAttempt]);
 
   // Derive the array of displayed digits from otpValue
   const otpArray = Array.from({ length: 6 }, (_, i) => otpValue[i] || '');
@@ -176,22 +120,24 @@ export default function Login() {
   const handleSendOtp = async (arg) => {
     if (arg?.preventDefault) arg.preventDefault();
     const mobileNumber = typeof arg === 'string' ? arg : mobile;
+    const cleanMobile = String(mobileNumber).replace(/\D/g, '').slice(-10);
 
-    if (!mobileNumber || mobileNumber.length < 10) {
+    if (!cleanMobile || cleanMobile.length !== 10) {
       setError('Please enter a valid 10-digit mobile number');
       return;
     }
     setError(null);
     setSuccessMsg(null);
     setLoading(true);
-    mobileRef.current = mobileNumber;
+    isVerifyingRef.current = false;
     lastSubmittedOtpRef.current = null;
+    mobileRef.current = cleanMobile;
 
     try {
       let response = await fetch(`${API_BASE_URL}/user-login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-        body: JSON.stringify({ mobile: mobileNumber, phone_number: mobileNumber })
+        body: JSON.stringify({ mobile: cleanMobile, phone_number: cleanMobile })
       });
       let data = await response.json();
 
@@ -203,36 +149,50 @@ export default function Login() {
         setOtpType('login');
         setResendTimer(30);
 
+        setShowOtp(true);
         setSuccessMsg('OTP sent successfully to your mobile number.');
+
         const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
         const otpStr = receivedOtp ? String(receivedOtp).replace(/\D/g, '').slice(0, 6) : '';
-        setApiOtp(otpStr);
-        setShowOtp(true);
 
         const isMobile = isMobileDeviceOrView();
-        const isPhoneUser = isThisPhoneUser(mobileNumber);
-        const isExistingUser = data.is_new_user === false;
-        isNewUserRef.current = data.is_new_user === true;
 
-        // ONLY auto-fill and auto-verify when THIS phone's user enters their number on mobile
-        // If someone else's number or a non-existing user number is entered on this phone, do NOT auto-fill or auto-login
-        if (isMobile && isPhoneUser && isExistingUser && otpStr) {
-          setSuccessMsg('OTP sent via SMS & auto-filled. Verifying...');
+        // ── Device Owner Detection ──
+        // Only the phone owner's number auto-fills on mobile view; any other number requires manual OTP.
+        let deviceOwnerMobile = '';
+        try {
+          deviceOwnerMobile = localStorage.getItem('dharani_phone_owner') || '';
+        } catch (e) {}
+
+        // If this phone hasn't registered its owner number yet, the first number entered becomes this phone's owner number
+        if (!deviceOwnerMobile && cleanMobile) {
+          deviceOwnerMobile = cleanMobile;
+          try {
+            localStorage.setItem('dharani_phone_owner', cleanMobile);
+          } catch (e) {}
+        }
+
+        const isMyNumber = Boolean(cleanMobile && deviceOwnerMobile && cleanMobile === deviceOwnerMobile);
+
+        if (isMobile && isMyNumber && otpStr) {
+          // Mobile view + My Number only: auto-fill OTP and auto-verify
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
-          lastSubmittedOtpRef.current = otpStr;
-          // 1200ms allows the user to see the OTP filled in the boxes and receive normal SMS
           setTimeout(() => {
-            handleVerifyOtp(otpStr, mobileNumber, userId);
-          }, 1200);
+            if (!isVerifyingRef.current) {
+              handleVerifyOtp(otpStr);
+            }
+          }, 800);
         } else {
-          setSuccessMsg('OTP sent successfully to your mobile number. Please check your SMS messages.');
+          // Someone else's number OR Desktop view: user manually enters OTP
           setOtpValue('');
           if (realOtpInputRef.current) realOtpInputRef.current.value = '';
-          lastSubmittedOtpRef.current = null;
         }
+
+        setOtpAttempt(prev => prev + 1);
+        setTimeout(() => realOtpInputRef.current?.focus(), 150);
       } else {
-        setError(data.message || data.error || 'Login failed. Please try again or ensure you are registered.');
+        setError(data.message || data.error || 'Failed to send OTP. Please check your number.');
       }
     } catch (err) {
       setError('Network error. Please try again later.');
@@ -253,54 +213,61 @@ export default function Login() {
     setError(null);
     setSuccessMsg(null);
     setLoading(true);
+    isVerifyingRef.current = false;
     lastSubmittedOtpRef.current = null;
-    const currentMobile = mobileRef.current || mobile;
+    const currentMobile = String(mobileRef.current || mobile).replace(/\D/g, '').slice(-10);
     try {
-      let response = await fetch(`${API_BASE_URL}/resend-otp/`, {
+      // Must use /user-login/ because /resend-otp/ is for pending registrations on this backend
+      const response = await fetch(`${API_BASE_URL}/user-login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
         body: JSON.stringify({ phone_number: currentMobile, mobile: currentMobile })
       });
 
-      // If resend-otp not available, fall back to user-login
-      if (response.status === 404) {
-        response = await fetch(`${API_BASE_URL}/user-login/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-          body: JSON.stringify({ phone_number: currentMobile, mobile: currentMobile })
-        });
-      }
-
       const data = await response.json();
       if (!response.ok || data.success === false) {
         setError(data.message || 'Failed to resend OTP.');
       } else {
-        const userId = data.user_id || otpUserIdRef.current;
+        const userId = data.user_id || otpUserIdRef.current || null;
         setOtpUserId(userId);
         otpUserIdRef.current = userId;
-        setSuccessMsg('OTP sent successfully to your mobile number.');
-        const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
-        const otpStr = receivedOtp ? String(receivedOtp).replace(/\D/g, '').slice(0, 6) : '';
-        setApiOtp(otpStr);
         setResendTimer(30);
 
-        const isMobile = isMobileDeviceOrView();
-        const isPhoneUser = isThisPhoneUser(currentMobile);
-        const isExistingUser = data.is_new_user === false;
-        isNewUserRef.current = data.is_new_user === true;
+        const receivedOtp = data.otp || data.data?.otp || data.code || data.user?.otp || data.otp_code;
+        const otpStr = receivedOtp ? String(receivedOtp).replace(/\D/g, '').slice(0, 6) : '';
 
-        if (isMobile && isPhoneUser && isExistingUser && otpStr) {
+        const isMobile = isMobileDeviceOrView();
+
+        let deviceOwnerMobile = '';
+        try {
+          deviceOwnerMobile = localStorage.getItem('dharani_phone_owner') || '';
+        } catch (e) {}
+
+        if (!deviceOwnerMobile && currentMobile) {
+          deviceOwnerMobile = currentMobile;
+          try {
+            localStorage.setItem('dharani_phone_owner', currentMobile);
+          } catch (e) {}
+        }
+
+        const isMyNumber = Boolean(currentMobile && deviceOwnerMobile && currentMobile === deviceOwnerMobile);
+
+        setSuccessMsg('New OTP sent successfully to your mobile number.');
+        if (isMobile && isMyNumber && otpStr) {
           setOtpValue(otpStr);
           if (realOtpInputRef.current) realOtpInputRef.current.value = otpStr;
-          lastSubmittedOtpRef.current = otpStr;
           setTimeout(() => {
-            handleVerifyOtp(otpStr, currentMobile, userId);
-          }, 350);
+            if (!isVerifyingRef.current) {
+              handleVerifyOtp(otpStr);
+            }
+          }, 800);
         } else {
           setOtpValue('');
           if (realOtpInputRef.current) realOtpInputRef.current.value = '';
-          lastSubmittedOtpRef.current = null;
         }
+
+        setOtpAttempt(prev => prev + 1);
+        setTimeout(() => realOtpInputRef.current?.focus(), 150);
       }
     } catch (err) {
       setError('Network error. Please try again later.');
@@ -312,38 +279,43 @@ export default function Login() {
   // ─── VERIFY OTP ──────────────────────────────────────────────────
   const handleVerifyOtp = async (arg, customMobile, customUserId) => {
     if (arg?.preventDefault) arg.preventDefault();
-    const currentOtp = (typeof arg === 'string' && arg) ? arg : (otpValue || realOtpInputRef.current?.value || '');
-    const currentMobile = (typeof customMobile === 'string' && customMobile) ? customMobile : (mobileRef.current || mobile);
+
+    // Prevent concurrent duplicate verification calls
+    if (isVerifyingRef.current) return;
+
+    const rawOtp = (typeof arg === 'string' && arg) ? arg : (otpValue || realOtpInputRef.current?.value || '');
+    const currentOtp = String(rawOtp).replace(/\D/g, '').trim().slice(0, 6);
+    const rawMobile = (typeof customMobile === 'string' && customMobile) ? customMobile : (mobileRef.current || mobile);
+    const currentMobile = String(rawMobile).replace(/\D/g, '').slice(-10);
     const currentUserId = customUserId !== undefined ? customUserId : otpUserIdRef.current;
 
     if (!currentOtp || currentOtp.length < 4) {
       setError('Please enter a valid OTP');
       return;
     }
+
+    isVerifyingRef.current = true;
+    lastSubmittedOtpRef.current = currentOtp;
     setError(null);
     setSuccessMsg(null);
     setLoading(true);
 
     try {
       const verifyUrl = `${API_BASE_URL}/verify-otp/`;
+      const payload = {
+        phone_number: currentMobile,
+        mobile: currentMobile,
+        otp: currentOtp
+      };
+      if (currentUserId) {
+        payload.user_id = currentUserId;
+      }
 
       let response = await fetch(verifyUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
-        body: JSON.stringify({
-          phone_number: currentMobile,
-          mobile: currentMobile,
-          otp: currentOtp,
-          ...(currentUserId && { user_id: currentUserId })
-        })
+        body: JSON.stringify(payload)
       });
-
-      // 404 means user not found or OTP expired on backend
-      if (response.status === 404) {
-        setError('OTP expired or invalid. Please request a new OTP.');
-        setLoading(false);
-        return;
-      }
 
       let data = await response.json();
 
@@ -382,20 +354,24 @@ export default function Login() {
           const verifiedMobile = user.mobile || user.phone_number || currentMobile || '';
           const clean10 = String(verifiedMobile).replace(/\D/g, '').slice(-10);
           if (clean10 && clean10.length === 10) {
+            localStorage.setItem('dharani_phone_owner', clean10);
             localStorage.setItem('dharani_my_mobile', clean10);
           }
         } catch (e) {}
 
+        setSuccessMsg('Login successful!');
         if (typeof closeLoginModal === 'function') closeLoginModal();
         window.dispatchEvent(new Event('user-login-status-changed'));
         if (typeof refreshProducts === 'function') refreshProducts();
         if (typeof refreshCart === 'function') refreshCart();
-        
+
         setTimeout(() => {
-          window.location.href = window.location.pathname;
+          window.location.reload();
         }, 300);
 
       } else {
+        isVerifyingRef.current = false;
+        lastSubmittedOtpRef.current = null;
         if (data.message && String(data.message).toLowerCase().includes('expire')) {
           setError('OTP expired. Please request a new OTP.');
         } else {
@@ -403,9 +379,14 @@ export default function Login() {
         }
       }
     } catch (err) {
+      isVerifyingRef.current = false;
+      lastSubmittedOtpRef.current = null;
       setError('Network error. Please try again later.');
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        isVerifyingRef.current = false;
+      }, 300);
     }
   };
 
@@ -416,9 +397,24 @@ export default function Login() {
   const handleRealOtpChange = (e) => {
     const digits = e.target.value.replace(/\D/g, '').slice(0, 6);
     setOtpValue(digits);
-    // Auto-submit when 6 digits are typed/autofilled
-    if (digits.length === 6) {
-      setTimeout(() => handleVerifyOtp(digits), 50);
+    if (digits.length < 6) {
+      isVerifyingRef.current = false;
+      lastSubmittedOtpRef.current = null;
+    } else if (digits.length === 6 && !isVerifyingRef.current && lastSubmittedOtpRef.current !== digits) {
+      handleVerifyOtp(digits);
+    }
+  };
+
+  const handlePaste = (e) => {
+    const pasted = e.clipboardData?.getData('text') || '';
+    const digits = pasted.replace(/\D/g, '').slice(0, 6);
+    if (digits) {
+      e.preventDefault();
+      setOtpValue(digits);
+      if (realOtpInputRef.current) realOtpInputRef.current.value = digits;
+      if (digits.length === 6 && !isVerifyingRef.current) {
+        handleVerifyOtp(digits);
+      }
     }
   };
 
@@ -449,6 +445,13 @@ export default function Login() {
         {/* Right Side (White) */}
         <div className="login-modal-right">
           <div className="login-form-container">
+            <div className="mobile-login-logo-header">
+              <BrandLogoVideo variant="mobile-nav" />
+              <div className="mobile-login-brand-text">
+                <span className="mobile-brand-line1">Dharani</span>
+                <span className="mobile-brand-line2">Herbbals<span className="brand-reg">®</span></span>
+              </div>
+            </div>
             <h2 className="welcome-text">Welcome To Dharani Herbbals!</h2>
 
             <form onSubmit={showOtp ? handleVerifyOtp : handleSendOtp}>
@@ -505,18 +508,37 @@ export default function Login() {
                     <p className="otp-sent-text" style={{ marginBottom: '15px' }}>
                       Verification code sent to <br />
                       <strong>+91 {mobile}</strong>
-                      <button type="button" className="edit-mobile-btn" onClick={() => { setShowOtp(false); setOtpValue(''); lastSubmittedOtpRef.current = null; }}>Edit</button>
+                      <button
+                        type="button"
+                        className="edit-mobile-btn"
+                        onClick={() => {
+                          setShowOtp(false);
+                          setOtpValue('');
+                          setOtpUserId(null);
+                          otpUserIdRef.current = null;
+                          lastSubmittedOtpRef.current = null;
+                          isVerifyingRef.current = false;
+                          setError(null);
+                        }}
+                      >
+                        Edit
+                      </button>
                     </p>
 
                     {/*
                       ┌─────────────────────────────────────────────────────────┐
                       │  OTP INPUT — single real <input> layered over 6 visual  │
                       │  boxes. This is the technique used by Stripe & Airbnb.  │
-                      │  Android Chrome's SMS autofill targets this input,       │
-                      │  so OTP auto-fills without any user interaction.         │
+                      │  On Mobile: incoming SMS autofills via Web OTP or       │
+                      │  keyboard one-time-code.                                │
+                      │  On Desktop: user manually types digits into input.     │
                       └─────────────────────────────────────────────────────────┘
                     */}
-                    <div className="otp-boxes-container" style={{ position: 'relative' }}>
+                    <div
+                      className="otp-boxes-container"
+                      style={{ position: 'relative', cursor: 'text' }}
+                      onClick={() => realOtpInputRef.current?.focus()}
+                    >
                       {/* The ONE real input — transparent, covers the full area */}
                       <input
                         ref={realOtpInputRef}
@@ -528,6 +550,7 @@ export default function Login() {
                         maxLength={6}
                         value={otpValue}
                         onChange={handleRealOtpChange}
+                        onPaste={handlePaste}
                         style={{
                           position: 'absolute',
                           top: 0,
@@ -577,7 +600,7 @@ export default function Login() {
             </form>
 
             <div className="terms-footer">
-              <p>By logging in, you're agreeing to our <Link to="/privacy">Privacy Policy</Link> <br /><Link to="/terms">Terms of Service</Link></p>
+              <p>By logging in, you're agreeing to our <Link to="/privacy" onClick={closeLoginModal}>Privacy Policy</Link> <br /><Link to="/terms" onClick={closeLoginModal}>Terms of Service</Link></p>
             </div>
           </div>
         </div>

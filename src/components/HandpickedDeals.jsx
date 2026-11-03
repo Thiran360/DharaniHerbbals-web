@@ -6,7 +6,6 @@ import { useProducts } from '../context/ProductsContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useLanguage } from '../context/LanguageContext';
 import { ProductCard } from '../pages/Shop';
-import BrandLogoVideo from './BrandLogoVideo';
 import './HandpickedDeals.css';
 
 export default function HandpickedDeals() {
@@ -15,9 +14,8 @@ export default function HandpickedDeals() {
   
   // Select specific curated products based on user request
   const curatedOffersNames = [
+    "multani mitti soap",
     "multhani metti soap",
-    "coconut milk soap",
-    "vettiver soap",
     "aloe vera shampoo",
     "avarmpoo hair wash powder",
     "ashwagandha powder jar",
@@ -58,7 +56,6 @@ export default function HandpickedDeals() {
           
           <div className="bento-title-col">
             <h2 className="bento-title-text">
-              <BrandLogoVideo />
               <div>{t('trendingProducts')}</div>
             </h2>
           </div>

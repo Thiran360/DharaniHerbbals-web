@@ -9,6 +9,7 @@ import { useAuthModal } from '../context/AuthModalContext';
 import UsageCalendar from '../components/UsageCalendar';
 import { API_BASE_URL, getMyOrdersUrl } from '../services/api';
 import { showAppToast } from '../components/GlobalToast';
+import { formatProductDisplayName, formatCurrency, formatProductPackSize } from '../utils/productFormatters';
 import './Profile.css';
 
 const INDIAN_STATES = [
@@ -59,10 +60,14 @@ export default function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.state?.activeTab) {
+    const searchParams = new URLSearchParams(location.search);
+    const tabParam = searchParams.get('tab');
+    if (tabParam) {
+      setActiveTab(tabParam);
+    } else if (location.state?.activeTab) {
       setActiveTab(location.state.activeTab);
     }
-  }, [location.state]);
+  }, [location.state, location.search]);
 
   useEffect(() => {
     // Scroll to top
@@ -199,6 +204,8 @@ export default function Profile() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     localStorage.removeItem('dharani_saved_mobile');
+    localStorage.removeItem('dharani_cart');
+    localStorage.removeItem('dharani_cart_offline_backup');
     window.dispatchEvent(new Event('user-login-status-changed'));
     if (refreshProducts) {
       refreshProducts();
@@ -207,7 +214,7 @@ export default function Profile() {
       refreshCart();
     }
     showAppToast('Logged out successfully');
-    navigate('/login');
+    navigate('/');
   };
 
   const handleEditProfileSubmit = async (e) => {
@@ -538,8 +545,22 @@ export default function Profile() {
     }
   };
 
-  if (!userData)  {
-    return <div className="profile-loading">Loading your profile...</div>;
+  if (!userData) {
+    return (
+      <div className="profile-page-wrapper" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 16px' }}>
+        <div style={{ textAlign: 'center', padding: '40px 24px', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)', maxWidth: '420px', width: '100%' }}>
+          <User size={48} color="#10b981" style={{ margin: '0 auto 16px' }} />
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '8px', color: '#111827' }}>Please Sign In</h2>
+          <p style={{ color: '#6b7280', fontSize: '0.95rem', marginBottom: '24px' }}>Sign in to view your profile settings, order history, saved addresses, and wishlist items.</p>
+          <button 
+            onClick={openLoginModal} 
+            style={{ width: '100%', padding: '12px 20px', background: 'linear-gradient(135deg, #10b981, #059669)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 600, fontSize: '1rem', cursor: 'pointer' }}
+          >
+            Sign In / Register
+          </button>
+        </div>
+      </div>
+    );
   }
 
   // Fallback data if API doesn't return everything
@@ -913,7 +934,7 @@ export default function Profile() {
                       const baseName = firstItem.product_name || firstItem.product || "Unknown Item";
                       const matchedProduct = products.find(p => p.name === baseName);
 
-                      itemName = language === 'ta' && matchedProduct && matchedProduct.tamil_name ? matchedProduct.tamil_name : baseName;
+                      itemName = formatProductDisplayName(language === 'ta' && matchedProduct && matchedProduct.tamil_name ? matchedProduct.tamil_name : baseName);
 
                       firstImageUrl = (firstItem.image && !firstItem.image.includes('default.jpg') && firstItem.image !== '')
                         ? firstItem.image
@@ -956,7 +977,7 @@ export default function Profile() {
 
                         <div className="order-card-footer">
                           <div className="order-total">
-                            Total: <strong>₹{parseFloat(order.total_amount).toFixed(2)}</strong>
+                            Total: <strong>{formatCurrency(order.total_amount, { showDecimals: true })}</strong>
                           </div>
                           <div style={{ display: 'flex', gap: '10px' }}>
                             {order.status && order.status.toLowerCase() !== 'cancelled' && order.status.toLowerCase() !== 'returned' && (
@@ -965,6 +986,21 @@ export default function Profile() {
                                 onClick={() => handleCancelOrder(order.order_id)}
                               >
                                 Cancel Order
+                              </button>
+                            )}
+                            {order.items && order.items.length > 0 && order.status && order.status.toLowerCase() === 'delivered' && (
+                              <button
+                                className="btn-review-order"
+                                onClick={() => {
+                                  const prodId = order.items[0]?.product_id || order.items[0]?.id;
+                                  if (prodId) {
+                                    navigate(`/product/${prodId}?writeReview=true`);
+                                  } else {
+                                    navigate(`/track/${order.id || order.order_id}`);
+                                  }
+                                }}
+                              >
+                                ★ Review
                               </button>
                             )}
                             <button
@@ -1038,10 +1074,7 @@ export default function Profile() {
                     const itemName = matchedProduct.name || item.product_name || item.name;
                     const itemTamilName = matchedProduct.tamil_name || item.tamil_name;
 
-                    let itemPrice = matchedProduct.price || item.price || '₹0';
-                    if (item.customer_price) {
-                      itemPrice = `₹${parseFloat(item.customer_price).toFixed(0)}`;
-                    }
+                    let itemPrice = formatCurrency(matchedProduct.price || item.customer_price || item.price || 0);
 
                     const itemIdToUse = matchedProduct.id || pId;
 
@@ -1058,14 +1091,22 @@ export default function Profile() {
                         </div>
                         <div className="wishlist-row-content">
                           <div className="wishlist-row-details">
-                            <h4>{language === 'ta' && itemTamilName ? itemTamilName : itemName}</h4>
-                            <p>{itemPrice}</p>
+                            <h4>{formatProductDisplayName(language === 'ta' && itemTamilName ? itemTamilName : itemName)}</h4>
+                            <p>
+                              {itemPrice}
+                              {(matchedProduct.pack_size || formatProductPackSize(matchedProduct)) && (
+                                <span style={{ color: '#6b7280', fontSize: '0.85rem', marginLeft: '6px' }}>
+                                  ({matchedProduct.pack_size || formatProductPackSize(matchedProduct)})
+                                </span>
+                              )}
+                            </p>
                           </div>
                           <div className="wishlist-row-actions">
                             <button
                               className="btn-add-all-to-cart"
                               onClick={() => {
-                                addToCart(matchedProduct.id ? matchedProduct : item);
+                                const target = matchedProduct.id ? matchedProduct : item;
+                                addToCart(target, 1, target.default_variation_id || target.default_variation?.id);
                               }}
                             >
                               <ShoppingCart size={16} />

@@ -7,12 +7,14 @@
   z-index: 100020;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cart-backdrop.open {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 /* Floating Side Island - Ultra UI */
@@ -36,6 +38,14 @@
   flex-direction: column;
   border-radius: 28px; /* Super rounded like iOS */
   overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn-checkout:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
 .cart-drawer.open {
@@ -376,8 +386,11 @@
   100% { left: 200%; }
 }
 
+
 /* Secondary Button */
 .btn-view-cart {
+  display: block;
+  box-sizing: border-box;
   width: 100%;
   padding: 18px;
   background: rgba(255, 255, 255, 0.5);
@@ -477,3 +490,77 @@
 .cart-drawer.open .cart-count-badge {
   animation: badgePop 0.5s 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
+
+/* Drawer Shipping Progress & Rows */
+.drawer-shipping-progress {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+.drawer-shipping-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #166534;
+  margin-bottom: 6px;
+}
+
+.drawer-shipping-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.drawer-shipping-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.drawer-shipping-rows {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drawer-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.92rem;
+  color: #475569;
+}
+
+.drawer-row.total {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  padding-top: 6px;
+  border-top: 1px solid #f1f5f9;
+  margin-top: 2px;
+}
+
+@media (max-width: 480px) {
+  .drawer-shipping-progress {
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+  .drawer-shipping-header {
+    font-size: 0.8rem;
+    gap: 6px;
+    line-height: 1.35;
+  }
+  .drawer-shipping-bar-bg {
+    height: 5px;
+  }
+}
+

@@ -1,14 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ProductCard } from './Shop';
-import { ShoppingCart, ShieldCheck, Leaf, Truck, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Share2, MessageCircle, Camera, Copy, Check, Package, Plus, Star, MessageSquare, FileText, CheckCircle, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, ShieldCheck, Leaf, Truck, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Share2, MessageCircle, Camera, Copy, Check, Package, Plus, Star, MessageSquare, FileText, CheckCircle, ArrowLeft, Sparkles, Compass, Info, X, Edit3, Send } from 'lucide-react';
 import imgLifestyle from '../assets/herbal_lifestyle.png';
 import imgIngredients from '../assets/herbal_ingredients.png';
 import imgTexture from '../assets/herbal_texture.png';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
-import { API_BASE_URL } from '../services/api';
+import { API_BASE_URL, resolveMediaUrl } from '../services/api';
+import { formatProductPackSize, formatVariationLabel, formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
+import { getDefaultVariation } from '../data/productVariationsData';
+import { getProductDescription, getProductIngredients, getProductDirections } from '../data/productCatalogData';
+import SeoHead from '../components/SeoHead';
+import { generateProductSeo } from '../utils/productSeo';
+import { checkDeliveryPincode, isValidIndianPin } from '../utils/deliveryChecker';
+import { getVerifiedReviewData, getProductReviewsAndSummary } from '../utils/productReviews';
 import './ProductDetails.css';
 
 export default function ProductDetails() {
@@ -20,260 +27,332 @@ export default function ProductDetails() {
   const thumbRefs = useRef([]);
   const [reviews, setReviews] = useState([]);
   const [reviewSummary, setReviewSummary] = useState(null);
-  const [reviewText, setReviewText] = useState('');
-  const [reviewRating, setReviewRating] = useState(5);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showDesktopBuyBar, setShowDesktopBuyBar] = useState(false);
+
+  // Customer write review modal & form state
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [newRating, setNewRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [newReviewerName, setNewReviewerName] = useState(() => {
+    try {
+      const u = JSON.parse(localStorage.getItem('user') || '{}');
+      return u.name || u.full_name || u.first_name || (u.user && (u.user.name || u.user.full_name)) || '';
+    } catch {
+      return '';
+    }
+  });
+  const [newReviewText, setNewReviewText] = useState('');
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [reviewSuccessMsg, setReviewSuccessMsg] = useState(false);
+  const [reviewError, setReviewError] = useState('');
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowDesktopBuyBar(window.scrollY > 380);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Open review modal if directed via ?writeReview=true
+  useEffect(() => {
+    if (searchParams.get('writeReview') === 'true') {
+      setShowReviewModal(true);
+      setTimeout(() => {
+        document.getElementById('customer-reviews')?.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+  }, [searchParams]);
+
+  // Load locally saved customer reviews from browser storage
+  const getLocalCustomerReviews = (prodId) => {
+    try {
+      const raw = localStorage.getItem(`customer_reviews_${prodId}`);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const handleDeleteReview = (reviewId) => {
+    const existingLocal = getLocalCustomerReviews(id);
+    const updatedLocal = existingLocal.filter(r => r.id !== reviewId);
+    try {
+      localStorage.setItem(`customer_reviews_${id}`, JSON.stringify(updatedLocal));
+    } catch (e) { }
+    setReviews(prev => prev.filter(r => r.id !== reviewId));
+  };
 
 
   useEffect(() => {
-    
-      const fetchReviewsAndSummary = async () => {
-        if (!id) return;
+    const fetchReviewsAndSummary = async () => {
+      if (!id) return;
+      setReviews([]);
+      setReviewSummary(null);
 
-        // INJECT HIBISCUS AND ONION AND RICE KANJI REVIEWS
-        const currentProduct = products.find(p => p.id === parseInt(id));
-        if (currentProduct && currentProduct.name) {
-            const n = currentProduct.name.toLowerCase().trim();
-            if (n === 'chemparuthi herbal shampoo') {
-                const hardcodedReviews = [
-                    { id: 'h1', name: 'Karthik', date: '1/29/2026', rating: 5.0, text: 'Super product', initial: 'K', color: '#3b82f6' },
-                    { id: 'h2', name: 'haris raj', date: '3/31/2026', rating: 5.0, text: 'good natural product no side effects', initial: 'H', color: '#10b981' },
-                    { id: 'h3', name: 'Sanjaykrish', date: '3/31/2026', rating: 5.0, text: 'Smells good and reduce hair fall', initial: 'S', color: '#f59e0b' },
-                    { id: 'h4', name: 'Sivakami S', date: '4/1/2026', rating: 5.0, text: 'Really help to reduce hair fall and make hair very shine', initial: 'S', color: '#ef4444' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 4,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 4 }
-                });
-                return;
-            }
-            if (n === 'onion shampoo') {
-                const hardcodedReviews = [
-                    { id: 'o1', name: 'L kokila', date: '9/2/2025', rating: 5.0, text: 'Good', initial: 'L', color: '#8b5cf6' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'rice kanji shampoo') {
-                const hardcodedReviews = [
-                    { id: 'rk1', name: 'Geetha', date: '3/31/2026', rating: 5.0, text: 'I received a sample of their newly updated rice water shampoo, and I tried it immediately. It’s absolutely amazing! The texture feels smooth, it lathers well, and my hair feels nourished and refreshed.', initial: 'G', color: '#ec4899' },
-                    { id: 'rk2', name: 'G K DHARUN RAJ', date: '4/2/2026', rating: 5.0, text: 'This shampoo is really good and consistency is nice', initial: 'G', color: '#14b8a6' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 2,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 2 }
-                });
-                return;
-            }
-            if (n === 'avarampoo pusu manjal jar') {
-                const hardcodedReviews = [
-                    { id: 'av1', name: 'Karthikeyan', date: '2/12/2026', rating: 4.0, text: 'Nice product', initial: 'K', color: '#f59e0b' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 4.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 0 }
-                });
-                return;
-            }
-            if (n === 'multhani metti jar') {
-                const hardcodedReviews = [
-                    { id: 'm1', name: 'VARSHA C', date: '3/31/2026', rating: 5.0, text: 'I recently started using Multani Mitti, and even from the very beginning, I could see why it’s considered one of the best natural skincare ingredients. It leaves my skin feeling fresh, clean, and noticeably smoother after every use. I especially love how it absorbs excess oil without making my skin feel too dry.', initial: 'V', color: '#10b981' },
-                    { id: 'm2', name: 'haris raj', date: '3/31/2026', rating: 5.0, text: 'I recently tried the 100 gm Mahil Multani Mitti and overall it’s a good budget-friendly skincare product', initial: 'H', color: '#3b82f6' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 2,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 2 }
-                });
-                return;
-            }
-            if (n === 'wild turmeric') {
-                const hardcodedReviews = [
-                    { id: 'wt1', name: 'Madhan', date: '4/1/2026', rating: 4.0, text: 'Amazing Product!', initial: 'M', color: '#f59e0b' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 4.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 0 }
-                });
-                return;
-            }
-            if (n === 'aloe vera facepack powder jar (for men)') {
-                const hardcodedReviews = [
-                    { id: 'avm1', name: 'Madhan', date: '4/1/2026', rating: 5.0, text: 'Amazing Product!', initial: 'M', color: '#3b82f6' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'facepack powder(jar)') {
-                const hardcodedReviews = [
-                    { id: 'fp1', name: 'Dharanya', date: '7/15/2025', rating: 5.0, text: 'The website is easy to navigate.', initial: 'D', color: '#ec4899' },
-                    { id: 'fp2', name: 'Lavanya', date: '7/15/2025', rating: 5.0, text: 'Very useful and effective products.', initial: 'L', color: '#8b5cf6' },
-                    { id: 'fp3', name: 'Sautanyha', date: '3/30/2026', rating: 5.0, text: 'I’ve been using Dharani Herbbals Facepack Powder for a few weeks now, and I can really see a nice glow on my skin. It feels gentle and has been working well for my daily routine.', initial: 'S', color: '#10b981' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 3,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 3 }
-                });
-                return;
-            }
-            if (n === 'nalangu powder jar') {
-                const hardcodedReviews = [
-                    { id: 'np1', name: 'Madhan', date: '9/24/2025', rating: 5.0, text: 'I’ve been using Nalangu Maavu regularly, and I can really see the difference in my skin. It feels much softer and smoother now. The natural coarse texture works as a gentle exfoliator, removing dead skin without any irritation. Over time, my skin has started to look fresher and has a natural glow. I love that it’s completely natural and chemical-free, making it safe for daily use. Definitely a great alternative to store-bought soaps and face washes!', initial: 'M', color: '#10b981' },
-                    { id: 'np2', name: 'Sujatha', date: '7/22/2026', rating: 4.0, text: 'This product is great for regular use. Makes skin softer.', initial: 'S', color: '#f59e0b' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 4.5,
-                    total_reviews: 2,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'multhani metti soap') {
-                const hardcodedReviews = [
-                    { id: 'mms1', name: 'Sautanyha', date: '3/31/2026', rating: 5.0, text: 'Recently had the opportunity to visit the company during soap manufacturing. It was a great experience to see the process firsthand. I also tried the soaps , they are really good.', initial: 'S', color: '#8b5cf6' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'aloe vera soap') {
-                const hardcodedReviews = [
-                    { id: 'avs1', name: 'Geetha', date: '4/2/2026', rating: 5.0, text: 'Tried so many products until i found "DHARANI HERBBALS" for my skin issues, but this is one that truly made a difference. My skin feels healthier and more balanced now.', initial: 'G', color: '#10b981' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'balloon plant oil') {
-                const hardcodedReviews = [
-                    { id: 'bpo1', name: 'Kasinathan', date: '9/8/2025', rating: 4.0, text: 'Good', initial: 'K', color: '#f59e0b' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 4.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 0 }
-                });
-                return;
-            }
-            if (n === 'amutham nattu charkkarai') {
-                const hardcodedReviews = [
-                    { id: 'anc1', name: 'Ravikumar', date: '7/17/2026', rating: 5.0, text: 'Good', initial: 'R', color: '#ec4899' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'karuppu kavuni rice') {
-                const hardcodedReviews = [
-                    { id: 'kkr1', name: 'Geetha', date: '3/31/2026', rating: 5.0, text: 'As a student, I hardly get time to focus on proper nutrition. I tried Karuppu Kavuni rice to make up for essential vitamins and minerals, and it has been a wonderful choice.', initial: 'G', color: '#10b981' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'kodo - moringa millet pongal mix 250g') {
-                const hardcodedReviews = [
-                    { id: 'km1', name: 'sowmiya', date: '7/7/2026', rating: 3.0, text: 'good quality', initial: 'S', color: '#f59e0b' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 3.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 1, 4: 0, 5: 0 }
-                });
-                return;
-            }
-            if (n === 'abc malt (jar)') {
-                const hardcodedReviews = [
-                    { id: 'abc1', name: 'Sautanyha', date: '3/31/2026', rating: 5.0, text: 'Genuinely delighted with this health mix, the natural aroma is simply wonderful. It gives a sense of purity and nourishment in every sip, and it has become my absolute favorite.', initial: 'S', color: '#10b981' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'pirandai pickle') {
-                const hardcodedReviews = [
-                    { id: 'pp1', name: 'Pranesh S', date: '3/31/2026', rating: 5.0, text: 'Awesome Product', initial: 'P', color: '#f59e0b' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
-            if (n === 'ooty varkey') {
-                const hardcodedReviews = [
-                    { id: 'ov1', name: 'DHIVYA DHARSHINI S', date: '3/31/2026', rating: 5.0, text: 'Varkey for snacks is really delicious! The taste takes me back and beautifully resembles the nostalgic flavors of Ooty.', initial: 'D', color: '#8b5cf6' }
-                ];
-                setReviews(hardcodedReviews);
-                setReviewSummary({
-                    average_rating: 5.0,
-                    total_reviews: 1,
-                    rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
-                });
-                return;
-            }
+      const currentProduct = products.find(p => p.id === parseInt(id));
+      const local = getLocalCustomerReviews(id);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      try {
+        const res = await getProductReviewsAndSummary(id, currentProduct?.name || '');
+        const combined = [...local, ...((res && res.reviews) || [])];
+        setReviews(combined);
+        setReviewSummary(res && res.summary ? res.summary : null);
+      } catch (err) {
+        console.error("Failed to fetch product reviews or summary", err);
+        setReviews(local);
+        setReviewSummary(null);
+      }
+      return;
+      if (currentProduct && currentProduct.name) {
+        const n = currentProduct.name.toLowerCase().trim();
+        if (n === 'chemparuthi herbal shampoo') {
+          const hardcodedReviews = [
+            { id: 'h1', name: 'Karthik', date: '1/29/2026', rating: 5.0, text: 'Super product', initial: 'K', color: '#3b82f6' },
+            { id: 'h2', name: 'haris raj', date: '3/31/2026', rating: 5.0, text: 'good natural product no side effects', initial: 'H', color: '#10b981' },
+            { id: 'h3', name: 'Sanjaykrish', date: '3/31/2026', rating: 5.0, text: 'Smells good and reduce hair fall', initial: 'S', color: '#f59e0b' },
+            { id: 'h4', name: 'Sivakami S', date: '4/1/2026', rating: 5.0, text: 'Really help to reduce hair fall and make hair very shine', initial: 'S', color: '#ef4444' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 4,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 4 }
+          });
+          return;
         }
+        if (n === 'onion shampoo') {
+          const hardcodedReviews = [
+            { id: 'o1', name: 'L kokila', date: '9/2/2025', rating: 5.0, text: 'Good', initial: 'L', color: '#8b5cf6' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'rice kanji shampoo') {
+          const hardcodedReviews = [
+            { id: 'rk1', name: 'Geetha', date: '3/31/2026', rating: 5.0, text: 'I received a sample of their newly updated rice water shampoo, and I tried it immediately. It’s absolutely amazing! The texture feels smooth, it lathers well, and my hair feels nourished and refreshed.', initial: 'G', color: '#ec4899' },
+            { id: 'rk2', name: 'G K DHARUN RAJ', date: '4/2/2026', rating: 5.0, text: 'This shampoo is really good and consistency is nice', initial: 'G', color: '#14b8a6' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 2,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 2 }
+          });
+          return;
+        }
+        if (n === 'avarampoo pusu manjal jar') {
+          const hardcodedReviews = [
+            { id: 'av1', name: 'Karthikeyan', date: '2/12/2026', rating: 4.0, text: 'Nice product', initial: 'K', color: '#f59e0b' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 4.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 0 }
+          });
+          return;
+        }
+        if (n === 'multhani metti jar') {
+          const hardcodedReviews = [
+            { id: 'm1', name: 'VARSHA C', date: '3/31/2026', rating: 5.0, text: 'I recently started using Multani Mitti, and even from the very beginning, I could see why it’s considered one of the best natural skincare ingredients. It leaves my skin feeling fresh, clean, and noticeably smoother after every use. I especially love how it absorbs excess oil without making my skin feel too dry.', initial: 'V', color: '#10b981' },
+            { id: 'm2', name: 'haris raj', date: '3/31/2026', rating: 5.0, text: 'I recently tried the 100 gm Mahil Multani Mitti and overall it’s a good budget-friendly skincare product', initial: 'H', color: '#3b82f6' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 2,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 2 }
+          });
+          return;
+        }
+        if (n === 'wild turmeric') {
+          const hardcodedReviews = [
+            { id: 'wt1', name: 'Madhan', date: '4/1/2026', rating: 4.0, text: 'Amazing Product!', initial: 'M', color: '#f59e0b' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 4.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 0 }
+          });
+          return;
+        }
+        if (n === 'aloe vera facepack powder jar (for men)') {
+          const hardcodedReviews = [
+            { id: 'avm1', name: 'Madhan', date: '4/1/2026', rating: 5.0, text: 'Amazing Product!', initial: 'M', color: '#3b82f6' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'facepack powder(jar)') {
+          const hardcodedReviews = [
+            { id: 'fp1', name: 'Dharanya', date: '7/15/2025', rating: 5.0, text: 'The website is easy to navigate.', initial: 'D', color: '#ec4899' },
+            { id: 'fp2', name: 'Lavanya', date: '7/15/2025', rating: 5.0, text: 'Very useful and effective products.', initial: 'L', color: '#8b5cf6' },
+            { id: 'fp3', name: 'Sautanyha', date: '3/30/2026', rating: 5.0, text: 'I’ve been using Dharani Herbbals Facepack Powder for a few weeks now, and I can really see a nice glow on my skin. It feels gentle and has been working well for my daily routine.', initial: 'S', color: '#10b981' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 3,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 3 }
+          });
+          return;
+        }
+        if (n === 'nalangu powder jar') {
+          const hardcodedReviews = [
+            { id: 'np1', name: 'Madhan', date: '9/24/2025', rating: 5.0, text: 'I’ve been using Nalangu Maavu regularly, and I can really see the difference in my skin. It feels much softer and smoother now. The natural coarse texture works as a gentle exfoliator, removing dead skin without any irritation. Over time, my skin has started to look fresher and has a natural glow. I love that it’s completely natural and chemical-free, making it safe for daily use. Definitely a great alternative to store-bought soaps and face washes!', initial: 'M', color: '#10b981' },
+            { id: 'np2', name: 'Sujatha', date: '7/22/2026', rating: 4.0, text: 'This product is great for regular use. Makes skin softer.', initial: 'S', color: '#f59e0b' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 4.5,
+            total_reviews: 2,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'multhani metti soap') {
+          const hardcodedReviews = [
+            { id: 'mms1', name: 'Sautanyha', date: '3/31/2026', rating: 5.0, text: 'Recently had the opportunity to visit the company during soap manufacturing. It was a great experience to see the process firsthand. I also tried the soaps , they are really good.', initial: 'S', color: '#8b5cf6' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'aloe vera soap') {
+          const hardcodedReviews = [
+            { id: 'avs1', name: 'Geetha', date: '4/2/2026', rating: 5.0, text: 'Tried so many products until i found "DHARANI HERBBALS" for my skin issues, but this is one that truly made a difference. My skin feels healthier and more balanced now.', initial: 'G', color: '#10b981' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'balloon plant oil') {
+          const hardcodedReviews = [
+            { id: 'bpo1', name: 'Kasinathan', date: '9/8/2025', rating: 4.0, text: 'Good', initial: 'K', color: '#f59e0b' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 4.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 0 }
+          });
+          return;
+        }
+        if (n === 'amutham nattu charkkarai') {
+          const hardcodedReviews = [
+            { id: 'anc1', name: 'Ravikumar', date: '7/17/2026', rating: 5.0, text: 'Good', initial: 'R', color: '#ec4899' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'karuppu kavuni rice') {
+          const hardcodedReviews = [
+            { id: 'kkr1', name: 'Geetha', date: '3/31/2026', rating: 5.0, text: 'As a student, I hardly get time to focus on proper nutrition. I tried Karuppu Kavuni rice to make up for essential vitamins and minerals, and it has been a wonderful choice.', initial: 'G', color: '#10b981' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'kodo - moringa millet pongal mix 250g') {
+          const hardcodedReviews = [
+            { id: 'km1', name: 'sowmiya', date: '7/7/2026', rating: 3.0, text: 'good quality', initial: 'S', color: '#f59e0b' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 3.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 1, 4: 0, 5: 0 }
+          });
+          return;
+        }
+        if (n === 'abc malt (jar)') {
+          const hardcodedReviews = [
+            { id: 'abc1', name: 'Sautanyha', date: '3/31/2026', rating: 5.0, text: 'Genuinely delighted with this health mix, the natural aroma is simply wonderful. It gives a sense of purity and nourishment in every sip, and it has become my absolute favorite.', initial: 'S', color: '#10b981' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'pirandai pickle') {
+          const hardcodedReviews = [
+            { id: 'pp1', name: 'Pranesh S', date: '3/31/2026', rating: 5.0, text: 'Awesome Product', initial: 'P', color: '#f59e0b' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+        if (n === 'ooty varkey') {
+          const hardcodedReviews = [
+            { id: 'ov1', name: 'DHIVYA DHARSHINI S', date: '3/31/2026', rating: 5.0, text: 'Varkey for snacks is really delicious! The taste takes me back and beautifully resembles the nostalgic flavors of Ooty.', initial: 'D', color: '#8b5cf6' }
+          ];
+          setReviews(hardcodedReviews);
+          setReviewSummary({
+            average_rating: 5.0,
+            total_reviews: 1,
+            rating_count: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1 }
+          });
+          return;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      }
 
       try {
         const [revRes, sumRes] = await Promise.all([
@@ -287,53 +366,129 @@ export default function ProductDetails() {
 
         if (revRes.ok) {
           const data = await revRes.json();
-          if (data && data.reviews) {
+          if (data && data.reviews && Array.isArray(data.reviews) && data.reviews.length > 0) {
             const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
             const mapped = data.reviews.map((r, i) => ({
               id: r.id || Date.now() + i,
               name: r.user_name || r.customer_name || `Customer ${r.user_id || ''}`.trim(),
               date: r.created_at ? new Date(r.created_at).toLocaleDateString() : 'Recently',
-              rating: r.rating || 5,
+              rating: Number(r.rating) || 5,
               text: r.review_text || r.text || '',
               initial: (r.user_name || r.customer_name || 'C').charAt(0).toUpperCase(),
               color: colors[i % colors.length]
             }));
             setReviews(mapped);
+          } else {
+            setReviews([]);
           }
+        } else {
+          setReviews([]);
         }
 
         if (sumRes.ok) {
           const sumData = await sumRes.json();
-          setReviewSummary(sumData);
+          if (sumData && Number(sumData.total_reviews) > 0 && Number(sumData.average_rating) > 0) {
+            setReviewSummary(sumData);
+          } else {
+            setReviewSummary(null);
+          }
+        } else {
+          setReviewSummary(null);
         }
       } catch (err) {
         console.error("Failed to fetch product reviews or summary", err);
+        setReviews([]);
+        setReviewSummary(null);
       }
     };
     fetchReviewsAndSummary();
-  }, [id]);
+  }, [id, products]);
 
-  const handleReviewSubmit = () => {
-    if (!reviewText.trim()) return;
-    const newReview = {
-      id: Date.now(),
-      name: 'You',
-      date: 'Just now',
-      rating: reviewRating,
-      text: reviewText,
-      initial: 'Y',
-      color: '#10b981'
+  const handleCustomerReviewSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setReviewError('');
+    setIsSubmittingReview(true);
+
+    const finalRating = Number(newRating) || 5;
+    const finalName = newReviewerName.trim() || 'Customer';
+    const finalText = newReviewText.trim() || 'Great herbal product!';
+
+    const colors = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899', '#06b6d4'];
+    const assignedColor = colors[Math.floor(Math.random() * colors.length)];
+
+    const newRev = {
+      id: `rev_${Date.now()}`,
+      name: finalName,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      rating: finalRating,
+      text: finalText,
+      initial: (finalName.charAt(0) || 'C').toUpperCase(),
+      color: assignedColor,
+      verified: true,
+      isLocal: true
     };
-    setReviews([newReview, ...reviews]);
-    setReviewText('');
-    setReviewRating(5);
-    setCurrentSlide(0);
+
+    // 1. Save locally to localStorage so it permanently stays for this product
+    try {
+      const existing = getLocalCustomerReviews(id);
+      const updated = [newRev, ...existing.filter(r => r.id !== newRev.id)];
+      localStorage.setItem(`customer_reviews_${id}`, JSON.stringify(updated));
+    } catch (err) {
+      console.warn('Could not save review locally:', err);
+    }
+
+    // 2. Prepend to state so it appears below immediately
+    setReviews(prev => [newRev, ...prev]);
+
+    // 3. Attempt API submission to backend in background
+    try {
+      const storedUser = localStorage.getItem('user');
+      let userId = null;
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        const u = parsed.user || parsed;
+        userId = u.id || u.user_id;
+      }
+
+      const payload = {
+        rating: finalRating,
+        review_text: finalText,
+        product_id: parseInt(id)
+      };
+      if (userId) payload.user_id = userId;
+
+      fetch(`${API_BASE_URL}/reviews/submit/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
+        body: JSON.stringify(payload)
+      }).catch(() => { });
+    } catch (apiErr) {
+      // Handled gracefully
+    }
+
+    setIsSubmittingReview(false);
+    setReviewSuccessMsg(true);
+
+    setTimeout(() => {
+      setShowReviewModal(false);
+      setReviewSuccessMsg(false);
+      setNewReviewText('');
+      setNewRating(5);
+      // Smoothly scroll down to reviews below
+      setTimeout(() => {
+        const el = document.getElementById('customer-reviews-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }, 900);
   };
 
   // Auto-scroll logic for the slider
   useEffect(() => {
-      const slider = sliderRef.current;
-      if (!slider || reviews.length <= 2) return;
+    const slider = sliderRef.current;
+    if (!slider || reviews.length <= 2) return;
 
     let isPaused = false;
     let animationId;
@@ -374,6 +529,24 @@ export default function ProductDetails() {
 
   const product = products.find(p => p.id === parseInt(id));
 
+  const verifiedReviewData = getVerifiedReviewData(product);
+
+  const baseCount = (reviewSummary && typeof reviewSummary.total_reviews === 'number' && reviewSummary.total_reviews > 0)
+    ? reviewSummary.total_reviews
+    : (verifiedReviewData ? verifiedReviewData.reviews : (product && product.reviews && Number(product.reviews) > 0 ? Number(product.reviews) : 0));
+
+  const totalReviews = Math.max(baseCount, Array.isArray(reviews) ? reviews.length : 0);
+
+  const rawAvg = (Array.isArray(reviews) && reviews.length > 0)
+    ? (reviews.reduce((sum, r) => sum + (Number(r.rating) || 0), 0) / reviews.length)
+    : (reviewSummary && Number(reviewSummary.average_rating) > 0
+      ? Number(reviewSummary.average_rating)
+      : (verifiedReviewData ? verifiedReviewData.rating : (product && product.rating && Number(product.rating) > 0 ? Number(product.rating) : 5)));
+
+  const avgRating = (!isNaN(rawAvg) && rawAvg > 0) ? rawAvg : 5;
+
+  const hasValidReviews = totalReviews > 0;
+
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
   useEffect(() => {
@@ -396,7 +569,57 @@ export default function ProductDetails() {
   const touchStartRef = useRef(null);
   const touchEndRef = useRef(null);
   const [selectedVariation, setSelectedVariation] = useState(null);
-  const [pinCode, setPinCode] = useState('');
+  const [pinCode, setPinCode] = useState(() => {
+    try {
+      return localStorage.getItem('dharani_delivery_pincode') || '';
+    } catch {
+      return '';
+    }
+  });
+  const [deliveryInfo, setDeliveryInfo] = useState(null);
+  const [isCheckingPin, setIsCheckingPin] = useState(false);
+  const [pinError, setPinError] = useState('');
+
+  // Auto-check if previously verified PIN exists
+  useEffect(() => {
+    if (pinCode && pinCode.length === 6 && isValidIndianPin(pinCode)) {
+      checkDeliveryPincode(pinCode).then(res => {
+        if (res.success && res.deliverable) {
+          setDeliveryInfo(res);
+        }
+      }).catch(() => { });
+    }
+  }, []);
+
+  const handleVerifyPincode = async () => {
+    const cleanPin = pinCode.trim();
+    if (!cleanPin || cleanPin.length !== 6 || !isValidIndianPin(cleanPin)) {
+      setPinError('Enter a valid 6-digit Indian PIN code (e.g. 641001)');
+      setDeliveryInfo(null);
+      return;
+    }
+    setPinError('');
+    setIsCheckingPin(true);
+    try {
+      const res = await checkDeliveryPincode(cleanPin);
+      if (res.success && res.deliverable) {
+        setDeliveryInfo(res);
+        setPinError('');
+        try {
+          localStorage.setItem('dharani_delivery_pincode', cleanPin);
+        } catch (e) { }
+      } else {
+        setPinError(res.message || 'PIN code could not be verified for courier serviceability');
+        setDeliveryInfo(null);
+      }
+    } catch (e) {
+      setPinError('Could not verify PIN code. Please try again.');
+      setDeliveryInfo(null);
+    } finally {
+      setIsCheckingPin(false);
+    }
+  };
+
   const [deliveryMessage, setDeliveryMessage] = useState('');
   const [benefitsExpanded, setBenefitsExpanded] = useState(true);
   const [ingredientsExpanded, setIngredientsExpanded] = useState(true);
@@ -406,9 +629,9 @@ export default function ProductDetails() {
   const defaultDesc = "Experience the incredible benefits of our completely natural, 100% organic herbal formulation. Carefully crafted using traditional methods and sustainably sourced ingredients to ensure the highest quality for your holistic wellness journey. Free from harmful chemicals, parabens, and artificial preservatives.";
 
   // Translation states
-  const [translatedName, setTranslatedName] = useState(product ? product.name : '');
+  const [translatedName, setTranslatedName] = useState(product ? formatProductDisplayName(product.name) : '');
   const [translatedSubtitle, setTranslatedSubtitle] = useState(product ? product.subtitle : '');
-  const [translatedDesc, setTranslatedDesc] = useState(product ? (product.description || defaultDesc) : '');
+  const [translatedDesc, setTranslatedDesc] = useState(product ? (getProductDescription(product) || product.description || defaultDesc) : '');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -534,14 +757,20 @@ export default function ProductDetails() {
               }
               return {
                 ...v,
-                price: `₹${activePrice.toFixed(0)}`,
-                originalPrice: originalPrice > activePrice ? `₹${originalPrice.toFixed(0)}` : '',
+                price: formatCurrency(activePrice),
+                originalPrice: originalPrice > activePrice ? formatCurrency(originalPrice) : '',
                 discount: discount
               };
             });
             setFetchedVariations(formattedVariations);
             if (formattedVariations.length > 0) {
-              setSelectedVariation(formattedVariations[0]);
+              setSelectedVariation(prev => {
+                if (prev) {
+                  const match = formattedVariations.find(fv => String(fv.id || fv.variation_id) === String(prev.id || prev.variation_id));
+                  if (match) return match;
+                }
+                return getDefaultVariation(product, formattedVariations) || formattedVariations[0];
+              });
             }
           }
         })
@@ -553,17 +782,23 @@ export default function ProductDetails() {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [id, product]);
 
   useEffect(() => {
     if (fetchedVariations.length === 0) {
       if (product && product.variations && product.variations.length > 0) {
-        setSelectedVariation(product.variations[0]);
+        setSelectedVariation(prev => {
+          if (prev) {
+            const match = product.variations.find(v => String(v.id || v.variation_id) === String(prev.id || prev.variation_id));
+            if (match) return match;
+          }
+          return product.default_variation || getDefaultVariation(product, product.variations) || product.variations[0];
+        });
       } else {
         setSelectedVariation(null);
       }
     }
-  }, [product?.id, product?.variations, fetchedVariations.length]);
+  }, [product?.id, product?.variations, product?.default_variation, fetchedVariations.length]);
 
   const translatedRef = useRef(null); // tracks "productId:lang" already translated
   const shareMenuRef = useRef(null);
@@ -579,10 +814,11 @@ export default function ProductDetails() {
     let active = true;
 
     // Direct assignment for product name
-    setTranslatedName(language === 'ta' && product.tamil_name ? product.tamil_name : product.name);
+    setTranslatedName(formatProductDisplayName(language === 'ta' && product.tamil_name ? product.tamil_name : product.name));
 
     setTranslatedSubtitle(product.subtitle);
-    setTranslatedDesc(product.description || defaultDesc);
+    const activeBaseDesc = getProductDescription(product) || product.description || defaultDesc;
+    setTranslatedDesc(activeBaseDesc);
 
     if (language === 'ta') {
       // 2. Subtitle (single call, not per-card)
@@ -593,8 +829,7 @@ export default function ProductDetails() {
       }
 
       // 3. Description (single call)
-      const descText = product.description || defaultDesc;
-      translateText(descText).then(res => {
+      translateText(activeBaseDesc).then(res => {
         if (active && res) setTranslatedDesc(res);
       });
     }
@@ -614,6 +849,66 @@ export default function ProductDetails() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const productIngredients = product ? getProductIngredients(product) : [];
+  const productDirections = product ? getProductDirections(product) : [];
+
+  const productSeo = useMemo(() => {
+    if (!product) return null;
+    return generateProductSeo(product, {
+      language,
+      selectedVariation,
+      reviewSummary,
+      verifiedReviews: reviews
+    });
+  }, [product, language, selectedVariation, reviewSummary, reviews]);
+
+  // Smart, relevance-ranked related products from existing product catalog
+  const relatedProducts = useMemo(() => {
+    if (!product || !products || products.length === 0) return [];
+
+    const currentCat = (product.category_name || '').toLowerCase();
+    const currentName = (product.name || '').toLowerCase();
+    const currentIngs = (productIngredients || []).join(' ').toLowerCase();
+
+    const candidates = products.filter(p => p.id !== product.id);
+
+    // Score candidates based on relevance
+    const scored = candidates.map(p => {
+      let score = 0;
+      const pCat = (p.category_name || '').toLowerCase();
+      const pName = (p.name || '').toLowerCase();
+      const pDesc = (p.description || '').toLowerCase();
+
+      // Same category gets strong relevance
+      if (pCat && currentCat && pCat === currentCat) {
+        score += 15;
+      }
+
+      // Shared key botanical ingredients or keywords
+      const keyHerbs = ['hibiscus', 'onion', 'amla', 'aloe', 'turmeric', 'neem', 'shikakai', 'vetiver', 'ginger', 'pepper', 'nalangu', 'pickle'];
+      keyHerbs.forEach(herb => {
+        if ((currentName.includes(herb) || currentIngs.includes(herb)) && (pName.includes(herb) || pDesc.includes(herb))) {
+          score += 10;
+        }
+      });
+
+      // Products with valid image get slight priority
+      if (p.image && p.image.trim()) {
+        score += 2;
+      }
+
+      return { product: p, score };
+    });
+
+    // Sort descending by relevance score
+    scored.sort((a, b) => b.score - a.score);
+
+    return scored.slice(0, 6).map(s => s.product);
+  }, [product, products, productIngredients]);
+
   if (loading) {
     return <div className="pd-pro-wrapper"><div style={{ padding: '100px', textAlign: 'center' }}>Loading...</div></div>;
   }
@@ -629,22 +924,34 @@ export default function ProductDetails() {
 
   const mediaItems = [];
 
-  if (product.image) {
-    mediaItems.push({ type: 'image', src: product.image, thumb: product.image });
+  if (crmGalleryImages.length > 0) {
+    mediaItems.push(...crmGalleryImages.map(imgObj => { const src = resolveMediaUrl(imgObj.image || imgObj.url); return { type: 'image', src, thumb: src }; }));
   }
 
-  if (crmGalleryImages.length > 0) {
-    mediaItems.push(...crmGalleryImages.map(imgObj => ({ type: 'image', src: imgObj.image, thumb: imgObj.image })));
+  if (product.image) {
+    const pSrc = resolveMediaUrl(product.image);
+    if (!mediaItems.some(m => m.src === pSrc)) {
+      mediaItems.push({ type: 'image', src: pSrc, thumb: pSrc });
+    }
   }
 
   const currentMedia = mediaItems[currentImgIndex];
   const getProductShareUrl = () => {
-    if (typeof window === 'undefined') return '';
+    if (typeof window === 'undefined') return `https://www.dharaniherbbals.in/product/${product.id}`;
     return `${window.location.origin}/product/${product.id}`;
   };
 
   const getShareText = () => {
-    return `*${translatedName}* | Dharani Herbbals\n\nShop now on Dharani Herbbals!\n${getProductShareUrl()}`;
+    const price = selectedVariation?.price || product.price;
+    const formattedPrice = price ? ` - ₹${parseFloat(String(price).replace(/[^0-9.]/g, '')).toFixed(0)}` : '';
+    const packSize = selectedVariation ? formatVariationLabel(selectedVariation) : (product.pack_size || formatProductPackSize(product));
+    const sizeText = packSize ? ` (${packSize})` : '';
+    const shareUrl = getProductShareUrl();
+
+    let text = `🌿 Check out *${translatedName}*${sizeText}${formattedPrice} on Dharani Herbals!\n`;
+    text += `✨ 100% Authentic South Indian Botanical Care\n\n`;
+    text += `👉 View product details & order online:\n${shareUrl}`;
+    return text;
   };
 
   const copyShareLink = async () => {
@@ -652,7 +959,11 @@ export default function ProductDetails() {
     if (!shareUrl) return;
 
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      } else {
+        throw new Error('Clipboard API unavailable');
+      }
     } catch {
       const textarea = document.createElement('textarea');
       textarea.value = shareUrl;
@@ -666,12 +977,12 @@ export default function ProductDetails() {
     }
 
     setShareCopied(true);
-    window.setTimeout(() => setShareCopied(false), 1800);
+    window.setTimeout(() => setShareCopied(false), 2000);
   };
 
   const shareToWhatsApp = () => {
     const message = encodeURIComponent(getShareText());
-    window.open(`https://wa.me/?text=${message}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank', 'noopener,noreferrer');
     setShowShareMenu(false);
   };
 
@@ -698,9 +1009,6 @@ export default function ProductDetails() {
     }
     setShowShareMenu(false);
   };
-
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.targetTouches[0].clientX;
@@ -744,18 +1052,27 @@ export default function ProductDetails() {
 
   return (
     <div className="pd-pro-wrapper">
+      {productSeo && <SeoHead {...productSeo} />}
       {/* Breadcrumbs & Back Button */}
       <div className="pd-breadcrumbs" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <button 
-          onClick={() => navigate(-1)} 
-          style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#334155', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', flexShrink: 0 }} 
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#334155', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', flexShrink: 0 }}
           title="Go Back"
+          aria-label="Go Back"
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
           <Link to="/">{t('home')}</Link>
           <span className="separator" style={{ margin: '0 8px' }}>/</span>
+          {product.category_name && (
+            <>
+              <Link to={`/shop?category=${encodeURIComponent(product.category_name)}`}>{product.category_name}</Link>
+              <span className="separator" style={{ margin: '0 8px' }}>/</span>
+            </>
+          )}
           <span className="current">{translatedName}</span>
         </div>
       </div>
@@ -765,7 +1082,7 @@ export default function ProductDetails() {
         <div className="pd-pro-gallery">
 
           {/* Main Media Container */}
-          <div 
+          <div
             className="pd-pro-main-image-container"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -780,7 +1097,7 @@ export default function ProductDetails() {
                   disabled={isFirstSlide}
                   aria-label="Previous Image"
                 >
-                  <ChevronLeft size={22} />
+                  <ChevronLeft size={22} aria-hidden="true" />
                 </button>
                 <button
                   type="button"
@@ -789,7 +1106,7 @@ export default function ProductDetails() {
                   disabled={isLastSlide}
                   aria-label="Next Image"
                 >
-                  <ChevronRight size={22} />
+                  <ChevronRight size={22} aria-hidden="true" />
                 </button>
               </>
             )}
@@ -799,8 +1116,8 @@ export default function ProductDetails() {
               ref={trackRef}
             >
               {mediaItems.map((media, idx) => (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   className={`pd-pro-main-image-wrapper ${currentImgIndex === idx ? 'active' : ''}`}
                 >
                   {media.type === '3d' ? (
@@ -816,12 +1133,11 @@ export default function ProductDetails() {
                   ) : (
                     <img
                       src={media.src || '/logo.png'}
-                      alt={`${translatedName} - Image ${idx + 1}`}
-                      className={`pd-pro-main-image ${
-                        media.src && (media.src.includes('/4.jpeg') || media.src.endsWith('4.jpeg') || product?.id === 1301 || (product?.name && product.name.toLowerCase().includes('keelanelli')))
+                      alt={`${translatedName} - ${product.category_name || 'Herbal Product'} by Dharani Herbals (View ${idx + 1})`}
+                      className={`pd-pro-main-image ${media.src && (media.src.includes('/4.jpeg') || media.src.endsWith('4.jpeg') || product?.id === 1301 || (product?.name && product.name.toLowerCase().includes('keelanelli')))
                           ? 'pd-img-zoom-fit'
                           : ''
-                      }`}
+                        }`}
                       fetchPriority={idx === 0 ? "high" : "auto"}
                       loading={idx === 0 ? "eager" : "lazy"}
                       decoding="async"
@@ -850,9 +1166,9 @@ export default function ProductDetails() {
                 type="button"
                 className="pd-image-share-trigger"
                 onClick={shareToWhatsApp}
-                aria-label="Share on WhatsApp"
+                aria-label="Share product on WhatsApp"
               >
-                <Share2 size={20} />
+                <Share2 size={20} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -869,7 +1185,7 @@ export default function ProductDetails() {
                 >
                   <img
                     src={media.thumb}
-                    alt={`Gallery ${idx + 1}`}
+                    alt={`${translatedName} thumbnail view ${idx + 1}`}
                     onError={(e) => {
                       if (!e.target.dataset.retried) {
                         e.target.dataset.retried = 'true';
@@ -886,62 +1202,203 @@ export default function ProductDetails() {
         <div className="pd-pro-info">
           <h1 className="pd-pro-title">{translatedName}</h1>
 
-          <div className="pd-pro-rating">
-            <div className="pro-stars">
-              <span className="star">★</span>
-              <span className="score">{product.rating ? Number(product.rating).toFixed(1) : "0.0"}</span>
-            </div>
-            <span className="reviews-link">{product.reviews} Reviews</span>
-          </div>
-
-          <div className="pd-pro-price-block">
-            <span className="pro-current-price">{selectedVariation ? selectedVariation.price : product.price}</span>
-            {product.weight_volume && !selectedVariation && (
-              <span style={{ fontSize: '1.2rem', color: '#6b7280', marginLeft: '10px', fontWeight: '500' }}>
-                ({String(product.weight_volume).includes('.') ? parseFloat(product.weight_volume) * 1000 : product.weight_volume} {product.unit && product.unit.toUpperCase() === 'GM' ? 'g' : (product.unit ? product.unit.toLowerCase() : '')})
-              </span>
-            )}
-            <p className="tax-inclusive">{t('taxInclusive')}</p>
-          </div>
-
-          {fetchedVariations && fetchedVariations.length > 0 && (
-            <div className="pd-premium-variations-wrapper">
-              <h4 className="variations-title">{product.variationLabel || 'Weight / Size'}</h4>
-              <div className="premium-variations-grid">
-                {fetchedVariations.map((v, idx) => (
-                  <div
-                    key={idx}
-                    className={`premium-variation-card ${selectedVariation === v ? 'active' : ''}`}
-                    onClick={() => setSelectedVariation(v)}
-                  >
-                    {selectedVariation === v && (
-                      <div className="premium-variation-check">
-                        <CheckCircle size={16} weight="fill" />
-                      </div>
-                    )}
-                    <span className="premium-variation-name">{v.name || v.variation_name || v.weight || 'Variant'}</span>
-                    <span className="premium-variation-price">{v.price}</span>
-                  </div>
-                ))}
+          {hasValidReviews ? (
+            <div className="pd-pro-rating">
+              <div className="pro-stars">
+                <span className="star">★</span>
+                <span className="score">{avgRating.toFixed(1)}</span>
               </div>
+              <button
+                type="button"
+                className="pd-inline-add-review-btn"
+                onClick={() => setShowReviewModal(true)}
+              >
+                + Write a Review
+              </button>
+            </div>
+          ) : (
+            <div className="pd-pro-rating no-reviews">
+              <button
+                type="button"
+                className="pd-inline-add-review-btn"
+                onClick={() => setShowReviewModal(true)}
+              >
+                + Add Review
+              </button>
             </div>
           )}
 
-          <div className="pd-pro-divider"></div>
-
-          {/* Add to Cart Actions */}
-          <div className="pd-premium-actions-wrapper">
-            <div className="premium-qty-selector">
-              <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
-              <input type="text" value={quantity} readOnly />
-              <button type="button" onClick={() => setQuantity(quantity + 1)}>+</button>
+          {/* Unified Purchase Section: Price, Variations, Add to Cart / Buy Now & Delivery Check */}
+          <div className="pd-purchase-section">
+            <div className="pd-pro-price-block">
+              <span className="pro-current-price">{formatCurrency(selectedVariation ? selectedVariation.price : product.price)}</span>
+              {(() => {
+                const currentVar = selectedVariation || product.default_variation;
+                const packSize = currentVar ? formatVariationLabel(currentVar, product) : (product.pack_size || formatProductPackSize(product));
+                return packSize ? (
+                  <span style={{ fontSize: '1.2rem', color: '#6b7280', marginLeft: '10px', fontWeight: '500' }}>
+                    ({packSize})
+                  </span>
+                ) : null;
+              })()}
+              <p className="tax-inclusive">{t('taxInclusive') || 'Inclusive of all taxes'}</p>
             </div>
-            <div className="pd-action-buttons-row">
-              <button type="button" className="premium-add-btn" onClick={() => addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id)}>
-              <ShoppingCart size={20} strokeWidth={2.5} />
-              <span>{t('addToCart')}</span>
-            </button>
-            <button type="button" className="premium-buy-now-btn" onClick={async () => { await addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id, true); navigate('/checkout'); }}><span>Buy Now</span></button>
+
+            {((fetchedVariations && fetchedVariations.length > 0) || (product.variations && product.variations.length > 0)) && (
+              <div className="pd-premium-variations-wrapper">
+                <h4 className="variations-title">{product.variationLabel || 'Available Size / Pack'}</h4>
+                <div className="premium-variations-grid">
+                  {(fetchedVariations && fetchedVariations.length > 0 ? fetchedVariations : product.variations).map((v, idx) => {
+                    const isSelected = selectedVariation
+                      ? String(selectedVariation.id || selectedVariation.variation_id) === String(v.id || v.variation_id)
+                      : (product.default_variation_id && String(product.default_variation_id) === String(v.id || v.variation_id));
+                    return (
+                      <div
+                        key={idx}
+                        className={`premium-variation-card ${isSelected ? 'active' : ''}`}
+                        onClick={() => setSelectedVariation(v)}
+                      >
+                        {isSelected && (
+                          <div className="premium-variation-check">
+                            <CheckCircle size={16} weight="fill" />
+                          </div>
+                        )}
+                        <span className="premium-variation-name">{formatVariationLabel(v, product)}</span>
+                        <span className="premium-variation-price">{formatCurrency(v.price)}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="pd-pro-divider"></div>
+
+            {/* Add to Cart Actions */}
+            <div className="pd-premium-actions-wrapper">
+              <div className="premium-qty-selector">
+                <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))} aria-label="Decrease quantity">-</button>
+                <input type="text" value={quantity} readOnly aria-label="Selected quantity" />
+                <button type="button" onClick={() => setQuantity(quantity + 1)} aria-label="Increase quantity">+</button>
+              </div>
+              <div className="pd-action-buttons-row">
+                <button type="button" className="premium-add-btn" onClick={() => addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id || product.default_variation_id)}>
+                  <ShoppingCart size={20} strokeWidth={2.5} />
+                  <span>{t('addToCart') || 'Add to Cart'}</span>
+                </button>
+                <button
+                  type="button"
+                  className="premium-buy-now-btn"
+                  onClick={async () => {
+                    await addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id || product.default_variation_id, true);
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                    navigate('/checkout');
+                  }}
+                >
+                  <span>Buy Now</span>
+                </button>
+              </div>
+
+              {/* WhatsApp Share & Direct Link Sharing */}
+              <div className="pd-share-block">
+                <span className="pd-share-label">Share Product:</span>
+                <div className="pd-share-actions">
+                  <button
+                    type="button"
+                    className="pd-share-btn pd-share-whatsapp"
+                    onClick={shareToWhatsApp}
+                    aria-label="Share product on WhatsApp"
+                    title="Share product on WhatsApp"
+                  >
+                    <MessageCircle size={18} className="pd-wa-icon" />
+                    <span>Share on WhatsApp</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pd-share-btn pd-share-copy ${shareCopied ? 'copied' : ''}`}
+                    onClick={copyShareLink}
+                    aria-label="Copy direct product link"
+                    title="Copy direct product link"
+                  >
+                    {shareCopied ? (
+                      <>
+                        <Check size={16} />
+                        <span>Link Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={16} />
+                        <span>Copy Link</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* In-Section PIN-Code Delivery Check */}
+            <div className="pd-pincode-check-card">
+              <div className="pd-pincode-header">
+                <Truck size={18} className="text-emerald" />
+                <span className="pd-pincode-title">Delivery & Pincode Availability</span>
+              </div>
+              <div className="pd-pincode-input-row">
+                <input
+                  type="text"
+                  placeholder="Enter 6-digit PIN"
+                  value={pinCode}
+                  maxLength={6}
+                  onChange={(e) => {
+                    setPinCode(e.target.value.replace(/\D/g, '').slice(0, 6));
+                    if (pinError) setPinError('');
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleVerifyPincode();
+                    }
+                  }}
+                  className="pd-pincode-input"
+                />
+                <button
+                  type="button"
+                  className="pd-pincode-check-btn"
+                  onClick={handleVerifyPincode}
+                  disabled={isCheckingPin || pinCode.length !== 6}
+                >
+                  {isCheckingPin ? 'Checking...' : 'Check'}
+                </button>
+              </div>
+
+              {deliveryInfo && (
+                <div className="pd-delivery-status-box success">
+                  <CheckCircle size={16} className="status-icon text-emerald" />
+                  <div>
+                    <p className="delivery-location">
+                      <strong>Deliverable</strong> {deliveryInfo.location ? `to ${deliveryInfo.location}` : `to PIN ${deliveryInfo.pin}`}
+                    </p>
+                    <p className="delivery-estimate">
+                      Estimated delivery in <strong>{deliveryInfo.timeline}</strong> (Standard courier with live tracking)
+                    </p>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#16a34a', fontWeight: '500' }}>
+                      ✓ Free Shipping on orders of ₹500 or more
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {pinError && (
+                <div className="pd-delivery-status-box error">
+                  <Info size={16} className="status-icon text-rose" />
+                  <p className="delivery-error-text">{pinError}</p>
+                </div>
+              )}
+
+              <div className="pd-delivery-badges-row">
+                <span>✓ Standard Courier</span>
+                <span>✓ Fast Dispatch</span>
+                <span>✓ Cash on Delivery Available</span>
+              </div>
             </div>
           </div>
 
@@ -951,11 +1408,15 @@ export default function ProductDetails() {
             <div className="pd-bento-cell bento-desc">
               <div className="pd-bento-header">
                 <FileText size={18} className="pd-bento-icon text-indigo" />
-                <h3>{t('descriptionLabel')}</h3>
+                <h3>{t('descriptionLabel') || 'Description'}</h3>
               </div>
-              <p className="pd-bento-text">
-                {translatedDesc}
-              </p>
+              <div className="pd-bento-text">
+                {(translatedDesc || '').split(/\n\n+/).map((para, idx) => (
+                  <p key={idx} style={{ marginBottom: idx < (translatedDesc || '').split(/\n\n+/).length - 1 ? '12px' : '0', lineHeight: '1.65' }}>
+                    {para.trim()}
+                  </p>
+                ))}
+              </div>
             </div>
 
             {/* Bento Box 2: Trust Badges (Compact) */}
@@ -972,6 +1433,47 @@ export default function ProductDetails() {
                 <Truck size={16} className="text-amber" />
                 <span>{t('freeDelivery')}</span>
               </div>
+            </div>
+
+            {/* Bento Box 3: Dedicated Ingredients Section */}
+            <div className="pd-bento-cell bento-ingredients">
+              <div className="pd-bento-header">
+                <Sparkles size={18} className="pd-bento-icon text-emerald" />
+                <h3>{t('ingredientsLabel') || 'Ingredients'}</h3>
+              </div>
+              {productIngredients && productIngredients.length > 0 ? (
+                <div className="bento-ingredients-list">
+                  {productIngredients.map((item, idx) => (
+                    <span key={idx} className="bento-ingredient-tag">
+                      <Leaf size={12} className="text-emerald" />
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <div className="bento-info-unavailable">
+                  <Info size={16} className="text-muted" />
+                  <p>{t('ingredientsNotAvailable') || 'Ingredients information not available'}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Bento Box 4: Dedicated Directions for Use Section */}
+            <div className="pd-bento-cell bento-directions">
+              <div className="pd-bento-header">
+                <Compass size={18} className="pd-bento-icon text-amber" />
+                <h3>{t('directionsLabel') || 'Directions for Use'}</h3>
+              </div>
+              {productDirections ? (
+                <div className="bento-directions-content">
+                  <p className="pd-bento-text" style={{ lineHeight: '1.65' }}>{productDirections}</p>
+                </div>
+              ) : (
+                <div className="bento-info-unavailable">
+                  <Info size={16} className="text-muted" />
+                  <p>{t('usageNotAvailable') || 'Usage instructions not available'}</p>
+                </div>
+              )}
             </div>
 
             {/* Bento Box 3: Quick Benefits */}
@@ -1085,41 +1587,43 @@ export default function ProductDetails() {
             <div className="pd-bento-cell bento-delivery">
               <div className="pd-bento-header">
                 <Truck size={18} className="pd-bento-icon text-indigo" />
-                <h3>Delivery Check</h3>
+                <h3>{t('deliveryCheck') || 'Delivery Check'}</h3>
               </div>
               <div className="bento-pincode-wrapper">
                 <input
                   type="text"
                   placeholder="Enter 6-digit PIN"
                   value={pinCode}
-                  onChange={(e) => setPinCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  maxLength={6}
+                  onChange={(e) => {
+                    setPinCode(e.target.value.replace(/\D/g, '').slice(0, 6));
+                    if (pinError) setPinError('');
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleVerifyPincode();
+                    }
+                  }}
                   className="bento-input"
                 />
                 <button
                   type="button"
                   className="bento-btn"
-                  onClick={() => {
-                    if (pinCode.length === 6) {
-                      const firstDigit = pinCode.charAt(0);
-                      if (firstDigit === '6') {
-                        setDeliveryMessage('Delivery in 2-3 working days.');
-                      } else if (firstDigit === '5') {
-                        setDeliveryMessage('Delivery in 3-4 working days.');
-                      } else if (['1', '2', '3', '4', '7', '8', '9'].includes(firstDigit)) {
-                        setDeliveryMessage('Delivery in 5-7 working days.');
-                      } else {
-                        setDeliveryMessage('Delivery in 3-5 working days.');
-                      }
-                    }
-                    else setDeliveryMessage('Enter a valid 6-digit PIN.');
-                  }}
+                  onClick={handleVerifyPincode}
+                  disabled={isCheckingPin || pinCode.length !== 6}
                 >
-                  Verify
+                  {isCheckingPin ? '...' : 'Verify'}
                 </button>
               </div>
-              {deliveryMessage && (
-                <p className={`bento-delivery-msg ${deliveryMessage.includes('Enter') ? 'error' : 'success'}`}>
-                  {deliveryMessage}
+              {deliveryInfo && (
+                <p className="bento-delivery-msg success">
+                  ✓ Deliverable to {deliveryInfo.location || pinCode} ({deliveryInfo.timeline})
+                </p>
+              )}
+              {pinError && (
+                <p className="bento-delivery-msg error">
+                  {pinError}
                 </p>
               )}
             </div>
@@ -1128,100 +1632,195 @@ export default function ProductDetails() {
         </div>
       </div>
 
-      <div className="pd-pro-divider pd-reviews-divider"></div>
 
-      {/* Modern Customer Reviews Section */}
-      <div className="pd-reviews-section">
-        <h2 className="pd-reviews-main-title">Customer Reviews</h2>
 
-        <div className="pd-reviews-layout">
-          {/* Left Side: Rating Summary Card */}
-          <div className="pd-summary-card-left">
-            <span className="pd-big-rating">{reviewSummary ? Number(reviewSummary.average_rating).toFixed(1) : "0.0"}</span>
-            <div className="pd-overall-stars">
-              {[1, 2, 3, 4, 5].map((star) => {
-                const avg = reviewSummary ? Number(reviewSummary.average_rating) : 0;
-                const fill = star <= avg ? "#16a34a" : "transparent";
-                return <Star key={star} className="pd-summary-star" fill={fill} color="#16a34a" />;
-              })}
+      {/* Customer Write Review Modal */}
+      {showReviewModal && (
+        <div className="pd-review-modal-backdrop" onClick={() => !isSubmittingReview && setShowReviewModal(false)}>
+          <div className="pd-review-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="pd-review-modal-close"
+              onClick={() => setShowReviewModal(false)}
+              disabled={isSubmittingReview}
+              aria-label="Close review modal"
+            >
+              ×
+            </button>
+
+            <div className="pd-review-modal-header">
+              <div className="pd-review-modal-product">
+                <img src={mediaItems[0]?.src || product?.image} alt={translatedName} />
+                <div>
+                  <h3>Write a Customer Review</h3>
+                  <p className="pd-review-modal-product-name">{translatedName}</p>
+                </div>
+              </div>
             </div>
-            <div className="pd-summary-sentiment">
-              {(reviewSummary && reviewSummary.average_rating >= 4) ? 'Excellent' : (reviewSummary && reviewSummary.average_rating >= 3) ? 'Good' : 'Average'}
-            </div>
-            <div className="pd-summary-inner-divider"></div>
-            <p className="pd-summary-count">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-              Based on <strong style={{ color: '#16a34a' }}>{reviewSummary ? reviewSummary.total_reviews : 0}</strong> reviews
+
+            {reviewSuccessMsg ? (
+              <div className="pd-review-success-state">
+                <div className="pd-success-icon-wrap">
+                  <CheckCircle size={52} color="#16a34a" />
+                </div>
+                <h4>Thank you for your feedback!</h4>
+                <p>Your review has been submitted successfully.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleCustomerReviewSubmit} className="pd-review-form" noValidate>
+                {/* Interactive Star Rating */}
+                <div className="pd-form-group">
+                  <label className="pd-form-label">
+                    Your Rating
+                  </label>
+                  <div className="pd-interactive-stars">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        type="button"
+                        key={star}
+                        className="pd-star-btn"
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        onClick={() => setNewRating(star)}
+                        title={`${star} Star`}
+                      >
+                        <Star
+                          size={32}
+                          fill={(hoverRating || newRating) >= star ? "#fbbf24" : "transparent"}
+                          color={(hoverRating || newRating) >= star ? "#fbbf24" : "#d1d5db"}
+                        />
+                      </button>
+                    ))}
+                    <span className="pd-rating-text-label">
+                      {{
+                        1: '⭐ Poor - Not satisfied',
+                        2: '⭐⭐ Fair - Needs improvement',
+                        3: '⭐⭐⭐ Good - Met expectations',
+                        4: '⭐⭐⭐⭐ Very Good - Satisfied',
+                        5: '⭐⭐⭐⭐⭐ Excellent - Loved it!'
+                      }[hoverRating || newRating] || 'Select Rating'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Your Name */}
+                <div className="pd-form-group">
+                  <label className="pd-form-label">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    className="pd-form-input"
+                    placeholder="e.g. Karthik, Priya (optional)"
+                    value={newReviewerName}
+                    onChange={(e) => setNewReviewerName(e.target.value)}
+                  />
+                </div>
+
+                {/* Review Message */}
+                <div className="pd-form-group">
+                  <label className="pd-form-label">
+                    Your Review / Feedback
+                  </label>
+                  <textarea
+                    className="pd-form-textarea"
+                    rows={2}
+                    placeholder="Share your genuine experience with this herbal product (optional)"
+                    value={newReviewText}
+                    onChange={(e) => setNewReviewText(e.target.value)}
+                  />
+                </div>
+
+                {reviewError && (
+                  <p className="pd-review-error-msg">{reviewError}</p>
+                )}
+
+                {/* Modal Buttons */}
+                <div className="pd-review-modal-actions">
+                  <button
+                    type="button"
+                    className="pd-btn-secondary"
+                    onClick={() => setShowReviewModal(false)}
+                    disabled={isSubmittingReview}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="pd-btn-submit-review"
+                    disabled={isSubmittingReview}
+                  >
+                    {isSubmittingReview ? 'Posting Review...' : 'Post Review'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Customer Reviews Section (Rendered below on the page when reviews exist) */}
+      {reviews && reviews.length > 0 && (
+        <div id="customer-reviews-section" className="pd-customer-reviews-section" style={{ maxWidth: '1200px', margin: '40px auto 20px', padding: '0 20px' }}>
+          <div style={{ marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#111827', margin: 0 }}>
+              Customer Reviews
+            </h3>
+            <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '0.88rem' }}>
+              Real experiences and feedback from genuine herbal customers
             </p>
           </div>
 
-          {/* Right Side: Rating Bars */}
-          <div className="pd-rating-bars-right" style={{ flex: '1 1 300px', width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {[5, 4, 3, 2, 1].map(stars => {
-              const count = reviewSummary && reviewSummary.rating_count ? reviewSummary.rating_count[stars] : 0;
-              const total = reviewSummary ? reviewSummary.total_reviews : 0;
-              const percent = total > 0 ? Math.round((count / total) * 100) : 0;
-              return (
-                <div key={stars} className="pd-bar-row" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                  <span className="pd-bar-label" style={{ fontWeight: '700', color: '#334155', minWidth: '55px', fontSize: '1rem' }}>{stars} Star</span>
-                  <div className="pd-bar-track" style={{ flex: 1, height: '10px', background: '#f1f5f9', borderRadius: '10px', overflow: 'hidden' }}>
-                    <div className="pd-bar-fill" style={{ width: `${percent}%`, height: '100%', background: '#16a34a', borderRadius: '10px' }}></div>
+          <div className="pd-reviews-list-grid">
+            {reviews.map((rev) => (
+              <div key={rev.id} className="pd-single-review-card">
+                <div className="pd-single-review-header">
+                  <div className="pd-single-review-avatar" style={{ backgroundColor: rev.color || '#10b981' }}>
+                    {rev.initial || (rev.name ? rev.name.charAt(0).toUpperCase() : 'C')}
                   </div>
-                  <span className="pd-bar-percent" style={{ minWidth: '40px', textAlign: 'right', color: '#475569', fontSize: '0.95rem', fontWeight: '600' }}>{percent}%</span>
+                  <div className="pd-single-review-info">
+                    <div className="pd-single-review-name-row">
+                      <span className="pd-single-review-name">{rev.name}</span>
+                      <span className="pd-single-review-badge">Verified Buyer</span>
+                      {rev.isLocal && (
+                        <button
+                          type="button"
+                          className="pd-delete-review-chip"
+                          onClick={() => handleDeleteReview(rev.id)}
+                          title="Delete review"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                    <span className="pd-single-review-date">{rev.date}</span>
+                  </div>
                 </div>
-              );
-            })}
+
+                <div className="pd-single-review-stars">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <span
+                      key={s}
+                      style={{ color: s <= (rev.rating || 5) ? '#fbbf24' : '#d1d5db', fontSize: '1.1rem' }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+
+                <p className="pd-single-review-text">"{rev.text}"</p>
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* Bottom Section: Review Slider */}
-        <div className="pd-reviews-bottom-slider">
-          {reviews.length === 0 ? (
-            <div className="pd-empty-reviews-card">
-              <div className="pd-empty-icon-wrapper">
-                <MessageSquare size={36} className="empty-icon" />
-              </div>
-              <h4>No reviews yet</h4>
-              <p>Be the first to share your experience with this product!</p>
-            </div>
-          ) : (
-            <div className="pd-reviews-grid-slider" ref={sliderRef} style={reviews.length <= 2 ? { overflow: 'hidden', flexWrap: 'wrap', justifyContent: 'flex-start' } : {}}>
-                {(reviews.length > 2 ? [...reviews, ...reviews, ...reviews, ...reviews] : reviews).map((review, i) => (
-                <div key={`${review.id}-${i}`} className="pd-review-slide-card">
-                  <div className="pd-reviewer-header">
-                    <div className="pd-reviewer-avatar" style={{ backgroundColor: review.color }}>
-                      {review.initial}
-                    </div>
-                    <div className="pd-reviewer-info">
-                      <h5>{review.name}</h5>
-                      <span>{review.date}</span>
-                    </div>
-                    <div className="pd-google-icon-wrapper">
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" className="pd-google-icon" />
-                    </div>
-                  </div>
-                  <div className="pd-review-stars-display">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} size={16} fill={star <= review.rating ? "#fbbf24" : "transparent"} color={star <= review.rating ? "#fbbf24" : "#cbd5e1"} />
-                    ))}
-                  </div>
-                  <p className="pd-review-text-display">"{review.text}"</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      )}
 
       <div className="pd-pro-divider" style={{ marginTop: '60px', marginBottom: '20px' }}></div>
 
       <div className="related-products-section" style={{ maxWidth: '1200px', margin: '40px auto 0' }}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', fontWeight: 800, marginBottom: 'clamp(20px, 4vw, 40px)', color: '#111827' }}>{t('relatedProducts')}</h2>
         <div className="shop-grid">
-          {[
-            ...products.filter(p => p.id !== product.id && p.category_name === product.category_name),
-            ...products.filter(p => p.id !== product.id && p.category_name !== product.category_name)
-          ].slice(0, 6).map(p => (
+          {relatedProducts.map(p => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
@@ -1256,6 +1855,80 @@ export default function ProductDetails() {
           </button>
         </div>
       )}
+
+      {/* Universal Fixed Bottom Buy Bar (Desktop & Mobile) */}
+      <div
+        className={`pd-fixed-buy-bar ${showDesktopBuyBar ? 'desktop-visible' : ''}`}
+        role="region"
+        aria-label="Product purchase action bar"
+      >
+        <div className="pd-fixed-buy-bar-container">
+          {/* Desktop Left: Product thumbnail & clean title */}
+          <div className="pd-fixed-bar-product-info">
+            <img
+              src={mediaItems[0]?.src || product.image}
+              alt={formatProductDisplayName(product.name)}
+              className="pd-fixed-bar-thumb"
+            />
+            <div className="pd-fixed-bar-meta">
+              <span className="pd-fixed-bar-title">{formatProductDisplayName(product.name)}</span>
+              <span className="pd-fixed-bar-variant">
+                {selectedVariation ? formatVariationLabel(selectedVariation, product) : (product.pack_size || formatProductPackSize(product) || 'Standard')}
+              </span>
+            </div>
+          </div>
+
+          {/* Pricing Box */}
+          <div className="pd-sticky-price-box">
+            <div className="pd-sticky-prices">
+              <span className="pd-sticky-active-price">
+                {formatCurrency(selectedVariation?.price || product.price)}
+              </span>
+              {selectedVariation?.originalPrice && (
+                <span className="pd-sticky-original-price">{formatCurrency(selectedVariation.originalPrice)}</span>
+              )}
+            </div>
+            <span className="pd-sticky-pack-label mobile-only">
+              {selectedVariation ? formatVariationLabel(selectedVariation, product) : (product.pack_size || formatProductPackSize(product) || 'Standard')}
+            </span>
+          </div>
+
+          {/* Buttons: Add to Cart & Buy Now */}
+          <div className="pd-sticky-btn-group">
+            <button
+              type="button"
+              className="pd-sticky-btn pd-sticky-add-btn"
+              onClick={() => addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id || product.default_variation_id)}
+              aria-label="Add to Cart"
+            >
+              <ShoppingCart size={18} strokeWidth={2.4} aria-hidden="true" />
+              <span>{t('addToCart') || 'Add to Cart'}</span>
+            </button>
+            <button
+              type="button"
+              className="pd-sticky-btn pd-sticky-buy-btn"
+              onClick={async () => {
+                await addToCart(product, quantity, selectedVariation?.id || selectedVariation?.variation_id || product.default_variation_id, true);
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                navigate('/checkout');
+              }}
+              aria-label="Buy Now"
+            >
+              <span>Buy Now</span>
+            </button>
+            <button
+              type="button"
+              className="pd-sticky-btn pd-sticky-wa-btn"
+              onClick={shareToWhatsApp}
+              title="Share on WhatsApp"
+              aria-label="Share on WhatsApp"
+            >
+              <MessageCircle size={18} />
+              <span className="desktop-only">Share</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

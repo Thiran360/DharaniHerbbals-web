@@ -168,6 +168,41 @@
   font-weight: bold;
 }
 
+.filter-total-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #10b981;
+  color: white;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+}
+
+.filter-opt-text {
+  flex: 1;
+}
+
+.filter-opt-count {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.filter-checkbox-label.selected {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.filter-checkbox-label.selected .filter-opt-count {
+  color: #10b981;
+  font-weight: 700;
+}
+
 .filter-checkbox-label:hover {
   color: #111827;
 }

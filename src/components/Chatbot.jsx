@@ -5,6 +5,7 @@ import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { API_BASE_URL } from '../services/api';
+import { formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
 import './Chatbot.css';
 
 const PREDEFINED_RESPONSES = [
@@ -78,8 +79,11 @@ const PREDEFINED_RESPONSES = [
   }
 ];
 
-export default function Chatbot() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Chatbot({ isOpen: controlledIsOpen, setIsOpen: controlledSetIsOpen, hideTriggerButton = false }) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isControlled = controlledIsOpen !== undefined;
+  const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
+  const setIsOpen = isControlled ? controlledSetIsOpen : setInternalIsOpen;
   const [messages, setMessages] = useState([
     { id: 1, text: "Hi there! 👋 I'm the Dharani Herbbals Assistant. You can type or use the microphone to tell me what you're looking for!", isUser: false }
   ]);
@@ -282,9 +286,9 @@ export default function Chatbot() {
       } else if (matchedProduct && !isGeneralQuestion) {
         let responseText = "";
         if (isAskingPrice) {
-          responseText = `The price of ${matchedProduct.name} is ₹${matchedProduct.price}.`;
+          responseText = `The price of ${formatProductDisplayName(matchedProduct.name)} is ${formatCurrency(matchedProduct.price)}.`;
         } else {
-          responseText = `I found ${matchedProduct.name} for you!`;
+          responseText = `I found ${formatProductDisplayName(matchedProduct.name)} for you!`;
         }
 
         const botResponse = {
@@ -359,8 +363,8 @@ export default function Chatbot() {
               <span className="chatbot-status">Online</span>
             </div>
           </div>
-          <button className="chatbot-close-btn" onClick={() => setIsOpen(false)}>
-            <X size={20} />
+          <button className="chatbot-close-btn" onClick={() => setIsOpen(false)} aria-label="Close assistant">
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
 
@@ -378,8 +382,8 @@ export default function Chatbot() {
                         <img src={msg.product.image} alt={msg.product.name} />
                       </div>
                       <div className="chat-product-info">
-                        <h5>{msg.product.name}</h5>
-                        <span className="chat-product-price">{msg.product.price}</span>
+                        <h5>{formatProductDisplayName(msg.product.name)}</h5>
+                        <span className="chat-product-price">{formatCurrency(msg.product.price)}</span>
                       </div>
                       <div className="chat-product-actions">
                         <button className="chat-btn-know-more" onClick={() => navigate(`/product/${msg.product.id}`)}>
@@ -405,8 +409,8 @@ export default function Chatbot() {
                           <img src={p.image} alt={p.name} />
                         </div>
                         <div className="chat-product-info">
-                          <h5>{p.name}</h5>
-                          <span className="chat-product-price">{p.price}</span>
+                          <h5>{formatProductDisplayName(p.name)}</h5>
+                          <span className="chat-product-price">{formatCurrency(p.price)}</span>
                         </div>
                         <div className="chat-product-actions">
                           <button className="chat-btn-know-more" onClick={() => navigate(`/product/${p.id}`)}>
@@ -441,8 +445,9 @@ export default function Chatbot() {
             className={`voice-btn ${isListening ? 'listening' : ''}`}
             onClick={handleVoiceInput}
             title="Search by Voice"
+            aria-label={isListening ? "Stop voice listening" : "Search assistant by voice"}
           >
-            {isListening ? <MicOff size={18} color="#ef4444" /> : <Mic size={18} />}
+            {isListening ? <MicOff size={18} color="#ef4444" aria-hidden="true" /> : <Mic size={18} aria-hidden="true" />}
           </button>
           <input
             type="text"
@@ -451,20 +456,22 @@ export default function Chatbot() {
             placeholder={isListening ? "Listening..." : "Type your message..."}
             disabled={isListening}
           />
-          <button type="submit" disabled={!inputValue.trim() || isTyping || isListening}>
-            <Send size={18} />
+          <button type="submit" disabled={!inputValue.trim() || isTyping || isListening} aria-label="Send message">
+            <Send size={18} aria-hidden="true" />
           </button>
         </form>
       </div>
 
-      {/* Floating Toggle Button */}
-      <button
-        className={`float-btn float-chatbot ${isOpen ? 'active' : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle Chatbot"
-      >
-        {isOpen ? <X size={28} /> : <Sparkles size={28} />}
-      </button>
+      {/* Floating Toggle Button (rendered when not embedded in unified launcher) */}
+      {!hideTriggerButton && (
+        <button
+          className={`float-btn float-chatbot ${isOpen ? 'active' : ''}`}
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle Chatbot"
+        >
+          {isOpen ? <X size={28} /> : <Sparkles size={28} />}
+        </button>
+      )}
     </div>
   );
 }

@@ -5,8 +5,14 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
-import { API_BASE_URL } from '../services/api';
+import { API_BASE_URL, resolveMediaUrl } from '../services/api';
+import { formatProductPackSize, formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
+import { searchProducts } from '../utils/searchHelper';
+import { filterProductList } from '../utils/filterHelper';
 import FilterDrawer from '../components/FilterDrawer';
+import ComboOffersSection from '../components/ComboOffersSection';
+import SeoHead from '../components/SeoHead';
+import { getVerifiedReviewData } from '../utils/productReviews';
 import grpImg from '../assets/grp.png';
 import hairBannerImg from '../assets/hair_banner_transparent.png';
 import imgBody from '../assets/body_soap_transparent.png';
@@ -167,9 +173,18 @@ export const ProductCard = memo(({ product, index = 0 }) => {
 
   const navigate = useNavigate();
 
-  const translatedName = language === 'ta' && product.tamil_name ? product.tamil_name : product.name;
+  const translatedName = formatProductDisplayName(language === 'ta' && product.tamil_name ? product.tamil_name : product.name);
 
-  const displayRating = product.rating ? Number(product.rating).toFixed(1) : "0.0";
+  const verifiedReviewData = getVerifiedReviewData(product);
+  const hasValidRating = Boolean(
+    verifiedReviewData && 
+    typeof verifiedReviewData.rating === 'number' && 
+    verifiedReviewData.rating > 0 && 
+    typeof verifiedReviewData.reviews === 'number' && 
+    verifiedReviewData.reviews > 0
+  );
+  const displayRating = hasValidRating ? verifiedReviewData.rating.toFixed(1) : null;
+  const displayReviews = hasValidRating ? verifiedReviewData.reviews : null;
 
 
   const openProduct = () => {
@@ -200,7 +215,8 @@ export const ProductCard = memo(({ product, index = 0 }) => {
       displayImage = product.image.split(',')[0].trim();
     } else {
       displayImage = product.image;
-    }
+  }
+  displayImage = resolveMediaUrl(displayImage) || '/logo.png';
   }
 
   const isSpecialZoomImage = Boolean(
@@ -227,20 +243,37 @@ export const ProductCard = memo(({ product, index = 0 }) => {
           <span>{product.category_name || 'Snacks'}</span>
         </div>
 
-        <h3 className="uc-title">{translatedName}</h3>
+        <h3 className="uc-title">
+          <Link
+            to={`/product/${product.id}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              sessionStorage.setItem('shopScrollPos', window.scrollY);
+            }}
+          >
+            {translatedName}
+          </Link>
+        </h3>
         <p className="uc-subtitle">{language === 'ta' && product.tamil_description ? product.tamil_description : (product.description || 'Authentic Natural Herbal Product')}</p>
 
-        <div className="uc-meta-row">
-          <div className="uc-rating-row">
-            <Star size={12} fill="#f59e0b" color="#f59e0b" />
-            <span className="uc-rating-text">{displayRating}</span>
+        {hasValidRating && (
+          <div className="uc-meta-row">
+            <div className="uc-rating-row" aria-label={`Rating: ${displayRating} out of 5 (${displayReviews} reviews)`}>
+              <Star size={12} fill="#f59e0b" color="#f59e0b" />
+              <span className="uc-rating-text">{displayRating}</span>
+              <span className="uc-review-count">({displayReviews})</span>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="uc-bottom-row">
           <div className="uc-price-block">
-            <span className="uc-price">{product.price}</span>
-            {product.mrp && parseFloat(product.mrp) > parseFloat(String(product.price).replace(/[^0-9.]/g, '')) && <span className="uc-original-price">₹{product.mrp}</span>}
+            <span className="uc-price">{formatCurrency(product.price)}</span>
+            {(() => {
+              const packSize = product.pack_size || formatProductPackSize(product);
+              return packSize ? <span className="uc-pack-size">({packSize})</span> : null;
+            })()}
+            {product.mrp && parseFloat(product.mrp) > parseFloat(String(product.price).replace(/[^0-9.]/g, '')) && <span className="uc-original-price">{formatCurrency(product.mrp)}</span>}
           </div>
         </div>
 
@@ -249,7 +282,7 @@ export const ProductCard = memo(({ product, index = 0 }) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            addToCart(product);
+            addToCart(product, 1, product.default_variation_id || product.default_variation?.id);
           }}
           aria-label={t('addToCart')}
         >
@@ -259,6 +292,9 @@ export const ProductCard = memo(({ product, index = 0 }) => {
       </div>
 
       <div className="uc-img-section">
+        {product.discount && (
+          <span className="uc-discount-badge">{product.discount}</span>
+        )}
         <button
           className="uc-wishlist-btn"
           onClick={(e) => {
@@ -266,18 +302,19 @@ export const ProductCard = memo(({ product, index = 0 }) => {
             e.stopPropagation();
             toggleWishlist(product);
           }}
-          aria-label="Toggle Wishlist"
+          aria-label={isInWishlist(product.id) ? `Remove ${translatedName} from Wishlist` : `Add ${translatedName} to Wishlist`}
         >
           <Heart
             size={16}
             fill={isInWishlist(product.id) ? "#1f2937" : "transparent"}
             color="#1f2937"
             strokeWidth={1.5}
+            aria-hidden="true"
           />
         </button>
         <img
           src={displayImage}
-          alt={translatedName}
+          alt={`${translatedName} - ${product.category_name || 'Herbal Product'} by Dharani Herbals`}
           className={`uc-img ${isSpecialZoomImage ? 'uc-img-zoom-fit' : ''}`}
           loading="lazy"
           decoding="async"
@@ -312,6 +349,9 @@ const CategoryTab = ({ cat, activeCategory, onClick }) => {
     <button
       className={`shop-tab ${activeCategory === cat ? 'shop-tab--active' : ''}`}
       onClick={onClick}
+      role="tab"
+      aria-selected={activeCategory === cat}
+      aria-label={`Filter by category: ${name}`}
     >
       {name}
     </button>
@@ -324,6 +364,7 @@ export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'All';
   const activeBrand = searchParams.get('brand');
+  const activeSearch = searchParams.get('search') || searchParams.get('q') || '';
   const { language, translateText, t, isBulkLoading } = useLanguage();
   const [translatedHeroCat, setTranslatedHeroCat] = useState(activeCategory);
 
@@ -365,6 +406,10 @@ export default function Shop() {
   }, []);
 
   useEffect(() => {
+    if (activeSearch) {
+      setTranslatedHeroCat(`"${activeSearch}"`);
+      return;
+    }
     if (activeBrand) {
       setTranslatedHeroCat(`Brand: ${activeBrand}`);
       return;
@@ -380,7 +425,7 @@ export default function Shop() {
       setTranslatedHeroCat(activeCategory);
     }
     return () => { active = false; };
-  }, [language, activeCategory, activeBrand, t]);
+  }, [language, activeCategory, activeBrand, activeSearch, t]);
 
   const categories = useMemo(() => {
     return ['All', ...apiCategories.map(c => c.name)];
@@ -388,6 +433,11 @@ export default function Shop() {
 
   const filteredProducts = useMemo(() => {
     let list = products || [];
+
+    // 0. Search Query Filter
+    if (activeSearch) {
+      list = searchProducts(list, activeSearch);
+    }
 
     // 1. Category Filter
     list = activeCategory === 'All'
@@ -404,129 +454,8 @@ export default function Shop() {
       });
     }
 
-    // 2. Price Filter
-    if (selectedFilters.price && selectedFilters.price.length > 0) {
-      list = list.filter(p => {
-        const price = parseFloat(p.customer_price || p.mrp || 0);
-        return selectedFilters.price.some(range => {
-          if (range === 'Under ₹100') return price < 100;
-          if (range === '₹100–₹250') return price >= 100 && price <= 250;
-          if (range === '₹250–₹500') return price >= 250 && price <= 500;
-          if (range === 'Above ₹500') return price > 500;
-          return true;
-        });
-      });
-    }
-
-    // 3. Discount Filter
-    if (selectedFilters.offers && selectedFilters.offers.length > 0) {
-      list = list.filter(p => {
-        const mrp = parseFloat(p.mrp || 0);
-        const price = parseFloat(p.customer_price || p.mrp || 0);
-        const discountPercent = mrp > 0 ? ((mrp - price) / mrp) * 100 : 0;
-
-        return selectedFilters.offers.some(offer => {
-          if (offer === '10% Off or more') return discountPercent >= 10;
-          if (offer === '20% Off or more') return discountPercent >= 20;
-          if (offer === '30% Off or more') return discountPercent >= 30;
-          if (offer === '50% Off or more') return discountPercent >= 50;
-          return true;
-        });
-      });
-    }
-
-    // Product Type
-    if (selectedFilters.productType && selectedFilters.productType.length > 0) {
-      list = list.filter(p => {
-        const name = (p.name || '').toLowerCase();
-        const catName = (p.category_name || '').toLowerCase();
-        return selectedFilters.productType.some(type => {
-          const t = type.toLowerCase();
-          return name.includes(t) || catName.includes(t);
-        });
-      });
-    }
-
-    // Concern
-    if (selectedFilters.concern && selectedFilters.concern.length > 0) {
-      list = list.filter(p => {
-        const name = (p.name || '').toLowerCase();
-        const catName = (p.category_name || '').toLowerCase();
-        const desc = (p.description || '').toLowerCase();
-        return selectedFilters.concern.some(concern => {
-          const c = concern.toLowerCase();
-          // specifically for generic terms, check across name, category, and description
-          if (c === 'hair care') return catName.includes('hair') || name.includes('hair') || desc.includes('hair');
-          if (c === 'skin care') return catName.includes('skin') || name.includes('skin') || name.includes('face') || desc.includes('skin');
-          if (c === 'baby care') return catName.includes('baby') || name.includes('baby') || desc.includes('baby');
-          if (c === 'digestion') return name.includes('digestion') || desc.includes('digestion') || name.includes('stomach');
-          if (c === 'immunity') return name.includes('immunity') || desc.includes('immunity');
-          if (c === 'general wellness') return catName.includes('wellness') || catName.includes('health') || desc.includes('wellness') || desc.includes('health');
-          
-          return name.includes(c) || catName.includes(c) || desc.includes(c);
-        });
-      });
-    }
-
-
-    // Ingredient
-    if (selectedFilters.ingredient && selectedFilters.ingredient.length > 0) {
-      list = list.filter(p => {
-        const name = (p.name || '').toLowerCase();
-        const desc = (p.description || '').toLowerCase();
-        return selectedFilters.ingredient.some(ing => {
-          const i = ing.toLowerCase();
-          return name.includes(i) || desc.includes(i);
-        });
-      });
-    }
-
-    // Suitable For
-    if (selectedFilters.suitableFor && selectedFilters.suitableFor.length > 0) {
-      list = list.filter(p => {
-        const name = (p.name || '').toLowerCase();
-        const catName = (p.category_name || '').toLowerCase();
-        const desc = (p.description || '').toLowerCase();
-        return selectedFilters.suitableFor.some(suit => {
-          const s = suit.toLowerCase();
-          if (s === 'men') return name.includes('men') && !name.includes('women');
-          if (s === 'women') return name.includes('women');
-          if (s === 'kids') return name.includes('kid') || name.includes('baby') || catName.includes('baby');
-          
-          return name.includes(s) || catName.includes(s) || desc.includes(s);
-        });
-      });
-    }
-
-    // Availability
-    if (selectedFilters.availability && selectedFilters.availability.length > 0) {
-      list = list.filter(p => {
-        const wantsInStock = selectedFilters.availability.includes('In Stock');
-        const wantsOutOfStock = selectedFilters.availability.includes('Out of Stock');
-        
-        // If both are selected, no need to filter out anything
-        if (wantsInStock && wantsOutOfStock) return true;
-
-        // Derive stock safely from available fields
-        let isOutOfStock = false; // default to in stock if unknown, or handle safely
-        
-        if (p.stock !== undefined) {
-          isOutOfStock = Number(p.stock) <= 0;
-        } else if (p.quantity !== undefined) {
-          isOutOfStock = Number(p.quantity) <= 0;
-        } else if (p.in_stock !== undefined) {
-          isOutOfStock = !p.in_stock;
-        } else if (p.status !== undefined) {
-          const s = String(p.status).toLowerCase();
-          isOutOfStock = (s === 'out_of_stock' || s === 'outofstock');
-        }
-
-        if (wantsInStock) return !isOutOfStock;
-        if (wantsOutOfStock) return isOutOfStock;
-        
-        return true;
-      });
-    }
+    // 2. Apply multi-facet product filters (productType, concern, ingredient, intended customer, price, availability)
+    list = filterProductList(list, selectedFilters);
 
     // Sort to push products without images and specific products to the end
     list.sort((a, b) => {
@@ -551,7 +480,7 @@ export default function Shop() {
     });
 
     return list;
-  }, [products, activeCategory, activeBrand, selectedFilters]);
+  }, [products, activeCategory, activeBrand, activeSearch, selectedFilters]);
 
 
   const handleCategoryClick = (cat) => {
@@ -596,13 +525,45 @@ export default function Shop() {
   const heroTitleText = activeCategory === 'All' ? t('Explore Our Products') : (translatedHeroCat || catConfig.defaultTitle);
   const heroBgImg = catConfig.bgImage || imgAll;
 
+  const shopSeo = useMemo(() => {
+    const isCat = activeCategory && activeCategory !== 'All';
+    const catName = isCat ? (translatedHeroCat || catConfig.defaultTitle) : 'All Products';
+    const title = isCat
+      ? `${catName} | Herbal Products & Traditional Care | Dharani Herbals`
+      : 'Shop All Authentic Herbal Products | Dharani Herbals';
+    const description = isCat
+      ? `Explore our collection of authentic herbal ${catName.toLowerCase()} crafted with pure botanical extracts and traditional Siddha wisdom.`
+      : 'Browse our complete catalog of verified botanical hair care, skincare, baby care, traditional food, and pooja essentials.';
+    const canonicalUrl = isCat
+      ? `https://www.dharaniherbbals.in/shop?category=${encodeURIComponent(activeCategory)}`
+      : 'https://www.dharaniherbbals.in/shop';
+
+    return {
+      title,
+      description,
+      canonicalUrl,
+      openGraph: {
+        title,
+        description,
+        url: canonicalUrl,
+        image: 'https://www.dharaniherbbals.in/logo.png',
+        type: 'website'
+      },
+      keywords: isCat
+        ? [`herbal ${catName.toLowerCase()}`, `${catName.toLowerCase()} online`, 'dharani herbals', 'botanical products']
+        : ['herbal products', 'siddha wellness', 'dharani herbals catalog', 'ayurvedic products']
+    };
+  }, [activeCategory, translatedHeroCat, catConfig]);
+
   return (
     <div className="shop-root">
+      <SeoHead {...shopSeo} />
       <FilterDrawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
+        products={products}
       />
 
       {/* ── Mobile Category Header (Rendered ONLY on mobile when a category is selected) ── */}
@@ -666,8 +627,14 @@ export default function Shop() {
 
         {/* ── Filter Bar ── */}
         <div className="shop-filter-bar">
-          <div className="shop-filter-left" onClick={() => setIsFilterOpen(true)} style={{ cursor: 'pointer' }}>
-            <SlidersHorizontal size={20} className="shop-filter-icon" />
+          <button
+            type="button"
+            className="shop-filter-left"
+            onClick={() => setIsFilterOpen(true)}
+            aria-label={`Open product filters${Object.keys(selectedFilters).length > 0 ? ` (${Object.values(selectedFilters).flat().length} active)` : ''}`}
+            aria-expanded={isFilterOpen}
+          >
+            <SlidersHorizontal size={20} className="shop-filter-icon" aria-hidden="true" />
             <span className="shop-filter-label" style={{ userSelect: 'none' }}>{t('filterBy')}</span>
             {Object.keys(selectedFilters).length > 0 && (
               <span style={{
@@ -685,7 +652,7 @@ export default function Shop() {
                 {Object.values(selectedFilters).flat().length}
               </span>
             )}
-          </div>
+          </button>
           <div className="shop-tabs-scroll">
             {categories.map((cat) => (
               <CategoryTab
@@ -698,12 +665,81 @@ export default function Shop() {
           </div>
         </div>
 
+        {/* ── Active Combo Offers Section ── */}
+        {activeCategory === 'All' && !activeBrand && Object.keys(selectedFilters).length === 0 && (
+          <div style={{ marginBottom: '20px' }}>
+            <ComboOffersSection />
+          </div>
+        )}
+
+        {/* ── Active Filter Chips Bar ── */}
+        {Object.values(selectedFilters).flat().length > 0 && (
+          <div className="shop-active-filters-chips">
+            <span className="shop-active-filters-title">Active Filters:</span>
+            <div className="shop-active-chips-list">
+              {Object.entries(selectedFilters).map(([catId, options]) =>
+                (options || []).map(option => (
+                  <button
+                    key={`${catId}-${option}`}
+                    className="shop-filter-chip"
+                    onClick={() => {
+                      setSelectedFilters(prev => {
+                        const next = (prev[catId] || []).filter(o => o !== option);
+                        const updated = { ...prev };
+                        if (next.length > 0) updated[catId] = next;
+                        else delete updated[catId];
+                        return updated;
+                      });
+                    }}
+                    title={`Remove ${option}`}
+                  >
+                    <span>{option}</span>
+                    <span className="chip-x">×</span>
+                  </button>
+                ))
+              )}
+              <button
+                type="button"
+                className="shop-clear-all-chips-btn"
+                onClick={() => setSelectedFilters({})}
+              >
+                Clear All ✕
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* ── Results info ── */}
         <div className="shop-results-bar">
           <p className="shop-results-text">
             {t('showing')} <strong>{filteredProducts.length}</strong> {t('of')} <strong>{products.length}</strong> {t('products')}
+            {activeSearch && <> for &ldquo;<strong>{activeSearch}</strong>&rdquo;</>}
             {activeCategory !== 'All' && <> {t('in')} <strong className="shop-results-cat">{translatedHeroCat}</strong></>}
           </p>
+          {activeSearch && (
+            <button
+              type="button"
+              onClick={() => {
+                const newParams = new URLSearchParams(searchParams);
+                newParams.delete('search');
+                newParams.delete('q');
+                setSearchParams(newParams);
+              }}
+              style={{
+                background: '#f1f5f9',
+                border: '1px solid #cbd5e1',
+                borderRadius: '16px',
+                padding: '4px 12px',
+                fontSize: '0.82rem',
+                color: '#475569',
+                cursor: 'pointer',
+                fontWeight: 600,
+                marginLeft: '12px'
+              }}
+            >
+              Clear Search ✕
+            </button>
+          )}
         </div>
 
         {/* ── Skeleton loading ── */}

@@ -5,6 +5,8 @@ import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuthModal } from '../context/AuthModalContext';
 import { API_BASE_URL } from '../services/api';
+import SeoHead from '../components/SeoHead';
+import { formatVariationLabel, formatProductPackSize, formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
 import './Checkout.css';
 
 const INDIAN_STATES = [
@@ -22,6 +24,52 @@ export default function Checkout() {
   const { openLoginModal } = useAuthModal();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem('user');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return parsed.user || parsed;
+      }
+    } catch (e) {}
+    return null;
+  });
+  const isB2BUserUI = user?.is_store_member || ['retailer', 'reseller', 'staff'].includes(user?.role);
+  const [paymentMethod, setPaymentMethod] = useState('payglocal');
+  const [createdOrderId, setCreatedOrderId] = useState(null);
+  const [isPaytmLoaded, setIsPaytmLoaded] = useState(true); // Assume loaded from index.html
+
+  const [guestInfo, setGuestInfo] = useState({ name: '', email: '' });
+  const [isContactConfirmed, setIsContactConfirmed] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    pincode: '',
+    latitude: '11.0168',
+    longitude: '76.9558',
+    gstin: '',
+    is_default: false
+  });
+
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [checkoutView, setCheckoutView] = useState('selected'); // 'selected', 'list', 'form'
+  const [fetchingLocation, setFetchingLocation] = useState(false);
+  const [showFullAddressForm, setShowFullAddressForm] = useState(false);
+  const [isManualEntry, setIsManualEntry] = useState(false);
+  const [addressToDelete, setAddressToDelete] = useState(null);
+  const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
+  const stateDropdownRef = useRef(null);
+
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [successOrderId, setSuccessOrderId] = useState(null);
+  const [activeStep, setActiveStep] = useState(1);
 
   const checkinCalledRef = useRef(false);
 
@@ -91,7 +139,7 @@ export default function Checkout() {
       // Hit PayGlocal checkin endpoint to update CRM
       if (finalGatewayTxnId && !checkinCalledRef.current) {
         checkinCalledRef.current = true;
-        fetch('https://api.codingboss.in/herbal/payglocal/checkin/', {
+        fetch(`${API_BASE_URL}/payglocal/checkin/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -116,6 +164,7 @@ export default function Checkout() {
       }
 
       if (isSuccess || xGlToken || (finalGatewayTxnId && !isFailed)) {
+        try { localStorage.removeItem('dharani_bundle_cart_items'); } catch(e){}
         setSuccessOrderId(orderIdParam || 'Completed');
         setShowSuccessPopup(true);
         if (typeof refreshCart === 'function') refreshCart();
@@ -124,6 +173,7 @@ export default function Checkout() {
         setLoading(false);
         setError('Payment failed or was cancelled. Please try again.');
       } else {
+        try { localStorage.removeItem('dharani_bundle_cart_items'); } catch(e){}
         setSuccessOrderId(orderIdParam || 'Completed');
         setShowSuccessPopup(true);
         if (typeof refreshCart === 'function') refreshCart();
@@ -131,13 +181,6 @@ export default function Checkout() {
       }
     }
   }, [location]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
-  const isB2BUserUI = user?.is_store_member || ['retailer', 'reseller', 'staff'].includes(user?.role);
-  const [paymentMethod, setPaymentMethod] = useState('payglocal');
-  const [createdOrderId, setCreatedOrderId] = useState(null);
-  const [isPaytmLoaded, setIsPaytmLoaded] = useState(true); // Assume loaded from index.html
 
   const loadPaytmScript = (mid) => {
     return new Promise((resolve) => {
@@ -158,31 +201,6 @@ export default function Checkout() {
     });
   };
 
-  const [guestInfo, setGuestInfo] = useState({ name: '', email: '' });
-
-  const [isContactConfirmed, setIsContactConfirmed] = useState(false);
-  const [formData, setFormData] = useState({
-    full_name: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    pincode: '',
-    latitude: '11.0168',
-    longitude: '76.9558',
-    is_default: false
-  });
-
-  const [savedAddresses, setSavedAddresses] = useState([]);
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [checkoutView, setCheckoutView] = useState('selected'); // 'selected', 'list', 'form'
-  const [fetchingLocation, setFetchingLocation] = useState(false);
-  const [showFullAddressForm, setShowFullAddressForm] = useState(false);
-  const [isManualEntry, setIsManualEntry] = useState(false);
-  const [addressToDelete, setAddressToDelete] = useState(null);
-  const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
-  const stateDropdownRef = useRef(null);
-
   useEffect(() => {
     function handleClickOutside(event) {
       if (stateDropdownRef.current && !stateDropdownRef.current.contains(event.target)) {
@@ -198,9 +216,6 @@ export default function Checkout() {
       document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [isStateDropdownOpen]);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [successOrderId, setSuccessOrderId] = useState(null);
-  const [activeStep, setActiveStep] = useState(1);
 
   useEffect(() => {
     if (showSuccessPopup) {
@@ -211,8 +226,7 @@ export default function Checkout() {
     }
   }, [showSuccessPopup]);
 
-  useEffect(() => {
-    // Check if user is logged in
+  const loadUserData = () => {
     const storedUser = localStorage.getItem('user');
 
     if (storedUser) {
@@ -265,6 +279,9 @@ export default function Checkout() {
               setSelectedAddressId(loadedAddresses[0].id);
               setFormData(loadedAddresses[0]);
               setCheckoutView('selected');
+              if (loadedAddresses[0].state) {
+                refreshCart({ address_id: loadedAddresses[0].id, state: loadedAddresses[0].state });
+              }
               if (userData.name === 'Guest User' || userData.name === 'Vedan Customer' || userData.name === 'Dharani Customer' || userData.email?.includes('@guest.com')) {
                 setActiveStep(1);
               } else {
@@ -299,26 +316,32 @@ export default function Checkout() {
         // handle error
       }
     } else {
-      // Not logged in, redirect to login
-      navigate('/login?redirect=checkout');
+      // Not logged in, open login modal
+      openLoginModal();
     }
-  }, [navigate]);
+  };
 
-  // If cart is empty, redirect to shop
   useEffect(() => {
-    // Only redirect if we've had a chance to load user and cart is genuinely empty
-    // Also, don't redirect if we are currently showing the success popup
-    if (user && cartItems.length === 0 && !loading && !error && !showSuccessPopup) {
-      navigate('/shop');
-    }
-  }, [cartItems, navigate, loading, error, user, showSuccessPopup]);
+    loadUserData();
+  }, []);
+
+  useEffect(() => {
+    const handleAuthStatus = () => {
+      loadUserData();
+    };
+    window.addEventListener('user-login-status-changed', handleAuthStatus);
+    return () => window.removeEventListener('user-login-status-changed', handleAuthStatus);
+  }, []);
+
+
 
   // Refetch cart/shipping cost whenever the selected state or address changes
   useEffect(() => {
+    const activeState = formData.state || savedAddresses.find(a => a.id === selectedAddressId)?.state;
     if (selectedAddressId) {
-      refreshCart({ address_id: selectedAddressId });
-    } else if (formData.state) {
-      refreshCart({ state: formData.state });
+      refreshCart({ address_id: selectedAddressId, state: activeState });
+    } else if (activeState) {
+      refreshCart({ state: activeState });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAddressId, formData.state]);
@@ -326,12 +349,18 @@ export default function Checkout() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (name === 'state') {
+      refreshCart({ state: value });
+    }
   };
 
   const handleSelectAddress = (addr) => {
     setSelectedAddressId(addr.id);
     setFormData(addr);
     setCheckoutView('selected');
+    if (addr.state) {
+      refreshCart({ address_id: addr.id, state: addr.state });
+    }
   };
 
   const handleEditAddress = (e, addr) => {
@@ -600,6 +629,26 @@ export default function Checkout() {
 
       if (!internalOrderId) {
         // STEP 1: Create the Order in Database
+        // Determine TypeOfCustomer based on customer role and GST registration:
+        // - Consumer -> 'OLC' (Cash-and-carry only, MRP pricing, B2C invoice)
+        // - Reseller with valid GSTIN -> 'RSC B2B' (CustPriceCategory, B2B invoice)
+        // - Reseller without GSTIN -> 'RSC B2C' (CustPriceCategory, B2C invoice)
+        const isResellerUser = Boolean(
+          user?.is_store_member ||
+          ['retailer', 'reseller', 'staff', 'distributor', 'sarvo', 'drug', 'store_member'].includes(String(user?.role || '').toLowerCase())
+        );
+        const userGstin = (formData?.gstin || user?.gstin || user?.gst_number || '').trim().toUpperCase();
+        const hasValidGstin = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(userGstin);
+
+        let typeOfCustomer = 'OLC';
+        if (isResellerUser) {
+          typeOfCustomer = hasValidGstin ? 'RSC B2B' : 'RSC B2C';
+        }
+
+        // Auto-assign EmployeeName and ProcessBy based on TypeOfCustomer
+        const employeeName = typeOfCustomer === 'OLC' ? 'VM ONLINE OLC' : 'VM ONLINE RSC';
+        const processBy = typeOfCustomer === 'OLC' ? 'VM ONLINE OLC' : 'VM ONLINE RSC';
+
         const checkoutRes = await fetch(`${API_BASE_URL}/checkout/`, {
           method: 'POST',
           headers: {
@@ -610,17 +659,43 @@ export default function Checkout() {
             user_id: currentUserId,
             address_id: finalAddressId,
             shipping_address: combinedAddress,
+            status: 'pending',
             city: formData.city,
             state: formData.state || 'Tamil Nadu',
             pincode: formData.pincode,
             phone: formData.phone,
-            customer_type: user.role || "customer",
-            category: user.role || "customer",
-            role: user.role || "customer",
+            customer_type: typeOfCustomer,
+            TypeOfCustomer: typeOfCustomer,
+            type_of_customer: typeOfCustomer,
+            EmployeeName: employeeName,
+            employee_name: employeeName,
+            ProcessBy: processBy,
+            process_by: processBy,
+            gstin: userGstin,
+            category: user?.role || "customer",
+            role: user?.role || "customer",
             total_amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0)).toFixed(2)),
             amount: grandTotal !== null ? grandTotal : parseFloat((cartTotal + (shippingCost || 0)).toFixed(2)),
             email: user?.email || guestInfo?.email || "customer@dharaniherbbals.in",
-            name: formData.full_name || "Customer"
+            name: formData.full_name || "Customer",
+            cart_items: cartItems.map(item => ({
+              id: item.isBundle ? (item.bundleItems?.[0]?.productId || 1255) : item.id,
+              product_id: item.isBundle ? (item.bundleItems?.[0]?.productId || 1255) : item.id,
+              raw_id: item.id,
+              name: item.name,
+              quantity: item.quantity,
+              price: item.price,
+              is_bundle: !!item.isBundle,
+              bundle_id: item.bundleId || null,
+              bundle_items: item.bundleItems || null
+            })),
+            bundle_details: cartItems.filter(item => item.isBundle).map(item => ({
+              bundle_id: item.bundleId,
+              bundle_name: item.name,
+              quantity: item.quantity,
+              offer_price: item.price,
+              included_products: item.bundleItems
+            }))
           })
         });
 
@@ -644,6 +719,7 @@ export default function Checkout() {
       const backendRole = checkoutData?.role || checkoutData?.customer_role || checkoutData?.customer_type;
       const isB2BActual = isB2B || ['retailer', 'reseller', 'staff'].includes(backendRole) || checkoutData?.payment_method === 'credit';
       if (isB2BActual) {
+        try { localStorage.removeItem('dharani_bundle_cart_items'); } catch(e){}
         setSuccessOrderId(internalOrderId);
         setShowSuccessPopup(true);
         setLoading(false);
@@ -886,8 +962,30 @@ export default function Checkout() {
 
   if (!user && !isVerifyingPayment) {
     return (
-      <div className="checkout-page-wrapper" style={{ alignItems: 'center' }}>
-        <Loader2 size={40} className="spinner text-primary" style={{ color: '#16A34A' }} />
+      <div className="checkout-page-wrapper" style={{ alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center', padding: '40px 20px' }}>
+        <div style={{ maxWidth: '420px', width: '100%', background: '#fff', borderRadius: '16px', padding: '36px 24px', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', border: '1px solid #e5e7eb' }}>
+          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#16a34a' }}>
+            <UserCircle size={32} />
+          </div>
+          <h2 style={{ fontSize: '1.3rem', fontWeight: '700', color: '#1f2937', marginBottom: '8px' }}>Login to Complete Checkout</h2>
+          <p style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '24px', lineHeight: '1.5' }}>
+            Please enter your mobile number to view saved addresses and finish placing your order securely.
+          </p>
+          <button
+            type="button"
+            onClick={openLoginModal}
+            style={{ width: '100%', padding: '13px 20px', background: 'linear-gradient(135deg, #16a34a, #15803d)', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(22, 163, 74, 0.3)' }}
+          >
+            Login with Mobile Number
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/shop')}
+            style={{ width: '100%', marginTop: '14px', padding: '10px 20px', background: 'transparent', color: '#6b7280', border: 'none', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer' }}
+          >
+            ← Continue Shopping
+          </button>
+        </div>
       </div>
     );
   }
@@ -896,8 +994,14 @@ export default function Checkout() {
   const hasPaymentParams = new URLSearchParams(location.search).has('order_status') || new URLSearchParams(location.search).has('order_id') || new URLSearchParams(location.search).has('x_gl_token');
   if (cartItems.length === 0 && !showSuccessPopup && !error && !isVerifyingPayment && !hasPaymentParams) {
     return (
-      <div className="checkout-page-wrapper" style={{ alignItems: 'center', padding: '50px' }}>
-        <h2>Your cart is empty</h2>
+      <div className="checkout-page-wrapper" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center', padding: '50px 20px' }}>
+        <div style={{ maxWidth: '420px', width: '100%', background: '#fff', borderRadius: '16px', padding: '36px 24px', boxShadow: '0 8px 30px rgba(0,0,0,0.06)', border: '1px solid #e5e7eb' }}>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: '700', color: '#1f2937', marginBottom: '8px' }}>Your cart is empty</h2>
+          <p style={{ fontSize: '0.92rem', color: '#6b7280', marginBottom: '24px' }}>Add your favorite herbal essentials to continue to checkout.</p>
+          <button type="button" onClick={() => navigate('/shop')} style={{ width: '100%', padding: '13px 20px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer' }}>
+            Start Shopping
+          </button>
+        </div>
       </div>
     );
   }
@@ -909,6 +1013,18 @@ export default function Checkout() {
 
   return (
     <div className="checkout-page-wrapper">
+      <SeoHead
+        title="Secure Checkout | Dharani Herbals"
+        description="Complete your order securely with encrypted checkout, safe payment options, and express delivery across India."
+        canonicalUrl="https://www.dharaniherbbals.in/checkout"
+        openGraph={{
+          title: "Secure Checkout | Dharani Herbals",
+          description: "Complete your order securely with encrypted checkout, safe payment options, and express delivery across India.",
+          url: "https://www.dharaniherbbals.in/checkout",
+          image: "https://www.dharaniherbbals.in/logo.png",
+          type: "website"
+        }}
+      />
       <div className="checkout-container">
 
         {/* We removed the stepper from here based on modern designs, relying on accordion steps */}
@@ -1247,6 +1363,21 @@ export default function Checkout() {
                         </div>
                       </div>
 
+                      {isB2BUserUI && (
+                        <div className="form-group">
+                          <label>GSTIN (Optional — for B2B Tax Invoice)</label>
+                          <input
+                            type="text"
+                            name="gstin"
+                            value={formData.gstin || ''}
+                            onChange={handleInputChange}
+                            placeholder="15-character GSTIN (e.g. 33AABFZ5999A1ZZ)"
+                            maxLength={15}
+                            style={{ textTransform: 'uppercase' }}
+                          />
+                        </div>
+                      )}
+
                       {!showFullAddressForm ? (
                         <div className="location-prompt-section">
                           <button type="button" className="btn-get-location-large" onClick={handleGetLocation} disabled={fetchingLocation}>
@@ -1292,7 +1423,7 @@ export default function Checkout() {
                                   <div className="custom-select-overlay" onClick={() => setIsStateDropdownOpen(false)} />
                                   <div className="custom-select-dropdown">
                                     {INDIAN_STATES.map(state => (
-                                      <div key={state} className={`custom-select-option ${formData.state === state ? 'selected' : ''}`} onClick={() => { setFormData(prev => ({ ...prev, state })); setIsStateDropdownOpen(false); }}>
+                                      <div key={state} className={`custom-select-option ${formData.state === state ? 'selected' : ''}`} onClick={() => { setFormData(prev => ({ ...prev, state })); setIsStateDropdownOpen(false); refreshCart({ state }); }}>
                                         {state}
                                       </div>
                                     ))}
@@ -1365,27 +1496,53 @@ export default function Checkout() {
               {cartItems.map(item => (
                 <div key={item.id} className="summary-item">
                   <div className="summary-item-img-box">
-                    <img src={item.image} alt={item.name} />
+                    <img 
+                    src={item.image || '/logo.png'} 
+                    alt={item.name}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = '/logo.png';
+                    }}
+                  />
                     <span className="summary-item-qty">{item.quantity}</span>
                   </div>
                   <div className="summary-item-info">
-                    <h4>{language === 'ta' && item.tamil_name ? item.tamil_name : item.name}</h4>
-                    <p>{item.price}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                      <h4 style={{ margin: 0 }}>
+                        {language === 'ta' && item.tamil_name ? formatProductDisplayName(item.tamil_name) : formatProductDisplayName(item.name)}
+                        {(item.variation_name || item.pack_size || formatProductPackSize(item)) && (
+                          <span style={{ fontSize: '0.8rem', fontWeight: '500', color: '#64748b', marginLeft: '6px' }}>
+                            ({item.variation_name ? formatVariationLabel(item.variation_name, item) : (item.pack_size || formatProductPackSize(item))})
+                          </span>
+                        )}
+                      </h4>
+                      {item.isBundle && (
+                        <span style={{ background: '#ecfdf5', color: '#059669', border: '1px solid #a7f3d0', fontSize: '0.65rem', fontWeight: '700', padding: '1px 6px', borderRadius: '999px' }}>
+                          COMBO
+                        </span>
+                      )}
+                    </div>
+                    {item.isBundle && item.bundleItems && (
+                      <p style={{ margin: '3px 0', fontSize: '0.72rem', color: '#6b7280', lineHeight: '1.2' }}>
+                        {item.bundleItems.map(b => `${b.quantity}x ${b.name}`).join(' + ')}
+                      </p>
+                    )}
+                    <p style={{ margin: '2px 0 0 0', fontWeight: '600' }}>{formatCurrency(item.price)}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="summary-totals">
-              <div className="total-row"><span>Subtotal</span><span>₹{cartTotal}</span></div>
-              <div className="total-row"><span>Shipping Charge</span>{shippingCost === 0 ? <span className="text-free">Free</span> : <span>₹{shippingCost}</span>}</div>
+              <div className="total-row"><span>Subtotal</span><span>{formatCurrency(cartTotal, { showDecimals: true })}</span></div>
+              <div className="total-row"><span>Shipping Charge</span>{shippingCost === 0 ? <span className="text-free">Free</span> : <span>{formatCurrency(shippingCost, { showDecimals: true })}</span>}</div>
 
 
 
 
               <div className="total-row grand-total" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '16px', marginTop: '8px' }}>
                 <span>Total</span>
-                <span style={{ fontSize: "1.8rem", color: "#16A34A" }}>₹{grandTotal !== null ? grandTotal.toFixed(2) : (cartTotal + (shippingCost || 0)).toFixed(2)}</span>
+                <span style={{ fontSize: "1.8rem", color: "#16A34A" }}>{formatCurrency(grandTotal !== null ? grandTotal : (cartTotal + (shippingCost || 0)), { showDecimals: true })}</span>
               </div>
             </div>
 

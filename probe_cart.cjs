@@ -1,6 +1,6 @@
 const https = require('https');
 
-https.get('https://api.codingboss.in /herbal/cart/?user_id=10', {
+https.get('https://affecting-tingling-duke.ngrok-free.dev/herbal/cart/?user_id=10', {
   headers: { 'ngrok-skip-browser-warning': 'true' }
 }, (res) => {
   let data = '';
@@ -10,7 +10,7 @@ https.get('https://api.codingboss.in /herbal/cart/?user_id=10', {
   });
 }).on('error', err => console.log(err));
 
-https.get('https://api.codingboss.in /herbal/cart/?user_id=11', {
+https.get('https://affecting-tingling-duke.ngrok-free.dev/herbal/cart/?user_id=11', {
   headers: { 'ngrok-skip-browser-warning': 'true' }
 }, (res) => {
   let data = '';
@@ -20,7 +20,7 @@ https.get('https://api.codingboss.in /herbal/cart/?user_id=11', {
   });
 }).on('error', err => console.log(err));
 
-https.get('https://api.codingboss.in /herbal/cart/?user_id=1', {
+https.get('https://affecting-tingling-duke.ngrok-free.dev/herbal/cart/?user_id=1', {
   headers: { 'ngrok-skip-browser-warning': 'true' }
 }, (res) => {
   let data = '';

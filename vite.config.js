@@ -6,11 +6,17 @@ export default defineConfig({
   plugins: [react()],
   server: {
     watch: {
-      ignored: ['**/dist/**', '**/.git/**', '**/node_modules/**']
+      ignored: ['**/dist/**', '**/.git/**', '**/node_modules/**', '**/*.zip', '**/dist*/**']
     },
     proxy: {
+      '/api/media': {
+        target: 'http://179.197.251.47:30080',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
       '/api': {
-        target: 'https://api.codingboss.in/herbal',
+        target: 'http://179.197.251.47:30080/herbal',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')

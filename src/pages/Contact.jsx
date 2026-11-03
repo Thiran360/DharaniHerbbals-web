@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
 import { Phone, Mail, MapPin, Clock, Send, Headphones as HeadphonesIcon, MessageCircle, ShieldCheck, User } from 'lucide-react';
 import Footer from '../components/Footer';
+import SeoHead from '../components/SeoHead';
 import { useLanguage } from '../context/LanguageContext';
+import { COMPANY_FACTS } from '../data/companyFacts';
 import './Contact.css';
 
 export default function Contact() {
-  const { t } = useLanguage();
-  const contactPhoneDisplay = '+91 97881 22001';
-  const contactPhoneDial = '+919788122001';
-  const whatsappNumber = '919788122001';
+  const { t, language } = useLanguage();
+  const contactPhoneDisplay = COMPANY_FACTS.contact.primaryPhone;
+  const contactPhoneDial = COMPANY_FACTS.contact.primaryPhoneRaw;
+  const whatsappNumber = COMPANY_FACTS.contact.whatsappNumber;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -38,6 +40,19 @@ export default function Contact() {
 
   return (
     <div className="contact-page">
+      <SeoHead
+        title="Contact Us | Customer Support & Store Location | Dharani Herbals"
+        description="Get in touch with Dharani Herbals for inquiries, customer support, orders, and botanical wellness guidance. Reach us via WhatsApp (+91 97881 22001) or email."
+        canonicalUrl="https://www.dharaniherbbals.in/contact"
+        openGraph={{
+          title: "Contact Us | Customer Support & Store Location | Dharani Herbals",
+          description: "Get in touch with Dharani Herbals for inquiries, customer support, orders, and botanical wellness guidance. Reach us via WhatsApp (+91 97881 22001) or email.",
+          url: "https://www.dharaniherbbals.in/contact",
+          image: "https://www.dharaniherbbals.in/logo.png",
+          type: "website"
+        }}
+        keywords={['contact dharani herbals', 'herbal store customer care', 'dharani herbals phone', 'dharani herbals whatsapp']}
+      />
       {/* Hero Section */}
       <div className="contact-hero">
         <div className="contact-hero-content">
@@ -71,8 +86,8 @@ export default function Contact() {
             </div>
             <h3>{t('contactPhone')}</h3>
             <p>
-              <a href="tel:+919788122001" style={{ color: 'inherit', textDecoration: 'none', display: 'block', marginBottom: '4px' }}>+91 97881 22001</a>
-              <a href="tel:+919965532001" style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>+91 99655 32001</a>
+              <a href={`tel:${COMPANY_FACTS.contact.primaryPhoneRaw}`} style={{ color: 'inherit', textDecoration: 'none', display: 'block', marginBottom: '4px' }}>{COMPANY_FACTS.contact.primaryPhone}</a>
+              <a href={`tel:${COMPANY_FACTS.contact.secondaryPhoneRaw}`} style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>{COMPANY_FACTS.contact.secondaryPhone}</a>
             </p>
           </div>
 
@@ -81,7 +96,7 @@ export default function Contact() {
               <Mail size={24} color="#2563eb" />
             </div>
             <h3>{t('contactEmail')}</h3>
-            <p>info@dharaniherbbals.in</p>
+            <p><a href={`mailto:${COMPANY_FACTS.contact.primaryEmail}`} style={{ color: 'inherit', textDecoration: 'none' }}>{COMPANY_FACTS.contact.primaryEmail}</a></p>
           </div>
 
           <div className="contact-card">
@@ -101,7 +116,7 @@ export default function Contact() {
               <Clock size={24} color="#9333ea" />
             </div>
             <h3>{t('contactHours')}</h3>
-            <p>{t('contactHoursDesc')}</p>
+            <p>{COMPANY_FACTS.contact.supportHours[language === 'ta' ? 'ta' : 'en']}</p>
           </div>
 
         </div>
@@ -212,9 +227,9 @@ export default function Contact() {
               <h3 className="sidebar-title">{t('contactFollowUs')}</h3>
               <p className="follow-text">{t('contactFollowDesc')}</p>
               <div className="social-icons-row">
-                <a href="https://www.facebook.com/share/r/1BMDikPZVT/" className="social-circle" target="_blank" rel="noopener noreferrer"><FbIcon /></a>
-                <a href="https://www.instagram.com/dharani_herbbals?igsh=NG9sbTFidTdodzN2" className="social-circle" target="_blank" rel="noopener noreferrer"><InstaIcon /></a>
-                <a href="https://youtube.com/@dharaniherbbalsppy?si=Ja0OqohcfBTEBJJf" className="social-circle" target="_blank" rel="noopener noreferrer"><YtIcon /></a>
+                <a href={COMPANY_FACTS.socials.facebook.url} className="social-circle" target="_blank" rel="noopener noreferrer" title="Facebook"><FbIcon /></a>
+                <a href={COMPANY_FACTS.socials.instagram.url} className="social-circle" target="_blank" rel="noopener noreferrer" title="Instagram"><InstaIcon /></a>
+                <a href={COMPANY_FACTS.socials.youtube.url} className="social-circle" target="_blank" rel="noopener noreferrer" title="YouTube"><YtIcon /></a>
               </div>
             </div>
 

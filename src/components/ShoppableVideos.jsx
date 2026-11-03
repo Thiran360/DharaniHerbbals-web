@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, PlayCircle, ShoppingBag } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import BrandLogoVideo from './BrandLogoVideo';
+import { formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
 import './ShoppableVideos.css';
 
 // Product images
@@ -24,6 +24,7 @@ const baseVideoData = [
 
 function LazyVideoCard({ item, addToCart, navigate, actualProduct }) {
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const cardRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -32,9 +33,6 @@ function LazyVideoCard({ item, addToCart, navigate, actualProduct }) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setHasLoaded(true);
-          if (videoRef.current) {
-            videoRef.current.play().catch(() => {});
-          }
         } else {
           if (videoRef.current) {
             videoRef.current.pause();
@@ -50,9 +48,38 @@ function LazyVideoCard({ item, addToCart, navigate, actualProduct }) {
     };
   }, []);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && hasLoaded) {
+      video.defaultMuted = true;
+      video.muted = true;
+      video.play().then(() => setVideoPlaying(true)).catch(() => {});
+    }
+  }, [hasLoaded]);
+
   return (
     <div className="sv-card ultra" ref={cardRef}>
       <div className="sv-video-bg">
+        {/* Subtle product background preview so card is never black while video is buffering */}
+        {item.productImg && (
+          <img
+            src={item.productImg}
+            alt={actualProduct?.name || item.title}
+            className="sv-card-poster"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              filter: 'brightness(0.65) blur(2px)',
+              transform: 'scale(1.08)',
+              opacity: videoPlaying ? 0 : 1,
+              transition: 'opacity 0.4s ease',
+              zIndex: 0
+            }}
+          />
+        )}
         {hasLoaded && (
           <video
             ref={videoRef}
@@ -63,15 +90,22 @@ function LazyVideoCard({ item, addToCart, navigate, actualProduct }) {
             muted
             loop
             playsInline
+            webkit-playsinline="true"
             preload="metadata"
+            onPlaying={() => setVideoPlaying(true)}
             style={{
-              position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
               zIndex: 1
             }}
           />
         )}
       </div>
-      
+
       <div className="sv-gradient-overlay"></div>
 
       <div className="sv-glass-panel">
@@ -80,19 +114,30 @@ function LazyVideoCard({ item, addToCart, navigate, actualProduct }) {
           onClick={() => actualProduct && navigate(`/product/${actualProduct.id}`)}
           style={{ cursor: actualProduct ? 'pointer' : 'default' }}
         >
-          {item.productImg && <img src={item.productImg} alt={actualProduct?.name || item.title} className="sv-product-img" loading="lazy" />}
+          {item.productImg && (
+            <img 
+              src={item.productImg} 
+              alt={actualProduct?.name || item.title} 
+              className="sv-product-img" 
+              loading="lazy" 
+            />
+          )}
         </div>
         <div 
           className="sv-product-details"
           onClick={() => actualProduct && navigate(`/product/${actualProduct.id}`)}
           style={{ cursor: actualProduct ? 'pointer' : 'default' }}
         >
-          <h4 className="sv-product-title">{actualProduct?.name || item.title}</h4>
-          <div className="sv-product-price">{actualProduct?.price || item.price}</div>
+          <h4 className="sv-product-title">{formatProductDisplayName(actualProduct?.name || item.title)}</h4>
+          <div className="sv-product-price">{formatCurrency(actualProduct?.price || item.price)}</div>
         </div>
         <button 
           className="sv-buy-btn" 
-          onClick={() => addToCart(actualProduct || { id: item.id, name: item.title, price: item.price, image: item.productImg })}
+          onClick={(e) => {
+            e.stopPropagation();
+            addToCart(actualProduct || { id: item.id, name: item.title, price: item.price, image: item.productImg });
+          }}
+          aria-label="Add to Cart"
         >
           <ShoppingBag size={18} />
         </button>
@@ -110,40 +155,39 @@ export default function ShoppableVideos() {
 
   const videoData = baseVideoData;
 
-  const scrollLeft = () => sliderRef.current?.scrollBy({ left: -320, behavior: 'smooth' });
-  const scrollRight = () => sliderRef.current?.scrollBy({ left: 320, behavior: 'smooth' });
+  const scrollLeft = () => sliderRef.current?.scrollBy({ left: -280, behavior: 'smooth' });
+  const scrollRight = () => sliderRef.current?.scrollBy({ left: 280, behavior: 'smooth' });
 
   return (
     <div className="shoppable-videos-container">
       <div className="reveal bento-header" style={{ background: 'linear-gradient(135deg, rgba(74,222,128,0.2) 0%, rgba(34,197,94,0.1) 100%)', borderColor: 'rgba(74,222,128,0.3)' }}>
-          {/* Decorative background blob */}
-          <div className="bento-header-blob right"></div>
-          
-          <div className="bento-title-col">
-            <h2 className="bento-title-text">
-              <BrandLogoVideo />
-              {(() => {
-                const words = t('shopReelsTitle').split(' ');
-                const lastWord = words.pop();
-                return (
-                  <div style={{ flex: 1, minWidth: 0, wordWrap: 'break-word' }}>
-                    {words.join(' ')} <span className="highlight">{lastWord}</span>
-                  </div>
-                );
-              })()}
-            </h2>
-          </div>
-          
-          <div className="bento-desc-col">
-            <p className="bento-desc-text">
-              {t('shopReelsDesc')}
-            </p>
-          </div>
+        {/* Decorative background blob */}
+        <div className="bento-header-blob right"></div>
+
+        <div className="bento-title-col">
+          <h2 className="bento-title-text">
+            {(() => {
+              const words = t('shopReelsTitle').split(' ');
+              const lastWord = words.pop();
+              return (
+                <div style={{ flex: 1, minWidth: 0, wordWrap: 'break-word' }}>
+                  {words.join(' ')} <span className="highlight">{lastWord}</span>
+                </div>
+              );
+            })()}
+          </h2>
         </div>
+
+        <div className="bento-desc-col">
+          <p className="bento-desc-text">
+            {t('shopReelsDesc')}
+          </p>
+        </div>
+      </div>
 
       <div className="sv-wrapper reveal">
         <button className="sv-nav-btn left" onClick={scrollLeft} aria-label="Scroll left">
-          <ChevronLeft size={24} />
+          <ChevronLeft size={22} />
         </button>
 
         <div className="sv-track" ref={sliderRef}>
@@ -165,7 +209,7 @@ export default function ShoppableVideos() {
         </div>
 
         <button className="sv-nav-btn right" onClick={scrollRight} aria-label="Scroll right">
-          <ChevronRight size={24} />
+          <ChevronRight size={22} />
         </button>
       </div>
     </div>

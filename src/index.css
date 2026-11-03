@@ -61,11 +61,17 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
-  max-width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  position: relative;
+  box-sizing: border-box;
 }
 
 html {
-  max-width: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  box-sizing: border-box;
 }
 
 #root {
@@ -74,7 +80,9 @@ html {
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
-  max-width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -341,8 +349,8 @@ a:hover {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  mix-blend-mode: multiply;
   background: transparent;
+  pointer-events: none;
 }
 
 .brand-logo-video-canvas {

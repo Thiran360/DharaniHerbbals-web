@@ -1,42 +1,10 @@
-import React, { useState } from 'react';
-import { X, ChevronDown } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { X, ChevronDown, Check } from 'lucide-react';
 import './FilterDrawer.css';
 import { useLanguage } from '../context/LanguageContext';
+import { FILTER_CONFIG, matchesProductFilter } from '../utils/filterHelper';
 
-const FILTER_CATEGORIES = [
-  {
-    id: 'productType',
-    label: 'Product Type',
-    options: ['Powder', 'Soap', 'Oil', 'Gel', 'Shampoo', 'Food', 'Tea', 'Malt', 'Snacks', 'Lehyam', 'Others']
-  },
-  {
-    id: 'concern',
-    label: 'Concern',
-    options: ['Hair Care', 'Skin Care', 'Digestion', 'Immunity', 'General Wellness', 'Baby Care']
-  },
-  {
-    id: 'ingredient',
-    label: 'Ingredient',
-    options: ['Beetroot', 'Turmeric', 'Amla', 'Neem', 'Hibiscus', 'Moringa', 'Vetiver', 'Kuppaimeni']
-  },
-  {
-    id: 'suitableFor',
-    label: 'Suitable For',
-    options: ['Men', 'Women', 'Kids', 'Family']
-  },
-  {
-    id: 'price',
-    label: 'Price Range',
-    options: ['Under ₹100', '₹100–₹250', '₹250–₹500', 'Above ₹500']
-  },
-  {
-    id: 'availability',
-    label: 'Availability',
-    options: ['In Stock', 'Out of Stock']
-  }
-];
-
-export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSelectedFilters }) {
+export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSelectedFilters, products = [] }) {
   const { language } = useLanguage();
   const [openAccordion, setOpenAccordion] = useState('productType');
 
@@ -47,14 +15,32 @@ export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSele
     setOpenAccordion(openAccordion === id ? null : id);
   };
 
+  // Compute product count per option from real product catalog
+  const countsMap = useMemo(() => {
+    const map = {};
+    if (!products || products.length === 0) return map;
+
+    FILTER_CONFIG.forEach(cat => {
+      cat.options.forEach(opt => {
+        const key = `${cat.id}__${opt}`;
+        map[key] = products.filter(p => matchesProductFilter(p, cat.id, opt)).length;
+      });
+    });
+    return map;
+  }, [products]);
+
   const handleCheckboxChange = (categoryId, option) => {
     setLocalFilters(prev => {
       const currentCategorySelections = prev[categoryId] || [];
       if (currentCategorySelections.includes(option)) {
-        return {
-          ...prev,
-          [categoryId]: currentCategorySelections.filter(item => item !== option)
-        };
+        const next = currentCategorySelections.filter(item => item !== option);
+        const updated = { ...prev };
+        if (next.length > 0) {
+          updated[categoryId] = next;
+        } else {
+          delete updated[categoryId];
+        }
+        return updated;
       } else {
         return {
           ...prev,
@@ -82,6 +68,10 @@ export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSele
     }
   }, [isOpen, selectedFilters]);
 
+  const totalSelectedCount = useMemo(() => {
+    return Object.values(localFilters).flat().length;
+  }, [localFilters]);
+
   return (
     <>
       <div 
@@ -100,7 +90,10 @@ export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSele
               <circle cx="15" cy="14" r="1" />
               <circle cx="9" cy="21" r="1" />
             </svg>
-            {language === 'ta' ? 'வடிகட்டிகள்' : 'Filter Options'}
+            {language === 'ta' ? 'வடிகட்டிகள்' : 'Filter Products'}
+            {totalSelectedCount > 0 && (
+              <span className="filter-total-badge">{totalSelectedCount}</span>
+            )}
           </h2>
           <button className="filter-close-btn" onClick={onClose} aria-label="Close filters">
             <X size={24} />
@@ -108,10 +101,18 @@ export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSele
         </div>
 
         <div className="filter-content">
-          {FILTER_CATEGORIES.map((category) => {
+          {FILTER_CONFIG.map((category) => {
             const isOpenAccordion = openAccordion === category.id;
             const selectedCount = (localFilters[category.id] || []).length;
             
+            // Filter options to only show those supported by available product data
+            const availableOptions = category.options.filter(option => {
+              const count = countsMap[`${category.id}__${option}`] ?? 0;
+              return count > 0 || (localFilters[category.id] || []).includes(option);
+            });
+
+            if (availableOptions.length === 0) return null;
+
             return (
               <div key={category.id} className="filter-accordion">
                 <button 
@@ -120,23 +121,31 @@ export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSele
                 >
                   <span>
                     {category.label} 
-                    {selectedCount > 0 && <span style={{color: '#22c55e', marginLeft: '6px'}}>({selectedCount})</span>}
+                    {selectedCount > 0 && <span style={{ color: '#10b981', marginLeft: '6px', fontWeight: 700 }}>({selectedCount})</span>}
                   </span>
-                  <ChevronDown size={20} />
+                  <ChevronDown size={20} className="filter-chevron" />
                 </button>
                 
                 <div className={`filter-accordion-content ${isOpenAccordion ? 'open' : ''}`}>
                   <div className="filter-checkbox-list">
-                    {category.options.map((option) => (
-                      <label key={option} className="filter-checkbox-label">
-                        <input 
-                          type="checkbox"
-                          checked={(localFilters[category.id] || []).includes(option)}
-                          onChange={() => handleCheckboxChange(category.id, option)}
-                        />
-                        {option}
-                      </label>
-                    ))}
+                    {availableOptions.map((option) => {
+                      const count = countsMap[`${category.id}__${option}`] ?? 0;
+                      const isChecked = (localFilters[category.id] || []).includes(option);
+
+                      return (
+                        <label key={option} className={`filter-checkbox-label ${isChecked ? 'selected' : ''}`}>
+                          <input 
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleCheckboxChange(category.id, option)}
+                          />
+                          <span className="filter-opt-text">{option}</span>
+                          {count > 0 && (
+                            <span className="filter-opt-count">({count})</span>
+                          )}
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -145,11 +154,11 @@ export default function FilterDrawer({ isOpen, onClose, selectedFilters, setSele
         </div>
 
         <div className="filter-footer">
-          <button className="btn-filter-clear" onClick={handleClearAll}>
-            {language === 'ta' ? 'அழிக்க' : 'Clear All'}
+          <button className="btn-filter-clear" onClick={handleClearAll} disabled={totalSelectedCount === 0}>
+            {language === 'ta' ? 'அழிக்க' : 'Reset All'}
           </button>
           <button className="btn-filter-apply" onClick={handleApply}>
-            {language === 'ta' ? 'பயன்படுத்து' : 'Apply Filters'}
+            {language === 'ta' ? 'பயன்படுத்து' : `Apply Filters ${totalSelectedCount > 0 ? `(${totalSelectedCount})` : ''}`}
           </button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-const fs = require('fs');
+/*  */const fs = require('fs');
 let css = fs.readFileSync('src/pages/Profile.css', 'utf8');
 
 const startIdx = css.indexOf('/* --- MOBILE ALIGNMENT FIXES --- */');

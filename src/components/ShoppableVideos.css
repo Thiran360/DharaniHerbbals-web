@@ -1,32 +1,40 @@
 .shoppable-videos-container {
   width: 100%;
-  padding: 80px 0;
+  max-width: 100%;
+  padding: 60px 0;
   background: #fdfcfb;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .sv-header {
   text-align: left;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .sv-wrapper {
   position: relative;
+  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .sv-track {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   display: flex;
   gap: 24px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding: 20px 0;
+  padding: 16px 20px;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sv-track::-webkit-scrollbar {
@@ -36,18 +44,18 @@
 .sv-card.ultra {
   flex: 0 0 300px;
   height: 500px;
-  scroll-snap-align: center;
+  scroll-snap-align: start;
   border-radius: 24px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
   cursor: pointer;
-  background: black;
+  background: #0f172a;
 }
 
 .sv-card.ultra:hover {
-  transform: translateY(-10px);
+  transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(34, 197, 94, 0.15);
 }
 
@@ -58,13 +66,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Make iframe unclickable so it plays seamlessly in bg! */
-}
-
-.sv-video-bg.mobile {
-  pointer-events: auto;
-  transform: none;
-  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  background: #0f172a;
 }
 
 .sv-iframe {
@@ -73,42 +77,13 @@
   border: none;
 }
 
-.sv-video-thumb {
-  width: 100%;
-  height: 100%;
-  border: none;
-  padding: 0;
-  background-color: #0f172a;
-  background-position: center;
-  background-size: cover;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.sv-video-thumb::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.45) 100%);
-}
-
-.sv-video-thumb svg {
-  position: relative;
-  z-index: 1;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
-}
-
 .sv-gradient-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 60%;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -119,8 +94,10 @@
   bottom: 16px;
   left: 16px;
   right: 16px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 16px;
   padding: 12px;
   display: flex;
@@ -131,14 +108,14 @@
 }
 
 .sv-card.ultra:hover .sv-glass-panel {
-  transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.55);
 }
 
 .sv-product-img-wrapper {
-  width: 54px;
-  height: 54px;
+  width: 52px;
+  height: 52px;
   background: white;
   border-radius: 12px;
   display: flex;
@@ -146,7 +123,7 @@
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .sv-product-img {
@@ -157,6 +134,7 @@
 
 .sv-product-details {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -167,16 +145,16 @@
   font-weight: 800;
   color: white;
   margin: 0 0 4px 0;
-  line-height: 1.1;
-  letter-spacing: 0.5px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  line-height: 1.15;
+  letter-spacing: 0.3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .sv-product-price {
   font-size: 1rem;
   font-weight: 700;
-  color: #a3e635; /* Lime green pop on dark bg */
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  color: #a3e635; /* Crisp lime green */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .sv-buy-btn {
@@ -190,14 +168,15 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  flex-shrink: 0;
   transition: transform 0.3s ease, background 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .sv-buy-btn:hover {
   background: #22c55e;
   color: white;
-  transform: scale(1.1) rotate(-10deg);
+  transform: scale(1.08);
 }
 
 /* Nav Buttons */
@@ -205,8 +184,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 54px;
-  height: 54px;
+  width: 50px;
+  height: 50px;
   background: white;
   border-radius: 50%;
   border: none;
@@ -215,35 +194,179 @@
   justify-content: center;
   color: #111;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14);
   z-index: 10;
   transition: all 0.3s ease;
 }
 
-.sv-nav-btn.left { left: -27px; }
-.sv-nav-btn.right { right: -27px; }
+.sv-nav-btn.left { left: 16px; }
+.sv-nav-btn.right { right: 16px; }
 
 .sv-nav-btn:hover {
   background: #22c55e;
   color: white;
-  transform: translateY(-50%) scale(1.1);
+  transform: translateY(-50%) scale(1.08);
 }
 
-@media (max-width: 1460px) {
-  .sv-nav-btn.left { left: 10px; }
-  .sv-nav-btn.right { right: 10px; }
-}
-
-@media (max-width: 768px) {
+/* Tablet Layout */
+@media (max-width: 1024px) {
   .sv-card.ultra {
-    flex: 0 0 260px;
-    height: 420px;
+    flex: 0 0 280px;
+    height: 470px;
   }
-  .sv-nav-btn { 
-    display: flex; 
+}
+
+/* Mobile View Only - Clean, Peekable Reels Layout Without White Void */
+@media (max-width: 768px) {
+  .shoppable-videos-container {
+    padding: 24px 0 32px 0;
+  }
+
+  .sv-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .sv-track {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 14px;
+    padding: 10px 18px;
+    scroll-padding: 0 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Card width fills ~76vw on mobile, leaving next card to peek in nicely on the right */
+  .sv-card.ultra {
+    flex: 0 0 76vw;
+    max-width: 310px;
+    min-width: 250px;
+    height: 450px;
+    border-radius: 20px;
+    scroll-snap-align: start;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .sv-card.ultra:hover {
+    transform: none; /* Disable hover lift on touch */
+  }
+
+  /* Navigation Buttons: Kept comfortably inside carousel boundaries */
+  .sv-nav-btn {
+    display: flex;
+    width: 38px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    z-index: 8; /* Stays below floating WhatsApp button (z-index 99) */
+  }
+
+  .sv-nav-btn.left {
+    left: 8px;
+  }
+
+  .sv-nav-btn.right {
+    right: 8px;
+  }
+
+  .sv-glass-panel {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    padding: 8px 10px;
+    gap: 10px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .sv-product-img-wrapper {
     width: 44px;
     height: 44px;
+    border-radius: 10px;
+    flex-shrink: 0;
   }
-  .sv-nav-btn.left { left: 0px; }
-  .sv-nav-btn.right { right: 0px; }
+
+  .sv-product-details {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .sv-product-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+
+  .sv-product-price {
+    font-size: 0.9rem;
+  }
+
+  .sv-buy-btn {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+  }
+}
+
+/* Micro-tuning for small phone viewports (320px - 360px) */
+@media (max-width: 360px) {
+  .sv-track {
+    padding: 8px 12px;
+    scroll-padding: 0 12px;
+    gap: 10px;
+  }
+
+  .sv-card.ultra {
+    flex: 0 0 80vw;
+    max-width: 275px;
+    min-width: 240px;
+    height: 410px;
+    border-radius: 18px;
+  }
+
+  .sv-nav-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sv-nav-btn.left { left: 4px; }
+  .sv-nav-btn.right { right: 4px; }
+
+  .sv-glass-panel {
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    padding: 6px 8px;
+    gap: 8px;
+  }
+
+  .sv-product-img-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+
+  .sv-product-title {
+    font-size: 0.78rem;
+  }
+
+  .sv-product-price {
+    font-size: 0.82rem;
+  }
+
+  .sv-buy-btn {
+    width: 34px;
+    height: 34px;
+  }
 }

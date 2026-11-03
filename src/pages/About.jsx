@@ -2,11 +2,17 @@ import { useEffect } from 'react';
 import { Leaf, Shield, Sparkles, Target, Eye, Heart, Award, Users, CheckCircle } from 'lucide-react';
 import OurJourney from '../components/OurJourney';
 import Footer from '../components/Footer';
+import SeoHead from '../components/SeoHead';
 import { useLanguage } from '../context/LanguageContext';
+import { useProducts } from '../context/ProductsContext';
+import { COMPANY_FACTS } from '../data/companyFacts';
 import './About.css';
 
 export default function About() {
   const { t } = useLanguage();
+  const { products } = useProducts();
+  const actualFormulationCount = products && products.length > 0 ? `${products.length}+` : '270+';
+  const legacyYears = `${new Date().getFullYear() - COMPANY_FACTS.establishmentYear}+`;
   useEffect(() => {
     window.scrollTo(0, 0);
 
@@ -35,6 +41,19 @@ export default function About() {
 
   return (
     <div className="about-page">
+      <SeoHead
+        title="About Us | Our Siddha Heritage & Mission | Dharani Herbals"
+        description="Learn about Dharani Herbals, our dedication to traditional Siddha and Ayurvedic botanical heritage, pure ingredients, and natural wellness."
+        canonicalUrl="https://www.dharaniherbbals.in/about"
+        openGraph={{
+          title: "About Us | Our Siddha Heritage & Mission | Dharani Herbals",
+          description: "Learn about Dharani Herbals, our dedication to traditional Siddha and Ayurvedic botanical heritage, pure ingredients, and natural wellness.",
+          url: "https://www.dharaniherbbals.in/about",
+          image: "https://www.dharaniherbbals.in/logo.png",
+          type: "website"
+        }}
+        keywords={['about dharani herbals', 'siddha heritage', 'traditional herbal formulations', 'ayurvedic mission', 'tamil nadu herbal products']}
+      />
       {/* Hero Section */}
       <div className="about-hero">
         <div className="about-hero-bg"></div>
@@ -134,7 +153,7 @@ export default function About() {
           <div className="stat-label">{t('customersServed')}</div>
         </div>
         <div className="stat-item">
-          <div className="stat-number">{t('stat2Val')}</div>
+          <div className="stat-number">{actualFormulationCount}</div>
           <div className="stat-label">{t('stat2Label')}</div>
         </div>
         <div className="stat-item">
@@ -142,7 +161,7 @@ export default function About() {
           <div className="stat-label">{t('stat3Label')}</div>
         </div>
         <div className="stat-item">
-          <div className="stat-number">{t('stat4Val')}</div>
+          <div className="stat-number">{legacyYears}</div>
           <div className="stat-label">{t('legacyOfTrust')}</div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Package, Truck, CheckCircle, ArrowLeft, Loader2, MapPin, Image as ImageIcon, Star } from 'lucide-react';
 import { useProducts } from '../context/ProductsContext';
 import { API_BASE_URL } from '../services/api';
+import { formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
 import './OrderTracking.css';
 
 export default function OrderTracking() {
@@ -156,7 +157,7 @@ export default function OrderTracking() {
             <p className="order-date">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
           </div>
           <div className="order-total-badge">
-            Total: ₹{order.total_amount}
+            Total: {formatCurrency(order.total_amount, { showDecimals: true })}
           </div>
         </div>
 
@@ -218,11 +219,11 @@ export default function OrderTracking() {
                       )}
                     </div>
                     <div className="ordered-item-details">
-                      <h4>{itemName}</h4>
+                      <h4>{formatProductDisplayName(itemName)}</h4>
                       <p>Qty: {item.quantity}</p>
                     </div>
                     <div className="ordered-item-price">
-                      ₹{(parseFloat(item.price) * item.quantity).toFixed(2)}
+                      {formatCurrency(parseFloat(item.price) * item.quantity, { showDecimals: true })}
                     </div>
                   </li>
                 );

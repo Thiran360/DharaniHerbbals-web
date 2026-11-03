@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BrandsSlider.css';
 import { useLanguage } from '../context/LanguageContext';
-import { API_BASE_URL } from '../services/api';
+import { API_BASE_URL, resolveMediaUrl } from '../services/api';
 
 import makilImg from '../assets/brands_api/MAKIL.png';
 import amuthuImg from '../assets/brands_api/Amuthu.png';
@@ -59,7 +59,7 @@ const getBrandImage = (brand) => {
     return vedanImg;
   }
   
-  return localBrandImages[brand.name] || localBrandImages[brand.name?.trim()] || brand.logo;
+  return localBrandImages[brand.name] || localBrandImages[brand.name?.trim()] || resolveMediaUrl(brand.logo);
 };
 
 const fallbackBrands = [

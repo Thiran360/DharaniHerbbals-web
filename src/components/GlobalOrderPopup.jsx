@@ -75,7 +75,7 @@ export default function GlobalOrderPopup() {
     return () => clearTimeout(timer);
   }, [location.pathname]); // Re-run when user navigates around the app
 
-  if (!showPopup || !order) return null;
+  if (!showPopup || !order || location.pathname === '/cart' || location.pathname === '/checkout') return null;
 
   const getStatusStep = (status) => {
     if (!status) return 1;

@@ -10,10 +10,12 @@ import {
   DollarSign,
   ArrowUpRight,
   Bell,
-  Search
+  Search,
+  Sparkles
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { showAppToast } from '../components/GlobalToast';
+import AdminBundleManager from '../components/AdminBundleManager';
 import './Admin.css';
 
 // Dummy Data
@@ -68,6 +70,11 @@ export default function Admin() {
               <Package size={20} />
               <span>Products</span>
             </li>
+            <li className={activeTab === 'Bundles' ? 'active' : ''} onClick={() => setActiveTab('Bundles')}>
+              <Sparkles size={20} />
+              <span>Bundle Offers</span>
+              <span className="admin-badge" style={{ background: '#059669', color: '#ffffff' }}>Combo</span>
+            </li>
             <li className={activeTab === 'Customers' ? 'active' : ''} onClick={() => setActiveTab('Customers')}>
               <Users size={20} />
               <span>Customers</span>
@@ -108,71 +115,78 @@ export default function Admin() {
         </header>
 
         {/* Dashboard Content */}
+        {/* Dashboard Content */}
         <div className="admin-content-area">
-          <div className="admin-page-header">
-            <h1>Welcome back, Admin 👋</h1>
-            <p>Here's what's happening with your store today.</p>
-          </div>
+          {activeTab === 'Bundles' ? (
+            <AdminBundleManager />
+          ) : (
+            <>
+              <div className="admin-page-header">
+                <h1>Welcome back, Admin 👋</h1>
+                <p>Here's what's happening with your store today.</p>
+              </div>
 
-          {/* Stats Grid */}
-          <div className="admin-stats-grid">
-            {statCards.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <div key={idx} className="admin-stat-card">
-                  <div className="admin-stat-header">
-                    <span className="admin-stat-title">{stat.title}</span>
-                    <div className={`admin-stat-icon-box bg-${stat.color}`}>
-                      <Icon size={20} />
+              {/* Stats Grid */}
+              <div className="admin-stats-grid">
+                {statCards.map((stat, idx) => {
+                  const Icon = stat.icon;
+                  return (
+                    <div key={idx} className="admin-stat-card">
+                      <div className="admin-stat-header">
+                        <span className="admin-stat-title">{stat.title}</span>
+                        <div className={`admin-stat-icon-box bg-${stat.color}`}>
+                          <Icon size={20} />
+                        </div>
+                      </div>
+                      <div className="admin-stat-body">
+                        <h2>{stat.value}</h2>
+                        <div className="admin-stat-increase">
+                          <ArrowUpRight size={16} />
+                          {stat.increase} <span className="admin-stat-vs">vs last month</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="admin-stat-body">
-                    <h2>{stat.value}</h2>
-                    <div className="admin-stat-increase">
-                      <ArrowUpRight size={16} />
-                      {stat.increase} <span className="admin-stat-vs">vs last month</span>
-                    </div>
-                  </div>
+                  );
+                })}
+              </div>
+
+              {/* Recent Orders Table */}
+              <div className="admin-table-container">
+                <div className="admin-table-header">
+                  <h2>Recent Orders</h2>
+                  <button className="admin-btn-outline">View All</button>
                 </div>
-              );
-            })}
-          </div>
-
-          {/* Recent Orders Table */}
-          <div className="admin-table-container">
-            <div className="admin-table-header">
-              <h2>Recent Orders</h2>
-              <button className="admin-btn-outline">View All</button>
-            </div>
-            <div className="admin-table-responsive">
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentOrders.map((order, idx) => (
-                    <tr key={idx}>
-                      <td className="admin-td-bold">{order.id}</td>
-                      <td>{order.customer}</td>
-                      <td className="admin-td-muted">{order.date}</td>
-                      <td className="admin-td-bold">{order.amount}</td>
-                      <td>
-                        <span className={`admin-status-pill status-${order.status.toLowerCase()}`}>
-                          {order.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                <div className="admin-table-responsive">
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recentOrders.map((order, idx) => (
+                        <tr key={idx}>
+                          <td className="admin-td-bold">{order.id}</td>
+                          <td>{order.customer}</td>
+                          <td className="admin-td-muted">{order.date}</td>
+                          <td className="admin-td-bold">{order.amount}</td>
+                          <td>
+                            <span className={`admin-status-pill status-${order.status.toLowerCase()}`}>
+                              {order.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
 
         </div>
       </main>

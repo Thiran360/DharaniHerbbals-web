@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /profile
+Disallow: /checkout
+Disallow: /verify-otp
+Disallow: /reset-password
+Disallow: /forgot-password
+
+Sitemap: https://www.dharaniherbbals.in/sitemap.xml

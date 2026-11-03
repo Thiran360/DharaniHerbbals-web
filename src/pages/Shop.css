@@ -1127,6 +1127,79 @@
   color: #ffffff;
 }
 
+/* Active Filters Chips Bar */
+.shop-active-filters-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+}
+
+.shop-active-filters-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.shop-active-chips-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.shop-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shop-filter-chip:hover {
+  background: #d1fae5;
+  border-color: #6ee7b7;
+  color: #047857;
+}
+
+.shop-filter-chip .chip-x {
+  font-size: 1rem;
+  line-height: 1;
+  color: #059669;
+}
+
+.shop-clear-all-chips-btn {
+  background: #ffffff;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shop-clear-all-chips-btn:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
 /* Results Bar */
 .shop-results-bar {
   margin-bottom: 24px;
@@ -1234,6 +1307,15 @@
   overflow: hidden;
 }
 
+.uc-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.uc-title a:hover {
+  color: #16a34a;
+}
+
 .uc-subtitle {
   font-size: 0.8rem;
   color: #6b7280;
@@ -1302,6 +1384,12 @@
   font-size: 1.35rem;
   font-weight: 800;
   color: #111827;
+}
+
+.uc-pack-size {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .uc-original-price {
@@ -2177,3 +2265,18 @@
 }
 
 
+
+.uc-discount-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #15803d;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 6px;
+  z-index: 4;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
