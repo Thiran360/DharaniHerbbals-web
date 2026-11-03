@@ -194,8 +194,20 @@ export default function FloatingSocials() {
               <X size={24} className="launcher-icon-close" />
             ) : (
               <div className="launcher-icon-combo">
-                <MessageCircle size={24} className="launcher-primary-icon" />
-                <span className="launcher-sparkle-pip">
+                <div className="launcher-d-logo-badge">
+                  <img
+                    src="/favicon.png"
+                    alt="Dharani Herbbals"
+                    className="launcher-d-logo"
+                    width="28"
+                    height="28"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = '/videos/logo_transparent.webp';
+                    }}
+                  />
+                </div>
+                <span className="launcher-sparkle-pip" aria-hidden="true">
                   <Sparkles size={10} />
                 </span>
               </div>
