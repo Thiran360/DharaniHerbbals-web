@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, ChevronLeft, ChevronRight, ShoppingBag, Clock, Sparkles, MessageCircle, Gift } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ShoppingBag, Clock, Sparkles, Gift } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useProducts } from '../context/ProductsContext';
 import { formatProductDisplayName } from '../utils/productFormatters';
 import { API_BASE_URL, SLIDERS_API_URL, resolveMediaUrl } from '../services/api';
 import sathuMaavuImg from '../assets/sathu_maavu_transparent.webp';
 import dharaniAvatar from '../assets/dharani_avatar.webp';
+import dharaniMascotAnnouncing from '../assets/dharani_mascot_announcing.png';
 import wildTurmericBannerImg from '../assets/wild_turmeric_offer_banner.jpg';
 import bodySoapImg from '../assets/body_soap_transparent.webp';
 import chemparuthiShampooImg from '../assets/chemparuthi_shampoo_transparent_v3.webp';
@@ -511,35 +512,19 @@ export default function SliderPopup() {
           onClick={handleOpenOfferModal}
           role="button"
           tabIndex={0}
-          aria-label={isTamil ? 'ஆஃபர்களை காண்க' : 'View special offers'}
+          aria-label={isTamil ? 'சிறப்பு ஆஃபர்களை காண்க' : 'Special Offers are waiting for you!'}
         >
-          {/* Top-Right "Click me! ↘" Pointer + Green Chat/Offer Circle Button */}
-          <div className="dharani-mascot-top-hint-row">
-            <div className="dharani-mascot-click-hint">
-              <span>{isTamil ? 'இங்கே கிளிக் செய்க! ↘' : 'Click me! ↘'}</span>
-            </div>
-            <button
-              type="button"
-              className="dharani-mascot-chat-btn"
-              onClick={handleOpenOfferModal}
-              aria-label="Open Offer"
-              title={isTamil ? 'ஆஃபர்களை காண்க' : 'View Offers'}
-            >
-              <MessageCircle size={18} color="#ffffff" />
-            </button>
-          </div>
-
           <div className="dharani-mascot-container">
-            {/* Mascot Character on Left */}
+            {/* Mascot Character on Left with Megaphone */}
             <div className="dharani-mascot-avatar-box">
               <img
-                src={dharaniAvatar}
-                alt="Dharani Mascot"
+                src={dharaniMascotAnnouncing}
+                alt="Dharani Announcing Mascot"
                 className="dharani-mascot-img"
               />
             </div>
 
-            {/* Speech Bubble Card on Right */}
+            {/* Speech Bubble Card on Right matching user mockup ditto */}
             <div className="dharani-mascot-speech-bubble">
               <button
                 type="button"
@@ -551,26 +536,32 @@ export default function SliderPopup() {
                 aria-label={isTamil ? 'மூடுக' : 'Dismiss'}
                 title={isTamil ? 'மூடுக' : 'Dismiss'}
               >
-                <X size={14} />
+                <X size={14} strokeWidth={2.6} />
               </button>
 
-              <p className="dharani-mascot-msg">
-                {isTamil
-                  ? 'வாடிக்கையாளர்கள் அதிகம் விரும்பும் மூலிகை தயாரிப்புகளை காண இங்கே தட்டவும்! 🌿'
-                  : 'Explore our most loved herbal products chosen by our customers! 🌿'}
-              </p>
+              <div className="dharani-megaphone-card-header">
+                <span className="dharani-megaphone-title">
+                  {isTamil ? 'சிறப்பு ஆஃபர்கள்' : 'Special Offers'}
+                </span>
+                <span className="dharani-megaphone-subtitle">
+                  {isTamil ? 'உங்களுக்காக காத்திருக்கின்றன!' : 'are waiting for you!'}
+                </span>
+              </div>
 
               <button
                 type="button"
                 className="dharani-mascot-cta-btn"
                 onClick={handleOpenOfferModal}
               >
-                <span>⭐ {isTamil ? 'தயாரிப்புகளை காண்க →' : 'Most Loved →'}</span>
+                <span className="dharani-cta-gift-emoji">🎁</span>
+                <span>{isTamil ? 'ஆஃபரை காண்க →' : 'View Offer →'}</span>
               </button>
 
               <div className="dharani-mascot-footer">
-                <Sparkles size={11} />
-                <span>{isTamil ? 'வாடிக்கையாளர் விருப்பம் ✦' : 'Customer Favorites ✦'}</span>
+                <span className="footer-line"></span>
+                <Clock size={11} strokeWidth={2.4} />
+                <span>{isTamil ? 'குறிப்பிட்ட நேர சலுகை' : 'Limited Time Offer'}</span>
+                <span className="footer-line"></span>
               </div>
             </div>
           </div>
@@ -591,10 +582,10 @@ export default function SliderPopup() {
           title={isTamil ? 'சிறப்பு ஆஃபர்கள்' : 'Special Offers'}
           aria-label={isTamil ? 'ஆஃபர்களை காண்க' : 'View special offers'}
         >
-          <img src={dharaniAvatar} alt="Dharani Mascot" className="minimized-avatar-img" />
+          <img src={dharaniMascotAnnouncing} alt="Dharani Mascot" className="minimized-avatar-img" />
           <span className="minimized-offer-badge">
             <Sparkles size={10} />
-            <span>LOVED</span>
+            <span>OFFER</span>
           </span>
         </div>
       )}
