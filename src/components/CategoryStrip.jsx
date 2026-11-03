@@ -6,14 +6,14 @@ import { API_BASE_URL, resolveMediaUrl } from '../services/api';
 import './CategoryStrip.css';
 
 // Import custom generated category images matching premium organic blob style
-import imgHair from '../assets/chemparuthi_shampoo_transparent_v3.png';
-import imgBody from '../assets/body_soap_transparent.png';
-import imgFood from '../assets/pirandai_pickle_transparent_v2.png';
-import imgSkin from '../assets/aloe_vera_face_pack_transparent.png';
-import imgHealth from '../assets/sathu_maavu_transparent.png';
-import imgBaby from '../assets/nalangu_powder_transparent_v2.png';
-import imgPoojas from '../assets/pooja_oil_transparent_v2.png';
-import imgBeverages from '../assets/beverage_transparent.png';
+import imgHair from '../assets/chemparuthi_shampoo_transparent_v3.webp';
+import imgBody from '../assets/body_soap_transparent.webp';
+import imgFood from '../assets/pirandai_pickle_transparent_v2.webp';
+import imgSkin from '../assets/aloe_vera_face_pack_transparent.webp';
+import imgHealth from '../assets/sathu_maavu_transparent.webp';
+import imgBaby from '../assets/nalangu_powder_transparent_v2.webp';
+import imgPoojas from '../assets/pooja_oil_transparent_v2.webp';
+import imgBeverages from '../assets/beverage_transparent.webp';
 
 const LOCAL_CATEGORY_IMAGES = {
   "Hair": imgHair,
@@ -52,7 +52,7 @@ export default function CategoryStrip() {
 
   useEffect(() => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     fetch(`${API_BASE_URL}/categories/`, {
       signal: controller.signal,
@@ -102,9 +102,14 @@ export default function CategoryStrip() {
         setLoading(false);
       })
       .catch(err => {
-        console.error('Error fetching categories:', err);
+        if (err.name === 'AbortError') return;
+        console.warn('Unable to fetch categories, using cache/defaults:', err.message);
         setLoading(false);
       });
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, []);
 
   // ONLY show on Home Page and Shop Page
@@ -117,7 +122,12 @@ export default function CategoryStrip() {
   }
 
   return (
-    <div className="category-strip-container">
+    <section className="category-strip-container" id="categories" aria-label="Product Categories">
+      <div className="category-strip-header">
+        <span className="category-strip-eyebrow">✦ AYURVEDIC WELLNESS CATEGORIES ✦</span>
+        <h2 className="category-strip-title">Curated Herbal Formulations</h2>
+        <p className="category-strip-subtitle">Discover handcrafted South Indian botanical solutions, time-tested for purity and potency.</p>
+      </div>
       <div className="category-strip-scroll">
 
         {/* "All" pill — clears category filter */}
@@ -130,7 +140,7 @@ export default function CategoryStrip() {
             <div className="category-all-icon">{t('allCategory')}</div>
           </div>
           <div className="category-btn">
-            <span>{t('allProducts')} &gt;</span>
+            <span>{t('ourCollection') || 'Our Collection'} &gt;</span>
           </div>
         </Link>
 
@@ -148,6 +158,10 @@ export default function CategoryStrip() {
                   src={categoryImage ? `${categoryImage}?v=42` : ''}
                   alt={category.name}
                   className="category-img"
+                  loading="lazy"
+                  decoding="async"
+                  width="64"
+                  height="64"
                 />
               </div>
               <div className="category-btn">
@@ -157,6 +171,6 @@ export default function CategoryStrip() {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

@@ -875,3 +875,59 @@
   color: #4b5563;
   font-weight: 500;
 }
+
+
+/* Customer Loved Products Highlight Box & Badge */
+.herbal-loved-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1a5336;
+  background: rgba(26, 83, 54, 0.08);
+  border: 1px solid rgba(26, 83, 54, 0.2);
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.herbal-offer-badge--loved {
+  background: linear-gradient(135deg, #1a5336 0%, #2e7d32 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+}
+
+.herbal-customer-love-box {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(26, 83, 54, 0.08) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.herbal-customer-love-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a5336;
+}
+
+.herbal-customer-love-item .herbal-love-sparkle {
+  color: #eab308;
+}
+
+.herbal-customer-love-sub {
+  font-size: 11px;
+  color: #4b6b58;
+  margin: 0;
+  line-height: 1.35;
+}

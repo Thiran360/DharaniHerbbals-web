@@ -4,16 +4,17 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { X, ChevronLeft, ChevronRight, ShoppingBag, Clock, Sparkles, MessageCircle, Gift } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useProducts } from '../context/ProductsContext';
+import { formatProductDisplayName } from '../utils/productFormatters';
 import { API_BASE_URL, SLIDERS_API_URL, resolveMediaUrl } from '../services/api';
-import sathuMaavuImg from '../assets/sathu_maavu_transparent.png';
-import dharaniAvatar from '../assets/dharani_avatar.png';
+import sathuMaavuImg from '../assets/sathu_maavu_transparent.webp';
+import dharaniAvatar from '../assets/dharani_avatar.webp';
 import wildTurmericBannerImg from '../assets/wild_turmeric_offer_banner.jpg';
-import bodySoapImg from '../assets/body_soap_transparent.png';
-import chemparuthiShampooImg from '../assets/chemparuthi_shampoo_transparent_v3.png';
-import aloeFacePackImg from '../assets/aloe_vera_face_pack_transparent.png';
-import nalanguPowderImg from '../assets/nalangu_powder_transparent_v2.png';
-import poojaOilImg from '../assets/pooja_oil_transparent_v2.png';
-import pirandaiPickleImg from '../assets/pirandai_pickle_transparent_v2.png';
+import bodySoapImg from '../assets/body_soap_transparent.webp';
+import chemparuthiShampooImg from '../assets/chemparuthi_shampoo_transparent_v3.webp';
+import aloeFacePackImg from '../assets/aloe_vera_face_pack_transparent.webp';
+import nalanguPowderImg from '../assets/nalangu_powder_transparent_v2.webp';
+import poojaOilImg from '../assets/pooja_oil_transparent_v2.webp';
+import pirandaiPickleImg from '../assets/pirandai_pickle_transparent_v2.webp';
 import './SliderPopup.css';
 
 // Curated default featured offers from live products so the widget is ALWAYS visible
@@ -21,68 +22,68 @@ const DEFAULT_FEATURED_OFFERS = [
   {
     id: 1243,
     productName: 'Wild Turmeric',
-    offerTitle: '✨ Special Herbal Deal',
+    offerTitle: '⭐ Customer Favorite',
     subtitle: '100% Pure Kasturi Manjal for Natural Glow',
     image: wildTurmericBannerImg,
     link: '/product/1243',
-    originalPrice: 95,
+    originalPrice: 65,
     finalPrice: 65,
-    discountPercentage: 31
+    discountPercentage: null
   },
   {
     id: 1193,
-    productName: '75 GM MAHIL ROSE SOAP(RC)',
-    offerTitle: '🌹 Pure Herbal Soap Deal',
+    productName: 'Rose Soap',
+    offerTitle: '⭐ Customer Favorite',
     subtitle: 'Botanical Herbal Remedy with Natural Rose',
     image: bodySoapImg,
     link: '/product/1193',
-    originalPrice: 55,
-    finalPrice: 41,
-    discountPercentage: 25
+    originalPrice: 60,
+    finalPrice: 60,
+    discountPercentage: null
   },
   {
     id: 1011,
     productName: 'Facepack Powder',
-    offerTitle: '🌟 Glowing Skin Offer',
+    offerTitle: '⭐ Customer Favorite',
     subtitle: 'Herbal Radiance & Skin Nourishment',
     image: aloeFacePackImg,
     link: '/product/1011',
-    originalPrice: 90,
-    finalPrice: 65,
-    discountPercentage: 28
+    originalPrice: 70,
+    finalPrice: 70,
+    discountPercentage: null
   },
   {
     id: 1263,
-    productName: 'Cucumber gel',
-    offerTitle: '🌿 Hydrating Cooling Gel',
+    productName: 'Cucumber Gel',
+    offerTitle: '⭐ Customer Favorite',
     subtitle: 'Pure Herbal Hydration & Soothing Care',
     image: aloeFacePackImg,
     link: '/product/1263',
-    originalPrice: 110,
-    finalPrice: 80,
-    discountPercentage: 27
+    originalPrice: 85,
+    finalPrice: 85,
+    discountPercentage: null
   },
   {
     id: 1246,
     productName: 'Arappu Shampoo',
-    offerTitle: '🌺 Mega Hair Care Deal',
+    offerTitle: '⭐ Customer Favorite',
     subtitle: 'Traditional Natural Herbal Hair Cleanser',
     image: chemparuthiShampooImg,
     link: '/product/1246',
-    originalPrice: 130,
-    finalPrice: 65,
-    discountPercentage: 50
+    originalPrice: 75,
+    finalPrice: 75,
+    discountPercentage: null
   },
   {
     id: 1272,
     productName: 'Sprouted Multigrain Health Mix',
-    offerTitle: '🌾 Pure Nutrition Offer',
+    offerTitle: '⭐ Customer Favorite',
     subtitle: 'Traditional Herbal Health Mix for Whole Family',
     image: sathuMaavuImg,
     link: '/product/1272',
-    originalPrice: 220,
-    finalPrice: 185,
-    discountPercentage: 16
+    originalPrice: 195,
+    finalPrice: 195,
+    discountPercentage: null
   }
 ];
 
@@ -471,6 +472,16 @@ export default function SliderPopup() {
     }
   };
 
+  const nextSlide = () => {
+    if (offers.length <= 1) return;
+    setCurrentIndex((prev) => (prev + 1) % offers.length);
+  };
+
+  const prevSlide = () => {
+    if (offers.length <= 1) return;
+    setCurrentIndex((prev) => (prev === 0 ? offers.length - 1 : prev - 1));
+  };
+
   const handleTouchStart = (e) => {
     touchEndRef.current = null;
     touchStartRef.current = e.targetTouches[0].clientX;
@@ -545,8 +556,8 @@ export default function SliderPopup() {
 
               <p className="dharani-mascot-msg">
                 {isTamil
-                  ? 'உங்களுக்காக பிரத்யேக சலுகைகள் காத்திருக்கின்றன! ஆஃபர்களை காண தட்டவும்.'
-                  : 'Special offers are waiting for you! Tap to view the latest deal.'}
+                  ? 'வாடிக்கையாளர்கள் அதிகம் விரும்பும் மூலிகை தயாரிப்புகளை காண இங்கே தட்டவும்! 🌿'
+                  : 'Explore our most loved herbal products chosen by our customers! 🌿'}
               </p>
 
               <button
@@ -554,12 +565,12 @@ export default function SliderPopup() {
                 className="dharani-mascot-cta-btn"
                 onClick={handleOpenOfferModal}
               >
-                <span>🎁 {isTamil ? 'ஆஃபர்களை காண்க →' : 'View Offer →'}</span>
+                <span>⭐ {isTamil ? 'தயாரிப்புகளை காண்க →' : 'Most Loved →'}</span>
               </button>
 
               <div className="dharani-mascot-footer">
-                <Clock size={11} />
-                <span>{isTamil ? 'வரையறுக்கப்பட்ட கால சலுகை ✦' : 'Limited Time Offer ✦'}</span>
+                <Sparkles size={11} />
+                <span>{isTamil ? 'வாடிக்கையாளர் விருப்பம் ✦' : 'Customer Favorites ✦'}</span>
               </div>
             </div>
           </div>
@@ -582,8 +593,8 @@ export default function SliderPopup() {
         >
           <img src={dharaniAvatar} alt="Dharani Mascot" className="minimized-avatar-img" />
           <span className="minimized-offer-badge">
-            <Gift size={10} />
-            <span>OFFER</span>
+            <Sparkles size={10} />
+            <span>LOVED</span>
           </span>
         </div>
       )}
@@ -612,7 +623,7 @@ export default function SliderPopup() {
                 <img src={dharaniAvatar} alt="Dharani" className="herbal-modal-avatar-thumb" />
                 <div>
                   <h4 className="herbal-modal-avatar-title">{isTamil ? "வணக்கம்! நான் தரணி 🌿" : "Hi! I'm Dharani 🌿"}</h4>
-                  <p className="herbal-modal-avatar-sub">{isTamil ? "உங்களுக்கான சிறப்பு சலுகைகள்!" : "Special offers waiting for you!"}</p>
+                  <p className="herbal-modal-avatar-sub">{isTamil ? "வாடிக்கையாளர்கள் அதிகம் விரும்பும் தயாரிப்புகள்!" : "Customer's Most Loved Products!"}</p>
                 </div>
               </div>
               <button
@@ -649,14 +660,12 @@ export default function SliderPopup() {
                     }}
                   />
 
-                  {/* Discount Percentage Badge Over Image */}
-                  {currentOffer.discountPercentage && (
-                    <div className="herbal-offer-badge">
-                      <span>
-                        {currentOffer.discountPercentage}% {isTamil ? 'தள்ளுபடி' : 'OFF'}
-                      </span>
-                    </div>
-                  )}
+                  {/* Most Loved Badge Over Image */}
+                  <div className="herbal-offer-badge herbal-offer-badge--loved">
+                    <span>
+                      {isTamil ? '⭐ அதிகம் விரும்பப்படும் தயாரிப்பு' : '⭐ Most Loved'}
+                    </span>
+                  </div>
 
                   {/* Slider Arrows if multiple offers */}
                   {offers.length > 1 && (
@@ -689,15 +698,15 @@ export default function SliderPopup() {
               );
             })()}
 
-            {/* Content Body: Title, Product Name, Pricing, Live Countdown Timer, Shop Now Button */}
+            {/* Content Body: Category, Product Name, Single Price, Customer Love Box, Shop Now Button */}
             <div className="herbal-offer-modal-body">
-              {currentOffer.offerTitle && (
-                <span className="herbal-offer-badge-title">{currentOffer.offerTitle}</span>
-              )}
+              <span className="herbal-offer-badge-title">
+                {isTamil ? 'வாடிக்கையாளர் விருப்பம்' : 'CUSTOMER FAVORITE'}
+              </span>
 
               {currentOffer.productName && (
                 <h3 id="offer-modal-title" className="herbal-offer-product-name">
-                  {currentOffer.productName}
+                  {formatProductDisplayName(currentOffer.productName)}
                 </h3>
               )}
 
@@ -705,52 +714,31 @@ export default function SliderPopup() {
                 <p className="herbal-offer-subtitle">{currentOffer.subtitle}</p>
               )}
 
-              {/* Real Pricing Block */}
-              {(currentOffer.finalPrice !== null || currentOffer.originalPrice !== null) && (
-                <div className="herbal-offer-pricing-row">
-                  {currentOffer.finalPrice !== null && (
+              {/* Real Original Product Price */}
+              {(() => {
+                const prodPrice = currentOffer.originalPrice || currentOffer.finalPrice;
+                if (!prodPrice) return null;
+                return (
+                  <div className="herbal-offer-pricing-row">
                     <span className="herbal-offer-final-price">
-                      {formatPriceValue(currentOffer.finalPrice)}
+                      {formatPriceValue(prodPrice)}
                     </span>
-                  )}
-                  {currentOffer.originalPrice !== null &&
-                    currentOffer.originalPrice > (currentOffer.finalPrice || 0) && (
-                      <span className="herbal-offer-original-price">
-                        {formatPriceValue(currentOffer.originalPrice)}
-                      </span>
-                    )}
-                  {currentOffer.discountPercentage && (
-                    <span className="herbal-offer-discount-chip">
-                      {currentOffer.discountPercentage}% {isTamil ? 'தள்ளுபடி' : 'OFF'}
+                    <span className="herbal-loved-tag">
+                      {isTamil ? '❤️ அதிகம் விரும்பப்படும் தயாரிப்பு' : '❤️ Most Loved'}
                     </span>
-                  )}
-                </div>
-              )}
+                  </div>
+                );
+              })()}
 
-              {/* ⏱️ Live Deal Countdown Urgency Timer Box */}
-              <div className="herbal-offer-timer-box">
-                <div className="herbal-timer-header">
-                  <Clock size={13} className="herbal-timer-clock-icon" />
-                  <span>
-                    {isTamil ? 'ஆஃபர் முடிவடையும் நேரம்' : 'OFFER ENDS IN'}
-                  </span>
+              {/* Customer Lovable Products Highlight Box */}
+              <div className="herbal-customer-love-box">
+                <div className="herbal-customer-love-item">
+                  <Sparkles size={15} className="herbal-love-sparkle" />
+                  <span>{isTamil ? '10,000+ வாடிக்கையாளர்களால் அதிகம் விரும்பப்பட்டது' : 'Loved by 10,000+ Happy Customers'}</span>
                 </div>
-                <div className="herbal-timer-digits">
-                  <div className="herbal-timer-block">
-                    <span className="herbal-timer-val">{timeLeft.hours}</span>
-                    <span className="herbal-timer-lbl">{isTamil ? 'மணி' : 'HRS'}</span>
-                  </div>
-                  <span className="herbal-timer-sep">:</span>
-                  <div className="herbal-timer-block">
-                    <span className="herbal-timer-val">{timeLeft.minutes}</span>
-                    <span className="herbal-timer-lbl">{isTamil ? 'நிமி' : 'MIN'}</span>
-                  </div>
-                  <span className="herbal-timer-sep">:</span>
-                  <div className="herbal-timer-block">
-                    <span className="herbal-timer-val">{timeLeft.seconds}</span>
-                    <span className="herbal-timer-lbl">{isTamil ? 'நொடி' : 'SEC'}</span>
-                  </div>
-                </div>
+                <p className="herbal-customer-love-sub">
+                  {isTamil ? '100% தூய இயற்கை மூலிகை தயாரிப்பு • பக்கவிளைவுகள் அற்றது' : '100% Pure Botanical Care • Time-Tested Siddha Wisdom'}
+                </p>
               </div>
 
               {/* Shop Now Action Button */}

@@ -214,7 +214,7 @@ const UI_TRANSLATIONS = {
     noProductsFound: "தயாரிப்புகள் எதுவும் கிடைக்கவில்லை",
     noItemsAvailable: "இந்த பிரிவில் இன்னும் பொருட்கள் இல்லை.",
     browseAll: "அனைத்து தயாரிப்புகளையும் காண்க",
-    ourCollection: "எங்கள் சேகரிப்பு",
+    ourCollection: "எங்கள் கலெக்ஷன்",
     herbalTag: "🌿 100% இயற்கை & மூலிகை",
     handcraftedWellness: "இயற்கை மற்றும் பாரம்பரியத்தில் வேரூன்றிய கைவினைமுறை ஆரோக்கிய தயாரிப்புகள்.",
     quickView: "விரைவு பார்வை",
