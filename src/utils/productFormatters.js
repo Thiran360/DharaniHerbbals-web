@@ -248,7 +248,24 @@ export function cleanProductDescription(text) {
  */
 const LEADING_WEIGHT_REGEX = /^\s*(?:\(\s*)?\d+(?:\.\d+)?\s*(?:(?:gm|gms|gram|grams|g|ml|mls|milliliter|millilitres|l|ltr|liters|litres|liter|kg|kgs|kilogram|kilograms)(?=[^a-zA-Z0-9]|$)|(?:கிராம்|கிகி|கிலோ|மில்லி|மி\.லி|லிட்டர்)(?=[^\u0B80-\u0BFF]|$))(?:\s*\))?\s*[-–:xX*/]*\s*/i;
 
-const LEADING_BRAND_REGEX = /^\s*(?:(?:mahil|makil|ramcare|ram\s*care|vedanamuthu|vedanamut|vedan|amuthu|amutham|vana\s*arasi|vanarasi|athiyaman|divyam|dhisha|dharani(?:\s+herbb?als)?)(?=[^a-zA-Z0-9]|$)|(?:மகிழ்|மகிழ|ராம்கேர்|வேதனமுத்து|வேதன்|அமுது|அமுதம்|வான\s*அரசி|வன\s*அரசி|அதியமான்|திவ்யம்|திஷா|தாரணி|தரணி)(?=[^\u0B80-\u0BFF]|$))\s*[-–:xX*/]*\s*/i;
+const LEADING_BRAND_REGEX = /^\s*(?:(?:mahil|makil|ramcare|ram\s*care|vedanamuthu|vedanamut|vedan|amuthu|amutham|vana\s*arasi|vanaarasi|vanarasi|vana\s*rasi|athiyaman|adhiyaman|divyam|dhivyam|dhisha|disha|dharani(?:\s+herbb?als)?)(?=[^a-zA-Z0-9]|$)|(?:மகிழ்|மகிழ|ராம்கேர்|வேதனமுத்து|வேதன்|அமுது|அமுதம்|வான\s*அரசி|வன\s*அரசி|அதியமான்|திவ்யம்|திஷா|தாரணி|தரணி)(?=[^\u0B80-\u0BFF]|$))\s*[-–:xX*/]*\s*/i;
+
+/**
+ * Converts English words to Title Case (First letter capitalized, remaining letters lowercase).
+ * Handles contractions (e.g. Doctor's) and keeps non-English characters (Tamil, numbers, punctuation) intact.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+export function toTitleCase(str) {
+  if (!str) return '';
+  return str.replace(/[A-Za-zÀ-ÖØ-öø-ÿ]+/g, (word, offset, fullStr) => {
+    if (offset > 0 && fullStr[offset - 1] === "'" && word.toLowerCase() === 's') {
+      return 's';
+    }
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  });
+}
 
 export function formatProductDisplayName(rawName) {
   if (!rawName) return '';
@@ -286,11 +303,14 @@ export function formatProductDisplayName(rawName) {
     guard++;
   } while (name !== prev && guard < 10);
 
-  // 4. Normalize multiple spaces
+  // 4. Convert to Title Case (first letter capitalized, remaining letters lowercase)
+  name = toTitleCase(name);
+
+  // 5. Normalize multiple spaces
   name = name.replace(/\s+/g, ' ').trim();
 
-  // 5. Fallback to rawName if completely stripped
-  return name || String(rawName).trim();
+  // 6. Fallback to rawName if completely stripped
+  return name || toTitleCase(String(rawName).trim());
 }
 
 /**

@@ -645,15 +645,42 @@ export default function ProductDetails() {
 
   const mediaItems = [];
 
-  if (crmGalleryImages.length > 0) {
-    mediaItems.push(...crmGalleryImages.map(imgObj => { const src = resolveMediaUrl(imgObj.image || imgObj.url); return { type: 'image', src, thumb: src }; }));
+  // 1. Primary product image (the EXACT image shown on the card outside) MUST ALWAYS be first!
+  if (product.image) {
+    const rawImages = typeof product.image === 'string' && product.image.includes(',')
+      ? product.image.split(',').map(s => s.trim()).filter(Boolean)
+      : [product.image];
+
+    for (const img of rawImages) {
+      const pSrc = resolveMediaUrl(img);
+      if (pSrc && !mediaItems.some(m => m.src === pSrc)) {
+        mediaItems.push({ type: 'image', src: pSrc, thumb: pSrc });
+      }
+    }
   }
 
-  if (product.image) {
-    const pSrc = resolveMediaUrl(product.image);
-    if (!mediaItems.some(m => m.src === pSrc)) {
-      mediaItems.push({ type: 'image', src: pSrc, thumb: pSrc });
-    }
+  // 2. Extra gallery images from CRM come AFTER the primary product image
+  if (crmGalleryImages.length > 0) {
+    crmGalleryImages.forEach(imgObj => {
+      const src = resolveMediaUrl(imgObj.image || imgObj.url);
+      if (src && !mediaItems.some(m => m.src === src)) {
+        mediaItems.push({ type: 'image', src, thumb: src });
+      }
+    });
+  }
+
+  // 3. 3D Model if available
+  if (product.model_3d) {
+    mediaItems.push({
+      type: '3d',
+      src: resolveMediaUrl(product.model_3d),
+      thumb: mediaItems[0]?.src || '/logo.png'
+    });
+  }
+
+  // 4. Fallback if no images found
+  if (mediaItems.length === 0) {
+    mediaItems.push({ type: 'image', src: '/logo.png', thumb: '/logo.png' });
   }
 
   const currentMedia = mediaItems[currentImgIndex];
