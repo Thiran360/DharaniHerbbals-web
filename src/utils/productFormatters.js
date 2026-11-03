@@ -246,6 +246,10 @@ export function cleanProductDescription(text) {
  * @param {string} rawName - Original product name from ERP/database
  * @returns {string} Customer-facing clean display name
  */
+const LEADING_WEIGHT_REGEX = /^\s*(?:\(\s*)?\d+(?:\.\d+)?\s*(?:(?:gm|gms|gram|grams|g|ml|mls|milliliter|millilitres|l|ltr|liters|litres|liter|kg|kgs|kilogram|kilograms)(?=[^a-zA-Z0-9]|$)|(?:கிராம்|கிகி|கிலோ|மில்லி|மி\.லி|லிட்டர்)(?=[^\u0B80-\u0BFF]|$))(?:\s*\))?\s*[-–:xX*/]*\s*/i;
+
+const LEADING_BRAND_REGEX = /^\s*(?:(?:mahil|makil|ramcare|ram\s*care|vedanamuthu|vedanamut|vedan|amuthu|amutham|vana\s*arasi|vanarasi|athiyaman|divyam|dhisha|dharani(?:\s+herbb?als)?)(?=[^a-zA-Z0-9]|$)|(?:மகிழ்|மகிழ|ராம்கேர்|வேதனமுத்து|வேதன்|அமுது|அமுதம்|வான\s*அரசி|வன\s*அரசி|அதியமான்|திவ்யம்|திஷா|தாரணி|தரணி)(?=[^\u0B80-\u0BFF]|$))\s*[-–:xX*/]*\s*/i;
+
 export function formatProductDisplayName(rawName) {
   if (!rawName) return '';
   let name = String(rawName).trim();
@@ -257,8 +261,8 @@ export function formatProductDisplayName(rawName) {
   name = name.replace(/\bமுல்தானி\s+மெட்டி\b/g, 'முல்தானி மட்டி');
   name = name.replace(/\b(Orange|Lemon)\s+Peal\b/gi, '$1 Peel');
 
-  // 2. Remove internal packaging/inventory codes: (GC), (PO), (JAR), (NR), (G)
-  name = name.replace(/\s*\((?:GC|PO|JAR|NR|G)\)\s*/gi, ' ');
+  // 2. Remove internal packaging/inventory codes: (GC), (PO), (JAR), (NR), (G), (RC)
+  name = name.replace(/\s*\((?:GC|PO|JAR|NR|G|RC)\)\s*/gi, ' ');
   name = name.replace(/\s*\((?:பா|பொ|ஜார்|பாக்கெட்)\)\s*/gi, ' ');
   name = name.replace(/\s*\(PO\d*\)?\s*/gi, ' ');
 
@@ -272,10 +276,21 @@ export function formatProductDisplayName(rawName) {
   name = name.replace(/\s+பா$/g, '');
   name = name.replace(/\s+\(BOX\)$/i, ' Box');
 
-  // 3. Normalize multiple spaces
+  // 3. Remove leading weights/quantities and brand names repeatedly from the front
+  let prev;
+  let guard = 0;
+  do {
+    prev = name;
+    name = name.replace(LEADING_WEIGHT_REGEX, '');
+    name = name.replace(LEADING_BRAND_REGEX, '');
+    guard++;
+  } while (name !== prev && guard < 10);
+
+  // 4. Normalize multiple spaces
   name = name.replace(/\s+/g, ' ').trim();
 
-  return name;
+  // 5. Fallback to rawName if completely stripped
+  return name || String(rawName).trim();
 }
 
 /**
