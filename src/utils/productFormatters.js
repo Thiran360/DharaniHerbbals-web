@@ -482,13 +482,13 @@ export function getProductFallbackImage(name, id) {
     return 'https://vedanmart.com/images/Food/MUTTAKATRAN%20SADA%20POWDER%20JAR.jpg';
   }
   if (n.includes('vazhaithandu') || n.includes('vazhai poo') || n.includes('mixed fruit jam')) {
-    return 'https://vedanmart.com/images/Food/PIRANDAI%20PICKLE%20JAR.jpg';
+    return 'https://vedanmart.com/images/Food/PIRANDAI%20PICKLE.jpeg';
   }
   if (n.includes('sundaikkai') || n.includes('curry leaf thokku') || n.includes('curry leaf sada') || n.includes('puthina thokku')) {
     return 'https://vedanmart.com/images/Food/CURRYLEAF%20Gravy%20JAR.jpg';
   }
-  if (n.includes('pirandai pickle')) {
-    return 'https://vedanmart.com/images/Food/PIRANDAI%20PICKLE%20JAR.jpg';
+  if (n.includes('pirandai pickle') || n.includes('pickle') || n.includes('oorukai') || n.includes('thokku')) {
+    return 'https://vedanmart.com/images/Food/PIRANDAI%20PICKLE.jpeg';
   }
 
   // 4. Herbal & Leaf Powders
@@ -501,8 +501,8 @@ export function getProductFallbackImage(name, id) {
   if (n.includes('thetran kottai') || n.includes('thetrankottai')) {
     return 'https://vedanmart.com/images/Health%20&%20Wellness/Thanveevittan%20kizhangu%20powder.jpeg';
   }
-  if (n.includes('poonthikkai') || n.includes('poondhikai')) {
-    return 'https://vedanmart.com/images/Health%20&%20Wellness/Poonthikaai.jpg';
+  if (n.includes('poonthikkai') || n.includes('poondhikai') || n.includes('poonthikaai')) {
+    return 'https://vedanmart.com/images/Health%20%26%20Wellness/Poonthikaai.jpg';
   }
   if (n.includes('alampattai') || n.includes('aalam pattai')) {
     return 'https://vedanmart.com/images/Health%20&%20Wellness/aalam%20pattai%20powder.jpeg';
@@ -511,7 +511,7 @@ export function getProductFallbackImage(name, id) {
     return 'https://vedanmart.com/images/Health%20&%20Wellness/Athimathuram%20Powder%20(PO).jpg';
   }
   if (n.includes('omam powder') || n.includes('omam')) {
-    return 'https://vedanmart.com/images/Health%20&%20Wellness/Omam%20Powder.jpg';
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Trikaduku%20Suranam.jpg';
   }
   if (n.includes('murungai leaf') || n.includes('murungaikeerai') || n.includes('murungai keerai')) {
     return 'https://vedanmart.com/images/Food/Drumstick%20Leaf%20Rice%20Powder%20Jar.jpg';
@@ -556,7 +556,7 @@ export function getProductFallbackImage(name, id) {
     return 'https://vedanmart.com/images/hair/VETTIVER%20SHAMPOO.jpg';
   }
   if (n.includes('thuthuvalai') || n.includes('thoothuvalai')) {
-    return 'https://vedanmart.com/images/Health%20&%20Wellness/THUTHUVALAI%20POWDER.jpg';
+    return 'https://vedanmart.com/images/Health%20%26%20Wellness/THUTHUVALAI%20POWDER.jpg';
   }
   if (n.includes('aali vithai') || n.includes('flaxseed')) {
     return 'https://vedanmart.com/images/Health%20&%20Wellness/Jamun%20Seed%20Powder%20(JAR).jpg';
@@ -601,8 +601,8 @@ export function getProductFallbackImage(name, id) {
   if (n.includes('mysore pak')) {
     return 'https://vedanmart.com/images/Health%20&%20Wellness/beetroot%20powder.jpeg';
   }
-  if (n.includes('amla honey')) {
-    return 'https://vedanmart.com/images/Food/Wild%20Honey.jpg';
+  if (n.includes('amla honey') || n.includes('honey') || n.includes('thean')) {
+    return 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
   }
   if (n.includes('panang karuppatti') || n.includes('karuppatti') || n.includes('nattu sakkarai')) {
     return 'https://vedanmart.com/images/Food/Adhiyaman%20Country%20Jaggery.png';
@@ -625,7 +625,22 @@ export function getProductFallbackImage(name, id) {
     return 'https://vedanmart.com/images/Poojas/Herbal%20Incense%20Powder%20(PO).jpg';
   }
 
-  return null;
+  // 8. Category-aware default fallbacks (so NO product ever defaults to logo.png or null)
+  if (n.includes('food') || n.includes('sweet') || n.includes('snack') || n.includes('millet') || n.includes('rice') || n.includes('mix')) {
+    return 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
+  }
+  if (n.includes('hair') || n.includes('shampoo') || n.includes('oil')) {
+    return 'https://vedanmart.com/images/hair/Hibiscus%20Oil.jpg';
+  }
+  if (n.includes('soap') || n.includes('face') || n.includes('skin') || n.includes('wash') || n.includes('bath')) {
+    return 'https://vedanmart.com/images/Body/ROSE%20SOAP.png';
+  }
+  if (n.includes('tea') || n.includes('coffee') || n.includes('kashayam') || n.includes('kudineer') || n.includes('beverage')) {
+    return 'https://vedanmart.com/images/Beverages/hibiscus%20tea.jpeg';
+  }
+
+  // Universal authentic herbal fallback (verified high-res jar)
+  return 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
 }
 
 /**

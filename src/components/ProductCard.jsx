@@ -49,14 +49,13 @@ export const ProductCard = memo(({ product, index = 0 }) => {
       e.target.src = fallbackImg;
       return;
     }
-    if (e.target.src !== window.location.origin + '/logo.png') {
-      e.target.src = '/logo.png';
-      e.target.style.objectFit = 'contain';
-      e.target.style.padding = '1rem';
+    const safeProductImg = 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
+    if (e.target.src !== safeProductImg) {
+      e.target.src = safeProductImg;
     }
   };
 
-  let displayImage = '/logo.png';
+  let displayImage = fallbackImg || 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
   if (product.id === 1255 || (product.name && product.name.toLowerCase().includes('chemparuthi herbal shampoo'))) {
     displayImage = '/images/chemparuthi_shampoo_single.png';
   } else if (product.image && typeof product.image === 'string' && !product.image.includes('Vaishnavi.jpeg') && !product.image.endsWith('/logo.png')) {
@@ -65,9 +64,9 @@ export const ProductCard = memo(({ product, index = 0 }) => {
     } else {
       displayImage = product.image;
     }
-    displayImage = resolveMediaUrl(displayImage) || fallbackImg || '/logo.png';
+    displayImage = resolveMediaUrl(displayImage) || fallbackImg || 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
   } else {
-    displayImage = fallbackImg || '/logo.png';
+    displayImage = fallbackImg || 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
   }
 
   // 1. Detect tight camera close-up shots (Keelanelli 4.jpeg, Chemparuthi Poo, Thaneervittan, etc.)
