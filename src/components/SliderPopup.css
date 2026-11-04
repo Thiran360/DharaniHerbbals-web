@@ -22,8 +22,9 @@
   transition: bottom 0.25s ease, transform 0.25s ease;
 }
 
-.dharani-mascot-card-wrapper.on-product-page {
-  bottom: 24px;
+.dharani-mascot-card-wrapper.on-product-page,
+.dharani-mascot-minimized-trigger.on-product-page {
+  bottom: calc(88px + env(safe-area-inset-bottom, 0px));
 }
 
 .dharani-mascot-card-wrapper:hover .dharani-mascot-speech-bubble {
@@ -709,7 +710,7 @@
   }
 
   .dharani-mascot-card-wrapper.on-product-page {
-    bottom: 16px;
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .dharani-mascot-avatar-box {
@@ -751,6 +752,10 @@
     bottom: 16px;
     width: 50px;
     height: 50px;
+  }
+
+  .dharani-mascot-minimized-trigger.on-product-page {
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .minimized-avatar-img {

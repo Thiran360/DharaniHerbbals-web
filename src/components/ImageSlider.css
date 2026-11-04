@@ -540,12 +540,12 @@
 
 @media (max-width: 600px) {
   .slider-container {
-    min-height: 750px;
-    padding: 40px 0;
+    min-height: 620px;
+    padding: 20px 0;
   }
   
   .promo-slide {
-    padding-top: 140px; /* Add space below search bar on mobile */
+    padding-top: 135px; /* Add space below search bar on mobile */
   }
 
   .promo-layout {
@@ -608,8 +608,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 220px;
-    margin: 70px 0 20px;
+    height: 190px;
+    margin: 16px 0 12px;
     width: 100%;
   }
 

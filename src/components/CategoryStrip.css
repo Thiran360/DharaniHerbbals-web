@@ -190,6 +190,10 @@
     padding: 10px;
     gap: 20px;
   }
+  .category-strip-scroll::before,
+  .category-strip-scroll::after {
+    display: none;
+  }
   .category-blob-wrapper {
     width: 90px;
     height: 90px;
@@ -203,5 +207,25 @@
     padding: 6px 16px;
     font-size: 0.8rem;
     border-radius: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-strip-container {
+    padding: 16px 8px 12px 8px;
+    margin-top: 10px;
+  }
+  .category-strip-scroll {
+    gap: 14px;
+    padding: 6px 2px;
+  }
+  .category-blob-wrapper {
+    width: 76px;
+    height: 76px;
+  }
+  .category-all-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 0.7rem;
   }
 }

@@ -7,6 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { resolveMediaUrl } from '../services/api';
 import { formatProductPackSize, formatProductDisplayName, formatCurrency, getProductFallbackImage } from '../utils/productFormatters';
 import { getVerifiedReviewData } from '../utils/productReviews';
+import '../pages/Shop.css';
 
 export const ProductCard = memo(({ product, index = 0 }) => {
   const { addToCart } = useCart();
