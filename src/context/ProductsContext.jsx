@@ -40,10 +40,10 @@ export function ProductsProvider({ children }) {
           ['staff', 'store', 'store_member'].includes(role2) ||
           ['staff', 'store', 'store_member'].includes(type1) ||
           ['staff', 'store', 'store_member'].includes(type2);
-        if (isStoreMember) return 'dharani_products_cache_store';
+        if (isStoreMember) return 'dharani_products_cache_store_v3';
       }
     } catch (e) { }
-    return 'dharani_products_cache_customer';
+    return 'dharani_products_cache_customer_v3';
   };
 
   const transformProduct = (p) => {
