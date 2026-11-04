@@ -40,10 +40,10 @@ export function ProductsProvider({ children }) {
           ['staff', 'store', 'store_member'].includes(role2) ||
           ['staff', 'store', 'store_member'].includes(type1) ||
           ['staff', 'store', 'store_member'].includes(type2);
-        if (isStoreMember) return 'dharani_products_cache_store_v4';
+        if (isStoreMember) return 'dharani_products_cache_store_v5';
       }
     } catch (e) { }
-    return 'dharani_products_cache_customer_v4';
+    return 'dharani_products_cache_customer_v5';
   };
 
   const transformProduct = (p) => {
@@ -64,7 +64,7 @@ export function ProductsProvider({ children }) {
     const fallbackImg = getProductFallbackImage(p.raw_name || p.name, p.id) || getProductFallbackImage(displayName, p.id);
     let resolvedImage = p.image;
     if (p.id === 1255 || (displayName && displayName.toLowerCase().includes('chemparuthi herbal shampoo'))) {
-      resolvedImage = '/images/chemparuthi_shampoo_single.png';
+      resolvedImage = '/images/chemparuthi_herbal_shampoo.jpg';
     } else if (!resolvedImage || (typeof resolvedImage === 'string' && (resolvedImage.includes('Vaishnavi.jpeg') || resolvedImage.endsWith('/logo.png')))) {
       resolvedImage = fallbackImg || resolvedImage;
     }
@@ -322,7 +322,7 @@ export function ProductsProvider({ children }) {
             image: (() => {
               const fallbackImg = getProductFallbackImage(p.name, p.id) || getProductFallbackImage(displayName, p.id);
               if (p.id === 1255 || (displayName && displayName.toLowerCase().includes('chemparuthi herbal shampoo'))) {
-                return '/images/chemparuthi_shampoo_single.png';
+                return '/images/chemparuthi_herbal_shampoo.jpg';
               }
               if (extraImagesMap[String(p.id)]) {
                 return extraImagesMap[String(p.id)];

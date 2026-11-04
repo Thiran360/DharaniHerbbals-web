@@ -649,7 +649,7 @@ export default function ProductDetails() {
 
   // 1. Primary product image (the EXACT image shown on the card outside) MUST ALWAYS be first!
   if (isChemparuthiShampoo) {
-    mediaItems.push({ type: 'image', src: '/images/chemparuthi_shampoo_single.png', thumb: '/images/chemparuthi_shampoo_single.png' });
+    mediaItems.push({ type: 'image', src: '/images/chemparuthi_herbal_shampoo.jpg', thumb: '/images/chemparuthi_herbal_shampoo.jpg' });
   } else if (product.image && !product.image.includes('Vaishnavi.jpeg') && !product.image.endsWith('/logo.png')) {
     const rawImages = typeof product.image === 'string' && product.image.includes(',')
       ? product.image.split(',').map(s => s.trim()).filter(Boolean)

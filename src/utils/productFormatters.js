@@ -415,7 +415,7 @@ export function getProductFallbackImage(name, id) {
 
   // 1. Shampoos & Haircare
   if (numId === 1255 || n.includes('chemparuthi herbal shampoo') || n.includes('chemparuthi shampoo')) {
-    return '/images/chemparuthi_shampoo_single.png';
+    return '/images/chemparuthi_herbal_shampoo.jpg';
   }
   if (n.includes('shikakai shampoo') || n.includes('shikakkai shampoo')) {
     return 'https://vedanmart.com/images/hair/SHIKAKAI%20SHAMPOO.jpg';
