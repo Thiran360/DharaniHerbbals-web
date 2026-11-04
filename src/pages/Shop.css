@@ -1465,66 +1465,81 @@
     flex-shrink: 0;
   }
 
-.uc-img {
+.uc-img,
+.uc-img.uc-img-standard-fit {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 2px 4px;
+    padding: 8px 10px !important;
     box-sizing: border-box;
     object-fit: contain !important;
     object-position: center;
-    transform: scale(1.15);
+    transform: scale(1.02) !important;
     transform-origin: center center;
     transition: transform 0.25s ease, filter 0.25s ease;
   }
 
-.uc-card:hover .uc-img {
-  transform: scale(1.20);
+.uc-card:hover .uc-img,
+.uc-card:hover .uc-img.uc-img-standard-fit {
+  transform: scale(1.06) !important;
 }
 
 /* Tight camera closeups (Keelanelli 4.jpeg, Chemparuthi Poo, etc.): 100% full, zero cropping */
 .uc-img.uc-img-tight-fit {
-  transform: scale(1.02) !important;
+  transform: scale(1.0) !important;
   object-fit: contain !important;
-  padding: 6px 8px !important;
+  padding: 4px 6px !important;
 }
 
 .uc-card:hover .uc-img.uc-img-tight-fit {
-  transform: scale(1.08) !important;
+  transform: scale(1.04) !important;
 }
 
-/* Padded catalog photos (Vallarai, Sirukurinjan, Pirandai, etc.) */
-/* Boosted scale fills the arch frame clearly with full readable detail, never tiny, zero cut off */
+/* Padded catalog photos (Vallarai, Sirukurinjan, Pirandai flat-packet powders with 35% white margins) */
+/* Scale 1.48 fills the arch frame clearly with full readable detail, never tiny, zero cut off */
 .uc-img.uc-img-boost-fit {
-  transform: scale(2.05) !important;
+  transform: scale(1.48) !important;
   object-fit: contain !important;
   padding: 0 !important;
 }
 
 .uc-card:hover .uc-img.uc-img-boost-fit {
-  transform: scale(2.12) !important;
+  transform: scale(1.53) !important;
+}
+
+/* Wide landscape studio photos (herbal/1, 2, 3, 6, 7, 9, 10, 11 - Veliparuthi, Mudakathan, Tribala, etc.) */
+/* Cover + center crops the wide empty studio space on sides, scaling product up to fill height */
+.uc-img.uc-img-landscape-fit {
+  object-fit: cover !important;
+  object-position: center center !important;
+  transform: scale(1.08) !important;
+  padding: 0 !important;
+}
+
+.uc-card:hover .uc-img.uc-img-landscape-fit {
+  transform: scale(1.14) !important;
 }
 
 .uc-img.uc-img-zoom-fit {
-  transform: scale(1.02) !important;
+  transform: scale(1.0) !important;
   object-fit: contain !important;
   padding: 6px 8px !important;
 }
 
 .uc-card:hover .uc-img.uc-img-zoom-fit {
-  transform: scale(1.08) !important;
+  transform: scale(1.04) !important;
 }
 
 .shop-root .uc-img.uc-img-zoom-fit {
-  transform: scale(1.02) !important;
+  transform: scale(1.0) !important;
   object-fit: contain !important;
   padding: 6px 8px !important;
 }
 
 .shop-root .uc-card:hover .uc-img.uc-img-zoom-fit {
-  transform: scale(1.08) !important;
+  transform: scale(1.04) !important;
 }
 
 .uc-wishlist-btn {
@@ -1732,13 +1747,16 @@
 
   .shop-root .uc-img,
   .shop-grid .uc-img,
-  .uc-img {
+  .uc-img,
+  .shop-root .uc-img.uc-img-standard-fit,
+  .shop-grid .uc-img.uc-img-standard-fit,
+  .uc-img.uc-img-standard-fit {
     object-fit: contain !important;
     object-position: center;
-    padding: 2px 4px;
+    padding: 6px 8px !important;
     width: 100%;
     height: 100%;
-    transform: scale(1.10);
+    transform: scale(1.0) !important;
   }
 
   .shop-root .uc-img.uc-img-tight-fit,
@@ -1746,15 +1764,24 @@
   .uc-img.uc-img-tight-fit {
     transform: scale(1.0) !important;
     object-fit: contain !important;
-    padding: 4px 6px;
+    padding: 4px 6px !important;
   }
 
   .shop-root .uc-img.uc-img-boost-fit,
   .shop-grid .uc-img.uc-img-boost-fit,
   .uc-img.uc-img-boost-fit {
-    transform: scale(1.95) !important;
+    transform: scale(1.42) !important;
     object-fit: contain !important;
-    padding: 0;
+    padding: 0 !important;
+  }
+
+  .shop-root .uc-img.uc-img-landscape-fit,
+  .shop-grid .uc-img.uc-img-landscape-fit,
+  .uc-img.uc-img-landscape-fit {
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: scale(1.05) !important;
+    padding: 0 !important;
   }
 
   .shop-root .uc-img.uc-img-zoom-fit,
@@ -1762,7 +1789,7 @@
   .uc-img.uc-img-zoom-fit {
     transform: scale(1.0) !important;
     object-fit: contain !important;
-    padding: 4px 6px;
+    padding: 4px 6px !important;
   }
 
   .shop-root .uc-info-section,
@@ -2117,13 +2144,16 @@
 
   .shop-root .uc-img,
   .shop-grid .uc-img,
-  .uc-img {
-    padding: 2px 4px;
+  .uc-img,
+  .shop-root .uc-img.uc-img-standard-fit,
+  .shop-grid .uc-img.uc-img-standard-fit,
+  .uc-img.uc-img-standard-fit {
+    padding: 6px 8px !important;
     object-fit: contain !important;
     object-position: center;
     width: 100%;
     height: 100%;
-    transform: scale(1.10);
+    transform: scale(1.0) !important;
   }
 
   .shop-root .uc-img.uc-img-tight-fit,
@@ -2131,15 +2161,24 @@
   .uc-img.uc-img-tight-fit {
     transform: scale(1.0) !important;
     object-fit: contain !important;
-    padding: 4px 6px;
+    padding: 4px 6px !important;
   }
 
   .shop-root .uc-img.uc-img-boost-fit,
   .shop-grid .uc-img.uc-img-boost-fit,
   .uc-img.uc-img-boost-fit {
-    transform: scale(1.95) !important;
+    transform: scale(1.42) !important;
     object-fit: contain !important;
-    padding: 0;
+    padding: 0 !important;
+  }
+
+  .shop-root .uc-img.uc-img-landscape-fit,
+  .shop-grid .uc-img.uc-img-landscape-fit,
+  .uc-img.uc-img-landscape-fit {
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: scale(1.05) !important;
+    padding: 0 !important;
   }
 
   .shop-root .uc-img.uc-img-zoom-fit,
@@ -2147,7 +2186,7 @@
   .uc-img.uc-img-zoom-fit {
     transform: scale(1.0) !important;
     object-fit: contain !important;
-    padding: 4px 6px;
+    padding: 4px 6px !important;
   }
 
   .shop-root .uc-info-section,

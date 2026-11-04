@@ -69,92 +69,108 @@ export const ProductCard = memo(({ product, index = 0 }) => {
     displayImage = fallbackImg || 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
   }
 
-  // 1. Detect tight camera close-up shots (Keelanelli 4.jpeg, Chemparuthi Poo, Thaneervittan, etc.)
-  // These fill the entire photo frame with 0% margin, so they must stay unscaled to prevent clipping.
-  // NOTE: /herbal/ path is NOT tight — those are small-packet padded images (Veliparuthi, Mudakkatran, etc.)
-  const isTightImage = Boolean(
-    displayImage && (
-      displayImage.includes('4.jpeg') ||
-      displayImage.includes('HIBISCUS%20FLOWER%20POWDER') ||
-      displayImage.includes('Thanveevittan') ||
-      (product.name && (
-        product.name.toLowerCase().includes('keelanelli') ||
-        product.name.toLowerCase().includes('chemparuthi poo')
-      ))
-    )
-  );
+  // Dynamic image fitting classifier: ensures jars/bottles are never cropped,
+  // wide landscape photos fill the frame, and padded flat pouches are nicely zoomed.
+  const imageFitClass = (() => {
+    const img = String(displayImage || '').toLowerCase();
+    const rawName = String(product.raw_name || product.name || '').toLowerCase();
+    const displayName = String(product.name || '').toLowerCase();
+    const fullName = (rawName + ' ' + displayName).trim();
 
-  // 2. Detect products with wide white margins baked into their catalog photos (Vallarai, Sirukurinjan, etc.)
-  // These have 35-45% empty white space around the packet, so a boosted scale is needed so they aren't tiny.
-  const fullNameStr = (String(product.raw_name || '') + ' ' + String(product.name || '')).toLowerCase();
-  const isPaddedImage = Boolean(
-    !isTightImage && (
-      fullNameStr.includes('vallarai') ||
-      fullNameStr.includes('sirukurinjan') ||
-      fullNameStr.includes('pirandai') ||
-      fullNameStr.includes('neem powder') ||
-      fullNameStr.includes('nilaavarai') ||
-      fullNameStr.includes('thottal') ||
-      fullNameStr.includes('marudhontri') ||
-      fullNameStr.includes('karpuravalli') ||
-      fullNameStr.includes('thantrikkai') ||
-      fullNameStr.includes('vilva') ||
-      fullNameStr.includes('manathakkali') ||
-      fullNameStr.includes('sirunerunjil') ||
-      fullNameStr.includes('trikaduku') ||
-      fullNameStr.includes('koraikilangu') ||
-      fullNameStr.includes('lavangapattai') ||
-      fullNameStr.includes('fenugreek') ||
-      fullNameStr.includes('seenthilkodi') ||
-      fullNameStr.includes('kandakathiri') ||
-      fullNameStr.includes('thaamarai') ||
-      fullNameStr.includes('musumusukkai') ||
-      fullNameStr.includes('poonthikaai') ||
-      fullNameStr.includes('thipili') ||
-      fullNameStr.includes('veliparuthi') ||
-      fullNameStr.includes('mudakkatran') ||
-      fullNameStr.includes('mudakkathan') ||
-      fullNameStr.includes('mixture') ||
-      fullNameStr.includes('murukku') ||
-      fullNameStr.includes('vadhasura') ||
-      fullNameStr.includes('avarampoo') ||
-      fullNameStr.includes('sundaikkai') ||
-      fullNameStr.includes('veppilai') ||
-      fullNameStr.includes('karuveppilai') ||
-      fullNameStr.includes('curry leaf') ||
-      (displayImage && (
-        displayImage.includes('Health%20%26%20Wellness/') ||
-        displayImage.includes('Health & Wellness/') ||
-        displayImage.includes('/herbal/') ||
-        displayImage.toLowerCase().includes('vallarai') ||
-        displayImage.toLowerCase().includes('sirukurinjan') ||
-        displayImage.toLowerCase().includes('pirandai') ||
-        displayImage.includes('Neem%20powder') ||
-        displayImage.includes('Nilaavarai') ||
-        displayImage.includes('Thottal') ||
-        displayImage.includes('Marudhontri') ||
-        displayImage.includes('Karpuravalli') ||
-        displayImage.includes('THANTRIKKAI') ||
-        displayImage.includes('Vilva') ||
-        displayImage.includes('Manathakkali') ||
-        displayImage.includes('Sirunerunjil') ||
-        displayImage.includes('Trikaduku') ||
-        displayImage.includes('Koraikilangu') ||
-        displayImage.includes('Lavangapattai') ||
-        displayImage.includes('Fenugreek') ||
-        displayImage.includes('Seenthilkodi') ||
-        displayImage.includes('kandakathiri') ||
-        displayImage.includes('Thaamarai') ||
-        displayImage.includes('Musumusukkai') ||
-        displayImage.includes('Poonthikaai') ||
-        displayImage.includes('THIPILI')
-      ))
-    )
-  );
+    // 1. Wide Landscape Studio Photos (e.g. herbal/7.jpeg Veliparuthi, herbal/1 kadukkai, herbal/3 mudakathan, etc.)
+    // These horizontal landscape photos have a small pouch in the center with wide empty studio margins.
+    // By using 'uc-img-landscape-fit' (object-fit: cover), the empty horizontal space is cropped and the product fills the frame vertically.
+    const isLandscapeStudio = 
+      (img.includes('/herbal/') && !img.includes('4.jpeg')) ||
+      img.includes('108%20homa') ||
+      img.includes('mann%20kattiya%20toor%20dal');
 
-  const imageFitClass = isTightImage
-    ? 'uc-img-tight-fit'
-    : (isPaddedImage ? 'uc-img-boost-fit' : 'uc-img-standard-fit');
+    if (isLandscapeStudio) {
+      return 'uc-img-landscape-fit';
+    }
+
+    // 2. 3D Objects with full-frame photos (Jars, Bottles, Oils, Soaps, Teas, Sweets, Halwa, Burfi, etc.)
+    // These photos already show the jar/bottle clearly filling the frame.
+    // They MUST use 'uc-img-standard-fit' (scale 1.02 with padding) so lids, caps, and labels are NEVER clipped!
+    const isJarOr3DObject = 
+      fullName.includes('lehyam') ||
+      fullName.includes(' jar') ||
+      fullName.includes('(jar)') ||
+      fullName.includes('jar(') ||
+      fullName.includes('pickle') ||
+      fullName.includes('thokku') ||
+      fullName.includes('gravy') ||
+      fullName.includes('honey') ||
+      fullName.includes('thean') ||
+      fullName.includes('oil') ||
+      fullName.includes('shampoo') ||
+      fullName.includes('soap') ||
+      fullName.includes('tea') ||
+      fullName.includes('coffee') ||
+      fullName.includes('kudineer') ||
+      fullName.includes('kashayam') ||
+      fullName.includes('malt') ||
+      fullName.includes('burfi') ||
+      fullName.includes('halwa') ||
+      fullName.includes('mittai') ||
+      fullName.includes('varkey') ||
+      fullName.includes('gel') ||
+      fullName.includes('facepack') ||
+      fullName.includes('face pack') ||
+      fullName.includes('karuppatti') ||
+      fullName.includes('jaggery') ||
+      fullName.includes('sugar') ||
+      fullName.includes('sakkarai') ||
+      img.includes('/skin/') ||
+      img.includes('/hair/') ||
+      img.includes('/poojas/') ||
+      img.includes('lehyam') ||
+      img.includes('pickle') ||
+      img.includes('oil') ||
+      img.includes('shampoo') ||
+      img.includes('soap') ||
+      img.includes('jar') ||
+      img.includes('burfi') ||
+      img.includes('halwa') ||
+      img.includes('honey') ||
+      img.includes('chemparuthi_shampoo');
+
+    if (isJarOr3DObject) {
+      return 'uc-img-standard-fit';
+    }
+
+    // 3. Tight edge-to-edge camera shots (Keelanelli 4.jpeg, Chemparuthi Poo, Thaneervittan, etc.)
+    // Packets touch the outer photo edges -> scale 1.0, zero cropping
+    const isTightPacket = 
+      img.includes('4.jpeg') ||
+      img.includes('hibiscus%20flower%20powder') ||
+      img.includes('thanveevittan') ||
+      fullName.includes('keelanelli') ||
+      fullName.includes('chemparuthi poo');
+
+    if (isTightPacket) {
+      return 'uc-img-tight-fit';
+    }
+
+    // 4. Padded flat-packet powders (Vallarai Powder, Sirukurinjan Powder, Neem Powder, etc.)
+    // These flat sachets were photographed with 35-40% empty white margins.
+    // 'uc-img-boost-fit' scales by 1.48 to zoom past the empty white border so packet is large & readable
+    const isPaddedPacket = 
+      fullName.includes('powder') ||
+      fullName.includes('podi') ||
+      fullName.includes('churnam') ||
+      fullName.includes('suranam') ||
+      fullName.includes('maavu') ||
+      fullName.includes('flour') ||
+      img.includes('health%20&%20wellness') ||
+      img.includes('health%20%26%20wellness');
+
+    if (isPaddedPacket) {
+      return 'uc-img-boost-fit';
+    }
+
+    return 'uc-img-standard-fit';
+  })();
 
   const isAboveFold = index < 6;
 
