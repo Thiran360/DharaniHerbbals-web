@@ -945,31 +945,57 @@ export function CartProvider({ children }) {
   }, [cartTotal, deliveryState, stateShippingRates, shippingCost]);
 
 
+  const contextValue = useMemo(() => ({
+    cartItems: enrichedCartItems,
+    isCartOpen,
+    addToCart,
+    addBundleToCart,
+    removeFromCart,
+    updateQuantity,
+    toggleCart,
+    closeCart,
+    cartCount,
+    cartTotal,
+    shippingCost: effectiveShippingCost,
+    deliveryState,
+    setDeliveryState,
+    stateShippingRates,
+    taxAmount: taxAmount || localTaxes.taxTotal,
+    cgst: cgst || localTaxes.cgst,
+    sgst: sgst || localTaxes.sgst,
+    igst: igst || localTaxes.igst,
+    taxTotal: taxTotal || localTaxes.taxTotal,
+    grandTotal: grandTotal,
+    refreshCart,
+    triggerCartCrackers
+  }), [
+    enrichedCartItems,
+    isCartOpen,
+    addToCart,
+    addBundleToCart,
+    removeFromCart,
+    updateQuantity,
+    toggleCart,
+    closeCart,
+    cartCount,
+    cartTotal,
+    effectiveShippingCost,
+    deliveryState,
+    setDeliveryState,
+    stateShippingRates,
+    taxAmount,
+    localTaxes,
+    cgst,
+    sgst,
+    igst,
+    taxTotal,
+    grandTotal,
+    refreshCart,
+    triggerCartCrackers
+  ]);
+
   return (
-    <CartContext.Provider value={{
-      cartItems: enrichedCartItems,
-      isCartOpen,
-      addToCart,
-      addBundleToCart,
-      removeFromCart,
-      updateQuantity,
-      toggleCart,
-      closeCart,
-      cartCount,
-      cartTotal,
-      shippingCost: effectiveShippingCost,
-      deliveryState,
-      setDeliveryState,
-      stateShippingRates,
-      taxAmount: taxAmount || localTaxes.taxTotal,
-      cgst: cgst || localTaxes.cgst,
-      sgst: sgst || localTaxes.sgst,
-      igst: igst || localTaxes.igst,
-      taxTotal: taxTotal || localTaxes.taxTotal,
-      grandTotal: grandTotal,
-      refreshCart,
-      triggerCartCrackers
-    }}>
+    <CartContext.Provider value={contextValue}>
       {children}
     </CartContext.Provider>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Search, User, ShoppingBag, X, Home, Info, Phone, Heart, Clock, Package, MapPin, RefreshCw, LogOut, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -33,17 +33,26 @@ export default function Navbar() {
   const wishlistCount = wishlist.length;
   const location = useLocation();
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  // Max 3 for keyboard-navigable suggestions
-  const visibleProducts = filteredProducts.slice(0, 3);
+  const visibleProducts = useMemo(() => {
+    if (!searchQuery || !searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase().trim();
+    const matches = [];
+    for (let i = 0; i < products.length; i++) {
+      const p = products[i];
+      if (p.name && p.name.toLowerCase().includes(query)) {
+        matches.push(p);
+        if (matches.length >= 3) break;
+      }
+    }
+    return matches;
+  }, [products, searchQuery]);
 
   const rafIdRef = useRef(null);
   const handleScroll = useCallback(() => {
     if (rafIdRef.current) return;
     rafIdRef.current = requestAnimationFrame(() => {
-      setScrolled(window.scrollY > 20);
+      const isScrolledPast = window.scrollY > 20;
+      setScrolled(prev => (prev !== isScrolledPast ? isScrolledPast : prev));
       rafIdRef.current = null;
     });
   }, []);

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { API_BASE_URL, NGROK_DOMAIN, resolveMediaUrl } from '../services/api';
 import { formatProductPackSize, formatVariationLabel, formatProductDisplayName, formatCurrency, consolidateProducts, getProductFallbackImage } from '../utils/productFormatters';
 import { getProductVariations, getDefaultVariation } from '../data/productVariationsData';
@@ -114,7 +114,7 @@ export function ProductsProvider({ children }) {
     }
   });
 
-  const refreshProducts = () => {
+  const refreshProducts = useCallback(() => {
     if (products.length === 0) {
       setLoading(true);
     }
@@ -386,7 +386,7 @@ export function ProductsProvider({ children }) {
       .finally(() => {
         setLoading(false);
       });
-  };
+  }, []);
 
   useEffect(() => {
     refreshProducts();
@@ -398,28 +398,34 @@ export function ProductsProvider({ children }) {
     return () => window.removeEventListener('online', handleOnline);
   }, []);
 
-  const getProductById = useMemo(() => {
-    return (id) => {
-      if (!id || !products || products.length === 0) return null;
-      const numId = parseInt(id);
-      const strId = String(id);
-      // 1. Direct match on primary ID
-      const direct = products.find(p => p.id === numId || String(p.id) === strId);
-      if (direct) return direct;
-      // 2. Check if id is a variation inside a consolidated product
-      const parent = products.find(p => Array.isArray(p.variations) && p.variations.some(v => String(v.id || v.variation_id) === strId));
-      if (parent) {
-        const matchedVar = parent.variations.find(v => String(v.id || v.variation_id) === strId);
-        return {
-          ...parent,
-          selected_variation: matchedVar,
-          default_variation: matchedVar,
-          default_variation_id: matchedVar.id
-        };
+  const productMap = useMemo(() => {
+    const map = new Map();
+    if (!products || !Array.isArray(products)) return map;
+    for (let i = 0; i < products.length; i++) {
+      const p = products[i];
+      map.set(String(p.id), p);
+      if (Array.isArray(p.variations)) {
+        for (let j = 0; j < p.variations.length; j++) {
+          const v = p.variations[j];
+          const varId = String(v.id || v.variation_id);
+          if (!map.has(varId)) {
+            map.set(varId, {
+              ...p,
+              selected_variation: v,
+              default_variation: v,
+              default_variation_id: v.id
+            });
+          }
+        }
       }
-      return null;
-    };
+    }
+    return map;
   }, [products]);
+
+  const getProductById = useCallback((id) => {
+    if (!id) return null;
+    return productMap.get(String(id)) || null;
+  }, [productMap]);
 
   const value = useMemo(() => ({
     products,
