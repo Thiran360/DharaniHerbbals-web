@@ -199,8 +199,8 @@ export default function FloatingSocials() {
                     src="/favicon.png"
                     alt="Dharani Herbbals"
                     className="launcher-d-logo"
-                    width="28"
-                    height="28"
+                    width="34"
+                    height="34"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = '/videos/logo_transparent.webp';

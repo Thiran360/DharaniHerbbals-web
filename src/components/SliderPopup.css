@@ -55,31 +55,32 @@
 /* Main Container: 3D Announcing Mascot on Left, Speech Bubble Card on Right */
 .dharani-mascot-container {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   position: relative;
 }
 
 /* Mascot Avatar Box: Houses 3D Mascot Girl with Megaphone */
 .dharani-mascot-avatar-box {
-  width: 128px;
+  width: 126px;
   flex-shrink: 0;
   position: relative;
   margin-right: -24px;
+  margin-bottom: 0px;
   z-index: 4;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 }
 
 .dharani-mascot-img {
   width: 100%;
   height: auto;
-  max-height: 155px;
+  max-height: 145px;
   object-fit: contain;
   display: block;
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 4px 14px rgba(22, 61, 38, 0.22));
+  filter: drop-shadow(0 4px 12px rgba(22, 61, 38, 0.22));
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.25, 1);
 }
 
@@ -91,7 +92,7 @@
   box-shadow: 
     0 12px 32px rgba(23, 61, 43, 0.16),
     0 0 0 1.5px rgba(255, 255, 255, 0.95) inset;
-  padding: 13px 18px 11px 22px;
+  padding: 13px 18px 11px 26px;
   width: 236px;
   position: relative;
   z-index: 3;
