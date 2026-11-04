@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useLanguage } from '../context/LanguageContext';
 import { resolveMediaUrl } from '../services/api';
-import { formatProductPackSize, formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
+import { formatProductPackSize, formatProductDisplayName, formatCurrency, getProductFallbackImage } from '../utils/productFormatters';
 import { getVerifiedReviewData } from '../utils/productReviews';
 
 export const ProductCard = memo(({ product, index = 0 }) => {
@@ -42,7 +42,13 @@ export const ProductCard = memo(({ product, index = 0 }) => {
     }
   };
 
+  const fallbackImg = getProductFallbackImage(product.name, product.id);
+
   const handleImageError = (e) => {
+    if (fallbackImg && e.target.src !== fallbackImg) {
+      e.target.src = fallbackImg;
+      return;
+    }
     if (e.target.src !== window.location.origin + '/logo.png') {
       e.target.src = '/logo.png';
       e.target.style.objectFit = 'contain';
@@ -53,13 +59,15 @@ export const ProductCard = memo(({ product, index = 0 }) => {
   let displayImage = '/logo.png';
   if (product.id === 1255 || (product.name && product.name.toLowerCase().includes('chemparuthi herbal shampoo'))) {
     displayImage = '/images/chemparuthi_shampoo_single.png';
-  } else if (product.image) {
-    if (typeof product.image === 'string' && product.image.includes(',')) {
+  } else if (product.image && typeof product.image === 'string' && !product.image.includes('Vaishnavi.jpeg') && !product.image.endsWith('/logo.png')) {
+    if (product.image.includes(',')) {
       displayImage = product.image.split(',')[0].trim();
     } else {
       displayImage = product.image;
     }
-    displayImage = resolveMediaUrl(displayImage) || '/logo.png';
+    displayImage = resolveMediaUrl(displayImage) || fallbackImg || '/logo.png';
+  } else {
+    displayImage = fallbackImg || '/logo.png';
   }
 
   // 1. Detect tight camera close-up shots (Keelanelli 4.jpeg, Chemparuthi Poo, Thaneervittan, etc.)
@@ -163,7 +171,10 @@ export const ProductCard = memo(({ product, index = 0 }) => {
           <div className="uc-price-block">
             <span className="uc-price">{formatCurrency(product.price)}</span>
             {(() => {
-              const packSize = product.pack_size || formatProductPackSize(product);
+              let packSize = product.pack_size || formatProductPackSize(product);
+              if (packSize && /nos|pcs|ea|pkt/i.test(packSize)) {
+                packSize = formatProductPackSize({ ...product, unit: '' });
+              }
               return packSize ? <span className="uc-pack-size">({packSize})</span> : null;
             })()}
             {product.mrp && parseFloat(product.mrp) > parseFloat(String(product.price).replace(/[^0-9.]/g, '')) && <span className="uc-original-price">{formatCurrency(product.mrp)}</span>}

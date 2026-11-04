@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { API_BASE_URL, NGROK_DOMAIN, resolveMediaUrl } from '../services/api';
-import { formatProductPackSize, formatVariationLabel, formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
+import { formatProductPackSize, formatVariationLabel, formatProductDisplayName, formatCurrency, consolidateProducts, getProductFallbackImage } from '../utils/productFormatters';
 import { getProductVariations, getDefaultVariation } from '../data/productVariationsData';
 import { getProductDescription } from '../data/productCatalogData';
 import liveProductsBackup from '../data/liveProductsCache.json';
@@ -60,12 +60,22 @@ export function ProductsProvider({ children }) {
       : (formatProductPackSize(p) || p.pack_size);
     const displayName = formatProductDisplayName(p.raw_name || p.name);
     const displayTamilName = formatProductDisplayName(p.raw_tamil_name || p.tamil_name || displayName);
+
+    const fallbackImg = getProductFallbackImage(displayName, p.id);
+    let resolvedImage = p.image;
+    if (p.id === 1255 || (displayName && displayName.toLowerCase().includes('chemparuthi herbal shampoo'))) {
+      resolvedImage = '/images/chemparuthi_shampoo_single.png';
+    } else if (!resolvedImage || (typeof resolvedImage === 'string' && (resolvedImage.includes('Vaishnavi.jpeg') || resolvedImage.endsWith('/logo.png')))) {
+      resolvedImage = fallbackImg || resolvedImage;
+    }
+
     return {
       ...p,
       name: displayName,
       raw_name: p.raw_name || p.name,
       tamil_name: displayTamilName,
       raw_tamil_name: p.raw_tamil_name || p.tamil_name || displayName,
+      image: resolvedImage,
       price: formatCurrency(p.price),
       originalPrice: (p.mrp && parseFloat(p.mrp) > parseFloat(String(p.price || 0).replace(/[^0-9.]/g, ''))) ? formatCurrency(p.mrp) : (p.originalPrice ? formatCurrency(p.originalPrice) : ''),
       discount: (p.mrp && parseFloat(p.mrp) > parseFloat(String(p.price || 0).replace(/[^0-9.]/g, ''))) ? (Math.round(((parseFloat(p.mrp) - parseFloat(String(p.price).replace(/[^0-9.]/g, ''))) / parseFloat(p.mrp)) * 100) + '% OFF') : (p.discount ? p.discount + '% OFF' : ''),
@@ -85,12 +95,12 @@ export function ProductsProvider({ children }) {
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.filter(p => !isRemovedProduct(p)).map(transformProduct);
+          return consolidateProducts(parsed.filter(p => !isRemovedProduct(p)).map(transformProduct));
         }
       }
     } catch (e) { }
     if (Array.isArray(liveProductsBackup) && liveProductsBackup.length > 0) {
-      return liveProductsBackup.filter(p => !isRemovedProduct(p)).map(transformProduct);
+      return consolidateProducts(liveProductsBackup.filter(p => !isRemovedProduct(p)).map(transformProduct));
     }
     return [];
   });
@@ -309,7 +319,19 @@ export function ProductsProvider({ children }) {
             })(),
             badge: p.is_new ? 'NEW' : '',
             badgeColor: p.is_new ? 'green' : '',
-            image: (p.id === 1255 || (p.name && p.name.toLowerCase().includes('chemparuthi herbal shampoo'))) ? '/images/chemparuthi_shampoo_single.png' : (extraImagesMap[String(p.id)] || (p.image ? resolveMediaUrl(p.image) : null)),
+            image: (() => {
+              const fallbackImg = getProductFallbackImage(displayName, p.id);
+              if (p.id === 1255 || (displayName && displayName.toLowerCase().includes('chemparuthi herbal shampoo'))) {
+                return '/images/chemparuthi_shampoo_single.png';
+              }
+              if (extraImagesMap[String(p.id)]) {
+                return extraImagesMap[String(p.id)];
+              }
+              if (p.image && !p.image.includes('Vaishnavi.jpeg') && !p.image.endsWith('/logo.png')) {
+                return resolveMediaUrl(p.image);
+              }
+              return fallbackImg || null;
+            })(),
             category_name: p.category_name,
             description: enhancedDescription || p.description,
             pack_size: normalizedPackSize,
@@ -322,11 +344,14 @@ export function ProductsProvider({ children }) {
           };
         });
 
+        // Consolidate duplicate pack sizes into unified products with variations
+        const consolidated = consolidateProducts(formatted);
+
         // Custom sort: Push Sowbakiya Sundi and Thuthuvalai Lehyam to the end
         const normalProducts = [];
         const endProducts = [];
 
-        formatted.forEach(p => {
+        consolidated.forEach(p => {
           const nameLower = (p.name || "").toLowerCase();
           const tamilLower = (p.tamil_name || "").toLowerCase();
           if (
@@ -373,11 +398,35 @@ export function ProductsProvider({ children }) {
     return () => window.removeEventListener('online', handleOnline);
   }, []);
 
+  const getProductById = useMemo(() => {
+    return (id) => {
+      if (!id || !products || products.length === 0) return null;
+      const numId = parseInt(id);
+      const strId = String(id);
+      // 1. Direct match on primary ID
+      const direct = products.find(p => p.id === numId || String(p.id) === strId);
+      if (direct) return direct;
+      // 2. Check if id is a variation inside a consolidated product
+      const parent = products.find(p => Array.isArray(p.variations) && p.variations.some(v => String(v.id || v.variation_id) === strId));
+      if (parent) {
+        const matchedVar = parent.variations.find(v => String(v.id || v.variation_id) === strId);
+        return {
+          ...parent,
+          selected_variation: matchedVar,
+          default_variation: matchedVar,
+          default_variation_id: matchedVar.id
+        };
+      }
+      return null;
+    };
+  }, [products]);
+
   const value = useMemo(() => ({
     products,
     loading,
-    refreshProducts
-  }), [products, loading, refreshProducts]);
+    refreshProducts,
+    getProductById
+  }), [products, loading, refreshProducts, getProductById]);
 
   return (
     <ProductsContext.Provider value={value}>

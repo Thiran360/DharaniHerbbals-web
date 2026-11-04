@@ -9,7 +9,7 @@ import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
 import { useLanguage } from '../context/LanguageContext';
 import { API_BASE_URL, resolveMediaUrl } from '../services/api';
-import { formatProductPackSize, formatVariationLabel, formatProductDisplayName, formatCurrency } from '../utils/productFormatters';
+import { formatProductPackSize, formatVariationLabel, formatProductDisplayName, formatCurrency, getProductFallbackImage } from '../utils/productFormatters';
 import { getDefaultVariation } from '../data/productVariationsData';
 import { getProductDescription, getProductIngredients, getProductDirections } from '../data/productCatalogData';
 import SeoHead from '../components/SeoHead';
@@ -21,9 +21,9 @@ import './ProductDetails.css';
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { products, loading } = useProducts();
+  const { products, loading, getProductById } = useProducts();
   const { language, translateText, translateProduct, bulkProductNames, t } = useLanguage();
-  const product = products.find(p => p.id === parseInt(id));
+  const product = (getProductById ? getProductById(id) : null) || products.find(p => p.id === parseInt(id));
   const sliderRef = useRef(null);
   const trackRef = useRef(null);
   const thumbRefs = useRef([]);
@@ -111,7 +111,7 @@ export default function ProductDetails() {
       setReviews([]);
       setReviewSummary(null);
 
-      const currentProduct = products.find(p => p.id === parseInt(id));
+      const currentProduct = (getProductById ? getProductById(id) : null) || products.find(p => p.id === parseInt(id));
       const local = getLocalCustomerReviews(id);
 
       try {
@@ -513,13 +513,13 @@ export default function ProductDetails() {
             const match = product.variations.find(v => String(v.id || v.variation_id) === String(prev.id || prev.variation_id));
             if (match) return match;
           }
-          return product.default_variation || getDefaultVariation(product, product.variations) || product.variations[0];
+          return product.selected_variation || product.default_variation || getDefaultVariation(product, product.variations) || product.variations[0];
         });
       } else {
         setSelectedVariation(null);
       }
     }
-  }, [product?.id, product?.variations, product?.default_variation, fetchedVariations.length]);
+  }, [product?.id, product?.variations, product?.default_variation, product?.selected_variation, fetchedVariations.length]);
 
   const translatedRef = useRef(null); // tracks "productId:lang" already translated
   const shareMenuRef = useRef(null);
@@ -645,16 +645,18 @@ export default function ProductDetails() {
 
   const mediaItems = [];
   const isChemparuthiShampoo = Number(product.id) === 1255 || (product.name && product.name.toLowerCase().includes('chemparuthi herbal shampoo'));
+  const fallbackImg = getProductFallbackImage(product.name, product.id);
 
   // 1. Primary product image (the EXACT image shown on the card outside) MUST ALWAYS be first!
   if (isChemparuthiShampoo) {
     mediaItems.push({ type: 'image', src: '/images/chemparuthi_shampoo_single.png', thumb: '/images/chemparuthi_shampoo_single.png' });
-  } else if (product.image) {
+  } else if (product.image && !product.image.includes('Vaishnavi.jpeg') && !product.image.endsWith('/logo.png')) {
     const rawImages = typeof product.image === 'string' && product.image.includes(',')
       ? product.image.split(',').map(s => s.trim()).filter(Boolean)
       : [product.image];
 
     for (const img of rawImages) {
+      if (img.includes('Vaishnavi.jpeg') || img.endsWith('/logo.png')) continue;
       const pSrc = resolveMediaUrl(img);
       if (pSrc && !mediaItems.some(m => m.src === pSrc)) {
         mediaItems.push({ type: 'image', src: pSrc, thumb: pSrc });
@@ -662,10 +664,17 @@ export default function ProductDetails() {
     }
   }
 
+  // If primary image was missing/broken, use authentic fallback
+  if (mediaItems.length === 0 && fallbackImg) {
+    mediaItems.push({ type: 'image', src: fallbackImg, thumb: fallbackImg });
+  }
+
   // 2. Extra gallery images from CRM come AFTER the primary product image
   if (crmGalleryImages.length > 0) {
     crmGalleryImages.forEach(imgObj => {
-      const src = resolveMediaUrl(imgObj.image || imgObj.url);
+      const raw = imgObj.image || imgObj.url;
+      if (raw && (raw.includes('Vaishnavi.jpeg') || raw.endsWith('/logo.png'))) return;
+      const src = resolveMediaUrl(raw);
       if (src && !mediaItems.some(m => m.src === src)) {
         // Exclude double-bottle legacy image for Chemparuthi shampoo
         if (isChemparuthiShampoo && (src.includes('Hibiscus') || src.includes('Shampoo.jpg'))) {
@@ -681,13 +690,13 @@ export default function ProductDetails() {
     mediaItems.push({
       type: '3d',
       src: resolveMediaUrl(product.model_3d),
-      thumb: mediaItems[0]?.src || '/logo.png'
+      thumb: mediaItems[0]?.src || fallbackImg || '/logo.png'
     });
   }
 
   // 4. Fallback if no images found
   if (mediaItems.length === 0) {
-    mediaItems.push({ type: 'image', src: '/logo.png', thumb: '/logo.png' });
+    mediaItems.push({ type: 'image', src: fallbackImg || '/logo.png', thumb: fallbackImg || '/logo.png' });
   }
 
   const currentMedia = mediaItems[currentImgIndex];
@@ -898,6 +907,10 @@ export default function ProductDetails() {
                       decoding="async"
                       referrerPolicy="no-referrer"
                       onError={(e) => {
+                        if (fallbackImg && e.target.src !== fallbackImg) {
+                          e.target.src = fallbackImg;
+                          return;
+                        }
                         if (e.target.src !== window.location.origin + '/logo.png') {
                           e.target.src = '/logo.png';
                           e.target.style.objectFit = 'contain';

@@ -46,20 +46,24 @@ export function formatProductPackSize(product) {
     }
   }
 
+  // 5. Check product name for explicit pack size first (e.g. "500ml", "300ml", "250g", "50g")
+  const rawName = String(product.name || product.raw_name || '');
+  const nameMatch = rawName.match(/(\d+(?:\.\d+)?)\s*(gm|gms|gram|grams|g|ml|mls|milliliter|millilitres|l|ltr|liters|litres|liter|kg|kgs)\b/i);
+  if (nameMatch) {
+    let num = parseFloat(nameMatch[1]);
+    let u = nameMatch[2].toLowerCase();
+    if (u.startsWith('k')) u = 'kg';
+    else if (u.startsWith('m')) u = 'ml';
+    else if (u.startsWith('l')) u = 'L';
+    else u = 'g';
+    return `${num} ${u}`;
+  }
+
   let wv = product.weight_volume;
   let unit = product.unit ? String(product.unit).trim() : '';
 
-  // 5. If weight_volume is missing, '0', or 0, check product name for explicit pack size
-  if (!wv || wv === '0' || wv === 0) {
-    const nameMatch = (product.name || '').match(/(\d+(?:\.\d+)?)\s*(gm|g|kg|ml|l)\b/i);
-    if (nameMatch) {
-      let num = parseFloat(nameMatch[1]);
-      let u = nameMatch[2].toLowerCase();
-      if (u === 'gm') u = 'g';
-      return `${num} ${u}`;
-    }
-    return '';
-  }
+  // Check if unit is invalid or an ERP packaging stock unit (NOS, PCS, etc.)
+  const isInvalidUnit = !unit || /^(?:nos|no|pcs|pc|piece|pieces|ea|each|pkt|pack|box)$/i.test(unit);
 
   // 6. Extract embedded numbers and units (e.g. "500 gm", "0.250 ML")
   if (typeof wv === 'string') {
@@ -83,9 +87,20 @@ export function formatProductPackSize(product) {
     return '';
   }
 
+  const isLiquid = /oil|shampoo|juice|sherbet|syrup|water|liquid|wash/i.test(rawName);
+  const defaultUnit = isLiquid ? 'ml' : 'g';
+
+  // 7. If unit is an ERP unit like NOS or PCS, convert decimal numbers to clean grams/ml
+  if (isInvalidUnit) {
+    if (num < 1) {
+      return `${Math.round(num * 1000)} ${defaultUnit}`;
+    }
+    return `${num} ${defaultUnit}`;
+  }
+
   const unitUpper = unit.toUpperCase();
 
-  // 7. Handle demonstrably incorrect 'mg' on retail consumer food/herbal packs
+  // 8. Handle demonstrably incorrect 'mg' on retail consumer food/herbal packs
   // In Dharani Herbals catalog, powders, health mixes, halwas, dals, and homa draviyangal
   // are packaged in grams, never in milligrams.
   if (unitUpper === 'MG') {
@@ -97,7 +112,7 @@ export function formatProductPackSize(product) {
     return `${num} g`;
   }
 
-  // 8. Handle Grams (GM / Gm / G)
+  // 9. Handle Grams (GM / Gm / G)
   if (unitUpper === 'GM' || unitUpper === 'G') {
     // Decimal kg entered under GM (e.g. 0.050 GM -> 50 g, 0.250 GM -> 250 g, 0.500 GM -> 500 g)
     if (num < 1) {
@@ -106,7 +121,7 @@ export function formatProductPackSize(product) {
     return `${num} g`;
   }
 
-  // 9. Handle Millilitres (ML / Ml)
+  // 10. Handle Millilitres (ML / Ml)
   if (unitUpper === 'ML') {
     // Decimal litres entered under ML (e.g. 0.250 ML -> 250 ml, 0.125 ML -> 125 ml)
     if (num < 1) {
@@ -115,7 +130,7 @@ export function formatProductPackSize(product) {
     return `${num} ml`;
   }
 
-  // 10. Handle Litres and Kilograms
+  // 11. Handle Litres and Kilograms
   if (unitUpper === 'L') {
     return `${num} L`;
   }
@@ -123,8 +138,8 @@ export function formatProductPackSize(product) {
     return `${num} kg`;
   }
 
-  // Fallback to lowercase unit
-  return `${num} ${unit.toLowerCase()}`.trim();
+  // Fallback to defaultUnit (never return "nos" or "pcs")
+  return `${num} ${defaultUnit}`;
 }
 
 /**
@@ -250,6 +265,8 @@ const LEADING_WEIGHT_REGEX = /^\s*(?:\(\s*)?\d+(?:\.\d+)?\s*(?:(?:gm|gms|gram|gr
 
 const LEADING_BRAND_REGEX = /^\s*(?:(?:mahil|makil|ramcare|ram\s*care|vedanamuthu|vedanamut|vedan|amuthu|amutham|vana\s*arasi|vanaarasi|vanarasi|vana\s*rasi|athiyaman|adhiyaman|divyam|dhivyam|dhisha|disha|dharani(?:\s+herbb?als)?)(?=[^a-zA-Z0-9]|$)|(?:மகிழ்|மகிழ|ராம்கேர்|வேதனமுத்து|வேதன்|அமுது|அமுதம்|வான\s*அரசி|வன\s*அரசி|அதியமான்|திவ்யம்|திஷா|தாரணி|தரணி)(?=[^\u0B80-\u0BFF]|$))\s*[-–:xX*/]*\s*/i;
 
+const TRAILING_WEIGHT_REGEX = /\s*(?:[-–:xX*/(]|\b)\s*\d+(?:\.\d+)?\s*(?:gm|gms|gram|grams|g|ml|mls|milliliter|millilitres|l|ltr|liters|litres|liter|kg|kgs|kilogram|kilograms)\s*\)?$/i;
+
 /**
  * Converts English words to Title Case (First letter capitalized, remaining letters lowercase).
  * Handles contractions (e.g. Doctor's) and keeps non-English characters (Tamil, numbers, punctuation) intact.
@@ -293,13 +310,14 @@ export function formatProductDisplayName(rawName) {
   name = name.replace(/\s+பா$/g, '');
   name = name.replace(/\s+\(BOX\)$/i, ' Box');
 
-  // 3. Remove leading weights/quantities and brand names repeatedly from the front
+  // 3. Remove leading weights/quantities and brand names repeatedly from the front, and trailing weights from the end
   let prev;
   let guard = 0;
   do {
     prev = name;
     name = name.replace(LEADING_WEIGHT_REGEX, '');
     name = name.replace(LEADING_BRAND_REGEX, '');
+    name = name.replace(TRAILING_WEIGHT_REGEX, '');
     guard++;
   } while (name !== prev && guard < 10);
 
@@ -345,5 +363,193 @@ export function formatCurrency(amount, options = {}) {
   });
 
   return `₹${formattedNumber}`;
+}
+
+/**
+ * Returns a canonical matching key for a product name to group variations together.
+ * E.g., "Chemparuthi Herbal Hair Oil 500ml" and "Chemparuthi Herbal Hair Oil 300ml"
+ * both map to "chemparuthi herbal hair oil".
+ *
+ * @param {string} name - Product display or raw name
+ * @returns {string} Canonical key
+ */
+export function getProductCanonicalKey(name) {
+  if (!name) return '';
+  let s = formatProductDisplayName(name).toLowerCase();
+  s = s.replace(/\b\d+(?:\.\d+)?\s*(?:ml|mls|milliliter|millilitres|l|ltr|liters|litres|liter|g|gm|gms|gram|grams|kg|kgs|kilogram|kilograms)\b/gi, '');
+  s = s.replace(/\b(?:jar|po|pouch|box|nr|bottle)\b/gi, '');
+  s = s.replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
+  return s;
+}
+
+/**
+ * Fallback authentic image mapping for verified Dharani & Ramcare products
+ * whose images are missing or broken in the ERP backend.
+ *
+ * @param {string} name - Product name
+ * @param {number|string} [id] - Product ID
+ * @returns {string|null} Verified image URL or null
+ */
+export function getProductFallbackImage(name, id) {
+  const n = String(name || '').toLowerCase();
+  const numId = Number(id);
+
+  if (numId === 1255 || n.includes('chemparuthi herbal shampoo') || n.includes('chemparuthi shampoo')) {
+    return '/images/chemparuthi_shampoo_single.png';
+  }
+  if (n.includes('shikakai shampoo') || n.includes('shikakkai shampoo')) {
+    return 'https://vedanmart.com/images/hair/SHIKAKAI%20SHAMPOO.jpg';
+  }
+  if (n.includes('amla herbal shampoo') || n.includes('dr. amla') || n.includes('dr.amla') || (n.includes('amla') && n.includes('shampoo'))) {
+    return 'https://vedanmart.com/images/hair/AMLA%20SHAMPOO.jpg';
+  }
+  if (n.includes('karisalankanni shampoo')) {
+    return 'https://vedanmart.com/images/hair/Karisalankanni%20Shampoo.jpg';
+  }
+  if (n.includes('chemparuthi herbal hair oil') || n.includes('chemparuthi hair oil') || n.includes('hibiscus herbal hair oil') || n.includes('hibiscus hair oil')) {
+    return 'https://vedanmart.com/images/hair/Hibiscus%20Oil.jpg';
+  }
+  if (n.includes('chemparuthi hairwash') || n.includes('hibiscus hair wash') || n.includes('hair wash powder') || n.includes('hairwash')) {
+    return 'https://vedanmart.com/images/hair/HIBISCUS%20HAIRWASH%20POWDER.jpg';
+  }
+  if (n.includes('avarampoo hair wash')) {
+    return 'https://vedanmart.com/images/hair/AVARMPOO%20HAIR%20WASH%20POWDER%20(NR).jpg';
+  }
+  if (n.includes('onion shampoo')) {
+    return 'https://vedanmart.com/images/hair/ONION%20SHAMPOO.jpg';
+  }
+  if (n.includes('rice kanji shampoo')) {
+    return 'https://vedanmart.com/images/hair/RICE%20KANJI%20SHAMPOO.png';
+  }
+  if (n.includes('arappu shampoo')) {
+    return 'https://vedanmart.com/images/hair/ARAPPU%20SHAMPOO.jpg';
+  }
+  if (n.includes('vettiver shampoo')) {
+    return 'https://vedanmart.com/images/hair/VETTIVER%20SHAMPOO.jpg';
+  }
+  if (n.includes('amla hair oil') || n.includes('amla hairoil')) {
+    return 'https://vedanmart.com/images/hair/AMLA%20HAIROIL.jpg';
+  }
+  if (n.includes('karisalankanni hair oil') || n.includes('karisalankanni oil')) {
+    return 'https://vedanmart.com/images/hair/karisalankanni%20oil.jpg';
+  }
+  if (n.includes('veppilai powder') || n.includes('neem powder')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Neem%20powder.jpg';
+  }
+  if (n.includes('karuveppilai') || n.includes('curry leaf')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/veppilai%20powder.jpeg';
+  }
+  return null;
+}
+
+/**
+ * Consolidates duplicate product entries (e.g. 100ml vs 200ml, 300ml vs 500ml)
+ * into a single unified product with variations.
+ *
+ * @param {Array} list - Array of products
+ * @returns {Array} Deduplicated array of products with variations
+ */
+export function consolidateProducts(list) {
+  if (!Array.isArray(list) || list.length === 0) return [];
+  const groupMap = new Map();
+
+  list.forEach(p => {
+    const key = getProductCanonicalKey(p.name || p.raw_name) || `prod_${p.id}`;
+    if (!groupMap.has(key)) {
+      groupMap.set(key, []);
+    }
+    groupMap.get(key).push(p);
+  });
+
+  const consolidated = [];
+
+  groupMap.forEach((items) => {
+    if (items.length === 1) {
+      const single = { ...items[0] };
+      const fallbackImg = getProductFallbackImage(single.name, single.id);
+      if ((!single.image || single.image.includes('Vaishnavi.jpeg') || single.image.endsWith('/logo.png')) && fallbackImg) {
+        single.image = fallbackImg;
+      }
+      consolidated.push(single);
+      return;
+    }
+
+    // Sort items by numeric price ascending (so lowest/base price is primary)
+    items.sort((a, b) => {
+      const pA = parseFloat(String(a.price || 0).replace(/[^0-9.]/g, '')) || 0;
+      const pB = parseFloat(String(b.price || 0).replace(/[^0-9.]/g, '')) || 0;
+      return pA - pB;
+    });
+
+    const primary = { ...items[0] };
+    const combinedVariations = [];
+
+    items.forEach((item, idx) => {
+      if (Array.isArray(item.variations) && item.variations.length > 0) {
+        item.variations.forEach(v => {
+          const vName = formatVariationLabel(v, item);
+          if (!combinedVariations.some(cv => cv.variation_name === vName)) {
+            combinedVariations.push({
+              ...v,
+              id: v.id || `${item.id}_${vName}`,
+              variation_name: vName,
+              price: v.price || item.price,
+              mrp: v.mrp || item.mrp || null,
+              stock: v.stock || item.stock || 500,
+              is_active: true
+            });
+          }
+        });
+      } else {
+        const packSize = formatProductPackSize(item) || `${idx + 1}`;
+        if (!combinedVariations.some(cv => cv.variation_name === packSize)) {
+          combinedVariations.push({
+            id: item.id,
+            variation_name: packSize,
+            price: String(item.price).replace(/[^0-9.]/g, ''),
+            mrp: item.mrp || item.originalPrice || null,
+            stock: item.stock || 500,
+            is_active: true
+          });
+        }
+      }
+
+      // If primary lacks a valid image, borrow from item that has one
+      if ((!primary.image || primary.image.includes('Vaishnavi.jpeg') || primary.image.endsWith('/logo.png')) &&
+          item.image && !item.image.includes('Vaishnavi.jpeg') && !item.image.endsWith('/logo.png')) {
+        primary.image = item.image;
+      }
+    });
+
+    // Sort variations by price ascending
+    combinedVariations.sort((a, b) => (parseFloat(String(a.price).replace(/[^0-9.]/g, '')) || 0) - (parseFloat(String(b.price).replace(/[^0-9.]/g, '')) || 0));
+
+    primary.variations = combinedVariations;
+    if (combinedVariations.length > 0) {
+      primary.default_variation = combinedVariations[0];
+      primary.default_variation_id = combinedVariations[0].id;
+      primary.pack_size = combinedVariations[0].variation_name;
+      primary.price = formatCurrency(combinedVariations[0].price);
+      if (combinedVariations[0].mrp && parseFloat(combinedVariations[0].mrp) > parseFloat(combinedVariations[0].price)) {
+        primary.mrp = formatCurrency(combinedVariations[0].mrp);
+        primary.originalPrice = formatCurrency(combinedVariations[0].mrp);
+        primary.discount = `${Math.round(((parseFloat(combinedVariations[0].mrp) - parseFloat(combinedVariations[0].price)) / parseFloat(combinedVariations[0].mrp)) * 100)}% OFF`;
+      } else {
+        primary.mrp = '';
+        primary.originalPrice = '';
+        primary.discount = '';
+      }
+    }
+
+    // Ensure fallback image if missing or broken
+    const fallbackImg = getProductFallbackImage(primary.name, primary.id);
+    if ((!primary.image || primary.image.includes('Vaishnavi.jpeg') || primary.image.endsWith('/logo.png')) && fallbackImg) {
+      primary.image = fallbackImg;
+    }
+
+    consolidated.push(primary);
+  });
+
+  return consolidated;
 }
 
