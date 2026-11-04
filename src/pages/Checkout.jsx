@@ -40,7 +40,7 @@ export default function Checkout() {
   const isB2BUserUI = user?.is_store_member || ['retailer', 'reseller', 'staff'].includes(user?.role);
   const [paymentMethod, setPaymentMethod] = useState('payglocal');
   const [createdOrderId, setCreatedOrderId] = useState(null);
-  const [isPaytmLoaded, setIsPaytmLoaded] = useState(true); // Assume loaded from index.html
+  const [isPaytmLoaded, setIsPaytmLoaded] = useState(() => Boolean(typeof window !== 'undefined' && window.Paytm && window.Paytm.CheckoutJS));
 
   const [guestInfo, setGuestInfo] = useState({ name: '', email: '' });
   const [isContactConfirmed, setIsContactConfirmed] = useState(false);
@@ -182,24 +182,38 @@ export default function Checkout() {
     }
   }, [location]);
 
-  const loadPaytmScript = (mid) => {
+  const loadPaytmScript = (mid = 'YyffBp11837369316995') => {
     return new Promise((resolve) => {
-      // Remove any existing script to ensure a fresh load if retrying
+      if (window.Paytm && window.Paytm.CheckoutJS) {
+        setIsPaytmLoaded(true);
+        return resolve(true);
+      }
       const existingScript = document.getElementById('paytm-checkout-script');
-      if (existingScript) existingScript.remove();
-
-      // Delete any cached Paytm object from memory
-      if (window.Paytm) delete window.Paytm;
+      if (existingScript) {
+        setIsPaytmLoaded(true);
+        return resolve(true);
+      }
 
       const script = document.createElement("script");
       script.id = 'paytm-checkout-script';
-      script.src = `https://securegw-stage.paytm.in/merchantpgpui/checkoutjs/merchants/${mid}.js`;
+      script.src = `https://secure.paytmpayments.com/merchantpgpui/checkoutjs/merchants/${mid}.js`;
+      script.async = true;
       script.crossOrigin = "anonymous";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
+      script.onload = () => {
+        setIsPaytmLoaded(true);
+        resolve(true);
+      };
+      script.onerror = () => {
+        setIsPaytmLoaded(false);
+        resolve(false);
+      };
       document.body.appendChild(script);
     });
   };
+
+  useEffect(() => {
+    loadPaytmScript();
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {

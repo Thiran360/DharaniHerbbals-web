@@ -83,6 +83,31 @@ export default function BundleLanding() {
     }
   }, [utmSource, utmMedium, utmCampaign, utmContent, bundle?.id]);
 
+  const bundleSeo = useMemo(() => {
+    if (!bundle) return null;
+    const cleanBundleName = formatProductDisplayName(bundle.name);
+    const title = `${cleanBundleName} - ${formatCurrency(bundle.offerPrice)} Special Combo | Dharani Herbals`;
+    const description = `Get the ${cleanBundleName} for ${formatCurrency(bundle.offerPrice)} (Save ${formatCurrency(bundle.savings)}). Includes ${bundle.enrichedItems?.map(i => `${i.quantity}x ${formatProductDisplayName(i.name)}`).join(', ')}. 100% authentic Siddha formulation.`;
+    const canonicalUrl = `https://www.dharaniherbbals.in/combo/${bundle.id || bundle.slug}`;
+    const primaryImg = bundle.image || (bundle.enrichedItems && bundle.enrichedItems[0]?.image) || 'https://www.dharaniherbbals.in/logo.png';
+
+    return {
+      title,
+      description,
+      canonicalUrl,
+      openGraph: {
+        title,
+        description,
+        url: canonicalUrl,
+        image: primaryImg,
+        type: 'product',
+        priceAmount: String(bundle.offerPrice),
+        priceCurrency: 'INR'
+      },
+      keywords: ['herbal combo', 'ayurvedic bundle', bundle.name.toLowerCase(), 'dharani herbals offer']
+    };
+  }, [bundle]);
+
   if (!bundle) {
     return (
       <div className="bundle-landing-page">
@@ -128,31 +153,6 @@ export default function BundleLanding() {
       setTimeout(() => setCopiedLink(false), 2500);
     }
   };
-
-  const bundleSeo = useMemo(() => {
-    if (!bundle) return null;
-    const cleanBundleName = formatProductDisplayName(bundle.name);
-    const title = `${cleanBundleName} - ${formatCurrency(bundle.offerPrice)} Special Combo | Dharani Herbals`;
-    const description = `Get the ${cleanBundleName} for ${formatCurrency(bundle.offerPrice)} (Save ${formatCurrency(bundle.savings)}). Includes ${bundle.enrichedItems?.map(i => `${i.quantity}x ${formatProductDisplayName(i.name)}`).join(', ')}. 100% authentic Siddha formulation.`;
-    const canonicalUrl = `https://www.dharaniherbbals.in/combo/${bundle.id || bundle.slug}`;
-    const primaryImg = bundle.image || (bundle.enrichedItems && bundle.enrichedItems[0]?.image) || 'https://www.dharaniherbbals.in/logo.png';
-
-    return {
-      title,
-      description,
-      canonicalUrl,
-      openGraph: {
-        title,
-        description,
-        url: canonicalUrl,
-        image: primaryImg,
-        type: 'product',
-        priceAmount: String(bundle.offerPrice),
-        priceCurrency: 'INR'
-      },
-      keywords: ['herbal combo', 'ayurvedic bundle', bundle.name.toLowerCase(), 'dharani herbals offer']
-    };
-  }, [bundle]);
 
   return (
     <div className="bundle-landing-page">

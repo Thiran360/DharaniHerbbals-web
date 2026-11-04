@@ -8,11 +8,11 @@ import { formatProductDisplayName, formatCurrency } from '../utils/productFormat
 import './ShoppableVideos.css';
 
 // Product images
-import p1 from '../assets/1.png';
-import p2 from '../assets/2.png';
-import p3 from '../assets/3.png';
-import p4 from '../assets/6.png';
-import p5 from '../assets/5.png';
+import p1 from '../assets/1.webp';
+import p2 from '../assets/2.webp';
+import p3 from '../assets/3.webp';
+import p4 from '../assets/6.webp';
+import p5 from '../assets/5.webp';
 
 const baseVideoData = [
   { id: 1, videoUrl: '/videos/Carrot%20Malt(JAR).mp4', productImg: p1, title: 'CARROT MALT', price: '₹249' },

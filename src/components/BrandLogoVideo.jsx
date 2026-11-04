@@ -2,9 +2,23 @@ import React, { useRef, useEffect, useState } from 'react';
 
 export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLabel = 'Dharani Herbbals logo' }) {
   const videoRef = useRef(null);
-  const [canUseWebM, setCanUseWebM] = useState(true);
+  
+  // Mobile devices frequently render VP9 WebM alpha transparency as solid black background/leaves.
+  // Use high-resolution transparent green D logo image on mobile or when mobile-nav variant is specified.
+  const isMobile = typeof window !== 'undefined' && (
+    variant === 'mobile-nav' ||
+    window.innerWidth <= 768 ||
+    /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '')
+  );
+
+  const [canUseWebM, setCanUseWebM] = useState(!isMobile);
 
   useEffect(() => {
+    if (isMobile) {
+      setCanUseWebM(false);
+      return;
+    }
+
     // Detect if browser natively supports VP9 WebM video playback
     const testVideo = document.createElement('video');
     const supportsWebM = testVideo.canPlayType('video/webm; codecs="vp9"') !== '';
@@ -22,7 +36,9 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
     const playVideo = () => {
       const p = video.play();
       if (p !== undefined) {
-        p.catch(() => {});
+        p.catch(() => {
+          setCanUseWebM(false);
+        });
       }
     };
 
@@ -49,7 +65,7 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
       window.removeEventListener('touchstart', handleInteraction);
       window.removeEventListener('click', handleInteraction);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <span
@@ -72,9 +88,9 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
         >
           <source src="/videos/logo_transparent.webm" type="video/webm; codecs=vp9" />
           <img
-            src="/videos/logo_transparent.webp"
+            src="/favicon.png"
             alt={ariaLabel}
-            className="brand-logo-video"
+            className="brand-logo-video brand-logo-crisp-d"
             width="48"
             height="48"
             loading="eager"
@@ -83,9 +99,9 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
         </video>
       ) : (
         <img
-          src="/videos/logo_transparent.webp"
+          src="/favicon.png"
           alt={ariaLabel}
-          className="brand-logo-video"
+          className="brand-logo-video brand-logo-crisp-d"
           width="48"
           height="48"
           loading="eager"

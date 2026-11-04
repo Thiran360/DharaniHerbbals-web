@@ -56,17 +56,6 @@ export default function OtpVerification() {
     }
   }, [timeLeft, timerActive]);
 
-  // Auto-submit OTP as soon as 6 digits are prefilled or entered
-  useEffect(() => {
-    if (otp && otp.length === 6 && timerActive && lastSubmittedOtpRef.current !== otp && !loading) {
-      lastSubmittedOtpRef.current = otp;
-      const timerId = setTimeout(() => {
-        handleVerify(otp);
-      }, 300);
-      return () => clearTimeout(timerId);
-    }
-  }, [otp, timerActive, loading]);
-
   const handleVerify = async (eOrOtp) => {
     if (eOrOtp && eOrOtp.preventDefault) eOrOtp.preventDefault();
     const currentOtp = typeof eOrOtp === 'string' ? eOrOtp : otp;
@@ -119,6 +108,17 @@ export default function OtpVerification() {
       setLoading(false);
     }
   };
+
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered
+  useEffect(() => {
+    if (otp && otp.length === 6 && timerActive && lastSubmittedOtpRef.current !== otp && !loading) {
+      lastSubmittedOtpRef.current = otp;
+      const timerId = setTimeout(() => {
+        handleVerify(otp);
+      }, 300);
+      return () => clearTimeout(timerId);
+    }
+  }, [otp, timerActive, loading]);
 
   const handleResendOtp = async () => {
     setError(null);

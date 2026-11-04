@@ -124,6 +124,9 @@ export default function ComboOffersSection() {
                                   src={item.image || '/logo.png'}
                                   alt={item.name}
                                   loading="lazy"
+                                  width="76"
+                                  height="76"
+                                  decoding="async"
                                   onError={(e) => { e.target.src = '/logo.png'; }}
                                 />
                                 <span className="combo-item-qty-badge">

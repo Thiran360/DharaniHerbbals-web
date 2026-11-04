@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useLanguage } from '../context/LanguageContext';
-import { ProductCard } from '../pages/Shop';
+import ProductCard from './ProductCard';
 import './HandpickedDeals.css';
 
 export default function HandpickedDeals() {

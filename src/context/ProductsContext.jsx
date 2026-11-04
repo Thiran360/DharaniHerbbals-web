@@ -136,7 +136,7 @@ export function ProductsProvider({ children }) {
     }
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4500);
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     fetch(apiUrl, {
       signal: controller.signal,
@@ -146,6 +146,7 @@ export function ProductsProvider({ children }) {
     })
       .then(res => {
         clearTimeout(timeoutId);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
       })
       .then(async data => {
@@ -308,7 +309,7 @@ export function ProductsProvider({ children }) {
             })(),
             badge: p.is_new ? 'NEW' : '',
             badgeColor: p.is_new ? 'green' : '',
-            image: extraImagesMap[String(p.id)] || (p.image ? resolveMediaUrl(p.image) : null),
+            image: (p.id === 1255 || (p.name && p.name.toLowerCase().includes('chemparuthi herbal shampoo'))) ? '/images/chemparuthi_shampoo_single.png' : (extraImagesMap[String(p.id)] || (p.image ? resolveMediaUrl(p.image) : null)),
             category_name: p.category_name,
             description: enhancedDescription || p.description,
             pack_size: normalizedPackSize,
@@ -354,7 +355,8 @@ export function ProductsProvider({ children }) {
         }
       })
       .catch(err => {
-        console.error("Failed to fetch products:", err);
+        if (err.name === 'AbortError') return;
+        console.warn("Unable to fetch fresh products from API, using cached data:", err.message);
       })
       .finally(() => {
         setLoading(false);

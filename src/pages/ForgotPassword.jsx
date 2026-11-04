@@ -15,17 +15,6 @@ export default function ForgotPassword() {
 
   const lastSubmittedOtpRef = useRef(null);
 
-  // Auto-submit OTP as soon as 6 digits are prefilled or entered
-  useEffect(() => {
-    if (step === 'otp' && otp && otp.length === 6 && lastSubmittedOtpRef.current !== otp && !loading) {
-      lastSubmittedOtpRef.current = otp;
-      const timer = setTimeout(() => {
-        handleVerifyOtp(otp);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [step, otp, loading]);
-
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -68,6 +57,8 @@ export default function ForgotPassword() {
     }
   };
 
+
+
   const handleVerifyOtp = async (eOrOtp) => {
     if (eOrOtp && eOrOtp.preventDefault) eOrOtp.preventDefault();
     const currentOtp = typeof eOrOtp === 'string' ? eOrOtp : otp;
@@ -105,6 +96,17 @@ export default function ForgotPassword() {
       setLoading(false);
     }
   };
+
+  // Auto-submit OTP as soon as 6 digits are prefilled or entered
+  useEffect(() => {
+    if (step === 'otp' && otp && otp.length === 6 && lastSubmittedOtpRef.current !== otp && !loading) {
+      lastSubmittedOtpRef.current = otp;
+      const timer = setTimeout(() => {
+        handleVerifyOtp(otp);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [step, otp, loading]);
 
   return (
     <div className="login-page-wrapper">

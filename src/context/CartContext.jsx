@@ -81,7 +81,10 @@ export function CartProvider({ children }) {
     fetch(`${API_BASE_URL}/shipping-charge/`, {
       headers: { 'ngrok-skip-browser-warning': 'true' }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
       .then(data => {
         if (!isMounted) return;
         const list = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
@@ -92,7 +95,10 @@ export function CartProvider({ children }) {
           } catch (e) {}
         }
       })
-      .catch(err => console.error("Error fetching state shipping rates:", err));
+      .catch(err => {
+        if (err.name === 'AbortError') return;
+        console.warn("Unable to fetch state shipping rates, using defaults/cache:", err.message);
+      });
     return () => { isMounted = false; };
   }, []);
   const [taxAmount, setTaxAmount] = useState(0);

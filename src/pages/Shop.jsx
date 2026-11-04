@@ -13,16 +13,16 @@ import FilterDrawer from '../components/FilterDrawer';
 import ComboOffersSection from '../components/ComboOffersSection';
 import SeoHead from '../components/SeoHead';
 import { getVerifiedReviewData } from '../utils/productReviews';
-import grpImg from '../assets/grp.png';
-import hairBannerImg from '../assets/hair_banner_transparent.png';
-import imgBody from '../assets/body_soap_transparent.png';
-import imgFood from '../assets/pirandai_pickle_transparent_v2.png';
-import imgSkin from '../assets/aloe_vera_face_pack_transparent.png';
-import imgHealth from '../assets/sathu_maavu_transparent.png';
-import imgBaby from '../assets/nalangu_powder_transparent_v2.png';
-import imgPoojas from '../assets/pooja_oil_transparent_v2.png';
-import imgBeverages from '../assets/beverage_transparent.png';
-import imgAll from '../assets/show-all.png';
+import grpImg from '../assets/grp.webp';
+import hairBannerImg from '../assets/hair_banner_transparent.webp';
+import imgBody from '../assets/body_soap_transparent.webp';
+import imgFood from '../assets/pirandai_pickle_transparent_v2.webp';
+import imgSkin from '../assets/aloe_vera_face_pack_transparent.webp';
+import imgHealth from '../assets/sathu_maavu_transparent.webp';
+import imgBaby from '../assets/nalangu_powder_transparent_v2.webp';
+import imgPoojas from '../assets/pooja_oil_transparent_v2.webp';
+import imgBeverages from '../assets/beverage_transparent.webp';
+import imgAll from '../assets/show-all.webp';
 import './Shop.css';
 
 const getCategoryBullets = (catKey, language) => {
@@ -165,166 +165,8 @@ const CATEGORY_HERO_CONFIG = {
   }
 };
 
-// ─── Product Card ────────────────────────────────────────────────────────────
-export const ProductCard = memo(({ product, index = 0 }) => {
-  const { addToCart } = useCart();
-  const { toggleWishlist, isInWishlist } = useWishlist();
-  const { language, translateProduct, bulkProductNames, isBulkLoading, t } = useLanguage();
-
-  const navigate = useNavigate();
-
-  const translatedName = formatProductDisplayName(language === 'ta' && product.tamil_name ? product.tamil_name : product.name);
-
-  const verifiedReviewData = getVerifiedReviewData(product);
-  const hasValidRating = Boolean(
-    verifiedReviewData && 
-    typeof verifiedReviewData.rating === 'number' && 
-    verifiedReviewData.rating > 0 && 
-    typeof verifiedReviewData.reviews === 'number' && 
-    verifiedReviewData.reviews > 0
-  );
-  const displayRating = hasValidRating ? verifiedReviewData.rating.toFixed(1) : null;
-  const displayReviews = hasValidRating ? verifiedReviewData.reviews : null;
-
-
-  const openProduct = () => {
-    sessionStorage.setItem('shopScrollPos', window.scrollY);
-    navigate(`/product/${product.id}`);
-  };
-
-  const handleCardKeyDown = (e) => {
-    if (e.target !== e.currentTarget) return;
-
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openProduct();
-    }
-  };
-
-  const handleImageError = (e) => {
-    if (e.target.src !== window.location.origin + '/logo.png') {
-      e.target.src = '/logo.png';
-      e.target.style.objectFit = 'contain';
-      e.target.style.padding = '1rem';
-    }
-  };
-
-  let displayImage = '/logo.png';
-  if (product.image) {
-    if (typeof product.image === 'string' && product.image.includes(',')) {
-      displayImage = product.image.split(',')[0].trim();
-    } else {
-      displayImage = product.image;
-  }
-  displayImage = resolveMediaUrl(displayImage) || '/logo.png';
-  }
-
-  const isSpecialZoomImage = Boolean(
-    displayImage && (
-      displayImage.includes('/4.jpeg') ||
-      displayImage.endsWith('4.jpeg') ||
-      product.id === 1301 ||
-      (product.name && product.name.toLowerCase().includes('keelanelli'))
-    )
-  );
-
-  return (
-    <div
-      className="uc-card"
-      role="link"
-      tabIndex={0}
-      onClick={openProduct}
-      onKeyDown={handleCardKeyDown}
-      aria-label={`Open ${translatedName}`}
-    >
-      <div className="uc-info-section">
-        <div className="uc-category-tag">
-          <Leaf size={12} className="uc-tag-icon" />
-          <span>{product.category_name || 'Snacks'}</span>
-        </div>
-
-        <h3 className="uc-title">
-          <Link
-            to={`/product/${product.id}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              sessionStorage.setItem('shopScrollPos', window.scrollY);
-            }}
-          >
-            {translatedName}
-          </Link>
-        </h3>
-        <p className="uc-subtitle">{language === 'ta' && product.tamil_description ? product.tamil_description : (product.description || 'Authentic Natural Herbal Product')}</p>
-
-        {hasValidRating && (
-          <div className="uc-meta-row">
-            <div className="uc-rating-row" aria-label={`Rating: ${displayRating} out of 5 (${displayReviews} reviews)`}>
-              <Star size={12} fill="#f59e0b" color="#f59e0b" />
-              <span className="uc-rating-text">{displayRating}</span>
-              <span className="uc-review-count">({displayReviews})</span>
-            </div>
-          </div>
-        )}
-
-        <div className="uc-bottom-row">
-          <div className="uc-price-block">
-            <span className="uc-price">{formatCurrency(product.price)}</span>
-            {(() => {
-              const packSize = product.pack_size || formatProductPackSize(product);
-              return packSize ? <span className="uc-pack-size">({packSize})</span> : null;
-            })()}
-            {product.mrp && parseFloat(product.mrp) > parseFloat(String(product.price).replace(/[^0-9.]/g, '')) && <span className="uc-original-price">{formatCurrency(product.mrp)}</span>}
-          </div>
-        </div>
-
-        <button
-          className="uc-add-text-btn"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            addToCart(product, 1, product.default_variation_id || product.default_variation?.id);
-          }}
-          aria-label={t('addToCart')}
-        >
-          <ShoppingBag size={14} className="uc-btn-icon" />
-          Add to Cart
-        </button>
-      </div>
-
-      <div className="uc-img-section">
-        {product.discount && (
-          <span className="uc-discount-badge">{product.discount}</span>
-        )}
-        <button
-          className="uc-wishlist-btn"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleWishlist(product);
-          }}
-          aria-label={isInWishlist(product.id) ? `Remove ${translatedName} from Wishlist` : `Add ${translatedName} to Wishlist`}
-        >
-          <Heart
-            size={16}
-            fill={isInWishlist(product.id) ? "#1f2937" : "transparent"}
-            color="#1f2937"
-            strokeWidth={1.5}
-            aria-hidden="true"
-          />
-        </button>
-        <img
-          src={displayImage}
-          alt={`${translatedName} - ${product.category_name || 'Herbal Product'} by Dharani Herbals`}
-          className={`uc-img ${isSpecialZoomImage ? 'uc-img-zoom-fit' : ''}`}
-          loading="lazy"
-          decoding="async"
-          onError={handleImageError}
-          referrerPolicy="no-referrer"
-        />
-      </div>
-    </div>
-  );
-});
+import ProductCard from '../components/ProductCard';
+export { ProductCard };
 
 // ─── Category Tab ─────────────────────────────────────────────────────────────
 const CategoryTab = ({ cat, activeCategory, onClick }) => {

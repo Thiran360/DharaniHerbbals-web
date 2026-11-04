@@ -644,9 +644,12 @@ export default function ProductDetails() {
   }
 
   const mediaItems = [];
+  const isChemparuthiShampoo = Number(product.id) === 1255 || (product.name && product.name.toLowerCase().includes('chemparuthi herbal shampoo'));
 
   // 1. Primary product image (the EXACT image shown on the card outside) MUST ALWAYS be first!
-  if (product.image) {
+  if (isChemparuthiShampoo) {
+    mediaItems.push({ type: 'image', src: '/images/chemparuthi_shampoo_single.png', thumb: '/images/chemparuthi_shampoo_single.png' });
+  } else if (product.image) {
     const rawImages = typeof product.image === 'string' && product.image.includes(',')
       ? product.image.split(',').map(s => s.trim()).filter(Boolean)
       : [product.image];
@@ -664,6 +667,10 @@ export default function ProductDetails() {
     crmGalleryImages.forEach(imgObj => {
       const src = resolveMediaUrl(imgObj.image || imgObj.url);
       if (src && !mediaItems.some(m => m.src === src)) {
+        // Exclude double-bottle legacy image for Chemparuthi shampoo
+        if (isChemparuthiShampoo && (src.includes('Hibiscus') || src.includes('Shampoo.jpg'))) {
+          return;
+        }
         mediaItems.push({ type: 'image', src, thumb: src });
       }
     });

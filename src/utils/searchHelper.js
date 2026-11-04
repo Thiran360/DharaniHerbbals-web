@@ -162,8 +162,6 @@ export function getProductSearchScore(product, query) {
       score += 200;
     } else if (normKw.includes(normQuery) || compactKw.includes(compactQuery)) {
       score += 150;
-    } else if (compactQuery.length >= 4 && compactKw.includes(compactQuery)) {
-      score += 130;
     }
   }
 

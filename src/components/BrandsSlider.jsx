@@ -4,13 +4,13 @@ import './BrandsSlider.css';
 import { useLanguage } from '../context/LanguageContext';
 import { API_BASE_URL, resolveMediaUrl } from '../services/api';
 
-import makilImg from '../assets/brands_api/MAKIL.png';
-import amuthuImg from '../assets/brands_api/Amuthu.png';
-import ramcareImg from '../assets/brands_api/Ramcare.png';
-import vanaArasiImg from '../assets/brands_api/VANA ARASI.png';
-import divyamImg from '../assets/brands_api/Divyam.png';
-import athiyamanImg from '../assets/brands_api/Athiyaman.png';
-import vedanImg from '../assets/brands_api/Vedan.png';
+import makilImg from '../assets/brands_api/MAKIL.webp';
+import amuthuImg from '../assets/brands_api/Amuthu.webp';
+import ramcareImg from '../assets/brands_api/Ramcare.webp';
+import vanaArasiImg from '../assets/brands_api/VANA ARASI.webp';
+import divyamImg from '../assets/brands_api/Divyam.webp';
+import athiyamanImg from '../assets/brands_api/Athiyaman.webp';
+import vedanImg from '../assets/brands_api/Vedan.webp';
 
 const localBrandImages = {
   'MAKIL': makilImg,

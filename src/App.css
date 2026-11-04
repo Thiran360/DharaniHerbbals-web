@@ -8,7 +8,7 @@ html, body {
   min-height: 100vh;
   min-height: 100dvh;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .main-content {
@@ -18,7 +18,7 @@ html, body {
   padding: 0;
   position: relative;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Decorative background elements */

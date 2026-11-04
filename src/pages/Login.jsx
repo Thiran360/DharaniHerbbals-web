@@ -6,7 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useAuthModal } from '../context/AuthModalContext';
 import { API_BASE_URL } from '../services/api';
 import BrandLogoVideo from '../components/BrandLogoVideo';
-import heartImg from '../assets/heart.png';
+import heartImg from '../assets/heart.webp';
 import './Login.css';
 
 const isMobileDeviceOrView = () => {
@@ -100,7 +100,7 @@ export default function Login() {
           setOtpValue(digits);
           if (realOtpInputRef.current) realOtpInputRef.current.value = digits;
           if (digits.length === 6 && !isVerifyingRef.current) {
-            handleVerifyOtp(digits);
+            verifyFnRef.current?.(digits);
           }
         }
       })
@@ -113,10 +113,7 @@ export default function Login() {
   // Derive the array of displayed digits from otpValue
   const otpArray = Array.from({ length: 6 }, (_, i) => otpValue[i] || '');
 
-  const isAlreadyLoggedIn = localStorage.getItem('user') !== null;
-  if (!isLoginModalOpen || isAlreadyLoggedIn) return null;
-
-  // ─── SEND OTP ────────────────────────────────────────────────────
+// ─── SEND OTP ────────────────────────────────────────────────────
   const handleSendOtp = async (arg) => {
     if (arg?.preventDefault) arg.preventDefault();
     const mobileNumber = typeof arg === 'string' ? arg : mobile;
@@ -391,7 +388,9 @@ export default function Login() {
   };
 
   // Always keep verifyFnRef fresh (used by Web OTP API callback)
-  verifyFnRef.current = handleVerifyOtp;
+  useEffect(() => {
+    verifyFnRef.current = handleVerifyOtp;
+  });
 
   // ─── OTP REAL INPUT HANDLER ──────────────────────────────────────
   const handleRealOtpChange = (e) => {
@@ -417,6 +416,10 @@ export default function Login() {
       }
     }
   };
+
+
+  const isAlreadyLoggedIn = localStorage.getItem('user') !== null;
+  if (!isLoginModalOpen || isAlreadyLoggedIn) return null;
 
   return (
     <div className="login-modal-overlay">

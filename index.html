@@ -10,6 +10,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <title>Dharani Herbals | Authentic Siddha & Herbal Products</title>
   <meta name="description" content="Discover 100% authentic South Indian herbal products, botanical hair care, natural skincare, and traditional wellness formulations from Dharani Herbals." />
@@ -32,18 +33,44 @@
   <meta name="twitter:title" content="Dharani Herbals | Authentic Siddha & Herbal Products" />
   <meta name="twitter:description" content="Discover 100% authentic South Indian herbal products, botanical hair care, natural skincare, and traditional wellness formulations from Dharani Herbals." />
   <meta name="twitter:image" content="https://www.dharaniherbbals.in/logo.png" />
+
   <!-- Preconnects & DNS prefetch for instant API connection on slow networks -->
   <link rel="preconnect" href="http://179.197.251.47:30080" crossorigin />
   <link rel="dns-prefetch" href="http://179.197.251.47:30080" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" />
+  </noscript>
 
-  <!-- Paytm Script with defer so it never blocks page render on slow connections -->
-  <script type="application/javascript" src="https://secure.paytmpayments.com/merchantpgpui/checkoutjs/merchants/YyffBp11837369316995.js" defer></script>
-  
-  <!-- Google Model Viewer for 3D Products -->
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"
-    defer></script>
+  <!-- Permissions Policy shim: transparently reroutes legacy third-party 'unload' listeners to 'pagehide' to prevent Chrome unload Permissions-Policy violations and preserve bfcache -->
+  <script>
+    (function () {
+      try {
+        var proto = (typeof EventTarget !== 'undefined' && EventTarget.prototype) || (typeof window !== 'undefined' && window);
+        if (proto && proto.addEventListener) {
+          var origAdd = proto.addEventListener;
+          proto.addEventListener = function (type, listener, options) {
+            if (type === 'unload') {
+              return origAdd.call(this, 'pagehide', listener, options);
+            }
+            return origAdd.apply(this, arguments);
+          };
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Prevent uncaught promise rejections from third-party SDK telemetry -->
+  <script>
+    window.addEventListener('unhandledrejection', function (event) {
+      if (event.reason && (event.reason.head || event.reason.body)) {
+        event.preventDefault();
+      }
+    });
+  </script>
 </head>
 
 <body>

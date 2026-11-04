@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    headers: {
+      'Permissions-Policy': 'unload=*'
+    },
     watch: {
       ignored: ['**/dist/**', '**/.git/**', '**/node_modules/**', '**/*.zip', '**/dist*/**']
     },
@@ -13,13 +16,46 @@ export default defineConfig({
         target: 'http://179.197.251.47:30080',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        headers: {
+          host: '179.197.251.47:30080'
+        },
+        rewrite: (path) => path.replace(/^\/api\/media/, '/media')
       },
       '/api': {
-        target: 'http://179.197.251.47:30080/herbal',
+        target: 'http://179.197.251.47:30080',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        headers: {
+          host: '179.197.251.47:30080'
+        },
+        rewrite: (path) => path.replace(/^\/api/, '/herbal')
+      }
+    }
+  },
+  preview: {
+    headers: {
+      'Permissions-Policy': 'unload=*'
+    }
+  },
+  build: {
+    target: 'es2020',
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react/') || id.includes('react-dom/') || id.includes('react-router-dom/')) {
+              return 'vendor-react';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-lucide';
+            }
+            if (id.includes('canvas-confetti')) {
+              return 'vendor-confetti';
+            }
+          }
+        }
       }
     }
   }
