@@ -690,13 +690,14 @@ export default function ProductDetails() {
     mediaItems.push({
       type: '3d',
       src: resolveMediaUrl(product.model_3d),
-      thumb: mediaItems[0]?.src || fallbackImg || '/logo.png'
+      thumb: mediaItems[0]?.src || fallbackImg || 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg'
     });
   }
 
   // 4. Fallback if no images found
   if (mediaItems.length === 0) {
-    mediaItems.push({ type: 'image', src: fallbackImg || '/logo.png', thumb: fallbackImg || '/logo.png' });
+    const safeImg = fallbackImg || 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
+    mediaItems.push({ type: 'image', src: safeImg, thumb: safeImg });
   }
 
   const currentMedia = mediaItems[currentImgIndex];
@@ -911,10 +912,9 @@ export default function ProductDetails() {
                           e.target.src = fallbackImg;
                           return;
                         }
-                        if (e.target.src !== window.location.origin + '/logo.png') {
-                          e.target.src = '/logo.png';
-                          e.target.style.objectFit = 'contain';
-                          e.target.style.padding = '2rem';
+                        const safeProductImg = 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
+                        if (e.target.src !== safeProductImg) {
+                          e.target.src = safeProductImg;
                         }
                       }}
                     />

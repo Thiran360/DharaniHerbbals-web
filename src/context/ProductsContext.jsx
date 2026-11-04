@@ -330,7 +330,7 @@ export function ProductsProvider({ children }) {
               if (p.image && !p.image.includes('Vaishnavi.jpeg') && !p.image.endsWith('/logo.png')) {
                 return resolveMediaUrl(p.image);
               }
-              return fallbackImg || null;
+              return fallbackImg || 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
             })(),
             category_name: p.category_name,
             description: enhancedDescription || p.description,
