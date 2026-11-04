@@ -87,38 +87,56 @@ export const ProductCard = memo(({ product, index = 0 }) => {
 
   // 2. Detect products with wide white margins baked into their catalog photos (Vallarai, Sirukurinjan, etc.)
   // These have 35-45% empty white space around the packet, so a boosted scale is needed so they aren't tiny.
+  const fullNameStr = (String(product.raw_name || '') + ' ' + String(product.name || '')).toLowerCase();
   const isPaddedImage = Boolean(
-    !isTightImage && displayImage && (
-      displayImage.includes('Health%20%26%20Wellness/') ||
-      displayImage.includes('Health & Wellness/') ||
-      displayImage.includes('Vallarai') ||
-      displayImage.includes('SIRUKURINJAN') ||
-      displayImage.includes('Sirukurinjan') ||
-      displayImage.includes('PIRANDAI') ||
-      displayImage.includes('Pirandai') ||
-      displayImage.includes('Neem%20powder') ||
-      displayImage.includes('Nilaavarai') ||
-      displayImage.includes('Thottal') ||
-      displayImage.includes('Marudhontri') ||
-      displayImage.includes('Karpuravalli') ||
-      displayImage.includes('THANTRIKKAI') ||
-      displayImage.includes('Vilva') ||
-      displayImage.includes('Manathakkali') ||
-      displayImage.includes('Sirunerunjil') ||
-      displayImage.includes('Trikaduku') ||
-      displayImage.includes('Koraikilangu') ||
-      displayImage.includes('Lavangapattai') ||
-      displayImage.includes('Fenugreek') ||
-      displayImage.includes('Seenthilkodi') ||
-      displayImage.includes('kandakathiri') ||
-      displayImage.includes('Thaamarai') ||
-      displayImage.includes('Musumusukkai') ||
-      displayImage.includes('Poonthikaai') ||
-      displayImage.includes('THIPILI') ||
-      (product.name && (
-        product.name.toLowerCase().includes('vallarai') ||
-        product.name.toLowerCase().includes('sirukurinjan') ||
-        product.name.toLowerCase().includes('pirandai')
+    !isTightImage && (
+      fullNameStr.includes('vallarai') ||
+      fullNameStr.includes('sirukurinjan') ||
+      fullNameStr.includes('pirandai') ||
+      fullNameStr.includes('neem powder') ||
+      fullNameStr.includes('nilaavarai') ||
+      fullNameStr.includes('thottal') ||
+      fullNameStr.includes('marudhontri') ||
+      fullNameStr.includes('karpuravalli') ||
+      fullNameStr.includes('thantrikkai') ||
+      fullNameStr.includes('vilva') ||
+      fullNameStr.includes('manathakkali') ||
+      fullNameStr.includes('sirunerunjil') ||
+      fullNameStr.includes('trikaduku') ||
+      fullNameStr.includes('koraikilangu') ||
+      fullNameStr.includes('lavangapattai') ||
+      fullNameStr.includes('fenugreek') ||
+      fullNameStr.includes('seenthilkodi') ||
+      fullNameStr.includes('kandakathiri') ||
+      fullNameStr.includes('thaamarai') ||
+      fullNameStr.includes('musumusukkai') ||
+      fullNameStr.includes('poonthikaai') ||
+      fullNameStr.includes('thipili') ||
+      (displayImage && (
+        displayImage.includes('Health%20%26%20Wellness/') ||
+        displayImage.includes('Health & Wellness/') ||
+        displayImage.toLowerCase().includes('vallarai') ||
+        displayImage.toLowerCase().includes('sirukurinjan') ||
+        displayImage.toLowerCase().includes('pirandai') ||
+        displayImage.includes('Neem%20powder') ||
+        displayImage.includes('Nilaavarai') ||
+        displayImage.includes('Thottal') ||
+        displayImage.includes('Marudhontri') ||
+        displayImage.includes('Karpuravalli') ||
+        displayImage.includes('THANTRIKKAI') ||
+        displayImage.includes('Vilva') ||
+        displayImage.includes('Manathakkali') ||
+        displayImage.includes('Sirunerunjil') ||
+        displayImage.includes('Trikaduku') ||
+        displayImage.includes('Koraikilangu') ||
+        displayImage.includes('Lavangapattai') ||
+        displayImage.includes('Fenugreek') ||
+        displayImage.includes('Seenthilkodi') ||
+        displayImage.includes('kandakathiri') ||
+        displayImage.includes('Thaamarai') ||
+        displayImage.includes('Musumusukkai') ||
+        displayImage.includes('Poonthikaai') ||
+        displayImage.includes('THIPILI')
       ))
     )
   );

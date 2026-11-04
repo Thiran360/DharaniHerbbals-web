@@ -105,7 +105,7 @@ const getProductStudioImage = (item, matchedProd) => {
     return bodySoapImg;
   }
   // 3. Shampoo -> transparent shampoo bottle
-  if (idStr === '1246' || text.includes('shampoo') || text.includes('arappu') || text.includes('chemparuthi')) {
+  if (idStr === '1246' || idStr === '1255' || text.includes('shampoo') || text.includes('arappu') || (text.includes('chemparuthi') && !text.includes('oil'))) {
     return chemparuthiShampooImg;
   }
   // 4. Face Pack & Gels

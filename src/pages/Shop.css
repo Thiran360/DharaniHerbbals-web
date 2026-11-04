@@ -1498,13 +1498,13 @@
 /* Padded catalog photos (Vallarai, Sirukurinjan, Pirandai, etc.) */
 /* Boosted scale fills the arch frame clearly with full readable detail, never tiny, zero cut off */
 .uc-img.uc-img-boost-fit {
-  transform: scale(1.42) !important;
+  transform: scale(2.05) !important;
   object-fit: contain !important;
   padding: 0 !important;
 }
 
 .uc-card:hover .uc-img.uc-img-boost-fit {
-  transform: scale(1.48) !important;
+  transform: scale(2.12) !important;
 }
 
 .uc-img.uc-img-zoom-fit {
@@ -1752,7 +1752,7 @@
   .shop-root .uc-img.uc-img-boost-fit,
   .shop-grid .uc-img.uc-img-boost-fit,
   .uc-img.uc-img-boost-fit {
-    transform: scale(1.36) !important;
+    transform: scale(1.95) !important;
     object-fit: contain !important;
     padding: 0;
   }
@@ -2137,7 +2137,7 @@
   .shop-root .uc-img.uc-img-boost-fit,
   .shop-grid .uc-img.uc-img-boost-fit,
   .uc-img.uc-img-boost-fit {
-    transform: scale(1.36) !important;
+    transform: scale(1.95) !important;
     object-fit: contain !important;
     padding: 0;
   }

@@ -296,6 +296,17 @@ export function formatProductDisplayName(rawName) {
     return '100 Gm Vadhasura Kudineer Churnam';
   }
 
+  // Disambiguate Chemparuthi Herbal Shampoo vs Chemparuthi Herbal Hair Oil
+  if (/chemparuthi.*hair\s*oil.*shampoo/i.test(name)) {
+    return 'Chemparuthi Herbal Shampoo';
+  }
+  if (/chemparuthi.*shampoo/i.test(name) && !/hair\s*oil/i.test(name)) {
+    return 'Chemparuthi Herbal Shampoo';
+  }
+  if (/chemparuthi.*(?:hair\s*oil|oil)/i.test(name) && !/shampoo/i.test(name) && !/hairwash/i.test(name) && !/poo/i.test(name) && !/tea/i.test(name)) {
+    return 'Chemparuthi Herbal Hair Oil';
+  }
+
   // 1. Standardize confirmed duplicate spelling variations
   name = name.replace(/\bMulthani\s+Metti\b/gi, 'Multani Mitti');
   name = name.replace(/\bMulthani\b/gi, 'Multani');
@@ -441,6 +452,9 @@ export function getProductFallbackImage(name, id) {
   }
   if (n.includes('shikakai powder') || n.includes('shikakkai powder')) {
     return 'https://vedanmart.com/images/hair/HERBAL%20SHIKAKAI%20POWDER.png';
+  }
+  if (n.includes('arappu powder') || n.includes('arappu podi')) {
+    return 'https://vedanmart.com/images/Body/GREEN%20ARAPPU%20POWDER%20(2).jpeg';
   }
   if (n.includes('amla hair oil') || n.includes('amla hairoil')) {
     return 'https://vedanmart.com/images/hair/AMLA%20HAIROIL.jpg';
