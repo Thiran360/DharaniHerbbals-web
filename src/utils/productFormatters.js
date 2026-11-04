@@ -288,6 +288,14 @@ export function formatProductDisplayName(rawName) {
   if (!rawName) return '';
   let name = String(rawName).trim();
 
+  // 0. Clean test / typo artifact prefixes like 'XXXXX' in 'XXXXX100GM...'
+  name = name.replace(/^[xX]{2,}\s*/i, '');
+
+  // Special case: Vadhasura Kudineer with 100 Gm prefix requested by user
+  if (/vadhasura\s*kudineer/i.test(name)) {
+    return '100 Gm Vadhasura Kudineer Churnam';
+  }
+
   // 1. Standardize confirmed duplicate spelling variations
   name = name.replace(/\bMulthani\s+Metti\b/gi, 'Multani Mitti');
   name = name.replace(/\bMulthani\b/gi, 'Multani');
@@ -394,11 +402,15 @@ export function getProductFallbackImage(name, id) {
   const n = String(name || '').toLowerCase();
   const numId = Number(id);
 
+  // 1. Shampoos & Haircare
   if (numId === 1255 || n.includes('chemparuthi herbal shampoo') || n.includes('chemparuthi shampoo')) {
     return '/images/chemparuthi_shampoo_single.png';
   }
   if (n.includes('shikakai shampoo') || n.includes('shikakkai shampoo')) {
     return 'https://vedanmart.com/images/hair/SHIKAKAI%20SHAMPOO.jpg';
+  }
+  if (n.includes('katralai shampoo') || n.includes('aloe vera shampoo')) {
+    return 'https://vedanmart.com/images/hair/Aloe%20vera%20shampoo.jpg';
   }
   if (n.includes('amla herbal shampoo') || n.includes('dr. amla') || n.includes('dr.amla') || (n.includes('amla') && n.includes('shampoo'))) {
     return 'https://vedanmart.com/images/hair/AMLA%20SHAMPOO.jpg';
@@ -406,20 +418,14 @@ export function getProductFallbackImage(name, id) {
   if (n.includes('karisalankanni shampoo')) {
     return 'https://vedanmart.com/images/hair/Karisalankanni%20Shampoo.jpg';
   }
-  if (n.includes('chemparuthi herbal hair oil') || n.includes('chemparuthi hair oil') || n.includes('hibiscus herbal hair oil') || n.includes('hibiscus hair oil')) {
-    return 'https://vedanmart.com/images/hair/Hibiscus%20Oil.jpg';
-  }
-  if (n.includes('chemparuthi hairwash') || n.includes('hibiscus hair wash') || n.includes('hair wash powder') || n.includes('hairwash')) {
-    return 'https://vedanmart.com/images/hair/HIBISCUS%20HAIRWASH%20POWDER.jpg';
-  }
-  if (n.includes('avarampoo hair wash')) {
-    return 'https://vedanmart.com/images/hair/AVARMPOO%20HAIR%20WASH%20POWDER%20(NR).jpg';
-  }
-  if (n.includes('onion shampoo')) {
-    return 'https://vedanmart.com/images/hair/ONION%20SHAMPOO.jpg';
+  if (n.includes('coconut milk shampoo')) {
+    return 'https://vedanmart.com/images/hair/RICE%20KANJI%20SHAMPOO.png';
   }
   if (n.includes('rice kanji shampoo')) {
     return 'https://vedanmart.com/images/hair/RICE%20KANJI%20SHAMPOO.png';
+  }
+  if (n.includes('onion shampoo')) {
+    return 'https://vedanmart.com/images/hair/ONION%20SHAMPOO.jpg';
   }
   if (n.includes('arappu shampoo')) {
     return 'https://vedanmart.com/images/hair/ARAPPU%20SHAMPOO.jpg';
@@ -427,18 +433,184 @@ export function getProductFallbackImage(name, id) {
   if (n.includes('vettiver shampoo')) {
     return 'https://vedanmart.com/images/hair/VETTIVER%20SHAMPOO.jpg';
   }
+  if (n.includes('chemparuthi herbal hair oil') || n.includes('chemparuthi hair oil') || n.includes('hibiscus herbal hair oil') || n.includes('hibiscus hair oil')) {
+    return 'https://vedanmart.com/images/hair/Hibiscus%20Oil.jpg';
+  }
+  if (n.includes('chemparuthi hairwash') || n.includes('hibiscus hair wash') || n.includes('hairwash')) {
+    return 'https://vedanmart.com/images/hair/HIBISCUS%20HAIRWASH%20POWDER.jpg';
+  }
+  if (n.includes('shikakai powder') || n.includes('shikakkai powder')) {
+    return 'https://vedanmart.com/images/hair/HERBAL%20SHIKAKAI%20POWDER.png';
+  }
   if (n.includes('amla hair oil') || n.includes('amla hairoil')) {
     return 'https://vedanmart.com/images/hair/AMLA%20HAIROIL.jpg';
   }
   if (n.includes('karisalankanni hair oil') || n.includes('karisalankanni oil')) {
     return 'https://vedanmart.com/images/hair/karisalankanni%20oil.jpg';
   }
+  if (n.includes('avarampoo hair wash')) {
+    return 'https://vedanmart.com/images/hair/AVARMPOO%20HAIR%20WASH%20POWDER%20(NR).jpg';
+  }
+
+  // 2. Oils & Soups
+  if (n.includes('mudakkatran oil') || n.includes('mudakkathan oil') || n.includes('mutakkatran oil') || n.includes('balloon plant oil')) {
+    return 'https://vedanmart.com/images/Body/BALLOON%20PLANT%20MUTAKKATRAN%20OIL.jpg';
+  }
+  if (n.includes('mudakkatran soup') || n.includes('mudakkathan soup')) {
+    return 'https://vedanmart.com/images/herbal/3.jpeg';
+  }
+  if (n.includes('deepa oil')) {
+    return 'https://vedanmart.com/images/Poojas/DEEPA%20OIL.jpg';
+  }
+
+  // 3. Pickles, Gravies & Thokkus
+  if (n.includes('mudakkatran pickle') || n.includes('mudakkathan pickle')) {
+    return 'https://vedanmart.com/images/Food/MUTTAKATRAN%20SADA%20POWDER%20JAR.jpg';
+  }
+  if (n.includes('vazhaithandu') || n.includes('vazhai poo') || n.includes('mixed fruit jam')) {
+    return 'https://vedanmart.com/images/Food/PIRANDAI%20PICKLE%20JAR.jpg';
+  }
+  if (n.includes('sundaikkai') || n.includes('curry leaf thokku') || n.includes('curry leaf sada') || n.includes('puthina thokku')) {
+    return 'https://vedanmart.com/images/Food/CURRYLEAF%20Gravy%20JAR.jpg';
+  }
+  if (n.includes('pirandai pickle')) {
+    return 'https://vedanmart.com/images/Food/PIRANDAI%20PICKLE%20JAR.jpg';
+  }
+
+  // 4. Herbal & Leaf Powders
+  if (n.includes('veliparuthi')) {
+    return 'https://vedanmart.com/images/herbal/7.jpeg';
+  }
+  if (n.includes('paasiparuppu')) {
+    return 'https://vedanmart.com/images/Skin/Pasirarupu.jpg';
+  }
+  if (n.includes('thetran kottai') || n.includes('thetrankottai')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Thanveevittan%20kizhangu%20powder.jpeg';
+  }
+  if (n.includes('poonthikkai') || n.includes('poondhikai')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Poonthikaai.jpg';
+  }
+  if (n.includes('alampattai') || n.includes('aalam pattai')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/aalam%20pattai%20powder.jpeg';
+  }
+  if (n.includes('athimaduram') || n.includes('athimathuram')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Athimathuram%20Powder%20(PO).jpg';
+  }
+  if (n.includes('omam powder') || n.includes('omam')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Omam%20Powder.jpg';
+  }
+  if (n.includes('murungai leaf') || n.includes('murungaikeerai') || n.includes('murungai keerai')) {
+    return 'https://vedanmart.com/images/Food/Drumstick%20Leaf%20Rice%20Powder%20Jar.jpg';
+  }
+  if (n.includes('koiya leaf') || n.includes('guava leaf')) {
+    return 'https://vedanmart.com/images/Beverages/Guava%20Leaf%20Tea.jpg';
+  }
+  if (n.includes('elanthai leaf')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Avaram%20leaf%20powder.jpeg';
+  }
+  if (n.includes('athi ilai')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/NOCHI%20ILAI%20POWDER.jpg';
+  }
+  if (n.includes('arasa ilai')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Vilva%20Leaf%20Powder.jpg';
+  }
+  if (n.includes('aloe vera powder')) {
+    return 'https://vedanmart.com/images/Body/ALOE%20VERA%20POWDER.jpg';
+  }
+  if (n.includes('paruppu podi') || n.includes('paruppu')) {
+    return 'https://vedanmart.com/images/Food/PARUPPU%20DOSAI%20MIX.jpg';
+  }
+  if (n.includes('maa leaf') || n.includes('mango leaf')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Avaram%20leaf%20powder.jpeg';
+  }
+  if (n.includes('kalarchikkai')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Poonaikali%20power.jpeg';
+  }
+  if (n.includes('venthayam') || n.includes('fenugreek')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Fenugreek%20Powder.jpg';
+  }
+  if (n.includes('veppampoo') || n.includes('neem flower')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Neem%20powder.jpg';
+  }
   if (n.includes('veppilai powder') || n.includes('neem powder')) {
     return 'https://vedanmart.com/images/Health%20&%20Wellness/Neem%20powder.jpg';
+  }
+  if (n.includes('vellerukku')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Neermulli%20powder.jpeg';
+  }
+  if (n.includes('vettiver powder')) {
+    return 'https://vedanmart.com/images/hair/VETTIVER%20SHAMPOO.jpg';
+  }
+  if (n.includes('thuthuvalai') || n.includes('thoothuvalai')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/THUTHUVALAI%20POWDER.jpg';
+  }
+  if (n.includes('aali vithai') || n.includes('flaxseed')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Jamun%20Seed%20Powder%20(JAR).jpg';
+  }
+  if (n.includes('chemparuthi ilai') || n.includes('chemparuthi poo') || n.includes('hibiscus')) {
+    return 'https://vedanmart.com/images/Body/HIBISCUS%20FLOWER%20POWDER.jpeg';
   }
   if (n.includes('karuveppilai') || n.includes('curry leaf')) {
     return 'https://vedanmart.com/images/Health%20&%20Wellness/veppilai%20powder.jpeg';
   }
+  if (numId === 1018 || n.includes('vadhasura kudineer') || n.includes('vadhasura')) {
+    return 'https://vedanmart.com/images/Beverages/VADHASURA%20KUDINEER%20CHURNAM.jpg';
+  }
+
+  // 5. Teas & Coffees
+  if (n.includes('chemparuthi tea') || n.includes('hibiscus tea')) {
+    return 'https://vedanmart.com/images/Beverages/hibiscus%20tea.jpeg';
+  }
+  if (n.includes('sukku coffee') || n.includes('dry ginger coffee')) {
+    return 'https://vedanmart.com/images/Beverages/Dry%20Ginger%20Coffee.jpg';
+  }
+  if (n.includes('tulsi tea')) {
+    return 'https://vedanmart.com/images/Beverages/TULSI%20TEA.jpg';
+  }
+  if (n.includes('sangu poo')) {
+    return 'https://vedanmart.com/images/Beverages/Aavaram%20Flower%20Tea.png';
+  }
+
+  // 6. Foods, Snacks & Sweets
+  if (n.includes('burfi') || n.includes('barfi')) {
+    return 'https://vedanmart.com/images/Food/KADALAI%20MITTAI.webp';
+  }
+  if (n.includes('laddu')) {
+    return 'https://vedanmart.com/images/Food/KARUPATTI%20HALWA.jpeg';
+  }
+  if (n.includes('mixture')) {
+    return 'https://vedanmart.com/images/herbal/6.jpeg';
+  }
+  if (n.includes('murukku')) {
+    return 'https://vedanmart.com/images/Food/Ooty%20Varkey.jpg';
+  }
+  if (n.includes('mysore pak')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/beetroot%20powder.jpeg';
+  }
+  if (n.includes('amla honey')) {
+    return 'https://vedanmart.com/images/Food/Wild%20Honey.jpg';
+  }
+  if (n.includes('panang karuppatti') || n.includes('karuppatti') || n.includes('nattu sakkarai')) {
+    return 'https://vedanmart.com/images/Food/Adhiyaman%20Country%20Jaggery.png';
+  }
+  if (n.includes('kadalai maavu')) {
+    return 'https://vedanmart.com/images/Food/KADALAI%20MITTAI.webp';
+  }
+  if (n.includes('ulunthanganji') || n.includes('health mix')) {
+    return 'https://vedanmart.com/images/Health%20&%20Wellness/Millet%20Nutritional%20Mix.jpg';
+  }
+
+  // 7. Soaps & Poojas
+  if (n.includes('papaya soap')) {
+    return 'https://vedanmart.com/images/Body/PAPAYA%20SOAP.png';
+  }
+  if (n.includes('sample soaps') || n.includes('herbal soaps')) {
+    return 'https://vedanmart.com/images/Body/ROSE%20SOAP.png';
+  }
+  if (n.includes('kungumam')) {
+    return 'https://vedanmart.com/images/Poojas/Herbal%20Incense%20Powder%20(PO).jpg';
+  }
+
   return null;
 }
 

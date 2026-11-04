@@ -645,7 +645,7 @@ export default function ProductDetails() {
 
   const mediaItems = [];
   const isChemparuthiShampoo = Number(product.id) === 1255 || (product.name && product.name.toLowerCase().includes('chemparuthi herbal shampoo'));
-  const fallbackImg = getProductFallbackImage(product.name, product.id);
+  const fallbackImg = getProductFallbackImage(product.raw_name || product.name, product.id) || getProductFallbackImage(product.name, product.id);
 
   // 1. Primary product image (the EXACT image shown on the card outside) MUST ALWAYS be first!
   if (isChemparuthiShampoo) {

@@ -42,7 +42,7 @@ export const ProductCard = memo(({ product, index = 0 }) => {
     }
   };
 
-  const fallbackImg = getProductFallbackImage(product.name, product.id);
+  const fallbackImg = getProductFallbackImage(product.raw_name || product.name, product.id) || getProductFallbackImage(product.name, product.id);
 
   const handleImageError = (e) => {
     if (fallbackImg && e.target.src !== fallbackImg) {
