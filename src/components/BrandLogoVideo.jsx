@@ -143,7 +143,7 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
           const r = pix & 0xFF;
           const g = (pix >> 8) & 0xFF;
           const b = (pix >> 16) & 0xFF;
-          return r >= 200 && g >= 200 && b >= 200;
+          return r >= 210 && g >= 210 && b >= 210;
         };
 
         // Enqueue perimeter pixels connected to the canvas borders
@@ -213,7 +213,7 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
           }
         }
 
-        // Smooth anti-aliased edge blending for boundary pixels (removes white fringe)
+        // Smooth anti-aliased edge blending for boundary pixels (removes white fringe while preserving bright colors)
         for (let i = 0; i < clearedList.length; i++) {
           const bp = clearedList[i];
           const bx = bp % W;
@@ -227,12 +227,9 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
               const g = (pix >> 8) & 0xFF;
               const b = (pix >> 16) & 0xFF;
               const minVal = Math.min(r, g, b);
-              if (minVal >= 170) {
-                const alpha = Math.max(0, Math.min(255, Math.round(255 * (1 - (minVal - 170) / 40))));
-                const nr = Math.min(255, Math.round(r * (alpha / 255)));
-                const ng = Math.min(255, Math.round(g * (alpha / 255)));
-                const nb = Math.min(255, Math.round(b * (alpha / 255)));
-                data32[np] = (alpha << 24) | (nb << 16) | (ng << 8) | nr;
+              if (minVal >= 185) {
+                const alpha = Math.max(0, Math.min(255, Math.round(255 * (1 - (minVal - 185) / 25))));
+                data32[np] = (alpha << 24) | (b << 16) | (g << 8) | r;
               }
             }
           };
@@ -271,7 +268,13 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
       <img
         src={logo3dBright}
         alt={ariaLabel}
-        className="brand-logo-poster"
+        className={`brand-logo-poster ${videoStarted ? 'hidden' : ''}`}
+        style={{
+          opacity: videoStarted ? 0 : 1,
+          visibility: videoStarted ? 'hidden' : 'visible',
+          transition: 'opacity 0.2s ease',
+          pointerEvents: 'none'
+        }}
       />
       <canvas
         ref={canvasRef}

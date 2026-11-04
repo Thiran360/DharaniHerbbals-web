@@ -33,6 +33,13 @@
   object-fit: contain;
   pointer-events: none;
   background: transparent;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.brand-logo-poster.hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  display: none !important;
 }
 
 .brand-logo-canvas {
