@@ -62,7 +62,64 @@ export const ProductCard = memo(({ product, index = 0 }) => {
     displayImage = resolveMediaUrl(displayImage) || '/logo.png';
   }
 
-  const isSpecialZoomImage = false;
+  // 1. Detect tight camera close-up shots (Keelanelli 4.jpeg, Chemparuthi Poo, Thaneervittan, etc.)
+  // These fill the entire photo frame with 0% margin, so they must stay unscaled to prevent clipping.
+  const isTightImage = Boolean(
+    displayImage && (
+      displayImage.includes('/herbal/') ||
+      displayImage.includes('4.jpeg') ||
+      displayImage.includes('HIBISCUS%20FLOWER%20POWDER') ||
+      displayImage.includes('Thanveevittan') ||
+      (product.name && (
+        product.name.toLowerCase().includes('keelanelli') ||
+        product.name.toLowerCase().includes('chemparuthi poo')
+      ))
+    )
+  );
+
+  // 2. Detect products with wide white margins baked into their catalog photos (Vallarai, Sirukurinjan, etc.)
+  // These have 35-45% empty white space around the packet, so a boosted scale is needed so they aren't tiny.
+  const isPaddedImage = Boolean(
+    !isTightImage && displayImage && (
+      displayImage.includes('Health%20%26%20Wellness/') ||
+      displayImage.includes('Health & Wellness/') ||
+      displayImage.includes('Vallarai') ||
+      displayImage.includes('SIRUKURINJAN') ||
+      displayImage.includes('Sirukurinjan') ||
+      displayImage.includes('PIRANDAI') ||
+      displayImage.includes('Pirandai') ||
+      displayImage.includes('Neem%20powder') ||
+      displayImage.includes('Nilaavarai') ||
+      displayImage.includes('Thottal') ||
+      displayImage.includes('Marudhontri') ||
+      displayImage.includes('Karpuravalli') ||
+      displayImage.includes('THANTRIKKAI') ||
+      displayImage.includes('Vilva') ||
+      displayImage.includes('Manathakkali') ||
+      displayImage.includes('Sirunerunjil') ||
+      displayImage.includes('Trikaduku') ||
+      displayImage.includes('Koraikilangu') ||
+      displayImage.includes('Lavangapattai') ||
+      displayImage.includes('Fenugreek') ||
+      displayImage.includes('Seenthilkodi') ||
+      displayImage.includes('kandakathiri') ||
+      displayImage.includes('Thaamarai') ||
+      displayImage.includes('Musumusukkai') ||
+      displayImage.includes('Poonthikaai') ||
+      displayImage.includes('THIPILI') ||
+      (product.name && (
+        product.name.toLowerCase().includes('vallarai') ||
+        product.name.toLowerCase().includes('sirukurinjan') ||
+        product.name.toLowerCase().includes('pirandai')
+      ))
+    )
+  );
+
+  const imageFitClass = isTightImage
+    ? 'uc-img-tight-fit'
+    : (isPaddedImage ? 'uc-img-boost-fit' : 'uc-img-standard-fit');
+
+  const isAboveFold = index < 6;
 
   return (
     <div
@@ -151,9 +208,10 @@ export const ProductCard = memo(({ product, index = 0 }) => {
         <img
           src={displayImage}
           alt={`${translatedName} - ${product.category_name || 'Herbal Product'} by Dharani Herbals`}
-          className={`uc-img ${isSpecialZoomImage ? 'uc-img-zoom-fit' : ''}`}
-          loading="lazy"
-          decoding="async"
+          className={`uc-img ${imageFitClass}`}
+          loading={isAboveFold ? "eager" : "lazy"}
+          fetchPriority={isAboveFold ? "high" : "auto"}
+          decoding={isAboveFold ? "sync" : "async"}
           width="200"
           height="200"
           onError={handleImageError}

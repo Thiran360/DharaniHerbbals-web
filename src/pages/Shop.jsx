@@ -220,7 +220,14 @@ export default function Shop() {
   }, [visibleCount]);
 
   const scrollRestored = useRef(false);
-  const [apiCategories, setApiCategories] = useState([]);
+  const [apiCategories, setApiCategories] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('dharani_categories');
+      return cached ? JSON.parse(cached) : [];
+    } catch {
+      return [];
+    }
+  });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({});
 
@@ -232,14 +239,16 @@ export default function Shop() {
     })
       .then(res => res.json())
       .then(data => {
+        let cats = [];
         if (Array.isArray(data)) {
-          setApiCategories(data);
+          cats = data;
         } else if (data && data.data && Array.isArray(data.data)) {
-          setApiCategories(data.data);
-        } else {
-          console.error('API did not return an array for categories:', data);
-          setApiCategories([]);
+          cats = data.data;
         }
+        setApiCategories(cats);
+        try {
+          if (cats.length > 0) sessionStorage.setItem('dharani_categories', JSON.stringify(cats));
+        } catch {}
       })
       .catch(err => {
         console.error('Error fetching categories:', err);

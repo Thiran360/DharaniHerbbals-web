@@ -68,8 +68,8 @@ export default function HandpickedDeals() {
         </div>
 
       <div className="deals-grid reveal">
-        {dealProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {dealProducts.map((product, idx) => (
+          <ProductCard key={product.id} product={product} index={idx} />
         ))}
       </div>
     </div>

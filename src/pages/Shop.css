@@ -1247,11 +1247,11 @@
   max-width: 380px;
   margin: 0 auto;
   width: 100%;
-  animation: cardFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: cardFadeInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .uc-card:nth-child(even) {
-  animation-delay: 0.1s;
+  animation-delay: 0s;
 }
 
 .uc-card:hover {
@@ -1264,8 +1264,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 50%;
-  padding: 32px 24px;
+  width: 46%;
+  padding: 26px 16px 22px 20px;
 }
 
 .uc-category-tag {
@@ -1456,11 +1456,11 @@
 
 .uc-img-section {
     position: relative;
-    width: 50%;
+    width: 54%;
     background: #ffffff;
     overflow: hidden;
-    border-top-left-radius: 110px;
-    border-bottom-left-radius: 110px;
+    border-top-left-radius: 95px;
+    border-bottom-left-radius: 95px;
     border-left: 2px solid rgba(46, 125, 50, 0.15);
     flex-shrink: 0;
   }
@@ -1471,37 +1471,60 @@
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 8px 10px;
+    padding: 2px 4px;
     box-sizing: border-box;
     object-fit: contain !important;
     object-position: center;
-    transform: none !important;
-    transition: transform 0.4s ease, filter 0.3s ease;
+    transform: scale(1.15);
+    transform-origin: center center;
+    transition: transform 0.25s ease, filter 0.25s ease;
   }
 
 .uc-card:hover .uc-img {
-  transform: scale(1.05) !important;
+  transform: scale(1.20);
 }
 
-/* Ensure full product visibility without cropping Keelanelli or any powder/packet */
-.uc-img.uc-img-zoom-fit {
-  transform: none !important;
+/* Tight camera closeups (Keelanelli 4.jpeg, Chemparuthi Poo, etc.): 100% full, zero cropping */
+.uc-img.uc-img-tight-fit {
+  transform: scale(1.02) !important;
   object-fit: contain !important;
-  padding: 8px 10px;
+  padding: 6px 8px !important;
+}
+
+.uc-card:hover .uc-img.uc-img-tight-fit {
+  transform: scale(1.08) !important;
+}
+
+/* Padded catalog photos (Vallarai, Sirukurinjan, Pirandai, etc.) */
+/* Boosted scale fills the arch frame clearly with full readable detail, never tiny, zero cut off */
+.uc-img.uc-img-boost-fit {
+  transform: scale(1.42) !important;
+  object-fit: contain !important;
+  padding: 0 !important;
+}
+
+.uc-card:hover .uc-img.uc-img-boost-fit {
+  transform: scale(1.48) !important;
+}
+
+.uc-img.uc-img-zoom-fit {
+  transform: scale(1.02) !important;
+  object-fit: contain !important;
+  padding: 6px 8px !important;
 }
 
 .uc-card:hover .uc-img.uc-img-zoom-fit {
-  transform: scale(1.05) !important;
+  transform: scale(1.08) !important;
 }
 
 .shop-root .uc-img.uc-img-zoom-fit {
-  transform: none !important;
+  transform: scale(1.02) !important;
   object-fit: contain !important;
-  padding: 8px 10px;
+  padding: 6px 8px !important;
 }
 
 .shop-root .uc-card:hover .uc-img.uc-img-zoom-fit {
-  transform: scale(1.05) !important;
+  transform: scale(1.08) !important;
 }
 
 .uc-wishlist-btn {
@@ -1712,18 +1735,34 @@
   .uc-img {
     object-fit: contain !important;
     object-position: center;
-    padding: 6px 8px;
+    padding: 2px 4px;
     width: 100%;
     height: 100%;
-    transform: none !important;
+    transform: scale(1.10);
+  }
+
+  .shop-root .uc-img.uc-img-tight-fit,
+  .shop-grid .uc-img.uc-img-tight-fit,
+  .uc-img.uc-img-tight-fit {
+    transform: scale(1.0) !important;
+    object-fit: contain !important;
+    padding: 4px 6px;
+  }
+
+  .shop-root .uc-img.uc-img-boost-fit,
+  .shop-grid .uc-img.uc-img-boost-fit,
+  .uc-img.uc-img-boost-fit {
+    transform: scale(1.36) !important;
+    object-fit: contain !important;
+    padding: 0;
   }
 
   .shop-root .uc-img.uc-img-zoom-fit,
   .shop-grid .uc-img.uc-img-zoom-fit,
   .uc-img.uc-img-zoom-fit {
-    transform: none !important;
+    transform: scale(1.0) !important;
     object-fit: contain !important;
-    padding: 6px 8px;
+    padding: 4px 6px;
   }
 
   .shop-root .uc-info-section,
@@ -2079,20 +2118,36 @@
   .shop-root .uc-img,
   .shop-grid .uc-img,
   .uc-img {
-    padding: 6px 8px;
+    padding: 2px 4px;
     object-fit: contain !important;
     object-position: center;
     width: 100%;
     height: 100%;
-    transform: none !important;
+    transform: scale(1.10);
+  }
+
+  .shop-root .uc-img.uc-img-tight-fit,
+  .shop-grid .uc-img.uc-img-tight-fit,
+  .uc-img.uc-img-tight-fit {
+    transform: scale(1.0) !important;
+    object-fit: contain !important;
+    padding: 4px 6px;
+  }
+
+  .shop-root .uc-img.uc-img-boost-fit,
+  .shop-grid .uc-img.uc-img-boost-fit,
+  .uc-img.uc-img-boost-fit {
+    transform: scale(1.36) !important;
+    object-fit: contain !important;
+    padding: 0;
   }
 
   .shop-root .uc-img.uc-img-zoom-fit,
   .shop-grid .uc-img.uc-img-zoom-fit,
   .uc-img.uc-img-zoom-fit {
-    transform: none !important;
+    transform: scale(1.0) !important;
     object-fit: contain !important;
-    padding: 6px 8px;
+    padding: 4px 6px;
   }
 
   .shop-root .uc-info-section,
