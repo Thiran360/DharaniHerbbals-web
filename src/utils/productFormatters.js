@@ -265,7 +265,7 @@ const LEADING_WEIGHT_REGEX = /^\s*(?:\(\s*)?\d+(?:\.\d+)?\s*(?:(?:gm|gms|gram|gr
 
 const LEADING_BRAND_REGEX = /^\s*(?:(?:mahil|makil|ramcare|ram\s*care|vedanamuthu|vedanamut|vedan|amuthu|amutham|vana\s*arasi|vanaarasi|vanarasi|vana\s*rasi|athiyaman|adhiyaman|divyam|dhivyam|dhisha|disha|dharani(?:\s+herbb?als)?)(?=[^a-zA-Z0-9]|$)|(?:மகிழ்|மகிழ|ராம்கேர்|வேதனமுத்து|வேதன்|அமுது|அமுதம்|வான\s*அரசி|வன\s*அரசி|அதியமான்|திவ்யம்|திஷா|தாரணி|தரணி)(?=[^\u0B80-\u0BFF]|$))\s*[-–:xX*/]*\s*/i;
 
-const TRAILING_WEIGHT_REGEX = /\s*(?:[-–:xX*/(]|\b)\s*\d+(?:\.\d+)?\s*(?:gm|gms|gram|grams|g|ml|mls|milliliter|millilitres|l|ltr|liters|litres|liter|kg|kgs|kilogram|kilograms)\s*\)?$/i;
+const TRAILING_WEIGHT_REGEX = /\s*(?:\s+[xX]\s+|\s*[-–:*/(]|\b)\s*\d+(?:\.\d+)?\s*(?:gm|gms|gram|grams|g|ml|mls|milliliter|millilitres|l|ltr|liters|litres|liter|kg|kgs|kilogram|kilograms)\s*\)?$/i;
 
 /**
  * Converts English words to Title Case (First letter capitalized, remaining letters lowercase).

@@ -1808,10 +1808,9 @@
   .shop-root .uc-title,
   .shop-grid .uc-title,
   .uc-title {
-    font-size: 0.92rem;
-    line-height: 1.3em;
     margin-bottom: 4px;
-    height: 2.6em;
+    min-height: 2.8em;
+    height: auto;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -1819,10 +1818,25 @@
     text-overflow: ellipsis;
   }
 
+  .shop-root .uc-title a,
+  .shop-grid .uc-title a,
+  .uc-title a {
+    font-size: 0.95rem !important;
+    line-height: 1.32 !important;
+  }
+
   .shop-root .uc-subtitle,
   .shop-grid .uc-subtitle,
   .uc-subtitle {
-    display: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.72rem;
+    color: #64748b;
+    line-height: 1.3;
+    margin-bottom: 6px;
   }
 
   .shop-root .uc-category-tag,
@@ -2212,16 +2226,35 @@
   .shop-root .uc-title,
   .shop-grid .uc-title,
   .uc-title {
-    font-size: 0.82rem;
-    font-weight: 700;
-    line-height: 1.3em;
     margin-bottom: 3px;
-    height: 2.6em;
+    min-height: 2.7em;
+    height: auto;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .shop-root .uc-title a,
+  .shop-grid .uc-title a,
+  .uc-title a {
+    font-size: 0.88rem !important;
+    line-height: 1.28 !important;
+  }
+
+  .shop-root .uc-subtitle,
+  .shop-grid .uc-subtitle,
+  .uc-subtitle {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.68rem;
+    color: #64748b;
+    line-height: 1.25;
+    margin-bottom: 4px;
   }
 
   .shop-root .uc-category-tag,
@@ -2430,10 +2463,10 @@
 
 .uc-title a {
   font-family: 'Playfair Display', Georgia, serif !important;
-  font-size: 1.15rem !important;
+  font-size: clamp(0.92rem, 1.2vw, 1.15rem);
   font-weight: 600 !important;
   color: #173D2B !important;
-  line-height: 1.25 !important;
+  line-height: 1.28 !important;
   transition: color 0.2s ease !important;
 }
 
