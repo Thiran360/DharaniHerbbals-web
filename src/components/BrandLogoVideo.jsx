@@ -49,6 +49,7 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
     <span
       className={`brand-logo-video-wrap brand-logo-video-wrap--${variant} ${className}`}
       aria-label={ariaLabel}
+      style={{ background: 'transparent' }}
     >
       <video
         ref={videoRef}
@@ -62,6 +63,10 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
         preload="auto"
         aria-hidden="true"
         className="brand-logo-video brand-logo-video--mp4"
+        style={{
+          mixBlendMode: 'multiply',
+          backgroundColor: 'transparent'
+        }}
       >
         <source src={logoVideo} type="video/mp4" />
         <source src="/videos/logo.mp4" type="video/mp4" />
@@ -72,6 +77,7 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
           width="48"
           height="48"
           loading="eager"
+          style={{ mixBlendMode: 'multiply' }}
         />
       </video>
     </span>

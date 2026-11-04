@@ -7,6 +7,9 @@
   user-select: none;
   overflow: hidden;
   border-radius: 8px;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
 }
 
 .brand-logo-video-wrap--nav {
@@ -31,10 +34,14 @@
   display: block;
   pointer-events: none;
   user-select: none;
+  mix-blend-mode: multiply;
+  background-color: transparent;
 }
 
 .brand-logo-video--mp4 {
   transform: scale(1.45) translateY(13%);
+  mix-blend-mode: multiply;
+  background-color: transparent;
 }
 
 /* 3D legacy helpers kept for backward compatibility */
@@ -47,6 +54,7 @@
   -webkit-perspective: 700px;
   user-select: none;
   flex-shrink: 0;
+  background: transparent !important;
 }
 
 .brand-logo-3d-spinner {
@@ -76,7 +84,6 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   pointer-events: none;
-  filter: drop-shadow(0 3px 8px rgba(16, 185, 129, 0.35));
 }
 
 .brand-logo-3d-face.front {
