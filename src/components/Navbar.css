@@ -162,6 +162,14 @@
   filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.2));
 }
 
+.brand-logo-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
 /* Center Section: Links */
 .nav-links-center {
   display: flex;

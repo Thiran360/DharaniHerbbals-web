@@ -1,17 +1,35 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import './BrandLogoVideo.css';
 
 export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLabel = 'Dharani Herbbals logo' }) {
   const videoRef = useRef(null);
-  
-  // Mobile devices frequently render VP9 WebM alpha transparency as solid black background/leaves.
-  // Use high-resolution transparent green D logo image on mobile or when mobile-nav variant is specified.
-  const isMobile = typeof window !== 'undefined' && (
-    variant === 'mobile-nav' ||
-    window.innerWidth <= 768 ||
-    /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '')
-  );
+  const [logoSrc, setLogoSrc] = useState('/videos/logo_transparent.webp');
 
-  const [canUseWebM, setCanUseWebM] = useState(!isMobile);
+  const checkIsMobile = useCallback(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      variant === 'mobile-nav' ||
+      window.innerWidth <= 768 ||
+      /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '')
+    );
+  }, [variant]);
+
+  const [isMobile, setIsMobile] = useState(checkIsMobile);
+  const [canUseWebM, setCanUseWebM] = useState(() => !checkIsMobile());
+
+  // Listen for window resize (e.g. rotating device, or toggling device toolbar in DevTools)
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = checkIsMobile();
+      setIsMobile(mobile);
+      if (mobile) {
+        setCanUseWebM(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [checkIsMobile]);
 
   useEffect(() => {
     if (isMobile) {
@@ -88,24 +106,26 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
         >
           <source src="/videos/logo_transparent.webm" type="video/webm; codecs=vp9" />
           <img
-            src="/favicon.png"
+            src={logoSrc}
             alt={ariaLabel}
-            className="brand-logo-video brand-logo-crisp-d"
+            className="brand-logo-video"
             width="48"
             height="48"
             loading="eager"
             decoding="async"
+            onError={() => setLogoSrc('/favicon.png')}
           />
         </video>
       ) : (
         <img
-          src="/favicon.png"
+          src={logoSrc}
           alt={ariaLabel}
-          className="brand-logo-video brand-logo-crisp-d"
+          className="brand-logo-video"
           width="48"
           height="48"
           loading="eager"
           decoding="async"
+          onError={() => setLogoSrc('/favicon.png')}
         />
       )}
     </span>
