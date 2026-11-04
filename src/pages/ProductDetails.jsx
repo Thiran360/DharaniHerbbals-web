@@ -679,8 +679,11 @@ export default function ProductDetails() {
       if (raw && (raw.includes('Vaishnavi.jpeg') || raw.endsWith('/logo.png'))) return;
       const src = resolveMediaUrl(raw);
       if (src && !mediaItems.some(m => m.src === src)) {
-        // Exclude double-bottle legacy image for Chemparuthi shampoo
+        // Exclude double-bottle legacy image for Chemparuthi shampoo & Arappu shampoo
         if (isChemparuthiShampoo && (src.includes('Hibiscus') || src.includes('Shampoo.jpg'))) {
+          return;
+        }
+        if (isArappuShampoo) {
           return;
         }
         mediaItems.push({ type: 'image', src, thumb: src });
@@ -911,6 +914,10 @@ export default function ProductDetails() {
                       decoding="async"
                       referrerPolicy="no-referrer"
                       onError={(e) => {
+                        if (isArappuShampoo) {
+                          e.target.src = '/images/arappu_shampoo.jpg';
+                          return;
+                        }
                         if (fallbackImg && e.target.src !== fallbackImg) {
                           e.target.src = fallbackImg;
                           return;
