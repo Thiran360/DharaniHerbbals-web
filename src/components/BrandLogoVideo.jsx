@@ -122,19 +122,8 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
 
       const video = sharedVideo;
       if (video && video.videoWidth > 0 && !video.paused) {
-        const vw = video.videoWidth;
-        const vh = video.videoHeight;
-        // The 3D logo in logo.mp4 sits in the upper ~72% of the video frame.
-        // Crop the bottom empty margin so the 3D logo is centered.
-        const contentHeight = Math.min(vh, Math.round(vw * 0.72));
-        const contentWidth = vw;
-        const aspect = contentWidth / contentHeight;
-        const drawW = targetSize;
-        const drawH = Math.round(targetSize / aspect);
-        const offsetY = Math.round((targetSize - drawH) / 2);
-
         ctx.clearRect(0, 0, targetSize, targetSize);
-        ctx.drawImage(video, 0, 0, contentWidth, contentHeight, 0, offsetY, drawW, drawH);
+        ctx.drawImage(video, 0, 0, targetSize, targetSize);
 
         const imgData = ctx.getImageData(0, 0, targetSize, targetSize);
         const data32 = new Uint32Array(imgData.data.buffer);
@@ -146,30 +135,18 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
         let head = 0;
         let tail = 0;
 
-        // Detect if outer background is white or dark
-        const cornerPixel = data32[0];
-        const cr = cornerPixel & 0xFF;
-        const cg = (cornerPixel >> 8) & 0xFF;
-        const cb = (cornerPixel >> 16) & 0xFF;
-        const isWhiteBg = (cr + cg + cb) > 400;
+        // Any pixel that is transparent or matches the outer white background
+        const isBgPixel = (p) => {
+          const pix = data32[p];
+          const a = (pix >> 24) & 0xFF;
+          if (a < 20) return true;
+          const r = pix & 0xFF;
+          const g = (pix >> 8) & 0xFF;
+          const b = (pix >> 16) & 0xFF;
+          return r >= 200 && g >= 200 && b >= 200;
+        };
 
-        const isBgPixel = isWhiteBg
-          ? (p) => {
-              const pix = data32[p];
-              const r = pix & 0xFF;
-              const g = (pix >> 8) & 0xFF;
-              const b = (pix >> 16) & 0xFF;
-              return r > 215 && g > 215 && b > 215;
-            }
-          : (p) => {
-              const pix = data32[p];
-              const r = pix & 0xFF;
-              const g = (pix >> 8) & 0xFF;
-              const b = (pix >> 16) & 0xFF;
-              return r < 35 && g < 35 && b < 35;
-            };
-
-        // Enqueue only perimeter pixels matching background
+        // Enqueue perimeter pixels connected to the canvas borders
         for (let x = 0; x < W; x++) {
           if (isBgPixel(x)) {
             visited[x] = 1;
@@ -194,15 +171,16 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
           }
         }
 
-        // BFS flood fill: erase only outer background pixels connected to outside edges
-        // White leaves inside the green "D" are protected and preserved!
+        // BFS flood fill: erase only outer background pixels connected to outside edges.
+        // White leaves inside the green "D" are completely protected and preserved!
+        const clearedList = [];
         while (head < tail) {
           const p = queue[head++];
           const px = p % W;
           const py = (p / W) | 0;
 
-          // Clear this background pixel to 100% transparent
           data32[p] = 0;
+          clearedList.push(p);
 
           // 4-way neighbors
           if (px > 0) {
@@ -233,6 +211,36 @@ export default function BrandLogoVideo({ className = '', variant = 'nav', ariaLa
               queue[tail++] = np;
             }
           }
+        }
+
+        // Smooth anti-aliased edge blending for boundary pixels (removes white fringe)
+        for (let i = 0; i < clearedList.length; i++) {
+          const bp = clearedList[i];
+          const bx = bp % W;
+          const by = (bp / W) | 0;
+
+          const checkEdge = (np) => {
+            if (!visited[np]) {
+              visited[np] = 1;
+              const pix = data32[np];
+              const r = pix & 0xFF;
+              const g = (pix >> 8) & 0xFF;
+              const b = (pix >> 16) & 0xFF;
+              const minVal = Math.min(r, g, b);
+              if (minVal >= 170) {
+                const alpha = Math.max(0, Math.min(255, Math.round(255 * (1 - (minVal - 170) / 40))));
+                const nr = Math.min(255, Math.round(r * (alpha / 255)));
+                const ng = Math.min(255, Math.round(g * (alpha / 255)));
+                const nb = Math.min(255, Math.round(b * (alpha / 255)));
+                data32[np] = (alpha << 24) | (nb << 16) | (ng << 8) | nr;
+              }
+            }
+          };
+
+          if (bx > 0) checkEdge(bp - 1);
+          if (bx < W - 1) checkEdge(bp + 1);
+          if (by > 0) checkEdge(bp - W);
+          if (by < H - 1) checkEdge(bp + W);
         }
 
         ctx.putImageData(imgData, 0, 0);

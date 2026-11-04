@@ -893,40 +893,44 @@
    ========================================================================== */
 @media (max-width: 480px) {
   .dharani-mascot-card-wrapper {
-    left: 6px;
-    bottom: 18px;
+    left: 8px;
+    bottom: 16px;
   }
 
   .dharani-mascot-avatar-box {
-    width: 106px;
-    margin-right: -20px;
+    width: 88px;
+    height: 110px;
+    margin-right: -16px;
   }
 
   .dharani-mascot-img {
-    max-height: 130px;
+    max-height: 115px;
   }
 
   .dharani-mascot-speech-bubble {
-    width: 198px;
-    padding: 11px 14px 9px 18px;
-    border-radius: 22px;
+    width: 176px;
+    padding: 9px 12px 8px 14px;
+    border-radius: 20px;
   }
 
   .dharani-megaphone-title {
-    font-size: 15px;
+    font-size: 13.5px;
+    line-height: 1.2;
   }
 
   .dharani-megaphone-subtitle {
-    font-size: 11.5px;
+    font-size: 11px;
+    line-height: 1.2;
   }
 
   .dharani-mascot-cta-btn {
-    font-size: 12px;
-    padding: 6px 12px;
+    font-size: 11.5px;
+    padding: 6px 10px;
+    margin: 6px 0 3px 0;
   }
 
   .dharani-mascot-footer {
-    font-size: 10px;
-    margin-top: 6px;
+    font-size: 9.5px;
+    margin-top: 4px;
   }
 }
