@@ -71,9 +71,9 @@ export const ProductCard = memo(({ product, index = 0 }) => {
 
   // 1. Detect tight camera close-up shots (Keelanelli 4.jpeg, Chemparuthi Poo, Thaneervittan, etc.)
   // These fill the entire photo frame with 0% margin, so they must stay unscaled to prevent clipping.
+  // NOTE: /herbal/ path is NOT tight — those are small-packet padded images (Veliparuthi, Mudakkatran, etc.)
   const isTightImage = Boolean(
     displayImage && (
-      displayImage.includes('/herbal/') ||
       displayImage.includes('4.jpeg') ||
       displayImage.includes('HIBISCUS%20FLOWER%20POWDER') ||
       displayImage.includes('Thanveevittan') ||
@@ -111,9 +111,21 @@ export const ProductCard = memo(({ product, index = 0 }) => {
       fullNameStr.includes('musumusukkai') ||
       fullNameStr.includes('poonthikaai') ||
       fullNameStr.includes('thipili') ||
+      fullNameStr.includes('veliparuthi') ||
+      fullNameStr.includes('mudakkatran') ||
+      fullNameStr.includes('mudakkathan') ||
+      fullNameStr.includes('mixture') ||
+      fullNameStr.includes('murukku') ||
+      fullNameStr.includes('vadhasura') ||
+      fullNameStr.includes('avarampoo') ||
+      fullNameStr.includes('sundaikkai') ||
+      fullNameStr.includes('veppilai') ||
+      fullNameStr.includes('karuveppilai') ||
+      fullNameStr.includes('curry leaf') ||
       (displayImage && (
         displayImage.includes('Health%20%26%20Wellness/') ||
         displayImage.includes('Health & Wellness/') ||
+        displayImage.includes('/herbal/') ||
         displayImage.toLowerCase().includes('vallarai') ||
         displayImage.toLowerCase().includes('sirukurinjan') ||
         displayImage.toLowerCase().includes('pirandai') ||
