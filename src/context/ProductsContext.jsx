@@ -65,6 +65,8 @@ export function ProductsProvider({ children }) {
     let resolvedImage = p.image;
     if (p.id === 1255 || (displayName && displayName.toLowerCase().includes('chemparuthi herbal shampoo'))) {
       resolvedImage = '/images/chemparuthi_herbal_shampoo.jpg';
+    } else if (p.id === 1246 || (displayName && displayName.toLowerCase().includes('arappu shampoo'))) {
+      resolvedImage = '/images/arappu_shampoo.jpg';
     } else if (!resolvedImage || (typeof resolvedImage === 'string' && (resolvedImage.includes('Vaishnavi.jpeg') || resolvedImage.endsWith('/logo.png')))) {
       resolvedImage = fallbackImg || resolvedImage;
     }
@@ -323,6 +325,9 @@ export function ProductsProvider({ children }) {
               const fallbackImg = getProductFallbackImage(p.name, p.id) || getProductFallbackImage(displayName, p.id);
               if (p.id === 1255 || (displayName && displayName.toLowerCase().includes('chemparuthi herbal shampoo'))) {
                 return '/images/chemparuthi_herbal_shampoo.jpg';
+              }
+              if (p.id === 1246 || (displayName && displayName.toLowerCase().includes('arappu shampoo'))) {
+                return '/images/arappu_shampoo.jpg';
               }
               if (extraImagesMap[String(p.id)]) {
                 return extraImagesMap[String(p.id)];

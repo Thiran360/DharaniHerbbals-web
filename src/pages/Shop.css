@@ -1522,6 +1522,18 @@
   transform: scale(1.18) !important;
 }
 
+/* Sprouted Multigrain Health Mix: ensures the wide box carton is 100% visible without clipping on the top-left curved arc */
+.uc-img.uc-img-multigrain-fit {
+  object-fit: contain !important;
+  object-position: right center !important;
+  transform: scale(0.96) !important;
+  padding: 4px 6px 4px 22px !important;
+}
+
+.uc-card:hover .uc-img.uc-img-multigrain-fit {
+  transform: scale(1.0) !important;
+}
+
 .uc-img.uc-img-zoom-fit {
   transform: scale(1.0) !important;
   object-fit: contain !important;
@@ -1784,6 +1796,15 @@
     object-position: center center !important;
     transform: scale(1.08) !important;
     padding: 0 !important;
+  }
+
+  .shop-root .uc-img.uc-img-multigrain-fit,
+  .shop-grid .uc-img.uc-img-multigrain-fit,
+  .uc-img.uc-img-multigrain-fit {
+    object-fit: contain !important;
+    object-position: right center !important;
+    transform: scale(0.94) !important;
+    padding: 3px 4px 3px 20px !important;
   }
 
   .shop-root .uc-img.uc-img-zoom-fit,

@@ -59,6 +59,8 @@ export const ProductCard = memo(({ product, index = 0 }) => {
   let displayImage = fallbackImg || 'https://vedanmart.com/images/Food/WILD%20HONEYJAR(NR).jpg';
   if (product.id === 1255 || (product.name && product.name.toLowerCase().includes('chemparuthi herbal shampoo'))) {
     displayImage = '/images/chemparuthi_herbal_shampoo.jpg';
+  } else if (product.id === 1246 || (product.name && product.name.toLowerCase().includes('arappu shampoo'))) {
+    displayImage = '/images/arappu_shampoo.jpg';
   } else if (product.image && typeof product.image === 'string' && !product.image.includes('Vaishnavi.jpeg') && !product.image.endsWith('/logo.png')) {
     if (product.image.includes(',')) {
       displayImage = product.image.split(',')[0].trim();
@@ -77,6 +79,19 @@ export const ProductCard = memo(({ product, index = 0 }) => {
     const rawName = String(product.raw_name || product.name || '').toLowerCase();
     const displayName = String(product.name || '').toLowerCase();
     const fullName = (rawName + ' ' + displayName).trim();
+
+    // 0. Sprouted Multigrain Health Mix box carton:
+    // Wide square box carton. Must NOT be zoomed into the 95px curved arc!
+    // Shift right with left padding so the entire box and 'Sprouted Multigrain' text are completely visible!
+    const isMultigrain = 
+      Number(product.id) === 1272 ||
+      fullName.includes('multigrain') || 
+      fullName.includes('health mix') ||
+      img.includes('multigrain');
+
+    if (isMultigrain) {
+      return 'uc-img-multigrain-fit';
+    }
 
     // 1. Wide Landscape Studio Photos (e.g. herbal/7.jpeg Veliparuthi, herbal/1 kadukkai, herbal/3 mudakathan, etc.)
     // These horizontal landscape photos have a small pouch in the center with wide empty studio margins.

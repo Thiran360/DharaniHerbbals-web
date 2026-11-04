@@ -438,8 +438,8 @@ export function getProductFallbackImage(name, id) {
   if (n.includes('onion shampoo')) {
     return 'https://vedanmart.com/images/hair/ONION%20SHAMPOO.jpg';
   }
-  if (n.includes('arappu shampoo')) {
-    return 'https://vedanmart.com/images/hair/ARAPPU%20SHAMPOO.jpg';
+  if (numId === 1246 || n.includes('arappu shampoo')) {
+    return '/images/arappu_shampoo.jpg';
   }
   if (n.includes('vettiver shampoo')) {
     return 'https://vedanmart.com/images/hair/VETTIVER%20SHAMPOO.jpg';

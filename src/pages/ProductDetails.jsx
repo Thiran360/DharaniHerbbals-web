@@ -645,11 +645,14 @@ export default function ProductDetails() {
 
   const mediaItems = [];
   const isChemparuthiShampoo = Number(product.id) === 1255 || (product.name && product.name.toLowerCase().includes('chemparuthi herbal shampoo'));
+  const isArappuShampoo = Number(product.id) === 1246 || (product.name && product.name.toLowerCase().includes('arappu shampoo'));
   const fallbackImg = getProductFallbackImage(product.raw_name || product.name, product.id) || getProductFallbackImage(product.name, product.id);
 
   // 1. Primary product image (the EXACT image shown on the card outside) MUST ALWAYS be first!
   if (isChemparuthiShampoo) {
     mediaItems.push({ type: 'image', src: '/images/chemparuthi_herbal_shampoo.jpg', thumb: '/images/chemparuthi_herbal_shampoo.jpg' });
+  } else if (isArappuShampoo) {
+    mediaItems.push({ type: 'image', src: '/images/arappu_shampoo.jpg', thumb: '/images/arappu_shampoo.jpg' });
   } else if (product.image && !product.image.includes('Vaishnavi.jpeg') && !product.image.endsWith('/logo.png')) {
     const rawImages = typeof product.image === 'string' && product.image.includes(',')
       ? product.image.split(',').map(s => s.trim()).filter(Boolean)
