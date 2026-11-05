@@ -28,3 +28,5 @@ dist-ssr
 *.zip
 
 .env*
+
+export_updated_files/
