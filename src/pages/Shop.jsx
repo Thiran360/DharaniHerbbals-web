@@ -222,6 +222,13 @@ export default function Shop() {
   const scrollRestored = useRef(false);
   const [apiCategories, setApiCategories] = useState(() => {
     try {
+      // Prefer the shared localStorage cache written by CategoryStrip (avoids a duplicate fetch)
+      const lsCache = localStorage.getItem('dharani_categories_cache');
+      if (lsCache) {
+        const parsed = JSON.parse(lsCache);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+      // Fallback to the sessionStorage copy if present
       const cached = sessionStorage.getItem('dharani_categories');
       return cached ? JSON.parse(cached) : [];
     } catch {
@@ -232,6 +239,19 @@ export default function Shop() {
   const [selectedFilters, setSelectedFilters] = useState({});
 
   useEffect(() => {
+    // Skip the fetch entirely if we already have categories from the shared cache
+    // CategoryStrip (always rendered on the page) is responsible for keeping this cache fresh
+    const lsCache = localStorage.getItem('dharani_categories_cache');
+    if (lsCache) {
+      try {
+        const parsed = JSON.parse(lsCache);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setApiCategories(parsed);
+          return; // ← no network request needed
+        }
+      } catch { /* fall through to fetch */ }
+    }
+
     fetch(`${API_BASE_URL}/categories/`, {
       headers: {
         'ngrok-skip-browser-warning': 'true'

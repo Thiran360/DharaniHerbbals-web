@@ -14,6 +14,7 @@ const baseSlidesTemplate = [
   {
     id: 3, // Fallback
     mainTitle: "Rooted in Tradition, Crafted with Care from Handpicked Herbs for Pure and Timeless Wellness.",
+    mobileTitle: "Rooted in Tradition, Crafted for Pure & Timeless Wellness",
     offer: 'PREMIUM QUALITY',
     productImg: p4,
     bgGradient: 'linear-gradient(135deg, #1f2937 0%, #111827 50%, #030712 100%)',
@@ -23,6 +24,7 @@ const baseSlidesTemplate = [
     id: 2,
     productName: 'Makil Beetroot Malt',
     mainTitle: "Craving the Goodness of Beetroot Without the Extra Effort ?",
+    mobileTitle: "Pure Beetroot Goodness in Every Sip",
     offer: 'LIMITED TIME DEAL',
     originalPrice: '₹350',
     discountPrice: '₹249',
@@ -34,6 +36,7 @@ const baseSlidesTemplate = [
     id: 1,
     productName: 'Nalangu maavu',
     mainTitle: "A Heritage of Purity in Every Bath.",
+    mobileTitle: "A Heritage of Purity in Every Bath",
     offer: 'FLAT 20% OFF',
     originalPrice: '₹300',
     discountPrice: '₹249',
@@ -123,10 +126,20 @@ const ImageSlider = function() {
   const touchEndRef = useRef(null);
 
   const slides = baseSlidesTemplate.map((slide, index) => {
-    let titleKey, offerKey;
-    if (slide.id === 3) { titleKey = 'sliderTitle1'; offerKey = 'sliderOffer1'; }
-    else if (slide.id === 2) { titleKey = 'sliderTitle2'; offerKey = 'sliderOffer2'; }
-    else if (slide.id === 1) { titleKey = 'sliderTitle3'; offerKey = 'sliderOffer3'; }
+    let titleKey, titleMobileKey, offerKey;
+    if (slide.id === 3) {
+      titleKey = 'sliderTitle1';
+      titleMobileKey = 'sliderTitle1Mobile';
+      offerKey = 'sliderOffer1';
+    } else if (slide.id === 2) {
+      titleKey = 'sliderTitle2';
+      titleMobileKey = 'sliderTitle2Mobile';
+      offerKey = 'sliderOffer2';
+    } else if (slide.id === 1) {
+      titleKey = 'sliderTitle3';
+      titleMobileKey = 'sliderTitle3Mobile';
+      offerKey = 'sliderOffer3';
+    }
     
     let bgVideoUrl = '';
     if (index === 0) bgVideoUrl = '/videos/video_1.mp4';
@@ -136,8 +149,9 @@ const ImageSlider = function() {
     return {
       ...slide,
       bgVideo: bgVideoUrl,
-      mainTitle: t(titleKey),
-      offer: t(offerKey)
+      mainTitle: t(titleKey) || slide.mainTitle,
+      mobileTitle: t(titleMobileKey) || slide.mobileTitle || slide.mainTitle,
+      offer: t(offerKey) || slide.offer
     };
   });
 
@@ -203,14 +217,19 @@ const ImageSlider = function() {
             )}
             
             <div className="promo-layout" style={{ position: 'relative', zIndex: 2 }}>
-              {/* Left Content */}
+              {/* Left Content / Mobile Bottom Glass Card */}
               <div className="promo-text-col">
-                <h3 className="promo-small-title">{slide.productName}</h3>
-                <h1 className="promo-main-title">{slide.mainTitle}</h1>
-                <button className="promo-shop-btn" onClick={() => navigate(slide.link)}>{t('shopNow')}</button>
+
+                <h1 className="promo-main-title">
+                  <span className="promo-title-desktop">{slide.mainTitle}</span>
+                  <span className="promo-title-mobile">{slide.mobileTitle || slide.mainTitle}</span>
+                </h1>
+                <button className="promo-shop-btn" onClick={() => navigate(slide.link)}>
+                  {t('shopNow')}
+                </button>
               </div>
 
-              {/* Center Content (Product) */}
+              {/* Center Content (Product on desktop) */}
               <div className="promo-product-col">
                 {slide.productImg && (
                   <div className="promo-product-animator">

@@ -215,15 +215,13 @@ export default function SliderPopup() {
     return `₹${val}`;
   };
 
-  // Fetch real offers and products from CRM API
+  // Fetch real offers from CRM API; use contextProducts already loaded by ProductsContext
   useEffect(() => {
     let isMounted = true;
     const fetchOffersAndProducts = async () => {
       try {
-        const [slidersRes, prodsRes] = await Promise.all([
-          fetch(SLIDERS_API_URL, { headers: { 'ngrok-skip-browser-warning': 'true' } }).catch(() => null),
-          fetch(`${API_BASE_URL}/products/?role=admin`, { headers: { 'ngrok-skip-browser-warning': 'true' } }).catch(() => null)
-        ]);
+        // Only fetch sliders — products are already available from ProductsContext (no duplicate request)
+        const slidersRes = await fetch(SLIDERS_API_URL, { headers: { 'ngrok-skip-browser-warning': 'true' } }).catch(() => null);
 
         let sliderList = [];
         if (slidersRes && slidersRes.ok) {
@@ -231,14 +229,8 @@ export default function SliderPopup() {
           sliderList = Array.isArray(sData) ? sData : sData?.value || sData?.results || sData?.data || [];
         }
 
+        // Use contextProducts directly — already fetched, cached, and transformed by ProductsContext
         let productsList = contextProducts && contextProducts.length > 0 ? [...contextProducts] : [];
-        if (prodsRes && prodsRes.ok) {
-          const pData = await prodsRes.json();
-          const remoteList = Array.isArray(pData) ? pData : pData?.results || pData?.data || [];
-          if (remoteList.length > 0) {
-            productsList = remoteList;
-          }
-        }
 
         const findMatchedProduct = (titleText, imgUrl) => {
           if (!productsList || productsList.length === 0) return null;

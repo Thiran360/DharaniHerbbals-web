@@ -13,7 +13,7 @@
 
 .dharani-mascot-card-wrapper {
   position: fixed;
-  left: 12px;
+  left: 14px;
   bottom: 24px;
   z-index: 97;
   user-select: none;
@@ -56,26 +56,30 @@
   display: flex;
   align-items: flex-end;
   position: relative;
+  gap: 14px;
 }
 
 /* Mascot Avatar Box: Houses 3D Mascot Girl with Megaphone */
 .dharani-mascot-avatar-box {
-  width: 126px;
+  width: 115px;
   flex-shrink: 0;
   position: relative;
-  margin-right: -24px;
+  margin-right: 0px;
   margin-bottom: 0px;
-  z-index: 4;
+  z-index: 5;
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  overflow: visible;
 }
 
 .dharani-mascot-img {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
-  max-height: 145px;
+  max-height: 138px;
   object-fit: contain;
+  object-position: bottom center;
   display: block;
   position: relative;
   z-index: 2;
@@ -91,10 +95,10 @@
   box-shadow: 
     0 12px 32px rgba(23, 61, 43, 0.16),
     0 0 0 1.5px rgba(255, 255, 255, 0.95) inset;
-  padding: 13px 18px 11px 26px;
+  padding: 13px 18px 11px 18px;
   width: 236px;
   position: relative;
-  z-index: 3;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -713,15 +717,31 @@
     bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
+  .dharani-mascot-container {
+    gap: 10px;
+  }
+
   .dharani-mascot-avatar-box {
-    width: 76px;
-    height: 118px;
-    margin-right: -14px;
+    width: 88px;
+    height: auto;
+    max-height: 118px;
+    margin-right: 0px;
+    z-index: 5;
+    overflow: visible;
+  }
+
+  .dharani-mascot-img {
+    max-height: 115px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   .dharani-mascot-speech-bubble {
+    width: 200px;
     max-width: 230px;
-    padding: 12px 14px 10px 14px;
+    padding: 11px 14px 10px 14px;
+    z-index: 2;
   }
 
   .dharani-mascot-title {
@@ -893,24 +913,34 @@
    ========================================================================== */
 @media (max-width: 480px) {
   .dharani-mascot-card-wrapper {
-    left: 8px;
+    left: 6px;
     bottom: 16px;
   }
 
+  .dharani-mascot-container {
+    gap: 8px;
+  }
+
   .dharani-mascot-avatar-box {
-    width: 88px;
-    height: 110px;
-    margin-right: -16px;
+    width: 76px;
+    height: auto;
+    margin-right: 0px;
+    z-index: 5;
+    overflow: visible;
   }
 
   .dharani-mascot-img {
-    max-height: 115px;
+    max-height: 102px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   .dharani-mascot-speech-bubble {
-    width: 176px;
-    padding: 9px 12px 8px 14px;
+    width: 172px;
+    padding: 9px 12px 8px 12px;
     border-radius: 20px;
+    z-index: 2;
   }
 
   .dharani-megaphone-title {

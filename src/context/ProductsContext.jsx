@@ -3,6 +3,7 @@ import { API_BASE_URL, NGROK_DOMAIN, resolveMediaUrl } from '../services/api';
 import { formatProductPackSize, formatVariationLabel, formatProductDisplayName, formatCurrency, consolidateProducts, getProductFallbackImage } from '../utils/productFormatters';
 import { getProductVariations, getDefaultVariation } from '../data/productVariationsData';
 import { getProductDescription } from '../data/productCatalogData';
+import { getProductShortDescription } from '../data/productShortDescriptions';
 import liveProductsBackup from '../data/liveProductsCache.json';
 
 const EXCLUDED_PRODUCT_IDS = new Set([1032, 1039, 1228, 1192, 1128]);
@@ -51,6 +52,7 @@ export function ProductsProvider({ children }) {
     const rev = (p.reviews !== null && p.reviews !== undefined && p.reviews !== '') ? Number(p.reviews) : null;
     const isValid = r !== null && !isNaN(r) && r > 0 && rev !== null && !isNaN(rev) && rev > 0;
     const enhancedDescription = getProductDescription(p);
+    const shortDesc = getProductShortDescription(p);
     const variations = (Array.isArray(p.variations) && p.variations.length > 0)
       ? p.variations
       : getProductVariations(p.id);
@@ -82,6 +84,10 @@ export function ProductsProvider({ children }) {
       originalPrice: (p.mrp && parseFloat(p.mrp) > parseFloat(String(p.price || 0).replace(/[^0-9.]/g, ''))) ? formatCurrency(p.mrp) : (p.originalPrice ? formatCurrency(p.originalPrice) : ''),
       discount: (p.mrp && parseFloat(p.mrp) > parseFloat(String(p.price || 0).replace(/[^0-9.]/g, ''))) ? (Math.round(((parseFloat(p.mrp) - parseFloat(String(p.price).replace(/[^0-9.]/g, ''))) / parseFloat(p.mrp)) * 100) + '% OFF') : (p.discount ? p.discount + '% OFF' : ''),
       description: enhancedDescription || p.description,
+      full_description: enhancedDescription || p.description,
+      short_description: shortDesc,
+      card_description: shortDesc,
+      subtitle: shortDesc,
       pack_size: normalizedPackSize,
       variations: variations,
       default_variation: defaultVar,
@@ -150,25 +156,29 @@ export function ProductsProvider({ children }) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-    fetch(apiUrl, {
+    // Kick off both fetches in parallel — products and product-images are independent
+    const productsPromise = fetch(apiUrl, {
       signal: controller.signal,
       headers: {
         'ngrok-skip-browser-warning': 'true'
       }
-    })
+    });
+    const productImagesPromise = fetch(`${API_BASE_URL}/product-images/`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    }).catch(() => null); // product-images failure must never block product load
+
+    productsPromise
       .then(res => {
         clearTimeout(timeoutId);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
       })
       .then(async data => {
-        // Fetch product-images to overlay custom uploaded images
+        // Await the already-in-flight product-images request (no extra round-trip)
         let extraImagesMap = {};
         try {
-          const piRes = await fetch(`${API_BASE_URL}/product-images/`, {
-            headers: { 'ngrok-skip-browser-warning': 'true' }
-          });
-          if (piRes.ok) {
+          const piRes = await productImagesPromise;
+          if (piRes && piRes.ok) {
             const piData = await piRes.json();
             const piList = Array.isArray(piData) ? piData : (piData.data || piData.results || []);
             piList.forEach(pi => {
@@ -247,6 +257,7 @@ export function ProductsProvider({ children }) {
               });
 
           const enhancedDescription = getProductDescription(p);
+          const shortDesc = getProductShortDescription(p);
 
           const displayName = formatProductDisplayName(p.name);
           const displayTamilName = formatProductDisplayName(p.tamil_name || p.name);
@@ -259,7 +270,9 @@ export function ProductsProvider({ children }) {
             raw_name: p.name,
             tamil_name: displayTamilName,
             raw_tamil_name: p.tamil_name || p.name,
-            subtitle: enhancedDescription ? enhancedDescription.substring(0, 60) + '...' : 'Nourishing & Natural',
+            subtitle: shortDesc,
+            short_description: shortDesc,
+            card_description: shortDesc,
             price: formatCurrency(activePrice),
             originalPrice: originalPrice > activePrice ? formatCurrency(originalPrice) : '',
             discount: discount,
@@ -339,6 +352,7 @@ export function ProductsProvider({ children }) {
             })(),
             category_name: p.category_name,
             description: enhancedDescription || p.description,
+            full_description: enhancedDescription || p.description,
             pack_size: normalizedPackSize,
             weight_volume: displayWeight,
             unit: displayUnit,

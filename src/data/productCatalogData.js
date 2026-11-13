@@ -1206,7 +1206,7 @@ export function getProductDescription(product) {
     return verified.description;
   }
 
-  const raw = product.description;
+  const raw = product.full_description || product.description;
   if (!raw || !raw.trim()) {
     // Provide a respectful fallback mentioning botanical purity
     return "Authentic herbal preparation from Dharani Herbals, crafted adhering to traditional methods with pure natural botanicals for holistic wellness.";

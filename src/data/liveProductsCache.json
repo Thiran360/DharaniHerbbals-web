@@ -22,7 +22,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:33.853846+00:00"
+    "created_at": "2026-09-18T18:41:33.853846+00:00",
+    "short_description": "Nutrient-Dense Superfood Mix",
+    "card_description": "Nutrient-Dense Superfood Mix",
+    "subtitle": "Nutrient-Dense Superfood Mix",
+    "full_description": "Sprouted Multigrain Health Mix is a nutrient-packed superfood powder crafted from premium sprouted grains, millets, pulses, nuts, and seeds for ultimate health benefits"
   },
   {
     "id": 1263,
@@ -50,7 +54,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:37.570095+00:00"
+    "created_at": "2026-09-18T18:41:37.570095+00:00",
+    "short_description": "Cooling Pure Hydration Gel",
+    "card_description": "Cooling Pure Hydration Gel",
+    "subtitle": "Cooling Pure Hydration Gel",
+    "full_description": "Makil Cucumber Gel\n\nMakil Cucumber Gel is enriched with the natural freshness of cucumber to help soothe, hydrate, and refresh the skin. Its lightweight and cooling formula helps keep the skin soft and revitalized, making it suitable for daily skincare use. Carefully prepared with quality ingredients, it provides a refreshing skincare experience without harsh additives.\n\nமகில் குக்கம்பர் ஜெல்\n\nமகில் குக்கம்பர் ஜெல் இயற்கையான வெள்ளரிக்காயின் புத்துணர்ச்சியுடன் தயாரிக்கப்பட்டது. இது தோலை குளிர்ச்சியூட்டவும், ஈரப்பதமாக வைத்திருக்கவும், மென்மையாக்கவும் உதவுகிறது. இலகுவான மற்றும் புத்துணர்ச்சியூட்டும் இந்த ஜெல் தினசரி தோல் பராமரிப்பிற்கு ஏற்றதாகும். தரமான பொருட்களால் கவனமாக தயாரிக்கப்பட்ட இது, கடுமையான சேர்வுகள் இல்லாமல் இயற்கையான பராமரிப்பை வழங்குகிறது."
   },
   {
     "id": 1255,
@@ -75,7 +83,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:40.757814+00:00"
+    "created_at": "2026-09-18T18:41:40.757814+00:00",
+    "short_description": "Hibiscus Softening Hair Cleanser",
+    "card_description": "Hibiscus Softening Hair Cleanser",
+    "subtitle": "Hibiscus Softening Hair Cleanser",
+    "full_description": "Ramcare Hibiscus Herbal Shampoo is formulated with the natural _x000D_\ngoodness of hibiscus to nourish the hair and enhance its natural beauty. It _x000D_\nhelps make the hair smooth, soft, and shiny simultaneously improving _x000D_\noverall texture. With regular use, it leaves the hair silky."
   },
   {
     "id": 1248,
@@ -100,7 +112,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:43.042876+00:00"
+    "created_at": "2026-09-18T18:41:43.042876+00:00",
+    "short_description": "Tear-Free Gentle Baby Shampoo",
+    "card_description": "Tear-Free Gentle Baby Shampoo",
+    "subtitle": "Tear-Free Gentle Baby Shampoo",
+    "full_description": "Avarampoo Baby Shampoo is a gentle, natural cleanser specially designed \nfor the delicate hair and sensitive scalp of infants. Enriched with the \nsoothing goodness of avarampoo, it cleanses softly without causing \ndryness or irritation. It helps keep the baby’s hair soft, healthy, and \ncomfortably fresh after every wash."
   },
   {
     "id": 1246,
@@ -125,7 +141,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:43.970391+00:00"
+    "created_at": "2026-09-18T18:41:43.970391+00:00",
+    "short_description": "Cooling Herbal Scalp Cleanser",
+    "card_description": "Cooling Herbal Scalp Cleanser",
+    "subtitle": "Cooling Herbal Scalp Cleanser",
+    "full_description": "Ramcare Arappu Shampoo is traditionally crafted to preserve the natural \ncleansing and conditioning properties of arappu leaves, known for their \ngentle, cooling effect on the scalp. It helps remove impurities while naturally \nnourishing the hair from root to tip, improving softness and manageability"
   },
   {
     "id": 1229,
@@ -153,7 +173,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:49.133831+00:00"
+    "created_at": "2026-09-18T18:41:49.133831+00:00",
+    "short_description": "Vetiver Cooling Scalp Cleanser",
+    "card_description": "Vetiver Cooling Scalp Cleanser",
+    "subtitle": "Vetiver Cooling Scalp Cleanser",
+    "full_description": "Ramcare Khus Root (Vetiver) Herbal Shampoo is enriched with hibiscus, \namla, and curry leaves to gently cleanse the scalp while deeply nourishing \nthe hair. It helps strengthen the roots, support healthy hair growth, and \nmaintain overall scalp balance. With its natural cooling and refreshing \nproperties, it leaves the hair soft, smooth, and revitalized. "
   },
   {
     "id": 1226,
@@ -178,7 +202,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:50.576234+00:00"
+    "created_at": "2026-09-18T18:41:50.576234+00:00",
+    "short_description": "Bhringraj Root Care Shampoo",
+    "card_description": "Bhringraj Root Care Shampoo",
+    "subtitle": "Bhringraj Root Care Shampoo",
+    "full_description": "Ramcare False Daisy (Karisalankanni) Shampoo is made with the natural \ngoodness of false daisy to strengthen hair. It helps enhance natural hair \ncolor, promoting a darker and more vibrant appearance over time. It also \nsoothes dryness and maintains a healthy scalp."
   },
   {
     "id": 1225,
@@ -205,7 +233,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:51.044079+00:00"
+    "created_at": "2026-09-18T18:41:51.044079+00:00",
+    "short_description": "Cooling Aloe Hydrating Bar",
+    "card_description": "Cooling Aloe Hydrating Bar",
+    "subtitle": "Cooling Aloe Hydrating Bar",
+    "full_description": "Makil Aloe Vera Soap deeply hydrates and cools the skin with the natural \ngoodness of aloe vera. Known for its soothing properties, it helps relieve \ndryness and discomfort while restoring moisture. Skin feels soft, refreshed, \nand comfortably nourished after every wash. \n"
   },
   {
     "id": 1224,
@@ -230,7 +262,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:51.513161+00:00"
+    "created_at": "2026-09-18T18:41:51.513161+00:00",
+    "short_description": "Pure Amla Hair Vitality Wash",
+    "card_description": "Pure Amla Hair Vitality Wash",
+    "subtitle": "Pure Amla Hair Vitality Wash",
+    "full_description": "Dr. Amla Shampoo by Ramcare is crafted with amla, a rich source of \nVitamin C that deeply nourishes the scalp and fortifies hair from the roots. It \nhelps reduce hair fall and improves overall hair strength and resilience. \nWith consistent use, it also assists in slowing premature graying, leaving \nthe hair strong. "
   },
   {
     "id": 1223,
@@ -255,7 +291,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:51.997768+00:00"
+    "created_at": "2026-09-18T18:41:51.997768+00:00",
+    "short_description": "Red Onion Root Fortifying Wash",
+    "card_description": "Red Onion Root Fortifying Wash",
+    "subtitle": "Red Onion Root Fortifying Wash",
+    "full_description": "Onion Shampoo is enriched with the natural goodness of onion extract to \nstrengthen hair from the roots. It helps reduce hair fall, supports healthy \ngrowth, and improves overall hair strength and vitality. With regular use, it \nleaves the hair thicker, smoother, and naturally radiant. "
   },
   {
     "id": 1222,
@@ -280,7 +320,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:52.472884+00:00"
+    "created_at": "2026-09-18T18:41:52.472884+00:00",
+    "short_description": "Shikakai Natural Scalp Wash",
+    "card_description": "Shikakai Natural Scalp Wash",
+    "subtitle": "Shikakai Natural Scalp Wash",
+    "full_description": "Ramcare Shikakai Shampoo is blended with hibiscus, amla, curry leaves, \nand vetiver along with shikakai to gently cleanse the hair and scalp. \nShikakai acts as a natural cleanser that strengthens hair roots and helps \nreduce dandruff and scalp buildup. "
   },
   {
     "id": 1193,
@@ -308,7 +352,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:05.457144+00:00"
+    "created_at": "2026-09-18T18:42:05.457144+00:00",
+    "short_description": "Fragrant Rose Petal Beauty Bar",
+    "card_description": "Fragrant Rose Petal Beauty Bar",
+    "subtitle": "Fragrant Rose Petal Beauty Bar",
+    "full_description": "Rose Soap, infused with rose extract, refreshes and revitalizes the skin \nwhile enhancing its natural glow and softness. Rich in antioxidants, it helps \nprotect the skin from damage and supports a healthy, youthful appearance."
   },
   {
     "id": 1136,
@@ -333,7 +381,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:31.810217+00:00"
+    "created_at": "2026-09-18T18:42:31.810217+00:00",
+    "short_description": "Traditional Multi-Millet Mix",
+    "card_description": "Traditional Multi-Millet Mix",
+    "subtitle": "Traditional Multi-Millet Mix",
+    "full_description": "Mahil health mix powder is made for all ages and has a high nutritional value."
   },
   {
     "id": 1053,
@@ -358,7 +410,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:09.681108+00:00"
+    "created_at": "2026-09-18T18:43:09.681108+00:00",
+    "short_description": "Pure Unrefined Country Sugar",
+    "card_description": "Pure Unrefined Country Sugar",
+    "subtitle": "Pure Unrefined Country Sugar",
+    "full_description": "Adhiyaman brown sugar powder, like other brown sugars, offers several benefits, primarily due to the presence of molasses which is absent in refined white sugar. This molasses content contributes small amounts of minerals such as calcium, potassium, iron, and magnesium, making it a slightly more nutrient-rich option compared to “empty calorie” white sugar."
   },
   {
     "id": 1305,
@@ -383,7 +439,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-23T09:30:33.821751+00:00"
+    "created_at": "2026-09-23T09:30:33.821751+00:00",
+    "short_description": "Crunchy Peanut Jaggery Chikki",
+    "card_description": "Crunchy Peanut Jaggery Chikki",
+    "subtitle": "Crunchy Peanut Jaggery Chikki",
+    "full_description": ""
   },
   {
     "id": 1304,
@@ -408,7 +468,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:21.887681+00:00"
+    "created_at": "2026-09-18T18:41:21.887681+00:00",
+    "short_description": "Pure Hibiscus Petal Powder",
+    "card_description": "Pure Hibiscus Petal Powder",
+    "subtitle": "Pure Hibiscus Petal Powder",
+    "full_description": "A natural herbal product made from dried hibiscus flowers used for hair care, skin care, and traditional wellness"
   },
   {
     "id": 1301,
@@ -433,7 +497,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:22.281051+00:00"
+    "created_at": "2026-09-18T18:41:22.281051+00:00",
+    "short_description": "Traditional Liver Health Herb",
+    "card_description": "Traditional Liver Health Herb",
+    "subtitle": "Traditional Liver Health Herb",
+    "full_description": "A classic liver-toning herb, this pure powder supports healthy bile production and revitalizes liver_x000D_\nfunction. It cleanses the digestive tract, protects against metabolic sluggishness, and purifies_x000D_\nthe bloodstream, making it an excellent daily internal cleanser for optimal health."
   },
   {
     "id": 1300,
@@ -458,7 +526,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:22.678068+00:00"
+    "created_at": "2026-09-18T18:41:22.678068+00:00",
+    "short_description": "Herbal Respiratory Relief Powder",
+    "card_description": "Herbal Respiratory Relief Powder",
+    "subtitle": "Herbal Respiratory Relief Powder",
+    "full_description": "Formulated to clear airway passages, this herbal powder acts as a natural expectorant to_x000D_\ndissolve persistent chest phlegm. Taken with warm water or honey, it calms dry coughing,_x000D_\nrelaxes tight airways, and provides quick, soothing relief from throat irritation."
   },
   {
     "id": 1299,
@@ -483,7 +555,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:23.071025+00:00"
+    "created_at": "2026-09-18T18:41:23.071025+00:00",
+    "short_description": "Cooling Asparagus Root Powder",
+    "card_description": "Cooling Asparagus Root Powder",
+    "subtitle": "Cooling Asparagus Root Powder",
+    "full_description": "Made from wild asparagus roots, this deeply hydrating tonic relieves fatigue and calms excess_x000D_\nbody heat. Taken regularly with warm milk, it supports female hormonal balance, restores_x000D_\nnatural physical energy, and eases digestive burning sensations after daily meals."
   },
   {
     "id": 1298,
@@ -508,7 +584,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:23.466468+00:00"
+    "created_at": "2026-09-18T18:41:23.466468+00:00",
+    "short_description": "Natural Botanical Fluid Detox",
+    "card_description": "Natural Botanical Fluid Detox",
+    "subtitle": "Natural Botanical Fluid Detox",
+    "full_description": "Derived from mineral-rich seeds, this natural botanical powder assists the kidneys in flushing out_x000D_\nexcess fluids and easing body swelling. It supports smooth urinary flow, alleviates lower tract_x000D_\ndiscomfort, and encourages healthy red blood cell production for daily vitality"
   },
   {
     "id": 1297,
@@ -533,7 +613,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:23.865014+00:00"
+    "created_at": "2026-09-18T18:41:23.865014+00:00",
+    "short_description": "Velvet Bean Vitality Tonic",
+    "card_description": "Velvet Bean Vitality Tonic",
+    "subtitle": "Velvet Bean Vitality Tonic",
+    "full_description": "Prepared from nutrient-dense Velvet Bean seeds, this natural adaptogen restores physical_x000D_\nstamina and nerve vitality. Naturally supporting mood stability and mental sharpness, it acts as a_x000D_\nrejuvenating daily tonic to reduce everyday stress and improve overall energy levels."
   },
   {
     "id": 1296,
@@ -558,7 +642,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:24.254965+00:00"
+    "created_at": "2026-09-18T18:41:24.254965+00:00",
+    "short_description": "Targeted Scalp Anti-Dandruff",
+    "card_description": "Targeted Scalp Anti-Dandruff",
+    "subtitle": "Targeted Scalp Anti-Dandruff",
+    "full_description": "Specially targeted for scalp health, this herbal powder fights stubborn dandruff and relieves_x000D_\npersistent scalp itching. Applied in hair masks or mixed with warm oil, its gentle antimicrobial_x000D_\nproperties cool internal heat while maintaining a clean, balanced scalp barrier."
   },
   {
     "id": 1295,
@@ -583,7 +671,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:24.648817+00:00"
+    "created_at": "2026-09-18T18:41:24.648817+00:00",
+    "short_description": "Immunity Defense Bitter Herb",
+    "card_description": "Immunity Defense Bitter Herb",
+    "subtitle": "Immunity Defense Bitter Herb",
+    "full_description": "A potent botanical defense for seasonal wellness, this bitter leaf powder activates natural_x000D_\nimmunity and aids body detoxification. Brewing it into a warm decoction relieves body aches,_x000D_\nsupports liver function, and builds strong resilience against changing weather conditions."
   },
   {
     "id": 1294,
@@ -608,7 +700,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:25.047658+00:00"
+    "created_at": "2026-09-18T18:41:25.047658+00:00",
+    "short_description": "Sacred 108 Botanical Homa Blend",
+    "card_description": "Sacred 108 Botanical Homa Blend",
+    "subtitle": "Sacred 108 Botanical Homa Blend",
+    "full_description": "A carefully selected blend of 108 authentic herbs, aromatic woods, and botanical resins for spiritual offerings. When offered to the sacred fire, it releases purifying smoke that cleanses surrounding air, eliminates negative energy, and restores peaceful vibrations."
   },
   {
     "id": 1293,
@@ -633,7 +729,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:25.442843+00:00"
+    "created_at": "2026-09-18T18:41:25.442843+00:00",
+    "short_description": "Golden Senna Blossom Powder",
+    "card_description": "Golden Senna Blossom Powder",
+    "subtitle": "Golden Senna Blossom Powder",
+    "full_description": "Finely ground from shade-dried golden blossoms, this versatile powder helps regulate internal_x000D_\nmetabolic balance and flush out body heat. Used topically as a face pack, it brightens dull_x000D_\ncomplexions, reduces skin blemishes, and combats natural body odor effectively."
   },
   {
     "id": 1292,
@@ -658,7 +758,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:25.840568+00:00"
+    "created_at": "2026-09-18T18:41:25.840568+00:00",
+    "short_description": "Traditional Cooling Hair Wash",
+    "card_description": "Traditional Cooling Hair Wash",
+    "subtitle": "Traditional Cooling Hair Wash",
+    "full_description": "Made from sun-dried Albizia leaves, this traditional green hair wash creates a natural, gentle lather. It cleanses the scalp without stripping essential oils, cools head heat, reduces hair fall, and leaves hair naturally soft, glossy, and conditioned."
   },
   {
     "id": 1291,
@@ -683,7 +787,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:26.240514+00:00"
+    "created_at": "2026-09-18T18:41:26.240514+00:00",
+    "short_description": "Cooling Fresh Cucumber Soap",
+    "card_description": "Cooling Fresh Cucumber Soap",
+    "subtitle": "Cooling Fresh Cucumber Soap",
+    "full_description": "Handcrafted with fresh cucumber extracts and botanical oils, this cooling herbal soap generates_x000D_\na hydrating lather that gently sweeps away excess oil, grime, and dead skin. It soothes_x000D_\ninflammation, refines pores, and leaves skin feeling thoroughly refreshed and balanced."
   },
   {
     "id": 1290,
@@ -708,7 +816,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:26.641789+00:00"
+    "created_at": "2026-09-18T18:41:26.641789+00:00",
+    "short_description": "Brahmi Spiced Sambar Powder",
+    "card_description": "Brahmi Spiced Sambar Powder",
+    "subtitle": "Brahmi Spiced Sambar Powder",
+    "full_description": "A smart daily health upgrade combining shade-dried Vallarai leaves with traditionally roasted_x000D_\nSambar spices. It seamlessly delivers essential brain-nourishing benefits to your entire family_x000D_\nwithout altering the comforting, authentic flavor profile of classic homemade Sambar and curry_x000D_\ndishes."
   },
   {
     "id": 1289,
@@ -733,7 +845,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:27.032724+00:00"
+    "created_at": "2026-09-18T18:41:27.032724+00:00",
+    "short_description": "Digestive Triphala Wellness Herb",
+    "card_description": "Digestive Triphala Wellness Herb",
+    "subtitle": "Digestive Triphala Wellness Herb",
+    "full_description": "Combining three antioxidant-rich fruits, this complete daily rejuvenator promotes thorough colon cleansing and improves nutrient absorption in the gut. High in natural Vitamin C, it strengthens overall immunity, protects eye health, and keeps your digestive system balanced."
   },
   {
     "id": 1288,
@@ -758,7 +874,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:27.428243+00:00"
+    "created_at": "2026-09-18T18:41:27.428243+00:00",
+    "short_description": "Herbal Joint Relief Soup Mix",
+    "card_description": "Herbal Joint Relief Soup Mix",
+    "subtitle": "Herbal Joint Relief Soup Mix",
+    "full_description": "Derived from the balloon vine plant (Mudakku-Athan), this instant herbal soup mix effectively_x000D_\nrelieves joint stiffness and morning discomfort. Blended with black pepper and cumin, it creates_x000D_\na warm, comforting broth that clears chest congestion without added MSG or starches."
   },
   {
     "id": 1287,
@@ -783,7 +903,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:27.828092+00:00"
+    "created_at": "2026-09-18T18:41:27.828092+00:00",
+    "short_description": "Brahmi Spiced Seasoning Powder",
+    "card_description": "Brahmi Spiced Seasoning Powder",
+    "subtitle": "Brahmi Spiced Seasoning Powder",
+    "full_description": "Celebrated in ancient Tamil literature for wisdom and focus, Vallarai (Centella asiatica)_x000D_\nnourishes the brain and nervous system. This aromatic rice mix makes consuming the bitter_x000D_\nherb delicious, helping children and adults enhance memory retention and mental sharpness_x000D_\neffortlessly."
   },
   {
     "id": 1286,
@@ -808,7 +932,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:28.229848+00:00"
+    "created_at": "2026-09-18T18:41:28.229848+00:00",
+    "short_description": "Purifying Pure Neem Leaf Powder",
+    "card_description": "Purifying Pure Neem Leaf Powder",
+    "subtitle": "Purifying Pure Neem Leaf Powder",
+    "full_description": "Ground from pure shade-dried neem leaves, this potent powder provides antibacterial and blood-purifying benefits. Internally, it supports healthy intestinal flora and glucose metabolism. Externally, face masks made with this powder clear acne, unclog pores, and calm irritation."
   },
   {
     "id": 1285,
@@ -833,7 +961,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:28.622670+00:00"
+    "created_at": "2026-09-18T18:41:28.622670+00:00",
+    "short_description": "Curry Leaf Spiced Rice Mix",
+    "card_description": "Curry Leaf Spiced Rice Mix",
+    "subtitle": "Curry Leaf Spiced Rice Mix",
+    "full_description": "A savory spice blend made from dark curry leaves, lentils, pepper, and cumin. Packed with_x000D_\nnatural plant-iron and antioxidants, it promotes hair growth and sparks sluggish appetites._x000D_\nSimply mix with warm rice and sesame oil for an instant, nutritious meal."
   },
   {
     "id": 1284,
@@ -858,7 +990,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:29.018972+00:00"
+    "created_at": "2026-09-18T18:41:29.018972+00:00",
+    "short_description": "Respiratory Soothing Herb",
+    "card_description": "Respiratory Soothing Herb",
+    "subtitle": "Respiratory Soothing Herb",
+    "full_description": "A trusted remedy for respiratory wellness, this spiny herb breaks down stubborn phlegm and clears nasal blockages. Mixed into honey or warm soups, it rapidly soothes throat congestion, eases seasonal chest tightness, and strengthens overall lung capacity effortlessly."
   },
   {
     "id": 1282,
@@ -883,7 +1019,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:29.809368+00:00"
+    "created_at": "2026-09-18T18:41:29.809368+00:00",
+    "short_description": "Traditional Palm Jaggery Halwa",
+    "card_description": "Traditional Palm Jaggery Halwa",
+    "subtitle": "Traditional Palm Jaggery Halwa",
+    "full_description": "Slow-cooked with pure, unrefined palm jaggery instead of white sugar, this rich South Indian _x000D_\ndelicacy delivers a smooth, glossy texture. It satisfies sweet cravings naturally while providing _x000D_\nessential iron and micro-nutrients to support daily energy and gentle digestion."
   },
   {
     "id": 1281,
@@ -908,7 +1048,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:30.205612+00:00"
+    "created_at": "2026-09-18T18:41:30.205612+00:00",
+    "short_description": "Traditional Haritaki Colon Care",
+    "card_description": "Traditional Haritaki Colon Care",
+    "subtitle": "Traditional Haritaki Colon Care",
+    "full_description": "A comprehensive internal cleanser, this fruit powder eliminates accumulated bodily toxins and regulates bowel movements without abdominal cramping. Taken at bedtime with warm water, it restores natural stomach balance, aids digestion, and promotes clear, radiant skin from within."
   },
   {
     "id": 1280,
@@ -933,7 +1077,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:30.604806+00:00"
+    "created_at": "2026-09-18T18:41:30.604806+00:00",
+    "short_description": "Traditional Clay-Cured Toor Dal",
+    "card_description": "Traditional Clay-Cured Toor Dal",
+    "subtitle": "Traditional Clay-Cured Toor Dal",
+    "full_description": "Cured in mineral-dense red soil and sun-dried, this traditional unpolished dal retains its natural_x000D_\nproteins and essential oils. It cooks into a soft, velvety texture that adds a rich, earthy aroma to_x000D_\nSambar and Rasam while staying remarkably light on digestion."
   },
   {
     "id": 1279,
@@ -958,7 +1106,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:31.007505+00:00"
+    "created_at": "2026-09-18T18:41:31.007505+00:00",
+    "short_description": "Crunchy Brahmi Herbal Savory",
+    "card_description": "Crunchy Brahmi Herbal Savory",
+    "subtitle": "Crunchy Brahmi Herbal Savory",
+    "full_description": "Enjoy guilt-free snacking with this crispy herbal mixture infused with nutrient-rich Vallarai leaves _x000D_\nand savory gram flour. Packed with natural antioxidants, it offers a delicious, brain-nourishing _x000D_\nalternative to ordinary processed snacks that the whole family can enjoy at tea time."
   },
   {
     "id": 1278,
@@ -983,7 +1135,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:31.404159+00:00"
+    "created_at": "2026-09-18T18:41:31.404159+00:00",
+    "short_description": "Sacred Banyan Bark Powder",
+    "card_description": "Sacred Banyan Bark Powder",
+    "subtitle": "Sacred Banyan Bark Powder",
+    "full_description": "Derived from pure Banyan bark, this astringent powder is exceptional for oral hygiene and metabolic care. Used as a natural tooth powder, it tightens gums and eliminates bad breath, while internal consumption helps balance blood sugar levels naturally."
   },
   {
     "id": 1277,
@@ -1008,7 +1164,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:31.800206+00:00"
+    "created_at": "2026-09-18T18:41:31.800206+00:00",
+    "short_description": "Pure Botanical Beetroot Powder",
+    "card_description": "Pure Botanical Beetroot Powder",
+    "subtitle": "Pure Botanical Beetroot Powder",
+    "full_description": "Harness the vibrant power of pure, sun-dried beets with this finely milled Beetroot_x000D_\nPowder, rich in essential antioxidants, betalains, and natural dietary nitrates. Internally, it_x000D_\nhelps boost oxygen delivery through healthy blood flow, enhancing your daily energy_x000D_\nand stamina. Externally, its antioxidant density rejuvenates dull skin to reveal a natural,_x000D_\nhealthy glow. It also serves as a purely plant-based, chemical-free food color for baking,_x000D_\nsmoothies, and doughs, making wellness effortless and versatile."
   },
   {
     "id": 1276,
@@ -1033,7 +1193,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:32.205478+00:00"
+    "created_at": "2026-09-18T18:41:32.205478+00:00",
+    "short_description": "Herbal Pergularia Foliage Herb",
+    "card_description": "Herbal Pergularia Foliage Herb",
+    "subtitle": "Herbal Pergularia Foliage Herb",
+    "full_description": "Recognized for its warming botanical properties, this leaf powder assists in loosening stubborn lung mucus during heavy seasonal colds. It encourages easier breathing while its natural active compounds help ease joint stiffness and soothe gas-related abdominal discomfort."
   },
   {
     "id": 1275,
@@ -1058,7 +1222,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:32.598716+00:00"
+    "created_at": "2026-09-18T18:41:32.598716+00:00",
+    "short_description": "Cooling Senna Foliage Powder",
+    "card_description": "Cooling Senna Foliage Powder",
+    "subtitle": "Cooling Senna Foliage Powder",
+    "full_description": "Crafted from pure shade-dried Avaram leaves, this refreshing powder supports daily metabolic balance. Consumed as a warm herbal tea, it aids in managing blood sugar spikes, reduces internal heat buildup, and quenches excessive thirst for long-lasting daily hydration."
   },
   {
     "id": 1274,
@@ -1083,7 +1251,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:32.996604+00:00"
+    "created_at": "2026-09-18T18:41:32.996604+00:00",
+    "short_description": "Herbal Hemorrhoid Care Lehyam",
+    "card_description": "Herbal Hemorrhoid Care Lehyam",
+    "subtitle": "Herbal Hemorrhoid Care Lehyam",
+    "full_description": "A traditional Siddha herbal jam formulated with wild yam (Karunai Kizhangu) and cooling_x000D_\nbotanicals. It delivers targeted relief from the pain, burning, and inflammation of piles and_x000D_\nfissures while clearing internal Pitta and regulating daily bowel movements gently."
   },
   {
     "id": 1273,
@@ -1108,7 +1280,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:33.392587+00:00"
+    "created_at": "2026-09-18T18:41:33.392587+00:00",
+    "short_description": "Bone Density & Digestive Herb",
+    "card_description": "Bone Density & Digestive Herb",
+    "subtitle": "Bone Density & Digestive Herb",
+    "full_description": "Known in Siddha literature as Vajravalli, this pure Pirandai powder is rich in bio-available_x000D_\ncalcium that strengthens bone density and restores joint mobility. It also gently soothes the_x000D_\ndigestive system, easing acidity, chronic sluggishness, and uncomfortable abdominal bloating_x000D_\nnaturally."
   },
   {
     "id": 1271,
@@ -1133,7 +1309,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:34.318758+00:00"
+    "created_at": "2026-09-18T18:41:34.318758+00:00",
+    "short_description": "Postnatal Ginger Wellness Tonic",
+    "card_description": "Postnatal Ginger Wellness Tonic",
+    "subtitle": "Postnatal Ginger Wellness Tonic",
+    "full_description": "Sowbakiya Sundi Lehyam is a traditional herbal formulation centered _x000D__x000D_\naround dry ginger (sukku), known for its warming and digestive-supporting _x000D__x000D_\nproperties. Rich in natural bioactive compounds, it helps improve digestion, _x000D__x000D_\nreduce bloating, support appetite, and enhance overall metabolism."
   },
   {
     "id": 1270,
@@ -1158,7 +1338,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:34.783007+00:00"
+    "created_at": "2026-09-18T18:41:34.783007+00:00",
+    "short_description": "Herbal Throat Comfort Lehyam",
+    "card_description": "Herbal Throat Comfort Lehyam",
+    "subtitle": "Herbal Throat Comfort Lehyam",
+    "full_description": "Thuthuvalai Lehyam is a traditional herbal formulation made from the _x000D_\nmedicinal herb thuthuvalai, rich in natural antioxidants and plant _x000D_\ncompounds. It helps soothe throat irritation, supports clear breathing, _x000D_\nstrengthens immunity, and aids in managing seasonal cough and cold while _x000D_\npromoting better lung function."
   },
   {
     "id": 1269,
@@ -1185,7 +1369,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:35.242429+00:00"
+    "created_at": "2026-09-18T18:41:35.242429+00:00",
+    "short_description": "Clarifying Multani Earth Clay",
+    "card_description": "Clarifying Multani Earth Clay",
+    "subtitle": "Clarifying Multani Earth Clay",
+    "full_description": "Multhani metti, also known as Fuller's earth, is a versatile natural clay with numerous benefits for hair care."
   },
   {
     "id": 1267,
@@ -1210,7 +1398,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:35.704796+00:00"
+    "created_at": "2026-09-18T18:41:35.704796+00:00",
+    "short_description": "Herbal Bhringraj Growth Oil",
+    "card_description": "Herbal Bhringraj Growth Oil",
+    "subtitle": "Herbal Bhringraj Growth Oil",
+    "full_description": "“Ramcare Karisalankanni or False daisy hair oil” with amazing properties repairs grey hair, clear spilt ends and prevent hair loss. It makes hair a beautiful, long , shiny and darker."
   },
   {
     "id": 1266,
@@ -1237,7 +1429,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:36.178428+00:00"
+    "created_at": "2026-09-18T18:41:36.178428+00:00",
+    "short_description": "Senna Flower Scalp Cleanser",
+    "card_description": "Senna Flower Scalp Cleanser",
+    "subtitle": "Senna Flower Scalp Cleanser",
+    "full_description": "Our Ramcare Avarampoo (tanner’s cassia) hair wash powder is used as a cleanser, moisturizer, reduce body heat , strengthens hair from follicles."
   },
   {
     "id": 1265,
@@ -1262,7 +1458,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:36.640914+00:00"
+    "created_at": "2026-09-18T18:41:36.640914+00:00",
+    "short_description": "Sacred Pancha Deepam Lamp Oil",
+    "card_description": "Sacred Pancha Deepam Lamp Oil",
+    "subtitle": "Sacred Pancha Deepam Lamp Oil",
+    "full_description": "Divyam Deepa Oil is specially prepared using quality ingredients for traditional lighting during poojas and spiritual rituals. Known for its steady flame and pleasant purity, this oil helps create a peaceful and devotional atmosphere in homes and temples. Carefully prepared with purity and care, it is ideal for daily spiritual practices and festive occasions.\n\nதிவ்யம் தீப எண்ணெய் என்பது பூஜை மற்றும் ஆன்மீக வழிபாடுகளுக்காக தரமான பொருட்களால் சிறப்பாக தயாரிக்கப்பட்டது. நிலையான தீப ஒளியையும் பக்தி நிறைந்த சூழலையும் உருவாக்க உதவும் இந்த எண்ணெய், வீடுகள் மற்றும் கோவில்களில் தினசரி பயன்பாட்டிற்கு ஏற்றதாகும். தூய்மை மற்றும் பாரம்பரியத்தை கருத்தில் கொண்டு கவனமாக தயாரிக்கப்பட்டது."
   },
   {
     "id": 1264,
@@ -1287,7 +1487,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:37.108451+00:00"
+    "created_at": "2026-09-18T18:41:37.108451+00:00",
+    "short_description": "Aromatic Temple Dhoop Incense",
+    "card_description": "Aromatic Temple Dhoop Incense",
+    "subtitle": "Aromatic Temple Dhoop Incense",
+    "full_description": "Divyam Herbal Incense Powder\n\nDivyam Herbal Incense Powder is made from carefully selected natural herbs and traditional ingredients to create a soothing and refreshing aroma during poojas and spiritual practices. Commonly used in homes and temples, this herbal incense powder helps create a peaceful and positive atmosphere. Prepared with purity and care, it contains natural ingredients without artificial additives.\n\nதிவ்யம் மூலிகை தூப பொடி\n\nதிவ்யம் மூலிகை தூப பொடி தேர்ந்தெடுக்கப்பட்ட இயற்கை மூலிகைகள் மற்றும் பாரம்பரிய பொருட்களால் தயாரிக்கப்படுகிறது. பூஜைகள் மற்றும் ஆன்மீக வழிபாடுகளின் போது இனிய மணத்தையும் அமைதியான சூழலையும் உருவாக்க உதவுகிறது. வீடுகள் மற்றும் கோவில்களில் பொதுவாக பயன்படுத்தப்படும் இந்த தூப பொடி, நேர்மறை மற்றும் பக்தி நிறைந்த சூழலை தருகிறது. செயற்கை சேர்வுகள் இல்லாமல் தூய்மையாக தயாரிக்கப்பட்டது."
   },
   {
     "id": 1262,
@@ -1312,7 +1516,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:38.028493+00:00"
+    "created_at": "2026-09-18T18:41:38.028493+00:00",
+    "short_description": "Gentle Moong Dal Body Powder",
+    "card_description": "Gentle Moong Dal Body Powder",
+    "subtitle": "Gentle Moong Dal Body Powder",
+    "full_description": "Its gentle exfoliating properties help to remove dead skin cells, unclog pores, and reveal a brighter complexion.It is frequently mixed with other natural ingredients like water, yogurt, milk, honey, or turmeric to create customized face packs for various skin concerns."
   },
   {
     "id": 1261,
@@ -1337,7 +1545,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:38.493017+00:00"
+    "created_at": "2026-09-18T18:41:38.493017+00:00",
+    "short_description": "Citrus Vitamin C Glow Powder",
+    "card_description": "Citrus Vitamin C Glow Powder",
+    "subtitle": "Citrus Vitamin C Glow Powder",
+    "full_description": "Orange Powder works like a natural skin refresher, gently polishing away \ndullness while revealing a brighter, more even-looking complexion. It helps \nfade dark spots, refresh tired skin, and brings out a naturally radiant glow \nwith every use."
   },
   {
     "id": 1260,
@@ -1362,7 +1574,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:38.955182+00:00"
+    "created_at": "2026-09-18T18:41:38.955182+00:00",
+    "short_description": "Brightening Citrus Peel Clay",
+    "card_description": "Brightening Citrus Peel Clay",
+    "subtitle": "Brightening Citrus Peel Clay",
+    "full_description": ""
   },
   {
     "id": 1259,
@@ -1387,7 +1603,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:39.415924+00:00"
+    "created_at": "2026-09-18T18:41:39.415924+00:00",
+    "short_description": "Fragrant Wild Turmeric Powder",
+    "card_description": "Fragrant Wild Turmeric Powder",
+    "subtitle": "Fragrant Wild Turmeric Powder",
+    "full_description": "For black spots, pimples, mild wounds and cuts, it gets rid of facial hair, to have healthy skin. Note: not for cooking."
   },
   {
     "id": 1258,
@@ -1412,7 +1632,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:39.875914+00:00"
+    "created_at": "2026-09-18T18:41:39.875914+00:00",
+    "short_description": "Golden Glow Herbal Face Powder",
+    "card_description": "Golden Glow Herbal Face Powder",
+    "subtitle": "Golden Glow Herbal Face Powder",
+    "full_description": "skin free from irritation, pimples, acne to have skin fresh and soft."
   },
   {
     "id": 1256,
@@ -1439,7 +1663,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:40.358511+00:00"
+    "created_at": "2026-09-18T18:41:40.358511+00:00",
+    "short_description": "Purifying Aloe Vera Face Pack",
+    "card_description": "Purifying Aloe Vera Face Pack",
+    "subtitle": "Purifying Aloe Vera Face Pack",
+    "full_description": "Aloe Vera Facepack Powder (For Men) 100g helps maintain soft, clear skin \nwhile reducing pimples and minimizing the appearance of dark spots and \nblemishes for a fresh, even-toned look."
   },
   {
     "id": 1254,
@@ -1466,7 +1694,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:41.222055+00:00"
+    "created_at": "2026-09-18T18:41:41.222055+00:00",
+    "short_description": "Nourishing Fresh Goat Milk Bar",
+    "card_description": "Nourishing Fresh Goat Milk Bar",
+    "subtitle": "Nourishing Fresh Goat Milk Bar",
+    "full_description": "Goat milk soap is valued for its nourishing skincare benefits, being rich in \nessential vitamins and minerals that help feed and revitalize the skin. It \nhelps maintain the skin’s natural pH balance, supporting a healthy and \ncomfortable skin barrier. "
   },
   {
     "id": 1253,
@@ -1491,7 +1723,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:41.646892+00:00"
+    "created_at": "2026-09-18T18:41:41.646892+00:00",
+    "short_description": "Crispy Traditional Ooty Pastry",
+    "card_description": "Crispy Traditional Ooty Pastry",
+    "subtitle": "Crispy Traditional Ooty Pastry",
+    "full_description": "Ooty Varkey is a traditional, crispy, and flaky baked snack from the beautiful hills of Ooty in the Nilgiris. Crafted using time-honored recipes and baked to perfection, this iconic delicacy is loved for its unique layered texture, rich aroma, and mildly sweet flavor."
   },
   {
     "id": 1250,
@@ -1516,7 +1752,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:42.108972+00:00"
+    "created_at": "2026-09-18T18:41:42.108972+00:00",
+    "short_description": "Hydrating Aloe Vera Hair Wash",
+    "card_description": "Hydrating Aloe Vera Hair Wash",
+    "subtitle": "Hydrating Aloe Vera Hair Wash",
+    "full_description": "Ramcare Aloe Vera (Katralai) Shampoo refreshes the scalp and deeply \nnourishes the hair with the aloe vera. It helps activate dormant hair follicles, \nsupporting healthy hair regrowth and improving overall scalp vitality."
   },
   {
     "id": 1249,
@@ -1545,7 +1785,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:42.578698+00:00"
+    "created_at": "2026-09-18T18:41:42.578698+00:00",
+    "short_description": "Purifying Multani Clay Powder",
+    "card_description": "Purifying Multani Clay Powder",
+    "subtitle": "Purifying Multani Clay Powder",
+    "full_description": "For dark spots, dark patches, uneven skin tone, pimples, oily face, and makes skin soft and fresh."
   },
   {
     "id": 1247,
@@ -1570,7 +1814,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:43.499682+00:00"
+    "created_at": "2026-09-18T18:41:43.499682+00:00",
+    "short_description": "Soothing Pure Rose Petal Gel",
+    "card_description": "Soothing Pure Rose Petal Gel",
+    "subtitle": "Soothing Pure Rose Petal Gel",
+    "full_description": "Mahil Rose Gel is a lightweight formula that helps soothe irritated or \n \n sensitive skin and supports recovery from minor skin discomfort. Ideal for \n \n oily skin, it provides instant hydration without a greasy feel while helping \n \n reduce the occurrence of blackheads and whiteheads"
   },
   {
     "id": 1245,
@@ -1595,7 +1843,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:44.436874+00:00"
+    "created_at": "2026-09-18T18:41:44.436874+00:00",
+    "short_description": "Traditional Haritaki Digestive",
+    "card_description": "Traditional Haritaki Digestive",
+    "subtitle": "Traditional Haritaki Digestive",
+    "full_description": "kadukkai Powder (Haritaki Powder) derived from haritaki fruit, is your daily herbal ally for inner balance and digestive wellness. Known for its gentle cleansing \n \nnature—leaving you feeling lighter and more refreshed from within. With  consistent use, it encourages better metabolism and a well-balanced \nsystem."
   },
   {
     "id": 1243,
@@ -1624,7 +1876,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:44.895177+00:00"
+    "created_at": "2026-09-18T18:41:44.895177+00:00",
+    "short_description": "Pure Kasthuri Skin Glow Powder",
+    "card_description": "Pure Kasthuri Skin Glow Powder",
+    "subtitle": "Pure Kasthuri Skin Glow Powder",
+    "full_description": "For black spots, pimples, mild wounds and cuts, it gets rid of facial hair, to have healthy skin. Note: not for cooking."
   },
   {
     "id": 1241,
@@ -1649,7 +1905,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:45.382997+00:00"
+    "created_at": "2026-09-18T18:41:45.382997+00:00",
+    "short_description": "Antioxidant Botanical Gel",
+    "card_description": "Antioxidant Botanical Gel",
+    "subtitle": "Antioxidant Botanical Gel",
+    "full_description": "Red Wine Gel is enriched with antioxidants like resveratrol that help \n \n rejuvenate the skin, reduce the appearance of fine lines and wrinkles, and \n \n improve skin elasticity for a smoother, youthful-looking complexion."
   },
   {
     "id": 1240,
@@ -1674,7 +1934,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:45.853497+00:00"
+    "created_at": "2026-09-18T18:41:45.853497+00:00",
+    "short_description": "Pure Red Sandalwood Face Powder",
+    "card_description": "Pure Red Sandalwood Face Powder",
+    "subtitle": "Pure Red Sandalwood Face Powder",
+    "full_description": "Red Sandal Powder, enriched with the goodness of Rakta Chandan, offers \na deeper, more intensive skincare treatment compared to regular \ncleansing. Known for its complexion-enhancing and calming properties, it \nhelps reduce blemishes, soothe irritation, and improve overall skin tone \nwhen used as a face pack, leaving the skin clearer and more refreshed"
   },
   {
     "id": 1239,
@@ -1699,7 +1963,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:46.315830+00:00"
+    "created_at": "2026-09-18T18:41:46.315830+00:00",
+    "short_description": "Pure Distilled Rose Petal Mist",
+    "card_description": "Pure Distilled Rose Petal Mist",
+    "subtitle": "Pure Distilled Rose Petal Mist",
+    "full_description": "It can be used as a toner, moisturizer or it can be mix with any type of face pack."
   },
   {
     "id": 1238,
@@ -1724,7 +1992,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:46.789302+00:00"
+    "created_at": "2026-09-18T18:41:46.789302+00:00",
+    "short_description": "Nourishing Hibiscus Hair Oil",
+    "card_description": "Nourishing Hibiscus Hair Oil",
+    "subtitle": "Nourishing Hibiscus Hair Oil",
+    "full_description": "Our Ramcare Hibiscus hair oil restores hair’s natural shine, strengthens hair, promotes hair growth, and nourishes dry hair."
   },
   {
     "id": 1235,
@@ -1749,7 +2021,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:47.260252+00:00"
+    "created_at": "2026-09-18T18:41:47.260252+00:00",
+    "short_description": "Pure Traditional Besan Flour",
+    "card_description": "Pure Traditional Besan Flour",
+    "subtitle": "Pure Traditional Besan Flour",
+    "full_description": "n addition to its culinary uses, it is also a popular natural ingredient for skincare in Tamil Nadu, often used in face packs to cleanse, exfoliate, and brighten the skin."
   },
   {
     "id": 1233,
@@ -1774,7 +2050,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:47.733184+00:00"
+    "created_at": "2026-09-18T18:41:47.733184+00:00",
+    "short_description": "Pure Hibiscus Scalp Wash Powder",
+    "card_description": "Pure Hibiscus Scalp Wash Powder",
+    "subtitle": "Pure Hibiscus Scalp Wash Powder",
+    "full_description": "Ramcare Hibiscus hair wash powder makes hair darker, prevents dandruff and lice and makes hair softer and silkier."
   },
   {
     "id": 1232,
@@ -1799,7 +2079,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:48.202216+00:00"
+    "created_at": "2026-09-18T18:41:48.202216+00:00",
+    "short_description": "Pure Soothing Aloe Leaf Gel",
+    "card_description": "Pure Soothing Aloe Leaf Gel",
+    "subtitle": "Pure Soothing Aloe Leaf Gel",
+    "full_description": "Aloe Vera Gel is a multi-purpose skincare essential known for its cooling \n \n and hydrating properties. It helps moisturize the skin, reduce redness, and \n \n support recovery from minor cuts, sun exposure, and dryness, while \n \n improving skin texture and promoting a fresh, healthy glow."
   },
   {
     "id": 1230,
@@ -1824,7 +2108,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:48.668407+00:00"
+    "created_at": "2026-09-18T18:41:48.668407+00:00",
+    "short_description": "Purifying Multani Clay Soap",
+    "card_description": "Purifying Multani Clay Soap",
+    "subtitle": "Purifying Multani Clay Soap",
+    "full_description": "Multani mitti, a mineral-rich clay, is prized in natural soaps for its deep \n \n cleansing and oil-absorbing properties. It helps purify the skin, unclog \n \n pores, and reveal a clear, refreshed complexion."
   },
   {
     "id": 1227,
@@ -1852,7 +2140,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:50.105549+00:00"
+    "created_at": "2026-09-18T18:41:50.105549+00:00",
+    "short_description": "Kuppaimeni Skin Soothing Bar",
+    "card_description": "Kuppaimeni Skin Soothing Bar",
+    "subtitle": "Kuppaimeni Skin Soothing Bar",
+    "full_description": "Kuppaimeni soap gently cleanses and purifies, helping to keep skin clear \nand balanced. Its natural properties work to reduce pimples and acne. It \nleaves the skin feeling fresh, smooth, and naturally refreshed. "
   },
   {
     "id": 1221,
@@ -1879,7 +2171,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:52.937648+00:00"
+    "created_at": "2026-09-18T18:41:52.937648+00:00",
+    "short_description": "Authentic Leaf Hair Wash Powder",
+    "card_description": "Authentic Leaf Hair Wash Powder",
+    "subtitle": "Authentic Leaf Hair Wash Powder",
+    "full_description": "Green Arappu powder, derived from the leaves of the Arappu tree (Albizia amara), offers a range of benefits primarily for hair and scalp care."
   },
   {
     "id": 1220,
@@ -1906,7 +2202,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:53.415156+00:00"
+    "created_at": "2026-09-18T18:41:53.415156+00:00",
+    "short_description": "Gentle Herbal Baby Bath Soap",
+    "card_description": "Gentle Herbal Baby Bath Soap",
+    "subtitle": "Gentle Herbal Baby Bath Soap",
+    "full_description": "Avarampoo Baby Soap is enriched with the gentle essence of avarampoo, \nspecially crafted for a baby’s delicate and sensitive skin. It provides soft, \nsoothing care that naturally nourishes the skin without any harshness. Each \nwash leaves a tender, comforted feel."
   },
   {
     "id": 1219,
@@ -1931,7 +2231,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:53.889827+00:00"
+    "created_at": "2026-09-18T18:41:53.889827+00:00",
+    "short_description": "Cooling Herbal Scalp Powder",
+    "card_description": "Cooling Herbal Scalp Powder",
+    "subtitle": "Cooling Herbal Scalp Powder",
+    "full_description": "Green Arappu powder, derived from the leaves of the Arappu tree (Albizia amara), offers a range of benefits primarily for hair and scalp care."
   },
   {
     "id": 1218,
@@ -1956,7 +2260,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:54.369217+00:00"
+    "created_at": "2026-09-18T18:41:54.369217+00:00",
+    "short_description": "Forest Herbal Shikakai Powder",
+    "card_description": "Forest Herbal Shikakai Powder",
+    "subtitle": "Forest Herbal Shikakai Powder",
+    "full_description": "Nayam Shikakai Powder is a natural hair care product made from the dried and powdered pods of the Acacia concinna tree, commonly known as Shikakai. It is traditionally used in India as a mild and natural cleanser for hair."
   },
   {
     "id": 1217,
@@ -1984,7 +2292,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:54.841565+00:00"
+    "created_at": "2026-09-18T18:41:54.841565+00:00",
+    "short_description": "Senna & Wild Turmeric Soap",
+    "card_description": "Senna & Wild Turmeric Soap",
+    "subtitle": "Senna & Wild Turmeric Soap",
+    "full_description": "Avarampoo Turmeric Soap is a herbal blend designed to gently repair \ndamaged skin while helping to reduce allergies and irritation. Enriched with \nthe natural goodness of avarampoo and turmeric, it supports skin healing, \nsoothes inflammation, and promotes an even skin tone. "
   },
   {
     "id": 1216,
@@ -2012,7 +2324,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:55.322145+00:00"
+    "created_at": "2026-09-18T18:41:55.322145+00:00",
+    "short_description": "Detoxifying Activated Charcoal",
+    "card_description": "Detoxifying Activated Charcoal",
+    "subtitle": "Detoxifying Activated Charcoal",
+    "full_description": "Natural charcoal soap is made by slowly carbonizing natural raw materials \nto obtain pure charcoal, which is finely powdered and blended with a \nnatural soap base and nourishing oils to create a gentle, skin-friendly \nformulation. It is then molded into bars that effectively detoxify the skin by \ndrawing out impurities and excess oil, delivering a deep, natural cleansing \nexperience with a refreshed glow."
   },
   {
     "id": 1215,
@@ -2039,7 +2355,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:55.720249+00:00"
+    "created_at": "2026-09-18T18:41:55.720249+00:00",
+    "short_description": "Mineral-Rich Deep Cleansing Bar",
+    "card_description": "Mineral-Rich Deep Cleansing Bar",
+    "subtitle": "Mineral-Rich Deep Cleansing Bar",
+    "full_description": "Clay’s natural minerals gently soothe irritated skin and reduce redness, \npromoting a calm, balanced appearance. They help refine skin tone and \nimprove texture, leaving it smoother and more even. The result is skin that \nfeels clean, soft, and naturally refreshed. "
   },
   {
     "id": 1213,
@@ -2067,7 +2387,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:56.184052+00:00"
+    "created_at": "2026-09-18T18:41:56.184052+00:00",
+    "short_description": "Moong Dal Gentle Body Wash Bar",
+    "card_description": "Moong Dal Gentle Body Wash Bar",
+    "subtitle": "Moong Dal Gentle Body Wash Bar",
+    "full_description": "Green gram soap gently exfoliates, removing dead cells and impurities for \na naturally renewed feel. Its mild cleansing action helps keep pores clear \nwhile enhancing skin’s natural brightness, unveiling a fresh, polished glow."
   },
   {
     "id": 1212,
@@ -2092,7 +2416,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:56.579694+00:00"
+    "created_at": "2026-09-18T18:41:56.579694+00:00",
+    "short_description": "Pure Natural Indigo Leaf Dye",
+    "card_description": "Pure Natural Indigo Leaf Dye",
+    "subtitle": "Pure Natural Indigo Leaf Dye",
+    "full_description": "Neel Avuri Ilai powder, commonly known as Indigo powder, is a natural product derived from the leaves of the Indigofera tinctoria plant"
   },
   {
     "id": 1211,
@@ -2121,7 +2449,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:57.037213+00:00"
+    "created_at": "2026-09-18T18:41:57.037213+00:00",
+    "short_description": "Traditional Herbal Bridal Bar",
+    "card_description": "Traditional Herbal Bridal Bar",
+    "subtitle": "Traditional Herbal Bridal Bar",
+    "full_description": "Nalangu Maavu Soap is a traditional herbal blend made from green gram, \nrose petals, and Bengal gram. It gently removes dirt and excess oil, leaving \nthe skin clean and refreshed. Additionally, its plant-based goodness is \nknown to further enhance skin clarity"
   },
   {
     "id": 1210,
@@ -2146,7 +2478,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:57.498730+00:00"
+    "created_at": "2026-09-18T18:41:57.498730+00:00",
+    "short_description": "Traditional Pure Amla Hair Oil",
+    "card_description": "Traditional Pure Amla Hair Oil",
+    "subtitle": "Traditional Pure Amla Hair Oil",
+    "full_description": "Amla oil, derived from the Indian gooseberry, is a traditional hair care remedy known for its numerous benefits. Rich in Vitamin C, antioxidants, and essential fatty acids, it is a powerhouse for promoting overall hair and scalp health."
   },
   {
     "id": 1209,
@@ -2174,7 +2510,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:57.959921+00:00"
+    "created_at": "2026-09-18T18:41:57.959921+00:00",
+    "short_description": "Natural Plant-Based Hair Dye",
+    "card_description": "Natural Plant-Based Hair Dye",
+    "subtitle": "Natural Plant-Based Hair Dye",
+    "full_description": "Herbal hair color offers a gentle, nourishing alternative to chemical dyes, providing a range of benefits for both your hair and scalp."
   },
   {
     "id": 1208,
@@ -2201,7 +2541,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:58.421334+00:00"
+    "created_at": "2026-09-18T18:41:58.421334+00:00",
+    "short_description": "Traditional Shikakai Hair Wash",
+    "card_description": "Traditional Shikakai Hair Wash",
+    "subtitle": "Traditional Shikakai Hair Wash",
+    "full_description": "Herbal Shikakai Powder is a time-honoured herbal blend known for its mild, \nsoap-free cleansing that preserves the scalp’s natural moisture balance \nwhile promoting stronger, fuller-looking hair. Made from traditionally valued \nherbs, it helps reduce buildup, soothe scalp irritation, and enhance natural \nsoftness and shine without harsh chemicals. "
   },
   {
     "id": 1207,
@@ -2226,7 +2570,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:58.881421+00:00"
+    "created_at": "2026-09-18T18:41:58.881421+00:00",
+    "short_description": "Fermented Rice Water Shampoo",
+    "card_description": "Fermented Rice Water Shampoo",
+    "subtitle": "Fermented Rice Water Shampoo",
+    "full_description": "Rice Kanji Shampoo, inspired by traditional hair-care rituals, gently \ncleanses the scalp while providing deep nourishment to the hair. Made with \nrice kanji, it helps strengthen hair strands, improve texture, and boost \nnatural shine. With regular use the hair gets soften and manageable while \nreducing frizz and dryness."
   },
   {
     "id": 1206,
@@ -2251,7 +2599,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:59.344020+00:00"
+    "created_at": "2026-09-18T18:41:59.344020+00:00",
+    "short_description": "Traditional Vitality Herb Mix",
+    "card_description": "Traditional Vitality Herb Mix",
+    "subtitle": "Traditional Vitality Herb Mix",
+    "full_description": "Thathu Viruthi is a traditional Siddha and Ayurvedic medical practice used to increase the body's energy and strengthen the seven tissues known as Saptha Dhatu (blood, muscle, fat, bone, marrow, and sperm). Helps increase sperm count and correct nervous breakdown.  Helps cure heat-related illnesses caused by excessive heat and bad habits."
   },
   {
     "id": 1205,
@@ -2278,7 +2630,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:41:59.805509+00:00"
+    "created_at": "2026-09-18T18:41:59.805509+00:00",
+    "short_description": "Herbal Haritaki Cleansing Herb",
+    "card_description": "Herbal Haritaki Cleansing Herb",
+    "subtitle": "Herbal Haritaki Cleansing Herb",
+    "full_description": "kadukkai Powder (Haritaki Powder) derived from haritaki fruit, is your daily herbal ally for inner \n \n balance and digestive wellness. Known for its gentle cleansing \n \n nature—leaving you feeling lighter and more refreshed from within. With \n \n consistent use, it encourages better metabolism and a well-balanced \n \n system."
   },
   {
     "id": 1204,
@@ -2303,7 +2659,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:00.265679+00:00"
+    "created_at": "2026-09-18T18:42:00.265679+00:00",
+    "short_description": "Aromatic White Turmeric Powder",
+    "card_description": "Aromatic White Turmeric Powder",
+    "subtitle": "Aromatic White Turmeric Powder",
+    "full_description": "To help improve skin complexion, giving it a natural glow and a smoother texture. It is known for its cooling properties and is traditionally used as an external application for skin health."
   },
   {
     "id": 1203,
@@ -2328,7 +2688,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:00.732436+00:00"
+    "created_at": "2026-09-18T18:42:00.732436+00:00",
+    "short_description": "Soothing Vasaka Respiratory Jar",
+    "card_description": "Soothing Vasaka Respiratory Jar",
+    "subtitle": "Soothing Vasaka Respiratory Jar",
+    "full_description": "For cough and cold, bronchitis, osteoporosis, vomiting, sputum, wheezing,bloody flux, tuberculosis, abdominal pain, and also for intestinal worms."
   },
   {
     "id": 1202,
@@ -2353,7 +2717,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:01.199375+00:00"
+    "created_at": "2026-09-18T18:42:01.199375+00:00",
+    "short_description": "Soothing Vasaka Cough Herb",
+    "card_description": "Soothing Vasaka Cough Herb",
+    "subtitle": "Soothing Vasaka Cough Herb",
+    "full_description": "For cough and cold, bronchitis, osteoporosis, vomiting, sputum, wheezing, bloody flux, tuberculosis, abdominal pain, and also for intestinal worms."
   },
   {
     "id": 1201,
@@ -2378,7 +2746,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:01.671167+00:00"
+    "created_at": "2026-09-18T18:42:01.671167+00:00",
+    "short_description": "Vitamin C Rich Amla Berry Jar",
+    "card_description": "Vitamin C Rich Amla Berry Jar",
+    "subtitle": "Vitamin C Rich Amla Berry Jar",
+    "full_description": "Improves immunity, retains youthfulness, cures diabetes, alleviates bile, increases appetite."
   },
   {
     "id": 1200,
@@ -2403,7 +2775,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:02.147633+00:00"
+    "created_at": "2026-09-18T18:42:02.147633+00:00",
+    "short_description": "Traditional Euphorbia Skin Herb",
+    "card_description": "Traditional Euphorbia Skin Herb",
+    "subtitle": "Traditional Euphorbia Skin Herb",
+    "full_description": "Amman Pacharisi (Euphorbia hirta), also known as the asthma plant or snake weed, offers a wide array of health benefits. Traditionally, it has been used to alleviate respiratory issues like asthma, bronchitis, and coughs due to its anti-inflammatory properties that help reduce airway inflammation."
   },
   {
     "id": 1199,
@@ -2428,7 +2804,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:02.637510+00:00"
+    "created_at": "2026-09-18T18:42:02.637510+00:00",
+    "short_description": "Ashwagandha Vitality Root Jar",
+    "card_description": "Ashwagandha Vitality Root Jar",
+    "subtitle": "Ashwagandha Vitality Root Jar",
+    "full_description": "For infertility, proper blood flow, increase sperm count, for venereal disease, agility, hip pain, arthralgia, jitters."
   },
   {
     "id": 1198,
@@ -2453,7 +2833,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:03.117613+00:00"
+    "created_at": "2026-09-18T18:42:03.117613+00:00",
+    "short_description": "Ashwagandha Vitality Root Herb",
+    "card_description": "Ashwagandha Vitality Root Herb",
+    "subtitle": "Ashwagandha Vitality Root Herb",
+    "full_description": "For infertility, proper blood flow, increase sperm count, for venereal disease, agility, hip pain, arthralgia, jitters."
   },
   {
     "id": 1197,
@@ -2478,7 +2862,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:03.585759+00:00"
+    "created_at": "2026-09-18T18:42:03.585759+00:00",
+    "short_description": "Detox Bermuda Grass Powder Jar",
+    "card_description": "Detox Bermuda Grass Powder Jar",
+    "subtitle": "Detox Bermuda Grass Powder Jar",
+    "full_description": "Arugampul is known as Bermuda Grass or Doob Grass (botanical name: Cynodon dactylon). It is a highly valued, hardy, and nutritious perennial grass used in Ayurveda for detoxification, digestion, improving immunity, reducing blood sugar, and curing skin issues Regulates body heat, menstrual problems, jitters, skin and eye problems, arthritis and bile disorders, for dehydration."
   },
   {
     "id": 1196,
@@ -2503,7 +2891,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:04.060664+00:00"
+    "created_at": "2026-09-18T18:42:04.060664+00:00",
+    "short_description": "Detoxifying Bermuda Grass Herb",
+    "card_description": "Detoxifying Bermuda Grass Herb",
+    "subtitle": "Detoxifying Bermuda Grass Herb",
+    "full_description": "Arugampul is known as Bermuda Grass or Doob Grass (botanical name: Cynodon dactylon). It is a highly valued, hardy, and nutritious perennial grass used in Ayurveda for detoxification, digestion, improving immunity, reducing blood sugar, and curing skin issues Regulates body heat, menstrual problems, jitters, skin and eye problems, arthritis and bile disorders, for dehydration."
   },
   {
     "id": 1195,
@@ -2531,7 +2923,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:04.529118+00:00"
+    "created_at": "2026-09-18T18:42:04.529118+00:00",
+    "short_description": "Natural Papaya Enzyme Skin Bar",
+    "card_description": "Natural Papaya Enzyme Skin Bar",
+    "subtitle": "Natural Papaya Enzyme Skin Bar",
+    "full_description": "Papaya Soap is enriched with natural enzymes like papain and vitamins A \n& C that gently exfoliate the skin by removing dead cells and impurities. It \nhelps improve skin clarity and promotes a brighter, even-toned look. \nRegular use reduces dullness and reveals a fresh, smooth glow."
   },
   {
     "id": 1194,
@@ -2558,7 +2954,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:04.989612+00:00"
+    "created_at": "2026-09-18T18:42:04.989612+00:00",
+    "short_description": "Pure Sandalwood Complexion Bar",
+    "card_description": "Pure Sandalwood Complexion Bar",
+    "subtitle": "Pure Sandalwood Complexion Bar",
+    "full_description": "Red Sandal Soap, enriched with the revered Pterocarpus santalinus (Rakta \nChandan), offers a traditional and powerful approach to skincare. Known \nfor its complexion-enhancing and calming properties, it helps fade \nblemishes and ease skin irritation."
   },
   {
     "id": 1191,
@@ -2586,7 +2986,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:06.389737+00:00"
+    "created_at": "2026-09-18T18:42:06.389737+00:00",
+    "short_description": "Antibacterial Herbal Neem Bar",
+    "card_description": "Antibacterial Herbal Neem Bar",
+    "subtitle": "Antibacterial Herbal Neem Bar",
+    "full_description": "Neem Soap is a natural skin protector that helps fight bacterial and fungal \ninfections while calming irritation with its anti-inflammatory properties. It \nrelieves conditions like eczema and psoriasis, reducing redness and \ndiscomfort effectively. "
   },
   {
     "id": 1190,
@@ -2613,7 +3017,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:06.863807+00:00"
+    "created_at": "2026-09-18T18:42:06.863807+00:00",
+    "short_description": "Herbal Joint Flexibility Oil",
+    "card_description": "Herbal Joint Flexibility Oil",
+    "subtitle": "Herbal Joint Flexibility Oil",
+    "full_description": "Ramcare Balloon plant oil or Mudakatraan oil fully loaded along with 24-plus ingredients sprain, joint pain, shoulder pain, knee pain."
   },
   {
     "id": 1189,
@@ -2638,7 +3046,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:07.328602+00:00"
+    "created_at": "2026-09-18T18:42:07.328602+00:00",
+    "short_description": "Golden Senna Flower Powder Jar",
+    "card_description": "Golden Senna Flower Powder Jar",
+    "subtitle": "Golden Senna Flower Powder Jar",
+    "full_description": "For diabetes, strengthen liver, induce hunger, act as detoxifier, palliate menstrual problems, relieves impotency, for heart related disease, cures cough."
   },
   {
     "id": 1188,
@@ -2663,7 +3075,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:07.789644+00:00"
+    "created_at": "2026-09-18T18:42:07.789644+00:00",
+    "short_description": "Herbal Clove & Neem Tooth Powder",
+    "card_description": "Herbal Clove & Neem Tooth Powder",
+    "subtitle": "Herbal Clove & Neem Tooth Powder",
+    "full_description": "Many herbal ingredients possess inherent antimicrobial and anti-inflammatory properties, which can aid in preventing gum disease, reducing bad breath, and soothing sensitive gums."
   },
   {
     "id": 1187,
@@ -2688,7 +3104,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:08.254830+00:00"
+    "created_at": "2026-09-18T18:42:08.254830+00:00",
+    "short_description": "Soothing Licorice Root Jar",
+    "card_description": "Soothing Licorice Root Jar",
+    "subtitle": "Soothing Licorice Root Jar",
+    "full_description": "It is widely used in traditional medicine to treat coughs, sore throats, and digestive issues. Throat infections, dryness in breast, nerve problems, for spleen, stomach related disorders, hiccups."
   },
   {
     "id": 1186,
@@ -2713,7 +3133,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:08.720439+00:00"
+    "created_at": "2026-09-18T18:42:08.720439+00:00",
+    "short_description": "Babool Bark Herbal Tooth Care",
+    "card_description": "Babool Bark Herbal Tooth Care",
+    "subtitle": "Babool Bark Herbal Tooth Care",
+    "full_description": "Stain in tooth, maintains strong teeth, removes bad odour in mouth due to bacteria, whiteness of teeth."
   },
   {
     "id": 1185,
@@ -2738,7 +3162,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:09.192307+00:00"
+    "created_at": "2026-09-18T18:42:09.192307+00:00",
+    "short_description": "Natural Herbal Anion Pads",
+    "card_description": "Natural Herbal Anion Pads",
+    "subtitle": "Natural Herbal Anion Pads",
+    "full_description": "That herbal pads are gentler on the skin, more breathable, and can even help to alleviate issues like itching, rashes, and unpleasant odors. While research is ongoing, many women find herbal sanitary napkins"
   },
   {
     "id": 1184,
@@ -2763,7 +3191,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:09.657066+00:00"
+    "created_at": "2026-09-18T18:42:09.657066+00:00",
+    "short_description": "Soothing Licorice Root Powder",
+    "card_description": "Soothing Licorice Root Powder",
+    "subtitle": "Soothing Licorice Root Powder",
+    "full_description": "It is widely used in traditional medicine to treat coughs, sore throats, and digestive issues. Throat infections, dryness in breast, nerve problems, for spleen, stomach related disorders, hiccups."
   },
   {
     "id": 1183,
@@ -2790,7 +3222,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:10.125212+00:00"
+    "created_at": "2026-09-18T18:42:10.125212+00:00",
+    "short_description": "Indian Tulip Herbal Bath Bar",
+    "card_description": "Indian Tulip Herbal Bath Bar",
+    "subtitle": "Indian Tulip Herbal Bath Bar",
+    "full_description": "Poovarasan Kai Soap is crafted from the traditional goodness of the \n \n Poovarasan tree, widely valued in Ayurveda for its natural healing benefits. \n \n Known for its antiseptic properties, it helps protect the skin from infections. \n \n With its natural wound-healing support, it promotes clearer, healthier, and \n \n well-nourished skin."
   },
   {
     "id": 1182,
@@ -2815,7 +3251,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:10.593223+00:00"
+    "created_at": "2026-09-18T18:42:10.593223+00:00",
+    "short_description": "Nutritious Maerua Root Herb",
+    "card_description": "Nutritious Maerua Root Herb",
+    "subtitle": "Nutritious Maerua Root Herb",
+    "full_description": "Desert caper powder, derived from sun-dried caper buds, offers a concentrated burst of the caper’s signature salty, briny, and slightly tangy flavor."
   },
   {
     "id": 1181,
@@ -2840,7 +3280,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:11.061083+00:00"
+    "created_at": "2026-09-18T18:42:11.061083+00:00",
+    "short_description": "Fragrant Pink Rose Petal Powder",
+    "card_description": "Fragrant Pink Rose Petal Powder",
+    "subtitle": "Fragrant Pink Rose Petal Powder",
+    "full_description": "Roja poo powder, which is the powder of rose petals, is a powerful natural ingredient with extensive benefits for both skin and hair."
   },
   {
     "id": 1180,
@@ -2865,7 +3309,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:11.524696+00:00"
+    "created_at": "2026-09-18T18:42:11.524696+00:00",
+    "short_description": "Cardamom Digestive Choornam",
+    "card_description": "Cardamom Digestive Choornam",
+    "subtitle": "Cardamom Digestive Choornam",
+    "full_description": "Regular use may help prevent blemishes, dark spots, and pigmentation, contributing to a clearer and more even complexion. Furthermore, Eladhi Choornam nourishes and hydrates the skin, promoting a healthy and radiant glow."
   },
   {
     "id": 1179,
@@ -2890,7 +3338,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:11.986805+00:00"
+    "created_at": "2026-09-18T18:42:11.986805+00:00",
+    "short_description": "Pure Red Sandalwood Powder",
+    "card_description": "Pure Red Sandalwood Powder",
+    "subtitle": "Pure Red Sandalwood Powder",
+    "full_description": "Red Sandal Powder, enriched with the goodness of Rakta Chandan, offers \n \n a deeper, more intensive skincare treatment compared to regular \n \n cleansing. Known for its complexion-enhancing and calming properties, it \n \n helps reduce blemishes, soothe irritation, and improve overall skin tone \n \n when used as a face pack, leaving the skin clearer and more refreshed."
   },
   {
     "id": 1178,
@@ -2915,7 +3367,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:12.450767+00:00"
+    "created_at": "2026-09-18T18:42:12.450767+00:00",
+    "short_description": "Digestive Guava Leaf Powder",
+    "card_description": "Digestive Guava Leaf Powder",
+    "subtitle": "Digestive Guava Leaf Powder",
+    "full_description": "Guava leaf powder, known as \"koiyya leaf powder\" in some regions, is gaining popularity for its numerous health benefits."
   },
   {
     "id": 1177,
@@ -2940,7 +3396,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:12.913556+00:00"
+    "created_at": "2026-09-18T18:42:12.913556+00:00",
+    "short_description": "Coscinium Yellow Tree Turmeric",
+    "card_description": "Coscinium Yellow Tree Turmeric",
+    "subtitle": "Coscinium Yellow Tree Turmeric",
+    "full_description": "Maramanjal powder, derived from the plant Coscinium fenestratum and also known as tree turmeric or false calumba, is a potent herb widely used in traditional medicine systems like Ayurveda and Siddha."
   },
   {
     "id": 1176,
@@ -2965,7 +3425,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:13.379594+00:00"
+    "created_at": "2026-09-18T18:42:13.379594+00:00",
+    "short_description": "Antioxidant Hibiscus Flower Herb",
+    "card_description": "Antioxidant Hibiscus Flower Herb",
+    "subtitle": "Antioxidant Hibiscus Flower Herb",
+    "full_description": "Hibiscus flower powder, derived from the vibrant blooms of the hibiscus plant, offers a range of potential benefits. Rich in antioxidants, it may help combat free radicals in the body, potentially contributing to overall health and well-being."
   },
   {
     "id": 1175,
@@ -2990,7 +3454,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:13.845301+00:00"
+    "created_at": "2026-09-18T18:42:13.845301+00:00",
+    "short_description": "Aromatic Nutmeg Wellness Powder",
+    "card_description": "Aromatic Nutmeg Wellness Powder",
+    "subtitle": "Aromatic Nutmeg Wellness Powder",
+    "full_description": "Jaathikkai Powder (Nutmeg powder) derived from the seed of the Myristica fragrans tree, is far more than just a fragrant spice for culinary delights; it boasts a rich history of medicinal use in various traditional systems."
   },
   {
     "id": 1174,
@@ -3017,7 +3485,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:14.307776+00:00"
+    "created_at": "2026-09-18T18:42:14.307776+00:00",
+    "short_description": "Creamy Cow Milk Gentle Soap",
+    "card_description": "Creamy Cow Milk Gentle Soap",
+    "subtitle": "Creamy Cow Milk Gentle Soap",
+    "full_description": "Cow Milk Soap has been a part of traditional skincare for centuries, valued \n \n for its gentle and nourishing nature. Rich in natural nutrients, it helps \n \n moisturize and soften the skin, making it milder than commercial soaps. \n \n Free from harsh chemicals, it cleanses gently and supports healthy skin."
   },
   {
     "id": 1173,
@@ -3042,7 +3514,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:14.776917+00:00"
+    "created_at": "2026-09-18T18:42:14.776917+00:00",
+    "short_description": "Vedic Respiratory Defense Blend",
+    "card_description": "Vedic Respiratory Defense Blend",
+    "subtitle": "Vedic Respiratory Defense Blend",
+    "full_description": "To Improve Immunity."
   },
   {
     "id": 1172,
@@ -3067,7 +3543,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:15.242358+00:00"
+    "created_at": "2026-09-18T18:42:15.242358+00:00",
+    "short_description": "Zesty Vitamin C Citrus Powder",
+    "card_description": "Zesty Vitamin C Citrus Powder",
+    "subtitle": "Zesty Vitamin C Citrus Powder",
+    "full_description": "Lemon Peel Powder is a natural citrus-based ingredient used in skincare \n \n for its cleansing action. Rich in vitamin C and antioxidants, it helps brighten \n \n the skin while supporting gentle internal detox, bringing freshness and \n \n balance to everyday care. Made from sun-dried lemon peels (outer rind), it \n \n is used in pure form or blended with herbs like neem, turmeric, and rose \n \n powder, and is commonly applied in face packs, scrubs, herbal teas, and \n \n detox drinks to support both skin health and digestion when used in small, \n \n controlled quantities."
   },
   {
     "id": 1171,
@@ -3092,7 +3572,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:15.709375+00:00"
+    "created_at": "2026-09-18T18:42:15.709375+00:00",
+    "short_description": "Traditional Decoction Churnam",
+    "card_description": "Traditional Decoction Churnam",
+    "subtitle": "Traditional Decoction Churnam",
+    "full_description": "This herbal concoction is traditionally used to relieve symptoms associated with common respiratory ailments such as cold,cough. "
   },
   {
     "id": 1170,
@@ -3117,7 +3601,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:16.171427+00:00"
+    "created_at": "2026-09-18T18:42:16.171427+00:00",
+    "short_description": "Pure Soothing Aloe Leaf Powder",
+    "card_description": "Pure Soothing Aloe Leaf Powder",
+    "subtitle": "Pure Soothing Aloe Leaf Powder",
+    "full_description": "Aloe Vera Powder is made from pure, dehydrated aloe gel and is valued for \nits versatile use in skincare and haircare. Naturally free from additives, it \ndelivers a clean, plant-based approach while helping soothe, hydrate, and \nrestore natural balance. When food-grade, it may be blended in small \nquantities with herbal mixes or warm water to support light digestive \ncomfort."
   },
   {
     "id": 1169,
@@ -3142,7 +3630,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:16.638177+00:00"
+    "created_at": "2026-09-18T18:42:16.638177+00:00",
+    "short_description": "Punarnava Rejuvenating Herb",
+    "card_description": "Punarnava Rejuvenating Herb",
+    "subtitle": "Punarnava Rejuvenating Herb",
+    "full_description": "Mookirattai powder,botanically known as Boerhavia diffusa, and commonly referred to as Punarnava in Ayurveda, is a highly esteemed herb in traditional Indian medicine."
   },
   {
     "id": 1168,
@@ -3167,7 +3659,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:17.095675+00:00"
+    "created_at": "2026-09-18T18:42:17.095675+00:00",
+    "short_description": "Balloon Vine Joint Relief Jar",
+    "card_description": "Balloon Vine Joint Relief Jar",
+    "subtitle": "Balloon Vine Joint Relief Jar",
+    "full_description": "Mutakkatran powder, derived from the leaves of the “Balloon Vine” or Cardiospermum halicacabum, is a revered herb in traditional Indian medicine."
   },
   {
     "id": 1167,
@@ -3192,7 +3688,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:17.494702+00:00"
+    "created_at": "2026-09-18T18:42:17.494702+00:00",
+    "short_description": "Jamun Seed Sugar Balance Jar",
+    "card_description": "Jamun Seed Sugar Balance Jar",
+    "subtitle": "Jamun Seed Sugar Balance Jar",
+    "full_description": "For diabetes, regulate urinary tract, cures constipation, piles, cures indigestion, strengthens the liver, improves memory power."
   },
   {
     "id": 1166,
@@ -3217,7 +3717,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:17.955464+00:00"
+    "created_at": "2026-09-18T18:42:17.955464+00:00",
+    "short_description": "Jamun Seed Sugar Balance Herb",
+    "card_description": "Jamun Seed Sugar Balance Herb",
+    "subtitle": "Jamun Seed Sugar Balance Herb",
+    "full_description": "For diabetes, regulate urinary tract, cures constipation, piles, cures indigestion, strengthens the liver, improves memory power."
   },
   {
     "id": 1165,
@@ -3242,7 +3746,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:18.420006+00:00"
+    "created_at": "2026-09-18T18:42:18.420006+00:00",
+    "short_description": "Classic Immunity Decoction Herb",
+    "card_description": "Classic Immunity Decoction Herb",
+    "subtitle": "Classic Immunity Decoction Herb",
+    "full_description": "This nilavembu (chireta) kudineer cures normal and seasonal fevers, clearing intestinal worms, digestive problems for children, and also for bloating, acidity. the quantity of taking this liquid varies from kids to adult."
   },
   {
     "id": 1164,
@@ -3267,7 +3775,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:18.883454+00:00"
+    "created_at": "2026-09-18T18:42:18.883454+00:00",
+    "short_description": "Sweet Flag Traditional Root Jar",
+    "card_description": "Sweet Flag Traditional Root Jar",
+    "subtitle": "Sweet Flag Traditional Root Jar",
+    "full_description": "It helps to clean intestinal worms, flatulence, acidity, gastrointestinal disorders, and also helps to cure asthma."
   },
   {
     "id": 1163,
@@ -3292,7 +3804,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:19.353258+00:00"
+    "created_at": "2026-09-18T18:42:19.353258+00:00",
+    "short_description": "Traditional Baby Herbal Powder",
+    "card_description": "Traditional Baby Herbal Powder",
+    "subtitle": "Traditional Baby Herbal Powder",
+    "full_description": "It will help to relieve inflammation, to feel fresh and soft, and provide a better complexion."
   },
   {
     "id": 1162,
@@ -3317,7 +3833,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:19.818721+00:00"
+    "created_at": "2026-09-18T18:42:19.818721+00:00",
+    "short_description": "Pure Brahmi Cognitive Herb Jar",
+    "card_description": "Pure Brahmi Cognitive Herb Jar",
+    "subtitle": "Pure Brahmi Cognitive Herb Jar",
+    "full_description": "Helps increase memory power and cognitive, for anemia, helps reduce swelling of spleen and liver, reduce body heat."
   },
   {
     "id": 1161,
@@ -3342,7 +3862,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:20.286885+00:00"
+    "created_at": "2026-09-18T18:42:20.286885+00:00",
+    "short_description": "Pure Brahmi Cognitive Support",
+    "card_description": "Pure Brahmi Cognitive Support",
+    "subtitle": "Pure Brahmi Cognitive Support",
+    "full_description": "Helps increase memory power and cognitive, for anemia, helps reduce swelling of spleen and liver, reduce body heat."
   },
   {
     "id": 1160,
@@ -3367,7 +3891,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:20.749443+00:00"
+    "created_at": "2026-09-18T18:42:20.749443+00:00",
+    "short_description": "Triphala Three-Fruit Jar",
+    "card_description": "Triphala Three-Fruit Jar",
+    "subtitle": "Triphala Three-Fruit Jar",
+    "full_description": "Ramcare Triphala powder aids to cure constipation, cough, eye-related problems, thrush(வாய் புண்)."
   },
   {
     "id": 1159,
@@ -3392,7 +3920,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:21.213559+00:00"
+    "created_at": "2026-09-18T18:42:21.213559+00:00",
+    "short_description": "Respiratory Herb Powder Jar",
+    "card_description": "Respiratory Herb Powder Jar",
+    "subtitle": "Respiratory Herb Powder Jar",
+    "full_description": "For cold, cough, gives strength to the body, improves immune power, increases appetite, cures asthma, for bile disorders."
   },
   {
     "id": 1158,
@@ -3421,7 +3953,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:21.670768+00:00"
+    "created_at": "2026-09-18T18:42:21.670768+00:00",
+    "short_description": "Traditional Herbal Bath Powder",
+    "card_description": "Traditional Herbal Bath Powder",
+    "subtitle": "Traditional Herbal Bath Powder",
+    "full_description": "Nalangu maavu can make skin look better and have a natural glow when used regularly.Exfoliation: have a coarse texture that can work as a mild exfoliator to help remove dead skin cells and encourage softer, smoother skin."
   },
   {
     "id": 1157,
@@ -3446,7 +3982,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:22.128096+00:00"
+    "created_at": "2026-09-18T18:42:22.128096+00:00",
+    "short_description": "Respiratory Soothing Herb Pack",
+    "card_description": "Respiratory Soothing Herb Pack",
+    "subtitle": "Respiratory Soothing Herb Pack",
+    "full_description": "For cold, cough, gives strength to the body, improves immune power, increases appetite, cures asthma, for bile disorders."
   },
   {
     "id": 1156,
@@ -3471,7 +4011,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:22.590945+00:00"
+    "created_at": "2026-09-18T18:42:22.590945+00:00",
+    "short_description": "Pure Moong Dal Bath Flour Jar",
+    "card_description": "Pure Moong Dal Bath Flour Jar",
+    "subtitle": "Pure Moong Dal Bath Flour Jar",
+    "full_description": "Its gentle exfoliating properties help to remove dead skin cells, unclog pores, and reveal a brighter complexion.It is frequently mixed with other natural ingredients like water, yogurt, milk, honey, or turmeric to create customized face packs for various skin concerns."
   },
   {
     "id": 1155,
@@ -3496,7 +4040,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:23.056508+00:00"
+    "created_at": "2026-09-18T18:42:23.056508+00:00",
+    "short_description": "Gymnema Sugar Balance Jar",
+    "card_description": "Gymnema Sugar Balance Jar",
+    "subtitle": "Gymnema Sugar Balance Jar",
+    "full_description": "For fever and cough, stomatitis increases appetite, reduces body heat, strengthens the liver, helps control sugar cravings."
   },
   {
     "id": 1154,
@@ -3521,7 +4069,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:23.518110+00:00"
+    "created_at": "2026-09-18T18:42:23.518110+00:00",
+    "short_description": "Fragrant Botanical Bath Powder",
+    "card_description": "Fragrant Botanical Bath Powder",
+    "subtitle": "Fragrant Botanical Bath Powder",
+    "full_description": "The skin becomes soft, free of dryness, free of dark patches around the neck, free of odors, and without any added additives or preservatives."
   },
   {
     "id": 1153,
@@ -3546,7 +4098,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:23.980307+00:00"
+    "created_at": "2026-09-18T18:42:23.980307+00:00",
+    "short_description": "Gymnema Sugar Balance Herb",
+    "card_description": "Gymnema Sugar Balance Herb",
+    "subtitle": "Gymnema Sugar Balance Herb",
+    "full_description": "For fever and cough, stomatitis increases appetite, reduces body heat, strengthens the liver, helps control sugar cravings"
   },
   {
     "id": 1152,
@@ -3571,7 +4127,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:24.454562+00:00"
+    "created_at": "2026-09-18T18:42:24.454562+00:00",
+    "short_description": "Sacred Holy Basil Leaf Jar",
+    "card_description": "Sacred Holy Basil Leaf Jar",
+    "subtitle": "Sacred Holy Basil Leaf Jar",
+    "full_description": "For cold, cough, heart and liver strengthen, breast milk increases and also cures thorax infections"
   },
   {
     "id": 1151,
@@ -3596,7 +4156,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:24.911998+00:00"
+    "created_at": "2026-09-18T18:42:24.911998+00:00",
+    "short_description": "Sacred Holy Basil Leaf Powder",
+    "card_description": "Sacred Holy Basil Leaf Powder",
+    "subtitle": "Sacred Holy Basil Leaf Powder",
+    "full_description": "For cold, cough, heart and liver strengthen, breast milk increases and also cures thorax infections."
   },
   {
     "id": 1150,
@@ -3621,7 +4185,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:25.309767+00:00"
+    "created_at": "2026-09-18T18:42:25.309767+00:00",
+    "short_description": "27 Sacred Vedic Pooja Herbs",
+    "card_description": "27 Sacred Vedic Pooja Herbs",
+    "subtitle": "27 Sacred Vedic Pooja Herbs",
+    "full_description": "Dhiviyam homa thiraviyam contains 108 types of herbs that are not only used for religious purposes but also have medicinal properties."
   },
   {
     "id": 1149,
@@ -3646,7 +4214,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:25.777167+00:00"
+    "created_at": "2026-09-18T18:42:25.777167+00:00",
+    "short_description": "Herbal Stamina Ionidium Jar",
+    "card_description": "Herbal Stamina Ionidium Jar",
+    "subtitle": "Herbal Stamina Ionidium Jar",
+    "full_description": "It strengthens body, for syphilis, helps regulate mineral loss, weight loss, increases sperm count, controls urinary tract infections, jitters."
   },
   {
     "id": 1148,
@@ -3671,7 +4243,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:26.236106+00:00"
+    "created_at": "2026-09-18T18:42:26.236106+00:00",
+    "short_description": "Sacred Turmeric Pooja Powder",
+    "card_description": "Sacred Turmeric Pooja Powder",
+    "subtitle": "Sacred Turmeric Pooja Powder",
+    "full_description": "The aromatic nature of the powder also contributes to a serene and spiritually uplifting atmosphere during prayers and religious practices, enhancing the overall devotional experience."
   },
   {
     "id": 1147,
@@ -3696,7 +4272,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:26.697086+00:00"
+    "created_at": "2026-09-18T18:42:26.697086+00:00",
+    "short_description": "Herbal Stamina Ionidium Powder",
+    "card_description": "Herbal Stamina Ionidium Powder",
+    "subtitle": "Herbal Stamina Ionidium Powder",
+    "full_description": "It strengthens body, for syphilis, helps regulate mineral loss, weight loss, increases sperm count, controls urinary tract infections, jitters."
   },
   {
     "id": 1146,
@@ -3724,7 +4304,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:27.160920+00:00"
+    "created_at": "2026-09-18T18:42:27.160920+00:00",
+    "short_description": "Fragrant Screwpine Red Kumkum",
+    "card_description": "Fragrant Screwpine Red Kumkum",
+    "subtitle": "Fragrant Screwpine Red Kumkum",
+    "full_description": "Mahil Thazhampoo Kungumam is more fragrant and divine.\n\n"
   },
   {
     "id": 1145,
@@ -3749,7 +4333,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:27.617878+00:00"
+    "created_at": "2026-09-18T18:42:27.617878+00:00",
+    "short_description": "Tribulus Botanical Strength Jar",
+    "card_description": "Tribulus Botanical Strength Jar",
+    "subtitle": "Tribulus Botanical Strength Jar",
+    "full_description": "Perunerunjil powder, derived from the plant Tribulus terrestris (often referred to as Gokhru in other parts of India, or the larger variety of Nerunjil), is a highly valued herb in traditional Indian medicinal systems like Ayurveda and Siddha. Its most prominent benefit lies in its exceptional efficacy for kidney and urinary tract health"
   },
   {
     "id": 1144,
@@ -3774,7 +4362,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:28.076982+00:00"
+    "created_at": "2026-09-18T18:42:28.076982+00:00",
+    "short_description": "54 Divine Hawan Herb Offerings",
+    "card_description": "54 Divine Hawan Herb Offerings",
+    "subtitle": "54 Divine Hawan Herb Offerings",
+    "full_description": "Vedan 54 Vagai Homa Thiraviyangal is a traditional blend made from carefully selected herbal and natural ingredients used for homam and spiritual rituals. Prepared according to traditional practices, this sacred mixture creates a pleasant aroma and is commonly used during poojas, homams, and spiritual ceremonies to enhance the devotional atmosphere. Made with purity and care, it contains natural ingredients without artificial additives.\n\n54 வகை ஹோம திரவியங்கள் என்பது ஹோமம் மற்றும் ஆன்மீக வழிபாடுகளுக்காக தேர்ந்தெடுக்கப்பட்ட மூலிகைகள் மற்றும் இயற்கை பொருட்களால் தயாரிக்கப்பட்ட பாரம்பரிய கலவையாகும். பாரம்பரிய முறையில் தயாரிக்கப்பட்ட இந்த திரவியங்கள், இனிய மணத்தை வழங்கி பூஜைகள், ஹோமங்கள் மற்றும் ஆன்மீக நிகழ்ச்சிகளில் பக்தி நிறைந்த சூழலை உருவாக்க உதவுகின்றன. செயற்கை சேர்வுகள் இல்லாமல் தூய்மையாக தயாரிக்கப்பட்டது."
   },
   {
     "id": 1143,
@@ -3799,7 +4391,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:28.539044+00:00"
+    "created_at": "2026-09-18T18:42:28.539044+00:00",
+    "short_description": "Tribulus Botanical Strength Herb",
+    "card_description": "Tribulus Botanical Strength Herb",
+    "subtitle": "Tribulus Botanical Strength Herb",
+    "full_description": "Perunerunjil powder, derived from the plant Tribulus terrestris (often referred to as Gokhru in other parts of India, or the larger variety of Nerunjil), is a highly valued herb in traditional Indian medicinal systems like Ayurveda and Siddha. Its most prominent benefit lies in its exceptional efficacy for kidney and urinary tract health"
   },
   {
     "id": 1142,
@@ -3824,7 +4420,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:28.993442+00:00"
+    "created_at": "2026-09-18T18:42:28.993442+00:00",
+    "short_description": "Warming Sun-Dried Ginger Jar",
+    "card_description": "Warming Sun-Dried Ginger Jar",
+    "subtitle": "Warming Sun-Dried Ginger Jar",
+    "full_description": "The information provided here is based on traditional and folk medicine. Paralysis is a serious medical condition, and it is essential to seek a diagnosis and treatment from a qualified medical professional"
   },
   {
     "id": 1141,
@@ -3849,7 +4449,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:29.456739+00:00"
+    "created_at": "2026-09-18T18:42:29.456739+00:00",
+    "short_description": "Crisp Plantain Stem Pickle",
+    "card_description": "Crisp Plantain Stem Pickle",
+    "subtitle": "Crisp Plantain Stem Pickle",
+    "full_description": "Healthy side dish that can be eaten with idly dosa, chapati, or rice.Incorporating vaalaithandu pickle into your diet can be a tasty way to potentially harness these nutritional advantages."
   },
   {
     "id": 1140,
@@ -3874,7 +4478,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:29.933340+00:00"
+    "created_at": "2026-09-18T18:42:29.933340+00:00",
+    "short_description": "Pure Methi Seed Digest Jar",
+    "card_description": "Pure Methi Seed Digest Jar",
+    "subtitle": "Pure Methi Seed Digest Jar",
+    "full_description": "While fenugreek is generally safe for most people when consumed in moderation, it's always best to consult a healthcare professional before using it as a primary treatment for any medical condition, especially if you are pregnant, breastfeeding, or have a pre-existing medical condition."
   },
   {
     "id": 1139,
@@ -3899,7 +4507,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:30.430944+00:00"
+    "created_at": "2026-09-18T18:42:30.430944+00:00",
+    "short_description": "Savory Plantain Flower Pickle",
+    "card_description": "Savory Plantain Flower Pickle",
+    "subtitle": "Savory Plantain Flower Pickle",
+    "full_description": "A rare delicacy crafted for modern tables.\n\nExperience the richness of tradition with Dharani Herbals Banana Blossom Pickle, thoughtfully prepared from fresh banana blossoms and premium spices. Blending authentic flavor with natural goodness, this luxurious pickle brings a refined touch to every meal.\n\nPerfectly paired with idly, dosa, chapati, and rice, every spoonful delivers timeless taste, wholesome satisfaction, and everyday indulgence."
   },
   {
     "id": 1138,
@@ -3924,7 +4536,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:30.893388+00:00"
+    "created_at": "2026-09-18T18:42:30.893388+00:00",
+    "short_description": "Nutritious Multi-Millet Mix",
+    "card_description": "Nutritious Multi-Millet Mix",
+    "subtitle": "Nutritious Multi-Millet Mix",
+    "full_description": "Mahil health mix powder is made for all ages and has a high nutritional value."
   },
   {
     "id": 1137,
@@ -3949,7 +4565,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:31.349752+00:00"
+    "created_at": "2026-09-18T18:42:31.349752+00:00",
+    "short_description": "Digestive Cissus Herbal Pickle",
+    "card_description": "Digestive Cissus Herbal Pickle",
+    "subtitle": "Digestive Cissus Herbal Pickle",
+    "full_description": "Pirandai pickle is a healthy side dish that can be eaten with idly dosa, chapati, or rice.Traditionally, Pirandai has been used to support wound healing and may possess anti-inflammatory properties beneficial "
   },
   {
     "id": 1135,
@@ -3974,7 +4594,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:32.271402+00:00"
+    "created_at": "2026-09-18T18:42:32.271402+00:00",
+    "short_description": "Tangy Spiced Tamarind Relish",
+    "card_description": "Tangy Spiced Tamarind Relish",
+    "subtitle": "Tangy Spiced Tamarind Relish",
+    "full_description": "Pulithokku is the favorite dish for everyone.it can be eaten with hot rice.it can be a flavorful way to incorporate ingredients with potential health-promoting properties into your diet."
   },
   {
     "id": 1134,
@@ -3999,7 +4623,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:32.726527+00:00"
+    "created_at": "2026-09-18T18:42:32.726527+00:00",
+    "short_description": "Immunity Defense Bitter Jar",
+    "card_description": "Immunity Defense Bitter Jar",
+    "subtitle": "Immunity Defense Bitter Jar",
+    "full_description": "For fever, increases appetite, kills intestinal worms, headache, acidity for children, and also digestive problems."
   },
   {
     "id": 1133,
@@ -4024,7 +4652,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:33.187573+00:00"
+    "created_at": "2026-09-18T18:42:33.187573+00:00",
+    "short_description": "Turkey Berry Spiced Relish",
+    "card_description": "Turkey Berry Spiced Relish",
+    "subtitle": "Turkey Berry Spiced Relish",
+    "full_description": "Turkey berry thokku, also known as sundakkai thokku, is a popular South Indian dish made from turkey berries. These small, green berries have a slightly bitter taste but are known for their many health benefits. "
   },
   {
     "id": 1132,
@@ -4049,7 +4681,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:33.650635+00:00"
+    "created_at": "2026-09-18T18:42:33.650635+00:00",
+    "short_description": "Tangy Spiced Sun Lemon Pickle",
+    "card_description": "Tangy Spiced Sun Lemon Pickle",
+    "subtitle": "Tangy Spiced Sun Lemon Pickle",
+    "full_description": "Lemon pickle is a healthy side dish that can be eaten with idly dosa, chapati, or rice. it may even help in regulating blood sugar levels and dissolving kidney stones due to its citric acid content."
   },
   {
     "id": 1131,
@@ -4074,7 +4710,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:34.048501+00:00"
+    "created_at": "2026-09-18T18:42:34.048501+00:00",
+    "short_description": "Targeted Anti-Dandruff Jar",
+    "card_description": "Targeted Anti-Dandruff Jar",
+    "subtitle": "Targeted Anti-Dandruff Jar",
+    "full_description": "Ramcare Frog fruit powder helps to cure asthma, bronchitis, retains mineral loss, clears sputum."
   },
   {
     "id": 1130,
@@ -4099,7 +4739,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:34.512265+00:00"
+    "created_at": "2026-09-18T18:42:34.512265+00:00",
+    "short_description": "Traditional Baheda Fruit Jar",
+    "card_description": "Traditional Baheda Fruit Jar",
+    "subtitle": "Traditional Baheda Fruit Jar",
+    "full_description": "For cough, throat, trachea, bronchitis-related infections, cures constipation."
   },
   {
     "id": 1129,
@@ -4124,7 +4768,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:34.974453+00:00"
+    "created_at": "2026-09-18T18:42:34.974453+00:00",
+    "short_description": "Aromatic Karuveppilai Gravy",
+    "card_description": "Aromatic Karuveppilai Gravy",
+    "subtitle": "Aromatic Karuveppilai Gravy",
+    "full_description": "Curry leaves thokku is a healthy side dish, it can be served with hot rice, idly, dosa, or chapati."
   },
   {
     "id": 1127,
@@ -4149,7 +4797,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:35.912773+00:00"
+    "created_at": "2026-09-18T18:42:35.912773+00:00",
+    "short_description": "Bael Leaf Detox Herb Jar",
+    "card_description": "Bael Leaf Detox Herb Jar",
+    "subtitle": "Bael Leaf Detox Herb Jar",
+    "full_description": "Ramcare Bael leaf (vilvam ilai) powder helps to cure eye problems, cough, menorrhagia, throat infections, stomach ulcers, jaundice, act as an anti-inflammation."
   },
   {
     "id": 1126,
@@ -4174,7 +4826,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:36.372416+00:00"
+    "created_at": "2026-09-18T18:42:36.372416+00:00",
+    "short_description": "Herbal Brahmi Idly Chutney Podi",
+    "card_description": "Herbal Brahmi Idly Chutney Podi",
+    "subtitle": "Herbal Brahmi Idly Chutney Podi",
+    "full_description": "Vallarai idly powder is an easy and convenient way to include this nutritious herb in your diet. It is typically a blend of dried Vallarai leaves and traditional spices, which can be mixed with oil or ghee and served with idlis, dosas, or rice."
   },
   {
     "id": 1125,
@@ -4199,7 +4855,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:36.836211+00:00"
+    "created_at": "2026-09-18T18:42:36.836211+00:00",
+    "short_description": "Herbal Glycemic Support Blend",
+    "card_description": "Herbal Glycemic Support Blend",
+    "subtitle": "Herbal Glycemic Support Blend",
+    "full_description": "It helps to treat diabetes."
   },
   {
     "id": 1124,
@@ -4224,7 +4884,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:37.296198+00:00"
+    "created_at": "2026-09-18T18:42:37.296198+00:00",
+    "short_description": "Tangy Cissus Idly Chutney Podi",
+    "card_description": "Tangy Cissus Idly Chutney Podi",
+    "subtitle": "Tangy Cissus Idly Chutney Podi",
+    "full_description": "Pirandai idly powder is typically made by roasting Pirandai with other ingredients like lentils, spices, and dried chillies"
   },
   {
     "id": 1123,
@@ -4249,7 +4913,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:37.759842+00:00"
+    "created_at": "2026-09-18T18:42:37.759842+00:00",
+    "short_description": "Vasaka Respiratory Decoction",
+    "card_description": "Vasaka Respiratory Decoction",
+    "subtitle": "Vasaka Respiratory Decoction",
+    "full_description": "INDICATION: It cures Edema, Constipation and Fever."
   },
   {
     "id": 1122,
@@ -4274,7 +4942,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:38.228427+00:00"
+    "created_at": "2026-09-18T18:42:38.228427+00:00",
+    "short_description": "Balloon Vine Herbal Rice Mix",
+    "card_description": "Balloon Vine Herbal Rice Mix",
+    "subtitle": "Balloon Vine Herbal Rice Mix",
+    "full_description": "The powder is typically consumed by mixing it with warm water, ghee, or honey. It can also be incorporated into a diet by adding it to traditional dishes."
   },
   {
     "id": 1121,
@@ -4299,7 +4971,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:38.687754+00:00"
+    "created_at": "2026-09-18T18:42:38.687754+00:00",
+    "short_description": "Moringa Green Spiced Rice Mix",
+    "card_description": "Moringa Green Spiced Rice Mix",
+    "subtitle": "Moringa Green Spiced Rice Mix",
+    "full_description": "Constipation, anemia, eye problems, throat infections, and skin allergies such as psoriasis can be treated with drumstick leaves."
   },
   {
     "id": 1120,
@@ -4324,7 +5000,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:39.151453+00:00"
+    "created_at": "2026-09-18T18:42:39.151453+00:00",
+    "short_description": "Traditional Sore Throat Blend",
+    "card_description": "Traditional Sore Throat Blend",
+    "subtitle": "Traditional Sore Throat Blend",
+    "full_description": "INDICATION: For vatha disorder, kapa disorder, Jaundice, Leucorrhoea, Dryness of tongue, Excruciating pain in arms and legs, Excessive body heat, Throat infection.\n\nDOSAGE: 1-2 gm thrice daily with honey (or) Milk (or) Water, as directed by the physician."
   },
   {
     "id": 1119,
@@ -4349,7 +5029,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:39.612754+00:00"
+    "created_at": "2026-09-18T18:42:39.612754+00:00",
+    "short_description": "Cissus Herbal Spiced Rice Mix",
+    "card_description": "Cissus Herbal Spiced Rice Mix",
+    "subtitle": "Cissus Herbal Spiced Rice Mix",
+    "full_description": "Pirandai Sadha Powder, a traditional South Indian mix, is made from the Pirandai plant (also known as Adamant Creeper or Veldt Grape) along with a blend of lentils and spices."
   },
   {
     "id": 1118,
@@ -4374,7 +5058,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:40.076243+00:00"
+    "created_at": "2026-09-18T18:42:40.076243+00:00",
+    "short_description": "Roasted Horse Gram Rice Mix",
+    "card_description": "Roasted Horse Gram Rice Mix",
+    "subtitle": "Roasted Horse Gram Rice Mix",
+    "full_description": "It helps to cure constipation, kidney stones, digestion-related problems and helps to reduce weight."
   },
   {
     "id": 1117,
@@ -4402,7 +5090,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:40.473053+00:00"
+    "created_at": "2026-09-18T18:42:40.473053+00:00",
+    "short_description": "Black Rice Nutritional Drink",
+    "card_description": "Black Rice Nutritional Drink",
+    "subtitle": "Black Rice Nutritional Drink",
+    "full_description": "Put one spoon of Mahil Health mix in 20ml of water and mix it well. Pour this mixture into 100 ml of boiling water or milk. Add salt or brown sugar of your choice and wait for 2-3 minutes, and serve Natural Detoxifies Better for Heart Health, Brain Activity"
   },
   {
     "id": 1116,
@@ -4427,7 +5119,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:40.938972+00:00"
+    "created_at": "2026-09-18T18:42:40.938972+00:00",
+    "short_description": "Pure Traditional Country Sugar",
+    "card_description": "Pure Traditional Country Sugar",
+    "subtitle": "Pure Traditional Country Sugar",
+    "full_description": "\"Nattu Chakkarai Sukku + Elachi Mixed\" is a traditional South Indian blend that offers a harmonious fusion of unrefined sweetness and aromatic spices."
   },
   {
     "id": 1115,
@@ -4452,7 +5148,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:41.398840+00:00"
+    "created_at": "2026-09-18T18:42:41.398840+00:00",
+    "short_description": "Apple Beetroot Carrot Energy Mix",
+    "card_description": "Apple Beetroot Carrot Energy Mix",
+    "subtitle": "Apple Beetroot Carrot Energy Mix",
+    "full_description": "ABC Malt is a popular health drink mix made from the powdered blend of apples, beetroots, and carrots. It's often promoted as a natural and wholesome alternative to sugary beverages like coffee and tea. "
   },
   {
     "id": 1114,
@@ -4477,7 +5177,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:41.860352+00:00"
+    "created_at": "2026-09-18T18:42:41.860352+00:00",
+    "short_description": "Pure Raw Forest Wild Honey",
+    "card_description": "Pure Raw Forest Wild Honey",
+    "subtitle": "Pure Raw Forest Wild Honey",
+    "full_description": "Vedan honey is a natural, golden sweetener produced by bees from the nectar of flowers. Known for its rich flavor and smooth texture, honey has been valued for centuries not only as a delicious food but also for its nutritional and medicinal benefits. It contains natural antioxidants, vitamins, and minerals that support overall health and wellness."
   },
   {
     "id": 1113,
@@ -4502,7 +5206,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:42.323746+00:00"
+    "created_at": "2026-09-18T18:42:42.323746+00:00",
+    "short_description": "Balloon Vine Joint Care Powder",
+    "card_description": "Balloon Vine Joint Care Powder",
+    "subtitle": "Balloon Vine Joint Care Powder",
+    "full_description": "\"VEDAN\" balloon plant powder, also known as \"Mudakathan Keerai\" powder in Tamil, is derived from the balloon vine plant (Cardiospermum halicacabum). This plant and its powder are widely used in traditional medicine, particularly in Ayurveda and Siddha, for a variety of health benefits."
   },
   {
     "id": 1112,
@@ -4527,7 +5235,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:42.790827+00:00"
+    "created_at": "2026-09-18T18:42:42.790827+00:00",
+    "short_description": "Golden Multifloral Forest Honey",
+    "card_description": "Golden Multifloral Forest Honey",
+    "subtitle": "Golden Multifloral Forest Honey",
+    "full_description": "Honey is a natural, sweet, and viscous substance produced by bees from flower nectar. Beyond its use as a sweetener, it boasts a range of potential health benefits due to its unique composition of sugars (primarily fructose and glucose), water, enzymes, amino acids, vitamins, minerals, and a significant amount of antioxidants."
   },
   {
     "id": 1111,
@@ -4552,7 +5264,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:43.256111+00:00"
+    "created_at": "2026-09-18T18:42:43.256111+00:00",
+    "short_description": "Oak Gall Astringent Herbal Herb",
+    "card_description": "Oak Gall Astringent Herbal Herb",
+    "subtitle": "Oak Gall Astringent Herbal Herb",
+    "full_description": "Frog fruit powder helps to cure asthma, bronchitis, retains mineral loss, clears sputum."
   },
   {
     "id": 1110,
@@ -4577,7 +5293,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:43.718766+00:00"
+    "created_at": "2026-09-18T18:42:43.718766+00:00",
+    "short_description": "Raw Natural Forest Honey Jar",
+    "card_description": "Raw Natural Forest Honey Jar",
+    "subtitle": "Raw Natural Forest Honey Jar",
+    "full_description": "Honey is a natural, sweet, and viscous substance produced by bees from flower nectar. Beyond its use as a sweetener, it boasts a range of potential health benefits due to its unique composition of sugars (primarily fructose and glucose), water, enzymes, amino acids, vitamins, minerals, and a significant amount of antioxidants."
   },
   {
     "id": 1109,
@@ -4602,7 +5322,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:44.177906+00:00"
+    "created_at": "2026-09-18T18:42:44.177906+00:00",
+    "short_description": "Periwinkle Botanical Leaf Herb",
+    "card_description": "Periwinkle Botanical Leaf Herb",
+    "subtitle": "Periwinkle Botanical Leaf Herb",
+    "full_description": "It is crucial to understand that while periwinkle powder has a history of traditional use, it contains powerful and potentially toxic chemicals. Self-medicating with periwinkle powder or any part of the plant is considered unsafe."
   },
   {
     "id": 1108,
@@ -4629,7 +5353,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:44.640080+00:00"
+    "created_at": "2026-09-18T18:42:44.640080+00:00",
+    "short_description": "Nutritious Ancient Thinai Rice",
+    "card_description": "Nutritious Ancient Thinai Rice",
+    "subtitle": "Nutritious Ancient Thinai Rice",
+    "full_description": "Foxtail millet is one nutritious millet, it can be eaten as idli, dosa, porridge, and also sweet and savory dishes."
   },
   {
     "id": 1107,
@@ -4654,7 +5382,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:45.105655+00:00"
+    "created_at": "2026-09-18T18:42:45.105655+00:00",
+    "short_description": "Long Pepper Root Warming Herb",
+    "card_description": "Long Pepper Root Warming Herb",
+    "subtitle": "Long Pepper Root Warming Herb",
+    "full_description": "Kandathippili Powder (Indian Long Pepper Powder) is a valued herb in \nAyurveda and Siddha medicine, known for its potent therapeutic properties. \nIt supports respiratory health, aids digestion, and naturally enhances \nmetabolism. With its warming and cleansing nature, it promotes overall \nvitality and internal balance with regular use. \n"
   },
   {
     "id": 1106,
@@ -4679,7 +5411,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:45.571801+00:00"
+    "created_at": "2026-09-18T18:42:45.571801+00:00",
+    "short_description": "Antioxidant Rich Black Rice",
+    "card_description": "Antioxidant Rich Black Rice",
+    "subtitle": "Antioxidant Rich Black Rice",
+    "full_description": "It can treat constipation, aids weight loss, removes bad cholesterol, prevents diabetes."
   },
   {
     "id": 1105,
@@ -4704,7 +5440,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:46.034687+00:00"
+    "created_at": "2026-09-18T18:42:46.034687+00:00",
+    "short_description": "Antioxidant Pomegranate Peel",
+    "card_description": "Antioxidant Pomegranate Peel",
+    "subtitle": "Antioxidant Pomegranate Peel",
+    "full_description": "Mathulai powder, derived from the dried peel of the pomegranate fruit (Punica granatum), is a traditional and highly beneficial ingredient in Indian wellness practices like Ayurveda and Siddha. "
   },
   {
     "id": 1104,
@@ -4731,7 +5471,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:46.501919+00:00"
+    "created_at": "2026-09-18T18:42:46.501919+00:00",
+    "short_description": "Fiber-Rich Little Millet Rice",
+    "card_description": "Fiber-Rich Little Millet Rice",
+    "subtitle": "Fiber-Rich Little Millet Rice",
+    "full_description": "In addition to being one of the healthiest meals, little millet can also be made sweet and savory."
   },
   {
     "id": 1103,
@@ -4756,7 +5500,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:46.963623+00:00"
+    "created_at": "2026-09-18T18:42:46.963623+00:00",
+    "short_description": "Nutrient-Rich Curry Leaf Powder",
+    "card_description": "Nutrient-Rich Curry Leaf Powder",
+    "subtitle": "Nutrient-Rich Curry Leaf Powder",
+    "full_description": "Makil Curry Leaf Powder is made from carefully selected fresh curry leaves and naturally processed to preserve their aroma and nutrients. Rich in natural goodness, this herbal powder is traditionally used to support digestion and overall wellness. It can be easily added to rice, food, or health drinks for daily use. Prepared with purity and care, it contains no artificial colors or preservatives.  _x000D_\n_x000D_\nகறிவேப்பிலை பொடி புதிய மற்றும் தரமான கறிவேப்பிலைகளால் இயற்கையாக தயாரிக்கப்படுகிறது. இதில் உள்ள இயற்கை சத்துக்கள் உடல்நலத்தையும் செரிமானத்தையும் ஆதரிக்க உதவுகின்றன. இதை சாதம், உணவு அல்லது ஆரோக்கிய பானங்களுடன் எளிதாக கலந்து பயன்படுத்தலாம். செயற்கை நிறங்கள் மற்றும் பாதுகாப்புப் பொருட்கள் இல்லாமல் தூய்மையாக தயாரிக்கப்பட்டது."
   },
   {
     "id": 1102,
@@ -4783,7 +5531,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:47.425981+00:00"
+    "created_at": "2026-09-18T18:42:47.425981+00:00",
+    "short_description": "Traditional Kodo Millet Rice",
+    "card_description": "Traditional Kodo Millet Rice",
+    "subtitle": "Traditional Kodo Millet Rice",
+    "full_description": "Varagu or Kodo millet is highly nutritious, and it can replace rice as part of a balanced diet."
   },
   {
     "id": 1101,
@@ -4810,7 +5562,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:47.890004+00:00"
+    "created_at": "2026-09-18T18:42:47.890004+00:00",
+    "short_description": "Nutritious Bridegroom Rice",
+    "card_description": "Nutritious Bridegroom Rice",
+    "subtitle": "Nutritious Bridegroom Rice",
+    "full_description": "Mapilai Samba or Bridegroom’s rice can be taken as plain rice, idiyappam, dosa, idli, porridge, and also sweet and savories."
   },
   {
     "id": 1100,
@@ -4835,7 +5591,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:48.352787+00:00"
+    "created_at": "2026-09-18T18:42:48.352787+00:00",
+    "short_description": "Pure False Daisy Hair Leaf Herb",
+    "card_description": "Pure False Daisy Hair Leaf Herb",
+    "subtitle": "Pure False Daisy Hair Leaf Herb",
+    "full_description": "Karisalankanni powder, also known as Bhringraj powder, is derived from a medicinal herb and is highly valued in traditional medicine, particularly Ayurveda."
   },
   {
     "id": 1099,
@@ -4860,7 +5620,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:48.841671+00:00"
+    "created_at": "2026-09-18T18:42:48.841671+00:00",
+    "short_description": "Wholesome Multi-Millet Porridge",
+    "card_description": "Wholesome Multi-Millet Porridge",
+    "subtitle": "Wholesome Multi-Millet Porridge",
+    "full_description": "Mahil health mix powder is made for all ages and has a high nutritional value"
   },
   {
     "id": 1098,
@@ -4885,7 +5649,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:49.302824+00:00"
+    "created_at": "2026-09-18T18:42:49.302824+00:00",
+    "short_description": "Acalypha Indica Skin Soothing",
+    "card_description": "Acalypha Indica Skin Soothing",
+    "subtitle": "Acalypha Indica Skin Soothing",
+    "full_description": "Kuppaimeni powder, also known as Indian Nettle (Acalypha indica) powder, is a traditional herbal remedy with numerous health benefits, particularly for skin and hair."
   },
   {
     "id": 1097,
@@ -4910,7 +5678,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:49.771112+00:00"
+    "created_at": "2026-09-18T18:42:49.771112+00:00",
+    "short_description": "Triphala Digestive Balance Herb",
+    "card_description": "Triphala Digestive Balance Herb",
+    "subtitle": "Triphala Digestive Balance Herb",
+    "full_description": "Triphala is rich in antioxidants, including vitamin C, flavonoids, and polyphenols, which help combat oxidative stress and cellular damage, thereby supporting the immune system and reducing inflammation."
   },
   {
     "id": 1096,
@@ -4935,7 +5707,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:50.236290+00:00"
+    "created_at": "2026-09-18T18:42:50.236290+00:00",
+    "short_description": "Herbal Facial Steam Blend",
+    "card_description": "Herbal Facial Steam Blend",
+    "subtitle": "Herbal Facial Steam Blend",
+    "full_description": "Mooligai Neer Aavi powder, which translates to \"herbal water vapor powder,\" is an ancient Siddha practice of steam inhalation using a blend of medicinal herbs. This traditional remedy is primarily used to relieve respiratory ailments and other health issues"
   },
   {
     "id": 1095,
@@ -4960,7 +5736,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:50.700904+00:00"
+    "created_at": "2026-09-18T18:42:50.700904+00:00",
+    "short_description": "Aerva Lanata Kidney Wellness",
+    "card_description": "Aerva Lanata Kidney Wellness",
+    "subtitle": "Aerva Lanata Kidney Wellness",
+    "full_description": "Sirupeelai powder, also known as Mountain Knot Grass (Aerva lanata), is a powerful herb with a long history of use in traditional Indian medicine systems like Siddha and Ayurveda. "
   },
   {
     "id": 1094,
@@ -4985,7 +5765,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:51.174790+00:00"
+    "created_at": "2026-09-18T18:42:51.174790+00:00",
+    "short_description": "Abutilon Joint & Piles Comfort",
+    "card_description": "Abutilon Joint & Piles Comfort",
+    "subtitle": "Abutilon Joint & Piles Comfort",
+    "full_description": "Thuthi leaf powder, derived from the Indian Mallow plant (Abutilon indicum), is a traditional herbal remedy with a variety of potential health benefits."
   },
   {
     "id": 1093,
@@ -5010,7 +5794,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:51.648789+00:00"
+    "created_at": "2026-09-18T18:42:51.648789+00:00",
+    "short_description": "Pure Indian Gooseberry Powder",
+    "card_description": "Pure Indian Gooseberry Powder",
+    "subtitle": "Pure Indian Gooseberry Powder",
+    "full_description": "Amla powder, also known as Nellikai powder, is a potent herbal supplement derived from the Indian gooseberry. It is renowned for its high vitamin C content, which makes it a powerful antioxidant that boosts immunity and protects the body from free radical damage."
   },
   {
     "id": 1092,
@@ -5039,7 +5827,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:52.110801+00:00"
+    "created_at": "2026-09-18T18:42:52.110801+00:00",
+    "short_description": "Brahmi Spiced Millet Pongal Mix",
+    "card_description": "Brahmi Spiced Millet Pongal Mix",
+    "subtitle": "Brahmi Spiced Millet Pongal Mix",
+    "full_description": "Mahil Little millet-Vallarai Pongal mix is healthy dietary food. It is not only healthy but also good for health."
   },
   {
     "id": 1091,
@@ -5064,7 +5856,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:52.574117+00:00"
+    "created_at": "2026-09-18T18:42:52.574117+00:00",
+    "short_description": "Traditional Skin Calming Herb",
+    "card_description": "Traditional Skin Calming Herb",
+    "subtitle": "Traditional Skin Calming Herb",
+    "full_description": "Ammaan pacharisi powder, made from the dried leaves and stems of the Euphorbia hirta plant, is a revered herb in traditional medicine, particularly in Siddha and Ayurveda. "
   },
   {
     "id": 1090,
@@ -5094,7 +5890,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:53.045702+00:00"
+    "created_at": "2026-09-18T18:42:53.045702+00:00",
+    "short_description": "Moringa Kodo Millet Pongal Mix",
+    "card_description": "Moringa Kodo Millet Pongal Mix",
+    "subtitle": "Moringa Kodo Millet Pongal Mix",
+    "full_description": "Mahil Kodo millet-Moringa Pongal mix is healthy dietary food. It is not only healthy but also good for health."
   },
   {
     "id": 1089,
@@ -5121,7 +5921,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:53.513669+00:00"
+    "created_at": "2026-09-18T18:42:53.513669+00:00",
+    "short_description": "Unrefined Traditional Cane Sugar",
+    "card_description": "Unrefined Traditional Cane Sugar",
+    "subtitle": "Unrefined Traditional Cane Sugar",
+    "full_description": "Sugar is a major component of our food. Adhiyaman country sugar is 100% natural. This product is free of hydrosulphate, superphosphate, and other chemical additives."
   },
   {
     "id": 1088,
@@ -5146,7 +5950,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:53.975319+00:00"
+    "created_at": "2026-09-18T18:42:53.975319+00:00",
+    "short_description": "Vitex Leaf Sinus Relief Herb",
+    "card_description": "Vitex Leaf Sinus Relief Herb",
+    "subtitle": "Vitex Leaf Sinus Relief Herb",
+    "full_description": "Inhaling the steam from a decoction of Nochi powder is a traditional method for providing immediate relief from nasal congestion and headaches. "
   },
   {
     "id": 1087,
@@ -5174,7 +5982,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:54.446497+00:00"
+    "created_at": "2026-09-18T18:42:54.446497+00:00",
+    "short_description": "Fresh Ground Pearl Millet Flour",
+    "card_description": "Fresh Ground Pearl Millet Flour",
+    "subtitle": "Fresh Ground Pearl Millet Flour",
+    "full_description": "Makil Kambu Maavu is premium pearl millet flour from Makil, finely ground for versatile South Indian dishes like kanji, porridge, or dosa. This convenient powder captures the grain's natural earthy flavor, ready for quick preparation—boil into smooth kanji with buttermilk tempering, or blend into batters for everyday meals in minutes"
   },
   {
     "id": 1086,
@@ -5199,7 +6011,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:54.913037+00:00"
+    "created_at": "2026-09-18T18:42:54.913037+00:00",
+    "short_description": "Black Cumin Digestive Seed Herb",
+    "card_description": "Black Cumin Digestive Seed Herb",
+    "subtitle": "Black Cumin Digestive Seed Herb",
+    "full_description": "Karunjiragam powder, also known as black cumin seed powder (Nigella sativa), is a powerful natural remedy with a long history of use in traditional medicine."
   },
   {
     "id": 1085,
@@ -5227,7 +6043,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:55.374777+00:00"
+    "created_at": "2026-09-18T18:42:55.374777+00:00",
+    "short_description": "Steamed Pearl Millet Puttu Mix",
+    "card_description": "Steamed Pearl Millet Puttu Mix",
+    "subtitle": "Steamed Pearl Millet Puttu Mix",
+    "full_description": "Makil KAMBU PUTTU MAAVU is a premium pearl millet flour from Makil, perfectly processed for authentic South Indian puttu—a steamed delicacy that delivers a soft, fluffy texture and mild earthy flavor, best enjoyed with grated coconut, jaggery, or savory sides. Crafted from 100% natural kambu (pearl millet), this gluten-free mix is free from additives or preservatives, following traditional methods for superior taste and easy preparation in just 10-15 minutes: mix with water and salt to a crumbly dough, layer in a steamer, and serve hot. Ideal for daily breakfast or snacks, it embraces nature's goodness for a wholesome, traditional meal that fits modern lifestyles."
   },
   {
     "id": 1084,
@@ -5252,7 +6072,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:55.834541+00:00"
+    "created_at": "2026-09-18T18:42:55.834541+00:00",
+    "short_description": "Achyranthes Botanical Seed Herb",
+    "card_description": "Achyranthes Botanical Seed Herb",
+    "subtitle": "Achyranthes Botanical Seed Herb",
+    "full_description": "Naayuruvi powder, also known as Prickly Chaff Flower or by its botanical name Achyranthes aspera, is a well-regarded herb in traditional medicine systems like Ayurveda and Siddha"
   },
   {
     "id": 1083,
@@ -5277,7 +6101,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:56.228796+00:00"
+    "created_at": "2026-09-18T18:42:56.228796+00:00",
+    "short_description": "Crispy Pearl Millet Dosa Mix",
+    "card_description": "Crispy Pearl Millet Dosa Mix",
+    "subtitle": "Crispy Pearl Millet Dosa Mix",
+    "full_description": "Mahil Mudakatraan Kambu Dosa Mix is the healthiest and tastiest breakfast you can have."
   },
   {
     "id": 1082,
@@ -5302,7 +6130,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:56.684392+00:00"
+    "created_at": "2026-09-18T18:42:56.684392+00:00",
+    "short_description": "Alpinia Galanga Respiratory Herb",
+    "card_description": "Alpinia Galanga Respiratory Herb",
+    "subtitle": "Alpinia Galanga Respiratory Herb",
+    "full_description": "Chittarathai powder, also known as Lesser Galangal or Alpinia officinarum, is a traditional herbal remedy with a wide range of health benefits, particularly noted in Siddha and Ayurvedic medicine. "
   },
   {
     "id": 1081,
@@ -5330,7 +6162,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:57.144547+00:00"
+    "created_at": "2026-09-18T18:42:57.144547+00:00",
+    "short_description": "Nutritious Beetroot Health Malt",
+    "card_description": "Nutritious Beetroot Health Malt",
+    "subtitle": "Nutritious Beetroot Health Malt",
+    "full_description": "Beetroot Malt is the best option to drink.\n \n Preparation: Take a spoonful of \"Mahil Beetroot Malt\" in milk you can add if needed, and serve it hot. or as a cold drink."
   },
   {
     "id": 1080,
@@ -5359,7 +6195,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:57.609038+00:00"
+    "created_at": "2026-09-18T18:42:57.609038+00:00",
+    "short_description": "Natural Beetroot Energy Drink",
+    "card_description": "Natural Beetroot Energy Drink",
+    "subtitle": "Natural Beetroot Energy Drink",
+    "full_description": "Beetroot Malt is a highly nutritious beverage mix that uniquely combines the health benefits of beetroots with the wholesome energy of malted grains. It's especially valued for its rich content of iron, essential vitamins, and potent antioxidants derived from beetroots, making it beneficial for improving hemoglobin levels, enhancing stamina, and supporting overall blood health."
   },
   {
     "id": 1079,
@@ -5384,7 +6224,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:58.068509+00:00"
+    "created_at": "2026-09-18T18:42:58.068509+00:00",
+    "short_description": "Leucas Aspera Headache Herb",
+    "card_description": "Leucas Aspera Headache Herb",
+    "subtitle": "Leucas Aspera Headache Herb",
+    "full_description": "Thumbai leaf powder, derived from the plant Leucas aspera, is a potent traditional remedy with a wide range of health benefits."
   },
   {
     "id": 1078,
@@ -5409,7 +6253,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:58.468180+00:00"
+    "created_at": "2026-09-18T18:42:58.468180+00:00",
+    "short_description": "Nourishing Fresh Carrot Malt",
+    "card_description": "Nourishing Fresh Carrot Malt",
+    "subtitle": "Nourishing Fresh Carrot Malt",
+    "full_description": "Carrot Malt is a nutritious beverage mix that combines the wholesome benefits of carrots with the nourishing properties of malted grains. It offers a naturally sweet, earthy flavor and is rich in Vitamin A and antioxidants, supporting vision and boosting immunity. Ideal for all ages, it's commonly mixed with warm milk to create a comforting, energy-boosting, and healthy drink."
   },
   {
     "id": 1077,
@@ -5434,7 +6282,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:58.928284+00:00"
+    "created_at": "2026-09-18T18:42:58.928284+00:00",
+    "short_description": "Sacred Lotus Blossom Powder",
+    "card_description": "Sacred Lotus Blossom Powder",
+    "subtitle": "Sacred Lotus Blossom Powder",
+    "full_description": "Thaamarai poo powder, or Indian lotus flower powder, is a traditional herbal remedy with a wide range of purported health benefits. "
   },
   {
     "id": 1076,
@@ -5459,7 +6311,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:59.393312+00:00"
+    "created_at": "2026-09-18T18:42:59.393312+00:00",
+    "short_description": "Zesty Spiced Ginger Garlic Dip",
+    "card_description": "Zesty Spiced Ginger Garlic Dip",
+    "subtitle": "Zesty Spiced Ginger Garlic Dip",
+    "full_description": "Mahil Ginger Garlic pickle is a healthy side dish; it can be eaten with idly, dosa, chapati, or rice."
   },
   {
     "id": 1075,
@@ -5484,7 +6340,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:42:59.862172+00:00"
+    "created_at": "2026-09-18T18:42:59.862172+00:00",
+    "short_description": "Purifying Bitter Neem Leaves",
+    "card_description": "Purifying Bitter Neem Leaves",
+    "subtitle": "Purifying Bitter Neem Leaves",
+    "full_description": "Neem Leaf Powder is a revered botanical known for its natural _x000D_\nskin-purifying and balancing action. It gently draws out impurities, helps _x000D_\ncalm blemish-prone skin, and maintains oil balance while respecting the _x000D_\nskin’s natural barrier. Naturally rich in potent antibacterial and detoxifying _x000D_\ncompounds, helps reveal a calmer, and more refined complexion with _x000D_\nconsistent use."
   },
   {
     "id": 1074,
@@ -5509,7 +6369,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:00.326397+00:00"
+    "created_at": "2026-09-18T18:43:00.326397+00:00",
+    "short_description": "Traditional Ginger Garlic Pickle",
+    "card_description": "Traditional Ginger Garlic Pickle",
+    "subtitle": "Traditional Ginger Garlic Pickle",
+    "full_description": "Mahil Ginger Garlic pickle is a healthy side dish, it can be eaten with idly, dosa, chapati, or rice."
   },
   {
     "id": 1073,
@@ -5534,7 +6398,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:00.801037+00:00"
+    "created_at": "2026-09-18T18:43:00.801037+00:00",
+    "short_description": "Kandankathiri Throat Comfort",
+    "card_description": "Kandankathiri Throat Comfort",
+    "subtitle": "Kandankathiri Throat Comfort",
+    "full_description": "Kandakathri (Solanum xanthocarpum), a time-honoured herb in Siddha and Ayurveda, is valued for its natural ability to support respiratory health and overall wellness. Known for helping relieve cough, cold, asthma, and congestion, it works by clearing excess mucus and promoting easier breathing. It also aids digestion, reduces bloating, and supports metabolic balance. Rich in anti-inflammatory and antibacterial properties, Kandakathri helps soothe internal discomfort, promote skin health, and assist the body’s natural detox process by supporting liver and urinary function. A simple yet powerful herbal choice for maintaining daily health and vitality"
   },
   {
     "id": 1072,
@@ -5559,7 +6427,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:01.279699+00:00"
+    "created_at": "2026-09-18T18:43:01.279699+00:00",
+    "short_description": "Traditional Citron Herb Pickle",
+    "card_description": "Traditional Citron Herb Pickle",
+    "subtitle": "Traditional Citron Herb Pickle",
+    "full_description": "Mahil citron lime pickle(narthankkai) is a healthy side dish; it can be eaten with idly, dosa, chapati, or rice."
   },
   {
     "id": 1071,
@@ -5584,7 +6456,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:01.746925+00:00"
+    "created_at": "2026-09-18T18:43:01.746925+00:00",
+    "short_description": "Guduchi Giloy Immunity Vine",
+    "card_description": "Guduchi Giloy Immunity Vine",
+    "subtitle": "Guduchi Giloy Immunity Vine",
+    "full_description": "Seenthilkodi powder, also known as Guduchi or Heart-leaved Moonseed, is a revered herb in Ayurvedic and Siddha medicine for its extensive health benefits. "
   },
   {
     "id": 1069,
@@ -5609,7 +6485,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:02.218097+00:00"
+    "created_at": "2026-09-18T18:43:02.218097+00:00",
+    "short_description": "Pure Methi Seed Digest Powder",
+    "card_description": "Pure Methi Seed Digest Powder",
+    "subtitle": "Pure Methi Seed Digest Powder",
+    "full_description": "Venthaya powder, which is a powdered form of fenugreek seeds, is a popular ingredient in both traditional medicine and cooking due to its numerous health benefits. "
   },
   {
     "id": 1068,
@@ -5634,7 +6514,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:02.693292+00:00"
+    "created_at": "2026-09-18T18:43:02.693292+00:00",
+    "short_description": "Aromatic Herbal Biryani Spices",
+    "card_description": "Aromatic Herbal Biryani Spices",
+    "subtitle": "Aromatic Herbal Biryani Spices",
+    "full_description": "Inknut (Kadukkai in Tamil) has various health benefits. It treats constipation, indigestion, piles, thrush, strengthens the body, and vertigo."
   },
   {
     "id": 1067,
@@ -5659,7 +6543,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:03.166438+00:00"
+    "created_at": "2026-09-18T18:43:03.166438+00:00",
+    "short_description": "Aromatic Ceylon Cinnamon Powder",
+    "card_description": "Aromatic Ceylon Cinnamon Powder",
+    "subtitle": "Aromatic Ceylon Cinnamon Powder",
+    "full_description": "Lavanga pattai powder, commonly known as cinnamon powder, is a spice derived from the inner bark of the cinnamon tree, and it offers a wide range of health benefits. "
   },
   {
     "id": 1066,
@@ -5684,7 +6572,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:03.633308+00:00"
+    "created_at": "2026-09-18T18:43:03.633308+00:00",
+    "short_description": "Pure Sun-Dried Red Chilli Spice",
+    "card_description": "Pure Sun-Dried Red Chilli Spice",
+    "subtitle": "Pure Sun-Dried Red Chilli Spice",
+    "full_description": "Chili is a spice used to season and color food, Mahil dry chili contains only 100% dry chili."
   },
   {
     "id": 1065,
@@ -5709,7 +6601,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:04.096332+00:00"
+    "created_at": "2026-09-18T18:43:04.096332+00:00",
+    "short_description": "Traditional Curry Masala Spice",
+    "card_description": "Traditional Curry Masala Spice",
+    "subtitle": "Traditional Curry Masala Spice",
+    "full_description": "Kuzhambu Milagai powder is a popular ingredient used in a south Indian dish, it will be very tasty and also healthy."
   },
   {
     "id": 1064,
@@ -5734,7 +6630,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:04.563217+00:00"
+    "created_at": "2026-09-18T18:43:04.563217+00:00",
+    "short_description": "Nutgrass Skin Purifying Root",
+    "card_description": "Nutgrass Skin Purifying Root",
+    "subtitle": "Nutgrass Skin Purifying Root",
+    "full_description": "Koraikilangu, also known as Nut Grass (Cyperus rotundus), is a traditional herbal remedy that offers a wide range of health benefits, and its powder form is a convenient way to consume it. "
   },
   {
     "id": 1063,
@@ -5759,7 +6659,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:05.028199+00:00"
+    "created_at": "2026-09-18T18:43:05.028199+00:00",
+    "short_description": "Pure Farm Turmeric Spice Powder",
+    "card_description": "Pure Farm Turmeric Spice Powder",
+    "subtitle": "Pure Farm Turmeric Spice Powder",
+    "full_description": "Mahil Turmeric powder is not only added as a flavor but also has many uses for health."
   },
   {
     "id": 1062,
@@ -5784,7 +6688,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:05.495526+00:00"
+    "created_at": "2026-09-18T18:43:05.495526+00:00",
+    "short_description": "Aromatic Ground Coriander Spice",
+    "card_description": "Aromatic Ground Coriander Spice",
+    "subtitle": "Aromatic Ground Coriander Spice",
+    "full_description": "This spice is an important ingredient in Indian kitchens since it not only enhances food flavor, but it is also beneficial to health."
   },
   {
     "id": 1061,
@@ -5809,7 +6717,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:05.955535+00:00"
+    "created_at": "2026-09-18T18:43:05.955535+00:00",
+    "short_description": "Three-Pungent Digestion Spices",
+    "card_description": "Three-Pungent Digestion Spices",
+    "subtitle": "Three-Pungent Digestion Spices",
+    "full_description": "Trikadugu Suranam powder, also known as Trikatu Churna, is a potent Ayurvedic blend of three pungent spices: dried ginger (sunthi), black pepper (maricha), and long pepper (pippali). "
   },
   {
     "id": 1060,
@@ -5834,7 +6746,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:06.430003+00:00"
+    "created_at": "2026-09-18T18:43:06.430003+00:00",
+    "short_description": "Nutritious Moringa Leaf Soup",
+    "card_description": "Nutritious Moringa Leaf Soup",
+    "subtitle": "Nutritious Moringa Leaf Soup",
+    "full_description": "Makil Murungaikeerai Soup is a nutritious herbal soup mix made with premium moringa leaves, packed with natural goodness to support immunity, energy, and overall wellness.It is rich in protein, calcium, vitamins, and other minerals. It can treat vision problems, jitters, seizures, best for pregnant women.\n \n \n \n மகில் முருங்கைக்கீரை சூப் என்பது முருங்கைக்கீரையின் இயற்கை சத்துகளால் நிறைந்த ஆரோக்கியமான பாரம்பரிய சூப் கலவையாகும்."
   },
   {
     "id": 1059,
@@ -5859,7 +6775,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:06.900362+00:00"
+    "created_at": "2026-09-18T18:43:06.900362+00:00",
+    "short_description": "Gokshura Kidney Vitality Herb",
+    "card_description": "Gokshura Kidney Vitality Herb",
+    "subtitle": "Gokshura Kidney Vitality Herb",
+    "full_description": "Sirunerunjil powder, derived from the plant commonly known as Puncture Vine or Tribulus Terrestris, is a traditional herbal remedy with a wide range of health benefits, particularly for urinary and reproductive health."
   },
   {
     "id": 1058,
@@ -5884,7 +6804,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:07.361975+00:00"
+    "created_at": "2026-09-18T18:43:07.361975+00:00",
+    "short_description": "Joint-Care Idly Chutney Powder",
+    "card_description": "Joint-Care Idly Chutney Powder",
+    "subtitle": "Joint-Care Idly Chutney Powder",
+    "full_description": "Mahil Mudakatraan idly powder can be eaten with idly, dosa or chapati."
   },
   {
     "id": 1057,
@@ -5909,7 +6833,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:07.823334+00:00"
+    "created_at": "2026-09-18T18:43:07.823334+00:00",
+    "short_description": "Black Nightshade Ulcer Relief",
+    "card_description": "Black Nightshade Ulcer Relief",
+    "subtitle": "Black Nightshade Ulcer Relief",
+    "full_description": "Manathakkali powder, derived from the leaves and berries of the Black Nightshade plant, is a revered herb in traditional Indian medicine, especially in Tamil Nadu, for its wide-ranging health benefits."
   },
   {
     "id": 1056,
@@ -5934,7 +6862,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:08.287491+00:00"
+    "created_at": "2026-09-18T18:43:08.287491+00:00",
+    "short_description": "Moringa Leaf Idly Chutney Podi",
+    "card_description": "Moringa Leaf Idly Chutney Podi",
+    "subtitle": "Moringa Leaf Idly Chutney Podi",
+    "full_description": "Mahil Drumstick leaves(murungai) idly powder can be eaten with idly, dosa or chapati."
   },
   {
     "id": 1055,
@@ -5959,7 +6891,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:08.750349+00:00"
+    "created_at": "2026-09-18T18:43:08.750349+00:00",
+    "short_description": "Herbal Veppam Poo Rasam Spices",
+    "card_description": "Herbal Veppam Poo Rasam Spices",
+    "subtitle": "Herbal Veppam Poo Rasam Spices",
+    "full_description": "Makil Neem Flower Rasam Powder is a premium spice blend from Makil, featuring dried neem flowers (veppam poo) with traditional South Indian spices like tamarind, coriander, cumin, pepper, and curry leaves for authentic veppam poo rasam. This convenient powder simplifies preparation: mix 1-2 tsp with tamarind water, tomatoes, and dal water, boil until frothy, temper with ghee, mustard, and extra toasted neem flowers, then serve hot with rice"
   },
   {
     "id": 1054,
@@ -5984,7 +6920,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:09.215034+00:00"
+    "created_at": "2026-09-18T18:43:09.215034+00:00",
+    "short_description": "Black Musli Strength Botanical",
+    "card_description": "Black Musli Strength Botanical",
+    "subtitle": "Black Musli Strength Botanical",
+    "full_description": " Nila panaikilangu powder, also known as Black Musli or scientifically as Curculigo orchioides, is a traditional herbal remedy with a wide range of health benefits."
   },
   {
     "id": 1052,
@@ -6009,7 +6949,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:10.143624+00:00"
+    "created_at": "2026-09-18T18:43:10.143624+00:00",
+    "short_description": "Bael Leaf Detoxifying Botanical",
+    "card_description": "Bael Leaf Detoxifying Botanical",
+    "subtitle": "Bael Leaf Detoxifying Botanical",
+    "full_description": "Vilva leaf, also known as Bael or Bilva, has been revered in traditional Indian medicine systems like Ayurveda for its wide range of therapeutic benefits. "
   },
   {
     "id": 1051,
@@ -6036,7 +6980,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:10.545591+00:00"
+    "created_at": "2026-09-18T18:43:10.545591+00:00",
+    "short_description": "Natural Pure Cane Jaggery Block",
+    "card_description": "Natural Pure Cane Jaggery Block",
+    "subtitle": "Natural Pure Cane Jaggery Block",
+    "full_description": "Jaggery helps to improve digestion and boost immunity. Adhiyaman sugarcane jaggery is purely handmade and natural. It is also free of preservatives and additives"
   },
   {
     "id": 1050,
@@ -6063,7 +7011,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:11.024162+00:00"
+    "created_at": "2026-09-18T18:43:11.024162+00:00",
+    "short_description": "Nutritious Finger Millet Batter",
+    "card_description": "Nutritious Finger Millet Batter",
+    "subtitle": "Nutritious Finger Millet Batter",
+    "full_description": "Mahil Moringa Ragi dosa mix is a healthy choice. It can treat anemia, lower blood sugar levels, reduce inflammation, lower cholesterol"
   },
   {
     "id": 1049,
@@ -6088,7 +7040,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:11.488806+00:00"
+    "created_at": "2026-09-18T18:43:11.488806+00:00",
+    "short_description": "Long Pepper Respiratory Tonic",
+    "card_description": "Long Pepper Respiratory Tonic",
+    "subtitle": "Long Pepper Respiratory Tonic",
+    "full_description": "Thippili Rasayanam is a traditional Siddha and Ayurvedic medicine, widely recognized for its rejuvenating and therapeutic properties. "
   },
   {
     "id": 1048,
@@ -6113,7 +7069,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:11.948485+00:00"
+    "created_at": "2026-09-18T18:43:11.948485+00:00",
+    "short_description": "Energy-Boosting Pearl Millet",
+    "card_description": "Energy-Boosting Pearl Millet",
+    "subtitle": "Energy-Boosting Pearl Millet",
+    "full_description": "Kambu, also known as pearl is a nutritious grain that offers a wide range of health benefits, making it an excellent alternative to regular rice."
   },
   {
     "id": 1047,
@@ -6138,7 +7098,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:12.413223+00:00"
+    "created_at": "2026-09-18T18:43:12.413223+00:00",
+    "short_description": "Memory & Focus Herbal Confection",
+    "card_description": "Memory & Focus Herbal Confection",
+    "subtitle": "Memory & Focus Herbal Confection",
+    "full_description": "Vallarai Lehyam is a traditional herbal paste or jam (Lehyam) widely used in Ayurveda and Siddha medicine. Its primary ingredient is Vallarai (Centella asiatica), a potent medicinal herb also known as Gotu Kola or Indian Pennywort. "
   },
   {
     "id": 1046,
@@ -6163,7 +7127,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:12.870020+00:00"
+    "created_at": "2026-09-18T18:43:12.870020+00:00",
+    "short_description": "Mineral-Rich Barnyard Millet",
+    "card_description": "Mineral-Rich Barnyard Millet",
+    "subtitle": "Mineral-Rich Barnyard Millet",
+    "full_description": "Kuthiraivaali rice, also known as Barnyard Millet, is a small, gluten-free grain with a host of health benefits."
   },
   {
     "id": 1045,
@@ -6188,7 +7156,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:13.331833+00:00"
+    "created_at": "2026-09-18T18:43:13.331833+00:00",
+    "short_description": "Vitality Nourishing Herbal Tonic",
+    "card_description": "Vitality Nourishing Herbal Tonic",
+    "subtitle": "Vitality Nourishing Herbal Tonic",
+    "full_description": "Thathuviruthi Lehyam, also known as Thathu Viruthi Legiyam, is a traditional Siddha and Ayurvedic medicinal jam. The name itself, \"Thathuviruthi\" (தாதுவிருத்தி), translates to \"nourishing the dhatus\" (tissues), and \"lehyam\" (லேகியம்) refers to a semisolid or jam-like preparation. "
   },
   {
     "id": 1044,
@@ -6213,7 +7185,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:13.810699+00:00"
+    "created_at": "2026-09-18T18:43:13.810699+00:00",
+    "short_description": "100% Whole Grain Atta Flour",
+    "card_description": "100% Whole Grain Atta Flour",
+    "subtitle": "100% Whole Grain Atta Flour",
+    "full_description": "Wheat flour, especially whole wheat flour, is a fundamental food ingredient with a range of health benefits due to its rich nutritional profile."
   },
   {
     "id": 1043,
@@ -6238,7 +7214,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:14.281111+00:00"
+    "created_at": "2026-09-18T18:43:14.281111+00:00",
+    "short_description": "Cissus Quadrangularis Herb",
+    "card_description": "Cissus Quadrangularis Herb",
+    "subtitle": "Cissus Quadrangularis Herb",
+    "full_description": "Pirandai, known as Cissus quadrangularis in scientific terms, is a medicinal plant revered in traditional systems like Ayurveda and Siddha medicine."
   },
   {
     "id": 1042,
@@ -6263,7 +7243,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:14.746267+00:00"
+    "created_at": "2026-09-18T18:43:14.746267+00:00",
+    "short_description": "Protein-Rich Mixed Lentil Dosa",
+    "card_description": "Protein-Rich Mixed Lentil Dosa",
+    "subtitle": "Protein-Rich Mixed Lentil Dosa",
+    "full_description": "MAKIL PARUPPU DOSAI MIX is a premium instant mix from the Makil brand, crafted with a blend of lentils (paruppu) for authentic South Indian paruppu dosai—a savory crepe-style dish with a crisp exterior and soft interior. This convenient powder requires minimal preparation: mix with water to form a smooth batter, rest for 30 minutes to 2 hours (no fermentation needed), and cook on a hot tawa with oil for golden dosas ready in minutes, perfect alongside coconut chutney or sambar"
   },
   {
     "id": 1041,
@@ -6288,7 +7272,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:15.215604+00:00"
+    "created_at": "2026-09-18T18:43:15.215604+00:00",
+    "short_description": "Wholesome Traditional Red Rice",
+    "card_description": "Wholesome Traditional Red Rice",
+    "subtitle": "Wholesome Traditional Red Rice",
+    "full_description": "Sivappu Kavuni Rice is a traditional heritage variety known for its deep \n \n reddish color and rich nutritional value. Packed with iron, fiber, and \n \n essential nutrients, it helps support hemoglobin levels, heart health, and \n \n digestion, making it a wholesome alternative to polished rice."
   },
   {
     "id": 1040,
@@ -6313,7 +7301,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:15.676242+00:00"
+    "created_at": "2026-09-18T18:43:15.676242+00:00",
+    "short_description": "Baheda Fruit Ayurvedic Powder",
+    "card_description": "Baheda Fruit Ayurvedic Powder",
+    "subtitle": "Baheda Fruit Ayurvedic Powder",
+    "full_description": "Thandrikkai powder, also known as Beleric powder or Bibhitaki in Ayurveda, is derived from the dried fruit of the Terminalia bellirica tree."
   },
   {
     "id": 1038,
@@ -6338,7 +7330,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:16.608071+00:00"
+    "created_at": "2026-09-18T18:43:16.608071+00:00",
+    "short_description": "Mexican Mint Cough Relief Herb",
+    "card_description": "Mexican Mint Cough Relief Herb",
+    "subtitle": "Mexican Mint Cough Relief Herb",
+    "full_description": "Karpooravalli powder, also known as Indian Borage, Coleus amboinicus, or Omavalli, is a highly valued herbal remedy in traditional and Siddha medicine."
   },
   {
     "id": 1037,
@@ -6363,7 +7359,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:17.078300+00:00"
+    "created_at": "2026-09-18T18:43:17.078300+00:00",
+    "short_description": "Crispy Savory Snack Flour Mix",
+    "card_description": "Crispy Savory Snack Flour Mix",
+    "subtitle": "Crispy Savory Snack Flour Mix",
+    "full_description": "Kadukkai Bajji/Bonda Mix Powder is a convenient, ready-to-use blend \n \n crafted with carefully selected flours and traditional spices to deliver a crisp, \n \n flavorful snack with ease. Enriched with the gram flour and aromatic \n \n seasonings, it provides a quick source of energy while satisfying taste \n \n cravings. The balanced mix ensures consistent texture and taste, making it \n \n ideal for preparing crispy bajjis and soft bondas at home without the need \n \n for multiple ingredients."
   },
   {
     "id": 1036,
@@ -6388,7 +7388,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:17.565099+00:00"
+    "created_at": "2026-09-18T18:43:17.565099+00:00",
+    "short_description": "Mukia Cold & Chest Comfort Herb",
+    "card_description": "Mukia Cold & Chest Comfort Herb",
+    "subtitle": "Mukia Cold & Chest Comfort Herb",
+    "full_description": "Musumusukkai, a traditional herb widely used in Siddha and Ayurvedic medicine, especially in South India, is known for its wide range of health benefits."
   },
   {
     "id": 1035,
@@ -6413,7 +7417,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:18.057802+00:00"
+    "created_at": "2026-09-18T18:43:18.057802+00:00",
+    "short_description": "Pure Calcium-Rich Ragi Flour",
+    "card_description": "Pure Calcium-Rich Ragi Flour",
+    "subtitle": "Pure Calcium-Rich Ragi Flour",
+    "full_description": "Vedam Ragi Powder\n \n Vedam Ragi Powder is made from carefully selected quality ragi grains and finely processed to retain their natural nutrients and wholesome taste. Rich in fiber, calcium, and essential nutrients, this healthy powder is ideal for preparing traditional drinks, porridges, and nutritious recipes for daily wellness. Prepared with purity and care, it contains no artificial colors or preservatives.\n \n \n \n ராகி பொடி தரமான ராகி தானியங்களால் நுணுக்கமாக தயாரிக்கப்படுகிறது. இதில் உள்ள இயற்கை சத்துக்கள், நார்ச்சத்து மற்றும் கால்சியம் உடல்நலத்திற்கும் தினசரி ஆரோக்கியத்திற்கும் உதவுகின்றன. பாரம்பரிய கூழ், பானங்கள் மற்றும் சத்தான உணவுகள் தயாரிக்க ஏற்ற இந்தப் பொடி, செயற்கை நிறங்கள் மற்றும் பாதுகாப்புப் பொருட்கள் இல்லாமல் தூய்மையாக தயாரிக்கப்பட்டது."
   },
   {
     "id": 1033,
@@ -6438,7 +7446,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:18.526189+00:00"
+    "created_at": "2026-09-18T18:43:18.526189+00:00",
+    "short_description": "Pure Natural Henna Leaf Powder",
+    "card_description": "Pure Natural Henna Leaf Powder",
+    "subtitle": "Pure Natural Henna Leaf Powder",
+    "full_description": "Marudhontri powder is used in traditional medicine to address various skin issues. Its antiseptic and anti-inflammatory properties can help soothe and heal minor skin irritations, burns, boils, and fungal infections like ringworm. It is also used in some traditional practices to treat cracked heels and soothe skin conditions"
   },
   {
     "id": 1031,
@@ -6463,7 +7475,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:19.454283+00:00"
+    "created_at": "2026-09-18T18:43:19.454283+00:00",
+    "short_description": "Mimosa Sensitive Plant Herb",
+    "card_description": "Mimosa Sensitive Plant Herb",
+    "subtitle": "Mimosa Sensitive Plant Herb",
+    "full_description": "Thottal Surungi Powder is a carefully prepared herbal remedy used for its \nrestorative and protective qualities. It assists in reducing discomfort, \nimproving body balance, and supporting holistic health. Crafted from \nnatural sources for safe and effective use. "
   },
   {
     "id": 1030,
@@ -6488,7 +7504,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:19.918584+00:00"
+    "created_at": "2026-09-18T18:43:19.918584+00:00",
+    "short_description": "Natural Soapnut Cleansing Herb",
+    "card_description": "Natural Soapnut Cleansing Herb",
+    "subtitle": "Natural Soapnut Cleansing Herb",
+    "full_description": "Poonthikaai Podi (Soapnut Powder) is a natural cleanser valued in herbal _x000D_\ncare for its gentle purifying action. Rich in natural saponins, it is widely _x000D_\nused in skincare and haircare as a chemical-free alternative that cleanses _x000D_\nwithout disturbing the skin’s natural balance. It reflects the essence of _x000D_\nplant-based care, promoting purity and simplicity in everyday self-care _x000D_\nrituals."
   },
   {
     "id": 1029,
@@ -6513,7 +7533,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:20.315237+00:00"
+    "created_at": "2026-09-18T18:43:20.315237+00:00",
+    "short_description": "Natural Senna Cleansing Leaves",
+    "card_description": "Natural Senna Cleansing Leaves",
+    "subtitle": "Natural Senna Cleansing Leaves",
+    "full_description": "Nilaavarai Powder is mainly used in herbal laxative preparations to support \ndigestive wellness. It helps promote healthy bowel movements and gently \nease constipation. This plant-based remedy supports natural internal \ndetoxification and maintains overall digestive balance. "
   },
   {
     "id": 1028,
@@ -6538,7 +7562,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:20.773983+00:00"
+    "created_at": "2026-09-18T18:43:20.773983+00:00",
+    "short_description": "Piper Longum Respiratory Spice",
+    "card_description": "Piper Longum Respiratory Spice",
+    "subtitle": "Piper Longum Respiratory Spice",
+    "full_description": "Thippili, also known as Piper longum, supports healthy digestion, relieves cough and congestion, and boosts immunity. It aids detox, reduces inflammation, and helps improve overall energy and vitality—making it a powerful herb for daily wellness."
   },
   {
     "id": 1027,
@@ -6566,7 +7594,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:21.236213+00:00"
+    "created_at": "2026-09-18T18:43:21.236213+00:00",
+    "short_description": "Golden Senna Floral Wellness Tea",
+    "card_description": "Golden Senna Floral Wellness Tea",
+    "subtitle": "Golden Senna Floral Wellness Tea",
+    "full_description": "Avarampoo tea may tend to control diabetes, lowers blood pressure,strengthens live heart related curesdiseases,increases hunger, reduces cold and cough, Gives freshness, cures impotence,helps to reduces toxins from the body."
   },
   {
     "id": 1025,
@@ -6591,7 +7623,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:21.701352+00:00"
+    "created_at": "2026-09-18T18:43:21.701352+00:00",
+    "short_description": "Rich Nilgiri Orthodox Black Tea",
+    "card_description": "Rich Nilgiri Orthodox Black Tea",
+    "subtitle": "Rich Nilgiri Orthodox Black Tea",
+    "full_description": "Mahil Black tea is best to drink in the mornings, it tends to be refreshing one to drink"
   },
   {
     "id": 1024,
@@ -6616,7 +7652,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:22.166072+00:00"
+    "created_at": "2026-09-18T18:43:22.166072+00:00",
+    "short_description": "Dried Veppam Poo Herbal Powder",
+    "card_description": "Dried Veppam Poo Herbal Powder",
+    "subtitle": "Dried Veppam Poo Herbal Powder",
+    "full_description": "Neem Flower Powder is a delicate herbal preparation made from dried \nneem blossoms, valued for its gentle cleansing and balancing nature. It \nsupports digestive comfort, helps regulate body heat, and encourages a \nnatural appetite with its mild bitter profile. Its subtle action makes it a \ntraditional choice for maintaining everyday internal balance"
   },
   {
     "id": 1023,
@@ -6641,7 +7681,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:22.647973+00:00"
+    "created_at": "2026-09-18T18:43:22.647973+00:00",
+    "short_description": "Digestive Guava Leaf Herbal Tea",
+    "card_description": "Digestive Guava Leaf Herbal Tea",
+    "subtitle": "Digestive Guava Leaf Herbal Tea",
+    "full_description": "This tea helps to remove bad cholesterol, cure acidity problems, diarrhea, and maintain blood sugar levels."
   },
   {
     "id": 1022,
@@ -6669,7 +7713,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:23.116872+00:00"
+    "created_at": "2026-09-18T18:43:23.116872+00:00",
+    "short_description": "Aromatic Multi-Herb Wellness Tea",
+    "card_description": "Aromatic Multi-Herb Wellness Tea",
+    "subtitle": "Aromatic Multi-Herb Wellness Tea",
+    "full_description": "Mahil Herbal tea helps to improve immunity, treats cough, cold, strengthens liver, treats throat infections."
   },
   {
     "id": 1021,
@@ -6694,7 +7742,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:23.576666+00:00"
+    "created_at": "2026-09-18T18:43:23.576666+00:00",
+    "short_description": "Warming Sun-Dried Ginger Powder",
+    "card_description": "Warming Sun-Dried Ginger Powder",
+    "subtitle": "Warming Sun-Dried Ginger Powder",
+    "full_description": "The powder contains bioactive compounds like gingerol and which have potent anti-inflammatory and antioxidant properties."
   },
   {
     "id": 1020,
@@ -6719,7 +7771,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:24.039239+00:00"
+    "created_at": "2026-09-18T18:43:24.039239+00:00",
+    "short_description": "Antioxidant Pure Green Tea Jar",
+    "card_description": "Antioxidant Pure Green Tea Jar",
+    "subtitle": "Antioxidant Pure Green Tea Jar",
+    "full_description": "Mahil Green tea helps in weight loss, diabetes, blood pressure, maintains heart health and also a stress reliever."
   },
   {
     "id": 1019,
@@ -6749,7 +7805,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:24.504001+00:00"
+    "created_at": "2026-09-18T18:43:24.504001+00:00",
+    "short_description": "Cooling Sarsaparilla Herbal Syrup",
+    "card_description": "Cooling Sarsaparilla Herbal Syrup",
+    "subtitle": "Cooling Sarsaparilla Herbal Syrup",
+    "full_description": "Nannari sarbath is act as a body coolant, relieves constipation, improves digestion, and also acts as a blood purifier."
   },
   {
     "id": 1018,
@@ -6774,7 +7834,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:24.963756+00:00"
+    "created_at": "2026-09-18T18:43:24.963756+00:00",
+    "short_description": "Vedic Fever & Bodyache Blend",
+    "card_description": "Vedic Fever & Bodyache Blend",
+    "subtitle": "Vedic Fever & Bodyache Blend",
+    "full_description": "It is considered effective in symptoms like cold, cough, and body pain associated with these conditions. it is used to address Vatha disorders and related symptoms such as fever with rigor."
   },
   {
     "id": 1017,
@@ -6799,7 +7863,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:25.422165+00:00"
+    "created_at": "2026-09-18T18:43:25.422165+00:00",
+    "short_description": "Antioxidant Pure Green Tea",
+    "card_description": "Antioxidant Pure Green Tea",
+    "subtitle": "Antioxidant Pure Green Tea",
+    "full_description": "Mahil Green tea helps in weight loss, diabetes, blood pressure, maintains heart health and also a stress reliever."
   },
   {
     "id": 1016,
@@ -6828,7 +7896,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:25.884563+00:00"
+    "created_at": "2026-09-18T18:43:25.884563+00:00",
+    "short_description": "Digestive Bael Fruit Herbal Drink",
+    "card_description": "Digestive Bael Fruit Herbal Drink",
+    "subtitle": "Digestive Bael Fruit Herbal Drink",
+    "full_description": "This fruit is known to control excess bleeding, to reduce body heat, to reduce blood cholesterol, to relieve constipation, to treat colds and coughs."
   },
   {
     "id": 1015,
@@ -6853,7 +7925,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:26.346162+00:00"
+    "created_at": "2026-09-18T18:43:26.346162+00:00",
+    "short_description": "Traditional Sukku Malli Coffee",
+    "card_description": "Traditional Sukku Malli Coffee",
+    "subtitle": "Traditional Sukku Malli Coffee",
+    "full_description": "Dry Ginger Coffee will be stress free, best for cough and cold."
   },
   {
     "id": 1014,
@@ -6881,7 +7957,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:26.810226+00:00"
+    "created_at": "2026-09-18T18:43:26.810226+00:00",
+    "short_description": "Warming Three-Spice Herbal Tea",
+    "card_description": "Warming Three-Spice Herbal Tea",
+    "subtitle": "Warming Three-Spice Herbal Tea",
+    "full_description": "This Thirikadugam removes or detoxifies the liver, removes bad cholesterol, cures extreme tiredness."
   },
   {
     "id": 1013,
@@ -6906,7 +7986,11 @@
     "extra_images": [],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:27.269114+00:00"
+    "created_at": "2026-09-18T18:43:27.269114+00:00",
+    "short_description": "Sacred Holy Basil Immunity Tea",
+    "card_description": "Sacred Holy Basil Immunity Tea",
+    "subtitle": "Sacred Holy Basil Immunity Tea",
+    "full_description": "Mahil Tulsi tea helps to cure kidney stones, relieves fever and headache."
   },
   {
     "id": 1012,
@@ -6934,7 +8018,11 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:27.729575+00:00"
+    "created_at": "2026-09-18T18:43:27.729575+00:00",
+    "short_description": "Tangy Hibiscus Blossom Herb Tea",
+    "card_description": "Tangy Hibiscus Blossom Herb Tea",
+    "subtitle": "Tangy Hibiscus Blossom Herb Tea",
+    "full_description": "Mahil Hibiscus Tea helps to cure Weight loss, Diabetes, Heart diseases, Blood pressure, and also gives glow to the skin."
   },
   {
     "id": 1011,
@@ -6963,6 +8051,10 @@
     ],
     "is_new": false,
     "is_public": true,
-    "created_at": "2026-09-18T18:43:28.200624+00:00"
+    "created_at": "2026-09-18T18:43:28.200624+00:00",
+    "short_description": "Revitalizing Herbal Face Pack",
+    "card_description": "Revitalizing Herbal Face Pack",
+    "subtitle": "Revitalizing Herbal Face Pack",
+    "full_description": "Facepack Powder is a finely curated herbal blend crafted to promote a clearer, more refined skin appearance. It works to diminish the look of spot marks, under-eye dullness, breakouts, and uneven tone, including deeper discoloration around the neck. Its moisture-supporting nature helps prevent dryness, leaving the skin feeling smooth and nourished."
   }
 ]

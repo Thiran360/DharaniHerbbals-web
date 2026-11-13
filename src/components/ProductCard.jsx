@@ -7,6 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { resolveMediaUrl } from '../services/api';
 import { formatProductPackSize, formatProductDisplayName, formatCurrency, getProductFallbackImage } from '../utils/productFormatters';
 import { getVerifiedReviewData } from '../utils/productReviews';
+import { getProductShortDescription } from '../data/productShortDescriptions';
 import '../pages/Shop.css';
 
 export const ProductCard = memo(({ product, index = 0 }) => {
@@ -218,7 +219,7 @@ export const ProductCard = memo(({ product, index = 0 }) => {
             {translatedName}
           </Link>
         </h3>
-        <p className="uc-subtitle">{language === 'ta' && product.tamil_description ? product.tamil_description : (product.description || 'Authentic Natural Herbal Product')}</p>
+        <p className="uc-subtitle">{language === 'ta' && product.tamil_description ? product.tamil_description : (product.card_description || product.short_description || getProductShortDescription(product))}</p>
 
         {hasValidRating && (
           <div className="uc-meta-row">

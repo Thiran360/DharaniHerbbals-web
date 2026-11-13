@@ -72,13 +72,40 @@ const fallbackBrands = [
   { id: 'f7', name: 'Vedan', logo: vedanImg }
 ];
 
+const BRANDS_CACHE_KEY = 'dharani_brands_cache';
+const BRANDS_CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
 export default function BrandsSlider() {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const [brands, setBrands] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [brands, setBrands] = useState(() => {
+    // Seed from localStorage cache on first render to avoid flash
+    try {
+      const raw = localStorage.getItem(BRANDS_CACHE_KEY);
+      if (raw) {
+        const { data, ts } = JSON.parse(raw);
+        if (Array.isArray(data) && data.length > 0 && Date.now() - ts < BRANDS_CACHE_TTL_MS) {
+          return data;
+        }
+      }
+    } catch { /* ignore */ }
+    return [];
+  });
+  const [isLoading, setIsLoading] = useState(() => brands.length === 0);
 
   useEffect(() => {
+    // If we already have fresh cached brands, skip the network request
+    try {
+      const raw = localStorage.getItem(BRANDS_CACHE_KEY);
+      if (raw) {
+        const { data, ts } = JSON.parse(raw);
+        if (Array.isArray(data) && data.length > 0 && Date.now() - ts < BRANDS_CACHE_TTL_MS) {
+          setIsLoading(false);
+          return; // ← cache is fresh, no fetch needed
+        }
+      }
+    } catch { /* fall through to fetch */ }
+
     fetch(`${API_BASE_URL}/brands/`, {
       headers: {
         'ngrok-skip-browser-warning': 'true'
@@ -90,6 +117,9 @@ export default function BrandsSlider() {
           const activeBrands = data.data.filter(b => b.status === 'active');
           const duplicated = [...activeBrands, ...activeBrands, ...activeBrands];
           setBrands(duplicated);
+          try {
+            localStorage.setItem(BRANDS_CACHE_KEY, JSON.stringify({ data: duplicated, ts: Date.now() }));
+          } catch { /* ignore quota errors */ }
         } else {
           setBrands([...fallbackBrands, ...fallbackBrands, ...fallbackBrands]);
         }

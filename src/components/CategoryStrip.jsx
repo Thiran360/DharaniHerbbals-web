@@ -123,12 +123,7 @@ export default function CategoryStrip() {
 
   return (
     <section className="category-strip-container" id="categories" aria-label="Product Categories">
-      <div className="category-strip-header">
-        <span className="category-strip-eyebrow">✦ AYURVEDIC WELLNESS CATEGORIES ✦</span>
-        <h2 className="category-strip-title">Curated Herbal Formulations</h2>
-        <p className="category-strip-subtitle">Discover handcrafted South Indian botanical solutions, time-tested for purity and potency.</p>
-      </div>
-      <div className="category-strip-scroll">
+<div className="category-strip-scroll">
 
         {/* "All" pill — clears category filter */}
         <Link
